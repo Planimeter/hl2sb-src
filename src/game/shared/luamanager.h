@@ -35,6 +35,11 @@
 #define DEBUG_LUA_STACK 1
 
 #define BEGIN_LUA_CALL_HOOK(functionName) \
+  int n = lua_gettop(L); \
+  if (n>0) { \
+    Warning( "Warning: %d object(s) left on the stack!\n", n ); \
+	lua_pop(L, n); \
+  } \
   lua_getglobal(L, "hook"); \
   if (lua_istable(L, -1)) { \
     lua_getfield(L, -1, "Call"); \
