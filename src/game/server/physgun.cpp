@@ -33,6 +33,8 @@ ConVar phys_gunglueradius("phys_gunglueradius", "128" );
 static int g_physgunBeam;
 #define PHYSGUN_BEAM_SPRITE		"sprites/physbeam.vmt"
 
+#define	PHYSGUN_SKIN	1
+
 #define MAX_PELLETS	16
 
 class CWeaponGravityGun;
@@ -571,6 +573,8 @@ private:
 	int			m_pelletAttract;
 	float		m_glueTime;
 	CNetworkVar( bool, m_glueTouching );
+
+	DECLARE_ACTTABLE();
 };
 
 IMPLEMENT_SERVERCLASS_ST( CWeaponGravityGun, DT_WeaponGravityGun )
@@ -583,6 +587,25 @@ END_SEND_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_physgun, CWeaponGravityGun );
 PRECACHE_WEAPON_REGISTER(weapon_physgun);
+
+acttable_t	CWeaponGravityGun::m_acttable[] = 
+{
+	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_PHYSGUN,					false },
+	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_PHYSGUN,			false },
+
+	{ ACT_MP_RUN,						ACT_HL2MP_RUN_PHYSGUN,					false },
+	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_PHYSGUN,			false },
+
+	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
+	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
+
+	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
+	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
+
+	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_PHYSGUN,					false },
+};
+
+IMPLEMENT_ACTTABLE(CWeaponGravityGun);
 
 //---------------------------------------------------------
 // Save/Restore
@@ -641,6 +664,9 @@ void CWeaponGravityGun::Spawn( )
 {
 	BaseClass::Spawn();
 //	SetModel( GetWorldModel() );
+
+	// The physgun uses a different skin
+	m_nSkin = PHYSGUN_SKIN;
 
 	FallInit();
 }
