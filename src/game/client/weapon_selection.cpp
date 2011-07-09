@@ -506,15 +506,7 @@ void CBaseHudWeaponSelection::SetWeaponSelected( void )
 {
 	Assert( GetSelectedWeapon() );
 	// Mark selection so that it's placed into next CUserCmd created
-#if defined ( LUA_SDK )
-	// BUGBUG: Why can we not switch to a scripted weapon with
-	// MakeWeaponSelection, but we can with Weapon_Switch???
-	char szCmdString[MAX_WEAPON_STRING+4];
-	Q_snprintf( szCmdString , sizeof( szCmdString ), "use %s\n" , GetSelectedWeapon()->GetClassname() );
-	engine->ClientCmd( szCmdString );
-#else
 	input->MakeWeaponSelection( GetSelectedWeapon() );
-#endif
 }
 
 

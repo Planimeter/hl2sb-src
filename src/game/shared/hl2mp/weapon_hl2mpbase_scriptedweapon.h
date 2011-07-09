@@ -26,6 +26,7 @@ public:
 	DECLARE_DATADESC();
 
 	CHL2MPScriptedWeapon();
+	~CHL2MPScriptedWeapon();
 
 	bool			IsScripted( void ) const { return true; }
 	
@@ -49,6 +50,8 @@ public:
 public:
 
 	// Weapon info accessors for data in the weapon's data file
+	FileWeaponInfo_t *m_pLuaWeaponInfo;
+	virtual const FileWeaponInfo_t	&GetWpnData( void ) const;
 	virtual const char		*GetViewModel( int viewmodelindex = 0 ) const;
 	virtual const char		*GetWorldModel( void ) const;
 	virtual const char		*GetAnimPrefix( void ) const;

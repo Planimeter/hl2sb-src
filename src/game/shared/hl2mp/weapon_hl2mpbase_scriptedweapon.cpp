@@ -114,6 +114,15 @@ IMPLEMENT_ACTTABLE( CHL2MPScriptedWeapon );
 //-----------------------------------------------------------------------------
 CHL2MPScriptedWeapon::CHL2MPScriptedWeapon( void )
 {
+	m_pLuaWeaponInfo = new FileWeaponInfo_t();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+CHL2MPScriptedWeapon::~CHL2MPScriptedWeapon( void )
+{
+	delete m_pLuaWeaponInfo;
 }
 
 void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
@@ -125,6 +134,8 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	char className[ MAX_WEAPON_STRING ];
 	Q_strncpy( className, GetClassname(), sizeof( className ) );
 	Q_strlower( className );
+	// Andrew; This redundancy is pretty annoying.
+	Q_strncpy( m_pLuaWeaponInfo->szClassName, className, MAX_WEAPON_STRING );
 	SetClassname( className );
 
 	lua_getglobal( L, "weapon" );
@@ -178,6 +189,14 @@ void CHL2MPScriptedWeapon::Precache( void )
 #endif
 }
 
+
+//-----------------------------------------------------------------------------
+// Purpose: Get my data in the file weapon info array
+//-----------------------------------------------------------------------------
+const FileWeaponInfo_t &CHL2MPScriptedWeapon::GetWpnData( void ) const
+{
+	return *m_pLuaWeaponInfo;
+}
 
 const char *CHL2MPScriptedWeapon::GetViewModel( int ) const
 {

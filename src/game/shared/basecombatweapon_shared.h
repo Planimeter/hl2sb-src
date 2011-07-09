@@ -296,7 +296,7 @@ public:
 public:
 
 	// Weapon info accessors for data in the weapon's data file
-	const FileWeaponInfo_t	&GetWpnData( void ) const;
+	virtual const FileWeaponInfo_t	&GetWpnData( void ) const;
 	virtual const char		*GetViewModel( int viewmodelindex = 0 ) const;
 	virtual const char		*GetWorldModel( void ) const;
 	virtual const char		*GetAnimPrefix( void ) const;
