@@ -525,6 +525,11 @@ static int CBasePlayer_UsingStandardWeaponsInVehicle (lua_State *L) {
   return 1;
 }
 
+static int CBasePlayer_ViewPunch (lua_State *L) {
+  luaL_checkplayer(L, 1)->ViewPunch(luaL_checkangle(L, 2));
+  return 0;
+}
+
 static int CBasePlayer_ViewPunchReset (lua_State *L) {
   luaL_checkplayer(L, 1)->ViewPunchReset(luaL_optnumber(L, 2, 0));
   return 0;
@@ -603,10 +608,12 @@ static int CBasePlayer___index (lua_State *L) {
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
       luaL_getmetatable(L, "CBaseAnimating");
       lua_pushvalue(L, 2);
       lua_gettable(L, -2);
       if (lua_isnil(L, -1)) {
+        lua_pop(L, 1);
         luaL_getmetatable(L, "CBaseEntity");
         lua_pushvalue(L, 2);
         lua_gettable(L, -2);
@@ -757,6 +764,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"UpdateClientData", CBasePlayer_UpdateClientData},
   {"UpdateUnderwaterState", CBasePlayer_UpdateUnderwaterState},
   {"UsingStandardWeaponsInVehicle", CBasePlayer_UsingStandardWeaponsInVehicle},
+  {"ViewPunch", CBasePlayer_ViewPunch},
   {"ViewPunchReset", CBasePlayer_ViewPunchReset},
   {"Weapon_CanSwitchTo", CBasePlayer_Weapon_CanSwitchTo},
   {"Weapon_OwnsThisType", CBasePlayer_Weapon_OwnsThisType},

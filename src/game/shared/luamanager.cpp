@@ -252,6 +252,20 @@ void luasrc_init (void) {
   luaopen_IPhysicsObject(L);
 
   Msg( "Lua initialized (" LUA_VERSION ")\n" );
+  // Andrew; We currently support different Lua binaries, but as Henry has
+  // stated, this is a security concern, so we may end up baking LuaJIT into
+  // the released stable binaries.
+  lua_getglobal(L, "jit");
+  if (lua_istable(L, -1)) {
+    lua_getfield(L, -1, "version");
+	lua_remove(L, -2);
+	if (lua_isstring(L, -1)) {
+	  Msg( "LuaJIT detected (%s)\n", luaL_checkstring(L, -1) );
+	}
+	lua_pop(L, 1);
+  }
+  else
+	lua_pop(L, 1);
 }
 
 void luasrc_shutdown (void) {
@@ -370,13 +384,9 @@ void luasrc_LoadWeapons (void)
 						char path[ MAX_PATH ];
 						Q_snprintf( path, sizeof( path ), "weapons\\%s", className );
 						lua_pushstring( L, path );
-						lua_setfield( L, -2, "Folder" );
+						lua_setfield( L, -2, "__folder" );
 						lua_pushstring( L, LUA_BASE_WEAPON );
-						lua_setfield( L, -2, "Base" );
-						lua_newtable( L );
-						lua_setfield( L, -2, "Primary" );
-						lua_newtable( L );
-						lua_setfield( L, -2, "Secondary" );
+						lua_setfield( L, -2, "__base" );
 						lua_setglobal( L, "SWEP" );
 						if ( luasrc_dofile( L, fullpath ) == 0 )
 						{
@@ -440,7 +450,7 @@ bool luasrc_LoadGamemode (const char *gamemode) {
 	  lua_remove(L, -2);
 	  lua_getglobal(L, "GM");
 	  lua_pushstring(L, gamemode);
-	  lua_getfield(L, -2, "Base");
+	  lua_getfield(L, -2, "__base");
 	  if (lua_isnoneornil(L, -1) && Q_strcmp(gamemode, LUA_BASE_GAMEMODE) != 0) {
 	    lua_pop(L, 1);
 		lua_pushstring(L, LUA_BASE_GAMEMODE);

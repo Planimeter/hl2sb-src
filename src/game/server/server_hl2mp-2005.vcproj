@@ -2150,6 +2150,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\lshareddefs.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\steam\lsteam_api.cpp"
 				>
 			</File>
@@ -2159,6 +2163,14 @@
 			</File>
 			<File
 				RelativePath="..\shared\ltakedamageinfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\luacachefile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\luacachefile.h"
 				>
 			</File>
 			<File
@@ -3391,6 +3403,10 @@
 			</File>
 			<File
 				RelativePath=".\world.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\public\zip_utils.cpp"
 				>
 			</File>
 			<Filter
@@ -5203,6 +5219,10 @@
 			</File>
 			<File
 				RelativePath="..\..\public\vstdlib\lrandom.h"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\lshareddefs.h"
 				>
 			</File>
 			<File

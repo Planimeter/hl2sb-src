@@ -24,6 +24,11 @@
 IMPLEMENT_NETWORKCLASS_ALIASED( HL2MPScriptedWeapon, DT_HL2MPScriptedWeapon )
 
 BEGIN_NETWORK_TABLE( CHL2MPScriptedWeapon, DT_HL2MPScriptedWeapon )
+#ifdef CLIENT_DLL
+	RecvPropString( RECVINFO( m_iScriptedClassname ) ),
+#else
+	SendPropString( SENDINFO( m_iScriptedClassname ) ),
+#endif
 END_NETWORK_TABLE()
 
 BEGIN_PREDICTION_DATA( CHL2MPScriptedWeapon )
@@ -60,6 +65,12 @@ void RegisterScriptedWeapon( const char *className )
 		&CCHL2MPScriptedWeaponFactory );
 #else
 	// Complain about duplicately defined scripted weapon names...
+	// Andrew; I get that this works, but why? Whatever. Rate me box.
+	if ( EntityFactoryDictionary()->FindFactory( className ) )
+	{
+		return;
+	}
+
 	unsigned short lookup = m_EntityFactoryDatabase.Find( className );
 	if ( lookup != m_EntityFactoryDatabase.InvalidIndex() )
 	{
@@ -80,12 +91,14 @@ void RegisterScriptedWeapon( const char *className )
 #ifndef CLIENT_DLL
 void ResetEntityFactoryDatabase( void )
 {
+#if 0
 	int c = m_EntityFactoryDatabase.Count(); 
 	for ( int i = 0; i < c; ++i )
 	{
 		delete m_EntityFactoryDatabase[ i ];
 	}
 	m_EntityFactoryDatabase.RemoveAll();
+#endif
 }
 #endif
 
@@ -123,18 +136,33 @@ CHL2MPScriptedWeapon::CHL2MPScriptedWeapon( void )
 CHL2MPScriptedWeapon::~CHL2MPScriptedWeapon( void )
 {
 	delete m_pLuaWeaponInfo;
+	luaL_unref( L, LUA_REGISTRYINDEX, m_nRefCount );
 }
+
+extern const char *pWeaponSoundCategories[ NUM_SHOOT_SOUND_TYPES ];
 
 void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 {
 #if defined ( LUA_SDK )
+#ifndef CLIENT_DLL
+	// Let the instance reinitialize itself for the client.
 	if ( m_nRefCount != LUA_REFNIL )
 		return;
+#endif
 
 	char className[ MAX_WEAPON_STRING ];
-	Q_strncpy( className, GetClassname(), sizeof( className ) );
-	Q_strlower( className );
+#if defined ( CLIENT_DLL )
+	if ( strlen( GetScriptedClassname() ) > 0 )
+		Q_strncpy( className, GetScriptedClassname(), sizeof( className ) );
+	else
+		Q_strncpy( className, GetClassname(), sizeof( className ) );
+#else
+	Q_strncpy( m_iScriptedClassname.GetForModify(), GetClassname(), sizeof( className ) );
+ 	Q_strncpy( className, GetClassname(), sizeof( className ) );
+#endif
+ 	Q_strlower( className );
 	// Andrew; This redundancy is pretty annoying.
+	// Classname
 	Q_strncpy( m_pLuaWeaponInfo->szClassName, className, MAX_WEAPON_STRING );
 	SetClassname( className );
 
@@ -145,7 +173,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 		if ( lua_isfunction( L, -1 ) )
 		{
 			lua_remove( L, -2 );
-			lua_pushstring( L, GetClassname() );
+			lua_pushstring( L, className );
 			luasrc_pcall( L, 1, 1, 0 );
 		}
 		else
@@ -159,17 +187,161 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	}
 
 	m_nRefCount = luaL_ref( L, LUA_REGISTRYINDEX );
+#ifndef CLIENT_DLL
+	m_pLuaWeaponInfo->bParsedScript = true;
+#endif
+
+	// Printable name
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "printname" );
+	lua_remove( L, -2 );
+	if ( lua_isstring( L, -1 ) )
+	{
+		Q_strncpy( m_pLuaWeaponInfo->szPrintName, luaL_checkstring( L, -1 ), MAX_WEAPON_STRING );
+	}
+	else
+	{
+		Q_strncpy( m_pLuaWeaponInfo->szPrintName, WEAPON_PRINTNAME_MISSING, MAX_WEAPON_STRING );
+	}
+	lua_pop( L, 1 );
+	// View model & world model
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "viewmodel" );
+	lua_remove( L, -2 );
+	if ( lua_isstring( L, -1 ) )
+	{
+		Q_strncpy( m_pLuaWeaponInfo->szViewModel, luaL_checkstring( L, -1 ), MAX_WEAPON_STRING );
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "playermodel" );
+	lua_remove( L, -2 );
+	if ( lua_isstring( L, -1 ) )
+	{
+		Q_strncpy( m_pLuaWeaponInfo->szWorldModel, luaL_checkstring( L, -1 ), MAX_WEAPON_STRING );
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "anim_prefix" );
+	lua_remove( L, -2 );
+	if ( lua_isstring( L, -1 ) )
+	{
+		Q_strncpy( m_pLuaWeaponInfo->szAnimationPrefix, luaL_checkstring( L, -1 ), MAX_WEAPON_PREFIX );
+	}
+	lua_pop( L, 1 );
+
+	// Primary ammo used
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "primary_ammo" );
+	lua_remove( L, -2 );
+	if ( lua_isstring( L, -1 ) )
+	{
+		const char *pAmmo = luaL_checkstring( L, -1 );
+		if ( strcmp("None", pAmmo) == 0 )
+			Q_strncpy( m_pLuaWeaponInfo->szAmmo1, "", sizeof( m_pLuaWeaponInfo->szAmmo1 ) );
+		else
+			Q_strncpy( m_pLuaWeaponInfo->szAmmo1, pAmmo, sizeof( m_pLuaWeaponInfo->szAmmo1 )  );
+		m_pLuaWeaponInfo->iAmmoType = GetAmmoDef()->Index( m_pLuaWeaponInfo->szAmmo1 );
+	}
+	lua_pop( L, 1 );
+	
+	// Secondary ammo used
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "secondary_ammo" );
+	lua_remove( L, -2 );
+	if ( lua_isstring( L, -1 ) )
+	{
+		const char *pAmmo = luaL_checkstring( L, -1 );
+		if ( strcmp("None", pAmmo) == 0)
+			Q_strncpy( m_pLuaWeaponInfo->szAmmo2, "", sizeof( m_pLuaWeaponInfo->szAmmo2 ) );
+		else
+			Q_strncpy( m_pLuaWeaponInfo->szAmmo2, pAmmo, sizeof( m_pLuaWeaponInfo->szAmmo2 )  );
+		m_pLuaWeaponInfo->iAmmo2Type = GetAmmoDef()->Index( m_pLuaWeaponInfo->szAmmo2 );
+	}
+	lua_pop( L, 1 );
+
+	// Now read the weapon sounds
+	memset( m_pLuaWeaponInfo->aShootSounds, 0, sizeof( m_pLuaWeaponInfo->aShootSounds ) );
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "SoundData" );
+	lua_remove( L, -2 );
+	if ( lua_istable( L, -1 ) )
+	{
+		for ( int i = EMPTY; i < NUM_SHOOT_SOUND_TYPES; i++ )
+		{
+			lua_getfield( L, -1, pWeaponSoundCategories[i] );
+			if ( lua_isstring( L, -1 ) )
+			{
+				const char *soundname = luaL_checkstring( L, -1 );
+				if ( soundname && soundname[0] )
+				{
+					Q_strncpy( m_pLuaWeaponInfo->aShootSounds[i], soundname, MAX_WEAPON_STRING );
+				}
+			}
+			lua_pop( L, 1 );
+		}
+	}
+	lua_pop( L, 1 );
 
 	BEGIN_LUA_CALL_WEAPON_METHOD( "Initialize" );
 	END_LUA_CALL_WEAPON_METHOD( 0, 0 );
 #endif
 }
 
+#ifdef CLIENT_DLL
+void CHL2MPScriptedWeapon::OnDataChanged( DataUpdateType_t updateType )
+{
+	BaseClass::OnDataChanged( updateType );
+
+	if ( updateType == DATA_UPDATE_CREATED )
+	{
+		if ( m_iScriptedClassname.Get() && !m_pLuaWeaponInfo->bParsedScript )
+		{
+			m_pLuaWeaponInfo->bParsedScript = true;
+			SetClassname( m_iScriptedClassname.Get() );
+			InitScriptedWeapon();
+
+			BEGIN_LUA_CALL_WEAPON_METHOD( "Initialize" );
+			END_LUA_CALL_WEAPON_METHOD( 0, 0 );
+			
+			BEGIN_LUA_CALL_WEAPON_METHOD( "Precache" );
+			END_LUA_CALL_WEAPON_METHOD( 0, 0 );
+		}
+	}
+}
+
+const char *CHL2MPScriptedWeapon::GetScriptedClassname( void )
+{
+	if ( m_iScriptedClassname.Get() )
+		return m_iScriptedClassname.Get();
+	return BaseClass::GetClassname();
+}
+#endif
+
 void CHL2MPScriptedWeapon::Precache( void )
 {
 	BaseClass::Precache();
 
 	InitScriptedWeapon();
+
+	// Get the ammo indexes for the ammo's specified in the data file
+	if ( GetWpnData().szAmmo1[0] )
+	{
+		m_iPrimaryAmmoType = GetAmmoDef()->Index( GetWpnData().szAmmo1 );
+		if (m_iPrimaryAmmoType == -1)
+		{
+			Msg("ERROR: Weapon (%s) using undefined primary ammo type (%s)\n",GetClassname(), GetWpnData().szAmmo1);
+		}
+	}
+	if ( GetWpnData().szAmmo2[0] )
+	{
+		m_iSecondaryAmmoType = GetAmmoDef()->Index( GetWpnData().szAmmo2 );
+		if (m_iSecondaryAmmoType == -1)
+		{
+			Msg("ERROR: Weapon (%s) using undefined secondary ammo type (%s)\n",GetClassname(),GetWpnData().szAmmo2);
+		}
+
+	}
 
 	// Precache models (preload to avoid hitch)
 	m_iViewModelIndex = 0;
@@ -183,7 +355,17 @@ void CHL2MPScriptedWeapon::Precache( void )
 		m_iWorldModelIndex = CBaseEntity::PrecacheModel( GetWorldModel() );
 	}
 
-#if defined ( LUA_SDK )
+	// Precache sounds, too
+	for ( int i = 0; i < NUM_SHOOT_SOUND_TYPES; ++i )
+	{
+		const char *shootsound = GetShootSound( i );
+		if ( shootsound && shootsound[0] )
+		{
+			CBaseEntity::PrecacheScriptSound( shootsound );
+		}
+	}
+
+#if defined ( LUA_SDK ) && !defined( CLIENT_DLL )
 	BEGIN_LUA_CALL_WEAPON_METHOD( "Precache" );
 	END_LUA_CALL_WEAPON_METHOD( 0, 0 );
 #endif

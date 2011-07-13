@@ -21,33 +21,41 @@
 
 
 LUA_API lua_Physics_performanceparams_t lua_toperformanceparams (lua_State *L, int idx) {
-  luaL_checktype(L, 1, LUA_TTABLE);
+  luaL_checktype(L, idx, LUA_TTABLE);
   physics_performanceparams_t params;
   params.Defaults();
-  lua_getfield(L, 1, "maxCollisionsPerObjectPerTimestep");
+  lua_getfield(L, idx, "maxCollisionsPerObjectPerTimestep");
   if (!lua_isnil(L, -1))
     params.maxCollisionsPerObjectPerTimestep = luaL_checkinteger(L, -1);
-  lua_getfield(L, 1, "maxCollisionChecksPerTimestep");
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "maxCollisionChecksPerTimestep");
   if (!lua_isnil(L, -1))
     params.maxCollisionChecksPerTimestep = luaL_checkinteger(L, -1);
-  lua_getfield(L, 1, "maxVelocity");
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "maxVelocity");
   if (!lua_isnil(L, -1))
     params.maxVelocity = luaL_checknumber(L, -1);
-  lua_getfield(L, 1, "maxAngularVelocity");
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "maxAngularVelocity");
   if (!lua_isnil(L, -1))
     params.maxAngularVelocity = luaL_checknumber(L, -1);
-  lua_getfield(L, 1, "lookAheadTimeObjectsVsWorld");
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "lookAheadTimeObjectsVsWorld");
   if (!lua_isnil(L, -1))
     params.lookAheadTimeObjectsVsWorld = luaL_checknumber(L, -1);
-  lua_getfield(L, 1, "lookAheadTimeObjectsVsObject");
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "lookAheadTimeObjectsVsObject");
   if (!lua_isnil(L, -1))
     params.lookAheadTimeObjectsVsObject = luaL_checknumber(L, -1);
-  lua_getfield(L, 1, "minFrictionMass");
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "minFrictionMass");
   if (!lua_isnil(L, -1))
     params.minFrictionMass = luaL_checknumber(L, -1);
-  lua_getfield(L, 1, "maxFrictionMass");
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "maxFrictionMass");
   if (!lua_isnil(L, -1))
     params.maxFrictionMass = luaL_checknumber(L, -1);
+  lua_pop(L, 1);
   return params;
 }
 

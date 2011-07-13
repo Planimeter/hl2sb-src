@@ -35,11 +35,6 @@
 #define DEBUG_LUA_STACK 1
 
 #define BEGIN_LUA_CALL_HOOK(functionName) \
-  int n = lua_gettop(L); \
-  if (n>0) { \
-    Warning( "Warning: %d object(s) left on the stack!\n", n ); \
-	lua_pop(L, n); \
-  } \
   lua_getglobal(L, "hook"); \
   if (lua_istable(L, -1)) { \
     lua_getfield(L, -1, "Call"); \
@@ -64,13 +59,17 @@
   lua_getref(L, m_nRefCount); \
   lua_getfield(L, -1, functionName); \
   lua_remove(L, -2); \
-  int args = 0; \
-  lua_pushweapon(L, this); \
-  ++args;
+  if (lua_isfunction(L, -1)) { \
+    int args = 0; \
+	lua_pushweapon(L, this); \
+	++args;
 
 #define END_LUA_CALL_WEAPON_METHOD(nArgs, nresults) \
-  args += nArgs; \
-  luasrc_pcall(L, args, nresults, 0);
+	args += nArgs; \
+	luasrc_pcall(L, args, nresults, 0); \
+  } \
+  else \
+    lua_pop(L, 1);
 
 #define BEGIN_LUA_CALL_WEAPON_HOOK(pWeapon, functionName) \
   if (pWeapon->IsScripted()) { \

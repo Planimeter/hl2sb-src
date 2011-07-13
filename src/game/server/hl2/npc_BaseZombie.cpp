@@ -949,10 +949,14 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 //-----------------------------------------------------------------------------
 void CNPC_BaseZombie::MakeAISpookySound( float volume, float duration )
 {
+	// Andrew; This has the potential to break gameplay elements in the event
+	// we do a co-op campaign gamemode of some sort.
+#if !defined( HL2SB )
 	if ( HL2GameRules()->IsAlyxInDarknessMode() )
 	{
 		CSoundEnt::InsertSound( SOUND_COMBAT, EyePosition(), volume, duration, this, SOUNDENT_CHANNEL_SPOOKY_NOISE );
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------

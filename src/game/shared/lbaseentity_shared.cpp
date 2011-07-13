@@ -17,6 +17,7 @@
 #endif
 #include "lbaseplayer_shared.h"
 #include "lgametrace.h"
+#include "lshareddefs.h"
 #include "ltakedamageinfo.h"
 #include "mathlib/lvector.h"
 #include "lvphysics_interface.h"
@@ -38,8 +39,10 @@ LUA_API lua_CBaseEntity *lua_toentity (lua_State *L, int idx) {
 	lua_rawget(L, -2);
 	if (!lua_isstring(L, -1))
 	  lua_pop(L, 2);
-	else if (Q_strcmp(luaL_checkstring(L, -1), "entity") != 0)
+	else if (Q_strcmp(luaL_checkstring(L, -1), "entity") != 0) {
+	  lua_pop(L, 2);
 	  luaL_typerror(L, idx, "CBaseEntity");
+	}
   }
   CBaseHandle *hEntity = (CBaseHandle *)lua_touserdata(L, idx);
   return (lua_CBaseEntity *)hEntity->Get();
@@ -230,6 +233,13 @@ static int CBaseEntity_EmitAmbientSound (lua_State *L) {
   return 1;
 }
 
+static int CBaseEntity_EmitSound (lua_State *L) {
+  float duration;
+  luaL_checkentity(L, 1)->EmitSound(luaL_checkstring(L, 2), luaL_optnumber(L, 3, 0.0f), &duration);
+  lua_pushnumber(L, duration);
+  return 1;
+}
+
 static int CBaseEntity_EndGroundContact (lua_State *L) {
   luaL_checkentity(L, 1)->EndGroundContact(luaL_checkentity(L, 2));
   return 0;
@@ -262,6 +272,11 @@ static int CBaseEntity_EyePosition (lua_State *L) {
   return 1;
 }
 
+static int CBaseEntity_FireBullets (lua_State *L) {
+  luaL_checkentity(L, 1)->FireBullets(lua_tofirebulletsinfo(L, 2));
+  return 0;
+}
+
 static int CBaseEntity_FirstMoveChild (lua_State *L) {
   lua_pushentity(L, luaL_checkentity(L, 1)->FirstMoveChild());
   return 1;
@@ -276,6 +291,11 @@ static int CBaseEntity_GenderExpandString (lua_State *L) {
   char * out = "";
   luaL_checkentity(L, 1)->GenderExpandString(luaL_checkstring(L, 2), out, sizeof( out ));
   lua_pushstring(L, out);
+  return 1;
+}
+
+static int CBaseEntity_GetAbsAngles (lua_State *L) {
+  lua_pushangle(L, luaL_checkentity(L, 1)->GetAbsAngles());
   return 1;
 }
 
@@ -875,6 +895,11 @@ static int CBaseEntity_RemoveSolidFlags (lua_State *L) {
   return 0;
 }
 
+static int CBaseEntity_SetAbsAngles (lua_State *L) {
+  luaL_checkentity(L, 1)->SetAbsAngles(luaL_checkangle(L, 2));
+  return 0;
+}
+
 static int CBaseEntity_SetAbsOrigin (lua_State *L) {
   luaL_checkentity(L, 1)->SetAbsOrigin(luaL_checkvector(L, 2));
   return 0;
@@ -1368,6 +1393,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"DispatchTraceAttack", CBaseEntity_DispatchTraceAttack},
   {"DoImpactEffect", CBaseEntity_DoImpactEffect},
   {"EarPosition", CBaseEntity_EarPosition},
+  {"EmitSound", CBaseEntity_EmitSound},
   {"EmitAmbientSound", CBaseEntity_EmitAmbientSound},
   {"EndGroundContact", CBaseEntity_EndGroundContact},
   {"EndTouch", CBaseEntity_EndTouch},
@@ -1375,9 +1401,11 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"EntityToWorldSpace", CBaseEntity_EntityToWorldSpace},
   {"EyeAngles", CBaseEntity_EyeAngles},
   {"EyePosition", CBaseEntity_EyePosition},
+  {"FireBullets", CBaseEntity_FireBullets},
   {"FirstMoveChild", CBaseEntity_FirstMoveChild},
   {"FollowEntity", CBaseEntity_FollowEntity},
   {"GenderExpandString", CBaseEntity_GenderExpandString},
+  {"GetAbsAngles", CBaseEntity_GetAbsAngles},
   {"GetAbsOrigin", CBaseEntity_GetAbsOrigin},
   {"GetAbsVelocity", CBaseEntity_GetAbsVelocity},
   {"GetAnimTime", CBaseEntity_GetAnimTime},
@@ -1493,6 +1521,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"RemoveEFlags", CBaseEntity_RemoveEFlags},
   {"RemoveFlag", CBaseEntity_RemoveFlag},
   {"RemoveSolidFlags", CBaseEntity_RemoveSolidFlags},
+  {"SetAbsAngles", CBaseEntity_SetAbsAngles},
   {"SetAbsOrigin", CBaseEntity_SetAbsOrigin},
   {"SetAbsQueriesValid", CBaseEntity_SetAbsQueriesValid},
   {"SetAbsVelocity", CBaseEntity_SetAbsVelocity},

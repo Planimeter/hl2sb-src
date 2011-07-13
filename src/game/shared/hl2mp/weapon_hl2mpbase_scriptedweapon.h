@@ -44,6 +44,10 @@ public:
 	virtual void	ItemPostFrame( void );
 	virtual void	FireBullets( const FireBulletsInfo_t &info );
 	virtual bool	Deploy( void );
+#ifdef CLIENT_DLL
+	virtual void	OnDataChanged( DataUpdateType_t updateType );
+	virtual const char *GetScriptedClassname( void );
+#endif
 
 	virtual const Vector &GetBulletSpread( void );
 
@@ -71,6 +75,8 @@ public:
 private:
 	
 	CHL2MPScriptedWeapon( const CHL2MPScriptedWeapon & );
+
+	CNetworkString( m_iScriptedClassname, MAX_WEAPON_STRING );
 
 };
 

@@ -35,7 +35,7 @@ LUA_API lua_CBaseCombatWeapon *lua_toweapon (lua_State *L, int idx) {
 
 LUA_API void lua_pushweapon (lua_State *L, lua_CBaseCombatWeapon *pWeapon) {
   CBaseHandle *hWeapon = (CBaseHandle *)lua_newuserdata(L, sizeof(CBaseHandle));
-  hWeapon->Set(pWeapon);
+  hWeapon->Set((CBaseEntity *)pWeapon);
   luaL_getmetatable(L, "CBaseCombatWeapon");
   lua_setmetatable(L, -2);
 }
@@ -365,6 +365,112 @@ static int CBaseCombatWeapon_GetWorldModel (lua_State *L) {
   return 1;
 }
 
+extern const char *pWeaponSoundCategories[ NUM_SHOOT_SOUND_TYPES ];
+
+static int CBaseCombatWeapon_GetWpnData (lua_State *L) {
+  const FileWeaponInfo_t &weaponInfo = luaL_checkweapon(L, 1)->GetWpnData();
+  lua_newtable(L);
+  lua_pushstring(L, "aShootSounds");
+  lua_newtable(L);
+  for ( int i = EMPTY; i < NUM_SHOOT_SOUND_TYPES; i++ )
+  {
+	lua_pushstring( L, pWeaponSoundCategories[i] );
+	const char *soundname = weaponInfo.aShootSounds[i];
+	if ( soundname && soundname[0] )
+	{
+		lua_pushstring( L, soundname );
+		lua_settable( L, -3 );
+	}
+	else
+	{
+		lua_pop( L, 1 );
+	}
+  }
+  lua_settable(L, -3);
+  lua_pushstring(L, "bAutoSwitchFrom");
+  lua_pushboolean(L, weaponInfo.bAutoSwitchFrom);
+  lua_settable(L, -3);
+  lua_pushstring(L, "bAutoSwitchTo");
+  lua_pushboolean(L, weaponInfo.bAutoSwitchTo);
+  lua_settable(L, -3);
+  lua_pushstring(L, "bLoadedHudElements");
+  lua_pushboolean(L, weaponInfo.bLoadedHudElements);
+  lua_settable(L, -3);
+  lua_pushstring(L, "bParsedScript");
+  lua_pushboolean(L, weaponInfo.bParsedScript);
+  lua_settable(L, -3);
+  lua_pushstring(L, "bShowUsageHint");
+  lua_pushboolean(L, weaponInfo.bShowUsageHint);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iAmmo2Type");
+  lua_pushinteger(L, weaponInfo.iAmmo2Type);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iAmmoType");
+  lua_pushinteger(L, weaponInfo.iAmmoType);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iDefaultClip1");
+  lua_pushinteger(L, weaponInfo.iDefaultClip1);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iDefaultClip2");
+  lua_pushinteger(L, weaponInfo.iDefaultClip2);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iFlags");
+  lua_pushinteger(L, weaponInfo.iFlags);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iMaxClip1");
+  lua_pushinteger(L, weaponInfo.iMaxClip1);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iMaxClip2");
+  lua_pushinteger(L, weaponInfo.iMaxClip2);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iPosition");
+  lua_pushinteger(L, weaponInfo.iPosition);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iRumbleEffect");
+  lua_pushinteger(L, weaponInfo.iRumbleEffect);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iSlot");
+  lua_pushinteger(L, weaponInfo.iSlot);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iSpriteCount");
+  lua_pushinteger(L, weaponInfo.iSpriteCount);
+  lua_settable(L, -3);
+  lua_pushstring(L, "iWeight");
+  lua_pushinteger(L, weaponInfo.iWeight);
+  lua_settable(L, -3);
+  lua_pushstring(L, "m_bAllowFlipping");
+  lua_pushboolean(L, weaponInfo.m_bAllowFlipping);
+  lua_settable(L, -3);
+  lua_pushstring(L, "m_bBuiltRightHanded");
+  lua_pushboolean(L, weaponInfo.m_bBuiltRightHanded);
+  lua_settable(L, -3);
+  lua_pushstring(L, "m_bMeleeWeapon");
+  lua_pushboolean(L, weaponInfo.m_bMeleeWeapon);
+  lua_settable(L, -3);
+  lua_pushstring(L, "szAmmo1");
+  lua_pushstring(L, weaponInfo.szAmmo1);
+  lua_settable(L, -3);
+  lua_pushstring(L, "szAmmo2");
+  lua_pushstring(L, weaponInfo.szAmmo2);
+  lua_settable(L, -3);
+  lua_pushstring(L, "szAnimationPrefix");
+  lua_pushstring(L, weaponInfo.szAnimationPrefix);
+  lua_settable(L, -3);
+  lua_pushstring(L, "szClassName");
+  lua_pushstring(L, weaponInfo.szClassName);
+  lua_settable(L, -3);
+  lua_pushstring(L, "szPrintName");
+  lua_pushstring(L, weaponInfo.szPrintName);
+  lua_settable(L, -3);
+  lua_pushstring(L, "szViewModel");
+  lua_pushstring(L, weaponInfo.szViewModel);
+  lua_settable(L, -3);
+  lua_pushstring(L, "szWorldModel");
+  lua_pushstring(L, weaponInfo.szWorldModel);
+  lua_settable(L, -3);
+  return 1;
+}
+
 static int CBaseCombatWeapon_GiveDefaultAmmo (lua_State *L) {
   luaL_checkweapon(L, 1)->GiveDefaultAmmo();
   return 0;
@@ -422,6 +528,11 @@ static int CBaseCombatWeapon_IsMeleeWeapon (lua_State *L) {
 
 static int CBaseCombatWeapon_IsPredicted (lua_State *L) {
   lua_pushboolean(L, luaL_checkweapon(L, 1)->IsPredicted());
+  return 1;
+}
+
+static int CBaseCombatWeapon_IsScripted (lua_State *L) {
+  lua_pushboolean(L, luaL_checkweapon(L, 1)->IsScripted());
   return 1;
 }
 
@@ -730,10 +841,12 @@ static int CBaseCombatWeapon___index (lua_State *L) {
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
       luaL_getmetatable(L, "CBaseAnimating");
       lua_pushvalue(L, 2);
       lua_gettable(L, -2);
       if (lua_isnil(L, -1)) {
+        lua_pop(L, 1);
         luaL_getmetatable(L, "CBaseEntity");
         lua_pushvalue(L, 2);
         lua_gettable(L, -2);
@@ -885,6 +998,7 @@ static const luaL_Reg CBaseCombatWeaponmeta[] = {
   {"GetWeaponIdleTime", CBaseCombatWeapon_GetWeaponIdleTime},
   {"GetWeight", CBaseCombatWeapon_GetWeight},
   {"GetWorldModel", CBaseCombatWeapon_GetWorldModel},
+  {"GetWpnData", CBaseCombatWeapon_GetWpnData},
   {"GiveDefaultAmmo", CBaseCombatWeapon_GiveDefaultAmmo},
   {"HandleFireOnEmpty", CBaseCombatWeapon_HandleFireOnEmpty},
   {"HasAmmo", CBaseCombatWeapon_HasAmmo},
@@ -897,6 +1011,7 @@ static const luaL_Reg CBaseCombatWeaponmeta[] = {
   {"IsLocked", CBaseCombatWeapon_IsLocked},
   {"IsMeleeWeapon", CBaseCombatWeapon_IsMeleeWeapon},
   {"IsPredicted", CBaseCombatWeapon_IsPredicted},
+  {"IsScripted", CBaseCombatWeapon_IsScripted},
   {"IsViewModelSequenceFinished", CBaseCombatWeapon_IsViewModelSequenceFinished},
   {"IsWeaponVisible", CBaseCombatWeapon_IsWeaponVisible},
   {"IsWeaponZoomed", CBaseCombatWeapon_IsWeaponZoomed},

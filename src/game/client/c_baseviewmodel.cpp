@@ -23,7 +23,7 @@
 #include "tier0/memdbgon.h"
 
 //Tony; modified so that the sdk view models are right handed out of the box.
-#if defined( CSTRIKE_DLL ) || defined( SDK_DLL )
+#if defined( CSTRIKE_DLL ) || defined( SDK_DLL ) || defined( LUA_SDK )
 	ConVar cl_righthand( "cl_righthand", "1", FCVAR_ARCHIVE, "Use right-handed view models." );
 #endif
 
@@ -175,7 +175,7 @@ bool C_BaseViewModel::Interpolate( float currentTime )
 inline bool C_BaseViewModel::ShouldFlipViewModel()
 {
 //Tony; changed for SDK so that the CSS models can be flipped out of the box.
-#if defined( CSTRIKE_DLL ) || defined ( SDK_DLL )
+#if defined( CSTRIKE_DLL ) || defined ( SDK_DLL ) || defined ( LUA_SDK )
 	//Tony; move this up here.
 	if (!cl_righthand.GetBool())
 		return false;

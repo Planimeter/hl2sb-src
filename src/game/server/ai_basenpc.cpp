@@ -4844,13 +4844,17 @@ void CAI_BaseNPC::RunAI( void )
 
 	TryRestoreHull();
 
+#if !defined( HL2SB )
 	g_AIPrescheduleThinkTimer.Start();
+#endif
 
 	AI_PROFILE_SCOPE_BEGIN(CAI_RunAI_PrescheduleThink);
 	PrescheduleThink();
 	AI_PROFILE_SCOPE_END();
 
+#if !defined( HL2SB )
 	g_AIPrescheduleThinkTimer.End();
+#endif
 	
 	MaintainSchedule();
 
