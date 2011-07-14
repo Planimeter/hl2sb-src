@@ -2237,10 +2237,6 @@
 				RelativePath=".\WorldDimsProxy.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\public\zip_utils.cpp"
-				>
-			</File>
 			<Filter
 				Name="Precompiled Header"
 				>

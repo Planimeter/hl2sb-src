@@ -22,7 +22,7 @@ LUA_API IZip* luasrc_GetLcfFile( void )
 {
 	if ( !s_lcfFile )
 	{
-		s_lcfFile = IZip::CreateZip();
+		// s_lcfFile = IZip::CreateZip();
 	}
 	return s_lcfFile;
 }
