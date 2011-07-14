@@ -529,6 +529,16 @@ static int IPhysicsObject_SetShadow (lua_State *L) {
   return 0;
 }
 
+static int IPhysicsObject_SetVelocity (lua_State *L) {
+  luaL_checkphysicsobject(L, 1)->SetVelocity(&luaL_checkvector(L, 2), &(AngularImpulse)luaL_checkvector(L, 3));
+  return 0;
+}
+
+static int IPhysicsObject_SetVelocityInstantaneous (lua_State *L) {
+  luaL_checkphysicsobject(L, 1)->SetVelocityInstantaneous(&luaL_checkvector(L, 2), &(AngularImpulse)luaL_checkvector(L, 3));
+  return 0;
+}
+
 static int IPhysicsObject_Sleep (lua_State *L) {
   luaL_checkphysicsobject(L, 1)->Sleep();
   return 0;
@@ -621,6 +631,8 @@ static const luaL_Reg IPhysicsObjectmeta[] = {
   {"SetMass", IPhysicsObject_SetMass},
   {"SetMaterialIndex", IPhysicsObject_SetMaterialIndex},
   {"SetShadow", IPhysicsObject_SetShadow},
+  {"SetVelocity", IPhysicsObject_SetVelocity},
+  {"SetVelocityInstantaneous", IPhysicsObject_SetVelocityInstantaneous},
   {"Sleep", IPhysicsObject_Sleep},
   {"Wake", IPhysicsObject_Wake},
   {"WorldToLocal", IPhysicsObject_WorldToLocal},
