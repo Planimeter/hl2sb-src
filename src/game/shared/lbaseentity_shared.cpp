@@ -726,6 +726,11 @@ static int CBaseEntity_IsTransparent (lua_State *L) {
   return 1;
 }
 
+static int CBaseEntity_IsWeapon (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsWeapon());
+  return 1;
+}
+
 static int CBaseEntity_KeyValue (lua_State *L) {
   switch(lua_type(L, 3)) {
 	case LUA_TNUMBER:
@@ -1490,6 +1495,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"IsSolidFlagSet", CBaseEntity_IsSolidFlagSet},
   {"IsStandable", CBaseEntity_IsStandable},
   {"IsTransparent", CBaseEntity_IsTransparent},
+  {"IsWeapon", CBaseEntity_IsWeapon},
   {"KeyValue", CBaseEntity_KeyValue},
   {"LocalEyeAngles", CBaseEntity_LocalEyeAngles},
   {"NextMovePeer", CBaseEntity_NextMovePeer},

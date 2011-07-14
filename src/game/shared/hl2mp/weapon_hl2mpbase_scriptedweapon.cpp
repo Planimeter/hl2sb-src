@@ -136,7 +136,9 @@ CHL2MPScriptedWeapon::CHL2MPScriptedWeapon( void )
 CHL2MPScriptedWeapon::~CHL2MPScriptedWeapon( void )
 {
 	delete m_pLuaWeaponInfo;
-	luaL_unref( L, LUA_REGISTRYINDEX, m_nRefCount );
+	// Andrew; This is actually done in CBaseEntity. I'm doing it here because
+	// this is the class that initialized the reference.
+	lua_unref( L, m_nRefCount );
 }
 
 extern const char *pWeaponSoundCategories[ NUM_SHOOT_SOUND_TYPES ];

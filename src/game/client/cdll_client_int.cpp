@@ -1253,7 +1253,12 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 	g_bLevelInitialized = true;
 
 #if defined ( LUA_SDK )
-	// Add the Lua environment.	
+	// Add the Lua environment.
+	// Andrew; unarchive the Lua Cache File
+	if ( gpGlobals->maxClients > 1 )
+	{
+		// luasrc_ExtractLcf();
+	}
 
 	luasrc_init();
 

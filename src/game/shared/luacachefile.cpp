@@ -32,9 +32,9 @@ LUA_API IZip* luasrc_GetLcfFile( void )
 // Input  : *relativename - 
 //			*fullpath - 
 //-----------------------------------------------------------------------------
-LUA_API void luasrc_AddFileToLcf( IZip *lcf, const char *relativename, const char *fullpath )
+LUA_API void luasrc_AddFileToLcf( const char *relativename, const char *fullpath )
 {
-	lcf->AddFileToZip( relativename, fullpath );
+	s_lcfFile->AddFileToZip( relativename, fullpath );
 }
 
 LUA_API void luasrc_archivefolder (lua_State *L, const char *path)
@@ -67,7 +67,7 @@ LUA_API void luasrc_archivefolder (lua_State *L, const char *path)
 					Q_snprintf( loadname, sizeof( loadname ), "%s\\%s\\%s", gamePath, path, fn );
 					char archivename[ 512 ];
 					Q_snprintf( archivename, sizeof( archivename ), "%s\\%s", path, fn );
-					luasrc_AddFileToLcf(luasrc_GetLcfFile(),archivename,loadname);
+					luasrc_AddFileToLcf(archivename,loadname);
 				}
 			}
 
