@@ -2146,6 +2146,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lplayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lplayer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\vstdlib\lrandom.cpp"
 				>
 			</File>

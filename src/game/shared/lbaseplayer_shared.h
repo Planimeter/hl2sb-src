@@ -35,6 +35,6 @@ LUALIB_API lua_CBasePlayer *(luaL_optplayer) (lua_State *L, int narg,
                                                             lua_CBasePlayer *def);
 
 
-int luaopen_CBasePlayer(lua_State *L);
+int luaopen_CBasePlayer_shared(lua_State *L);
 
 #endif // LBASEPLAYER_SHARED_H

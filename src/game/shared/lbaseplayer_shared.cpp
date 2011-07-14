@@ -785,8 +785,12 @@ static const luaL_Reg CBasePlayermeta[] = {
 /*
 ** Open CBasePlayer object
 */
-int luaopen_CBasePlayer (lua_State *L) {
-  luaL_newmetatable(L, "CBasePlayer");
+int luaopen_CBasePlayer_shared (lua_State *L) {
+  luaL_getmetatable(L, "CBasePlayer");
+  if (lua_isnoneornil(L, -1)) {
+    lua_pop(L, 1);
+    luaL_newmetatable(L, "CBasePlayer");
+  }
   luaL_register(L, NULL, CBasePlayermeta);
   lua_pushstring(L, "entity");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */

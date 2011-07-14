@@ -24,6 +24,7 @@
 #include "lbaseentity.h"
 #include "leiface.h"
 #include "linetchannelinfo.h"
+#include "lplayer.h"
 #include "lutil.h"
 #endif
 #include "lbasecombatweapon_shared.h"
@@ -219,7 +220,10 @@ void luasrc_init (void) {
   luaopen_CBaseEntity(L);
 #endif
   luaopen_CBaseEntity_shared(L);
+#ifdef GAME_DLL
   luaopen_CBasePlayer(L);
+#endif
+  luaopen_CBasePlayer_shared(L);
   luaopen_Color(L);
   luaopen_ConCommand(L);
   luaopen_ConVar(L);
