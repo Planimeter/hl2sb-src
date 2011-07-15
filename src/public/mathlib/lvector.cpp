@@ -40,7 +40,7 @@ LUA_API lua_QAngle lua_toangle (lua_State *L, int idx) {
 */
 
 
-LUA_API void lua_pushvector (lua_State *L, lua_Vector v) {
+LUA_API void lua_pushvector (lua_State *L, lua_Vector &v) {
   if (&v == NULL)
     lua_pushnil(L);
   else {
@@ -52,7 +52,7 @@ LUA_API void lua_pushvector (lua_State *L, lua_Vector v) {
 }
 
 
-LUA_API void lua_pushangle (lua_State *L, lua_QAngle v) {
+LUA_API void lua_pushangle (lua_State *L, lua_QAngle &v) {
   if (&v == NULL)
     lua_pushnil(L);
   else {
@@ -201,11 +201,11 @@ static int Vector___newindex (lua_State *L) {
   Vector v = luaL_checkvector(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (strcmp(field, "x") == 0)
-    v.x = luaL_checknumber(L, 3);
+    v.x = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "y") == 0)
-    v.y = luaL_checknumber(L, 3);
+    v.y = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "z") == 0)
-    v.z = luaL_checknumber(L, 3);
+    v.z = (vec_t)luaL_checknumber(L, 3);
   return 0;
 }
 
@@ -301,8 +301,10 @@ int luaopen_Vector (lua_State *L) {
   lua_setfield(L, -2, "__type");  /* metatable.__type = "vector" */
   luaL_register(L, "_G", Vector_funcs);
   lua_pop(L, 2);
+  Vector vec3_origin = vec3_origin;
   lua_pushvector(L, vec3_origin);
   lua_setglobal(L, "vec3_origin");  /* set global vec3_origin */
+  Vector vec3_invalid = vec3_invalid;
   lua_pushvector(L, vec3_invalid);
   lua_setglobal(L, "vec3_invalid");  /* set global vec3_invalid */
   return 1;
@@ -355,11 +357,11 @@ static int QAngle___newindex (lua_State *L) {
   QAngle v = luaL_checkangle(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (strcmp(field, "x") == 0)
-    v.x = luaL_checknumber(L, 3);
+    v.x = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "y") == 0)
-    v.y = luaL_checknumber(L, 3);
+    v.y = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "z") == 0)
-    v.z = luaL_checknumber(L, 3);
+    v.z = (vec_t)luaL_checknumber(L, 3);
   return 0;
 }
 
@@ -440,6 +442,7 @@ int luaopen_QAngle (lua_State *L) {
   lua_setfield(L, -2, "__type");  /* metatable.__type = "angle" */
   luaL_register(L, "_G", QAngle_funcs);
   lua_pop(L, 2);
+  QAngle vec3_angle = vec3_angle;
   lua_pushangle(L, vec3_angle);
   lua_setglobal(L, "vec3_angle");  /* set global vec3_angle */
   return 1;

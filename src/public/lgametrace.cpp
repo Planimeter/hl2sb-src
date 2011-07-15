@@ -33,7 +33,7 @@ LUA_API lua_CGameTrace lua_totrace (lua_State *L, int idx) {
 */
 
 
-LUA_API void lua_pushtrace (lua_State *L, lua_CGameTrace tr) {
+LUA_API void lua_pushtrace (lua_State *L, lua_CGameTrace &tr) {
   if (&tr == NULL)
     lua_pushnil(L);
   else {

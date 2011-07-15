@@ -7,8 +7,9 @@
 #define lplayer_cpp
 
 #include "cbase.h"
-#include "lua.hpp"
+#include "luamanager.h"
 #include "lbaseplayer_shared.h"
+#include "mathlib/lvector.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -103,6 +104,36 @@ static int CBasePlayer_DamageEffect (lua_State *L) {
   return 0;
 }
 
+static int CBasePlayer_PauseBonusProgress (lua_State *L) {
+  luaL_checkplayer(L, 1)->PauseBonusProgress(luaL_optboolean(L, 2, true));
+  return 0;
+}
+
+static int CBasePlayer_SetBonusProgress (lua_State *L) {
+  luaL_checkplayer(L, 1)->SetBonusProgress(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_SetBonusChallenge (lua_State *L) {
+  luaL_checkplayer(L, 1)->SetBonusChallenge(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_GetBonusProgress (lua_State *L) {
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->GetBonusProgress());
+  return 1;
+}
+
+static int CBasePlayer_GetBonusChallenge (lua_State *L) {
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->GetBonusChallenge());
+  return 1;
+}
+
+static int CBasePlayer_SnapEyeAngles (lua_State *L) {
+  luaL_checkplayer(L, 1)->SnapEyeAngles(luaL_checkangle(L, 2));
+  return 0;
+}
+
 
 static const luaL_Reg CBasePlayermeta[] = {
   {"SetBodyPitch", CBasePlayer_SetBodyPitch},
@@ -123,6 +154,12 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"ForceSimulation", CBasePlayer_ForceSimulation},
   {"TakeHealth", CBasePlayer_TakeHealth},
   {"DamageEffect", CBasePlayer_DamageEffect},
+  {"PauseBonusProgress", CBasePlayer_PauseBonusProgress},
+  {"SetBonusProgress", CBasePlayer_SetBonusProgress},
+  {"SetBonusChallenge", CBasePlayer_SetBonusChallenge},
+  {"GetBonusProgress", CBasePlayer_GetBonusProgress},
+  {"GetBonusChallenge", CBasePlayer_GetBonusChallenge},
+  {"SnapEyeAngles", CBasePlayer_SnapEyeAngles},
   {NULL, NULL}
 };
 

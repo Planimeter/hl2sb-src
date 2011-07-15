@@ -858,9 +858,15 @@ void CBasePlayer::DrawDebugGeometryOverlays(void)
 //=========================================================
 // TraceAttack
 //=========================================================
+#if defined ( LUA_SDK )
+void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDirection, trace_t *ptr )
+#else
 void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr )
+#endif
 {
 #if defined ( LUA_SDK )
+	Vector vecDir = vecDirection;
+
 	BEGIN_LUA_CALL_HOOK( "PlayerTraceAttack" );
 		lua_pushplayer( L, this );
 		lua_pushdamageinfo( L, inputInfo );

@@ -96,6 +96,12 @@ static int CBasePlayer_ExitLadder (lua_State *L) {
   return 0;
 }
 
+static int CBasePlayer_EyeAngles (lua_State *L) {
+  QAngle v = luaL_checkplayer(L, 1)->EyeAngles();
+  lua_pushangle(L, v);
+  return 1;
+}
+
 static int CBasePlayer_EyePosition (lua_State *L) {
   lua_pushvector(L, luaL_checkplayer(L, 1)->EyePosition());
   return 1;
@@ -218,17 +224,20 @@ static int CBasePlayer_GetOffset_m_Local (lua_State *L) {
 }
 
 static int CBasePlayer_GetPlayerMaxs (lua_State *L) {
-  lua_pushvector(L, luaL_checkplayer(L, 1)->GetPlayerMaxs());
+  Vector v = luaL_checkplayer(L, 1)->GetPlayerMaxs();
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBasePlayer_GetPlayerMins (lua_State *L) {
-  lua_pushvector(L, luaL_checkplayer(L, 1)->GetPlayerMins());
+  Vector v = luaL_checkplayer(L, 1)->GetPlayerMins();
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBasePlayer_GetPreviouslyPredictedOrigin (lua_State *L) {
-  lua_pushvector(L, luaL_checkplayer(L, 1)->GetPreviouslyPredictedOrigin());
+  Vector v = luaL_checkplayer(L, 1)->GetPreviouslyPredictedOrigin();
+  lua_pushvector(L, v);
   return 1;
 }
 
@@ -343,6 +352,12 @@ static int CBasePlayer_ItemPreFrame (lua_State *L) {
 static int CBasePlayer_LeaveVehicle (lua_State *L) {
   luaL_checkplayer(L, 1)->LeaveVehicle();
   return 0;
+}
+
+static int CBasePlayer_LocalEyeAngles (lua_State *L) {
+  QAngle v = luaL_checkplayer(L, 1)->LocalEyeAngles();
+  lua_pushangle(L, v);
+  return 1;
 }
 
 static int CBasePlayer_MaxSpeed (lua_State *L) {
@@ -681,6 +696,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"CurrentCommandNumber", CBasePlayer_CurrentCommandNumber},
   {"DoMuzzleFlash", CBasePlayer_DoMuzzleFlash},
   {"ExitLadder", CBasePlayer_ExitLadder},
+  {"EyeAngles", CBasePlayer_EyeAngles},
   {"EyePosition", CBasePlayer_EyePosition},
   {"EyePositionAndVectors", CBasePlayer_EyePositionAndVectors},
   {"EyeVectors", CBasePlayer_EyeVectors},
@@ -728,6 +744,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"ItemPostFrame", CBasePlayer_ItemPostFrame},
   {"ItemPreFrame", CBasePlayer_ItemPreFrame},
   {"LeaveVehicle", CBasePlayer_LeaveVehicle},
+  {"LocalEyeAngles", CBasePlayer_LocalEyeAngles},
   {"MaxSpeed", CBasePlayer_MaxSpeed},
   {"MyCombatCharacterPointer", CBasePlayer_MyCombatCharacterPointer},
   {"OnRestore", CBasePlayer_OnRestore},

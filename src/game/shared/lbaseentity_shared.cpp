@@ -263,7 +263,8 @@ static int CBaseEntity_EntityToWorldSpace (lua_State *L) {
 }
 
 static int CBaseEntity_EyeAngles (lua_State *L) {
-  lua_pushangle(L, luaL_checkentity(L, 1)->EyeAngles());
+  QAngle v = luaL_checkentity(L, 1)->EyeAngles();
+  lua_pushangle(L, v);
   return 1;
 }
 
@@ -295,17 +296,20 @@ static int CBaseEntity_GenderExpandString (lua_State *L) {
 }
 
 static int CBaseEntity_GetAbsAngles (lua_State *L) {
-  lua_pushangle(L, luaL_checkentity(L, 1)->GetAbsAngles());
+  QAngle v = luaL_checkentity(L, 1)->GetAbsAngles();
+  lua_pushangle(L, v);
   return 1;
 }
 
 static int CBaseEntity_GetAbsOrigin (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->GetAbsOrigin());
+  Vector v = luaL_checkentity(L, 1)->GetAbsOrigin();
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBaseEntity_GetAbsVelocity (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->GetAbsVelocity());
+  Vector v = luaL_checkentity(L, 1)->GetAbsVelocity();
+  lua_pushvector(L, v);
   return 1;
 }
 
@@ -325,7 +329,8 @@ static int CBaseEntity_GetBaseEntity (lua_State *L) {
 }
 
 static int CBaseEntity_GetBaseVelocity (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->GetBaseVelocity());
+  Vector v = luaL_checkentity(L, 1)->GetBaseVelocity();
+  lua_pushvector(L, v);
   return 1;
 }
 
@@ -432,22 +437,26 @@ static int CBaseEntity_GetLastThinkTick (lua_State *L) {
 }
 
 static int CBaseEntity_GetLocalAngles (lua_State *L) {
-  lua_pushangle(L, luaL_checkentity(L, 1)->GetLocalAngles());
+  QAngle v = luaL_checkentity(L, 1)->GetLocalAngles();
+  lua_pushangle(L, v);
   return 1;
 }
 
 static int CBaseEntity_GetLocalAngularVelocity (lua_State *L) {
-  lua_pushangle(L, luaL_checkentity(L, 1)->GetLocalAngularVelocity());
+  QAngle v = luaL_checkentity(L, 1)->GetLocalAngularVelocity();
+  lua_pushangle(L, v);
   return 1;
 }
 
 static int CBaseEntity_GetLocalOrigin (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->GetLocalOrigin());
+  Vector v = luaL_checkentity(L, 1)->GetLocalOrigin();
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBaseEntity_GetLocalVelocity (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->GetLocalVelocity());
+  Vector v = luaL_checkentity(L, 1)->GetLocalVelocity();
+  lua_pushvector(L, v);
   return 1;
 }
 
@@ -552,7 +561,8 @@ static int CBaseEntity_GetVectors (lua_State *L) {
 }
 
 static int CBaseEntity_GetViewOffset (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->GetViewOffset());
+  Vector v = luaL_checkentity(L, 1)->GetViewOffset();
+  lua_pushvector(L, v);
   return 1;
 }
 
@@ -747,7 +757,8 @@ static int CBaseEntity_KeyValue (lua_State *L) {
 }
 
 static int CBaseEntity_LocalEyeAngles (lua_State *L) {
-  lua_pushangle(L, luaL_checkentity(L, 1)->LocalEyeAngles());
+  QAngle v = luaL_checkentity(L, 1)->LocalEyeAngles();
+  lua_pushangle(L, v);
   return 1;
 }
 
@@ -1257,27 +1268,31 @@ static int CBaseEntity_WakeRestingObjects (lua_State *L) {
 }
 
 static int CBaseEntity_WorldAlignMaxs (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->WorldAlignMaxs());
+  Vector v = luaL_checkentity(L, 1)->WorldAlignMaxs();
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBaseEntity_WorldAlignMins (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->WorldAlignMins());
+  Vector v = luaL_checkentity(L, 1)->WorldAlignMins();
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBaseEntity_WorldAlignSize (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->WorldAlignSize());
+  Vector v = luaL_checkentity(L, 1)->WorldAlignSize();
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBaseEntity_WorldSpaceCenter (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->WorldSpaceCenter());
+  Vector v = luaL_checkentity(L, 1)->WorldSpaceCenter();
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBaseEntity_WorldToEntitySpace (lua_State *L) {
-  lua_Vector pOut;
+  Vector pOut;
   luaL_checkentity(L, 1)->WorldToEntitySpace(luaL_checkvector(L, 2), &pOut);
   lua_pushvector(L, pOut);
   return 1;

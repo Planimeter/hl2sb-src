@@ -137,9 +137,17 @@ void C_HL2MP_Player::UpdateIDTarget()
 	}
 }
 
+#if defined ( LUA_SDK )
+void C_HL2MP_Player::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDirection, trace_t *ptr )
+#else
 void C_HL2MP_Player::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
+#endif
 {
 #if defined ( LUA_SDK )
+	// Andrew; push a copy of the vector, bring the changes back out of Lua
+	// and set vecDir to the new value if it's been modified.
+	Vector vecDir = vecDirection;
+
 	BEGIN_LUA_CALL_HOOK( "PlayerTraceAttack" );
 		lua_pushplayer( L, this );
 		lua_pushdamageinfo( L, info );

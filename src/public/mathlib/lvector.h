@@ -33,8 +33,8 @@ LUA_API lua_QAngle     (lua_toangle) (lua_State *L, int idx);
 /*
 ** push functions (C -> stack)
 */
-LUA_API void  (lua_pushvector) (lua_State *L, lua_Vector v);
-LUA_API void  (lua_pushangle) (lua_State *L, lua_QAngle v);
+LUA_API void  (lua_pushvector) (lua_State *L, lua_Vector &v);
+LUA_API void  (lua_pushangle) (lua_State *L, lua_QAngle &v);
 
 
 
