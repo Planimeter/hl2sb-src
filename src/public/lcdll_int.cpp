@@ -57,12 +57,12 @@ static int engine_CopyFrameBufferToMaterial (lua_State *L) {
 }
 
 static int engine_CullBox (lua_State *L) {
-  lua_pushboolean(L, engine->CullBox(luaL_checkvector(L, 1), luaL_checkvector(L, 2)));
+  lua_pushboolean(L, engine->CullBox(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2)));
   return 1;
 }
 
 static int engine_DoesBoxTouchAreaFrustum (lua_State *L) {
-  lua_pushboolean(L, engine->DoesBoxTouchAreaFrustum(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkinteger(L, 3)));
+  lua_pushboolean(L, engine->DoesBoxTouchAreaFrustum(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checkinteger(L, 3)));
   return 1;
 }
 
@@ -132,12 +132,14 @@ static int engine_GetLevelName (lua_State *L) {
 }
 
 static int engine_GetLightForPoint (lua_State *L) {
-  lua_pushvector(L, engine->GetLightForPoint(luaL_checkvector(L, 1), luaL_checkboolean(L, 2)));
+  Vector v = engine->GetLightForPoint(*(Vector *)luaL_checkvector(L, 1), luaL_checkboolean(L, 2));
+  lua_pushvector(L, &v);
   return 1;
 }
 
 static int engine_GetLightForPointFast (lua_State *L) {
-  lua_pushvector(L, engine->GetLightForPointFast(luaL_checkvector(L, 1), luaL_checkboolean(L, 2)));
+  Vector v = engine->GetLightForPointFast(*(Vector *)luaL_checkvector(L, 1), luaL_checkboolean(L, 2));
+  lua_pushvector(L, &v);
   return 1;
 }
 
@@ -232,12 +234,12 @@ static int engine_GrabPreColorCorrectedFrame (lua_State *L) {
 }
 
 static int engine_IsBoxInViewCluster (lua_State *L) {
-  luaL_checkinteger(L, engine->IsBoxInViewCluster(luaL_checkvector(L, 1), luaL_checkvector(L, 2)));
+  luaL_checkinteger(L, engine->IsBoxInViewCluster(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2)));
   return 1;
 }
 
 static int engine_IsBoxVisible (lua_State *L) {
-  luaL_checkinteger(L, engine->IsBoxVisible(luaL_checkvector(L, 1), luaL_checkvector(L, 2)));
+  luaL_checkinteger(L, engine->IsBoxVisible(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2)));
   return 1;
 }
 
@@ -282,7 +284,7 @@ static int engine_IsLowViolence (lua_State *L) {
 }
 
 static int engine_IsOccluded (lua_State *L) {
-  luaL_checkboolean(L, engine->IsOccluded(luaL_checkvector(L, 1), luaL_checkvector(L, 2)));
+  luaL_checkboolean(L, engine->IsOccluded(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2)));
   return 1;
 }
 
@@ -312,7 +314,7 @@ static int engine_IsSaveInProgress (lua_State *L) {
 }
 
 static int engine_IsSkyboxVisibleFromPoint (lua_State *L) {
-  lua_pushinteger(L, engine->IsSkyboxVisibleFromPoint(luaL_checkvector(L, 1)));
+  lua_pushinteger(L, engine->IsSkyboxVisibleFromPoint(*(Vector *)luaL_checkvector(L, 1)));
   return 1;
 }
 

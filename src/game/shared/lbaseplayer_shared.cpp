@@ -98,31 +98,32 @@ static int CBasePlayer_ExitLadder (lua_State *L) {
 
 static int CBasePlayer_EyeAngles (lua_State *L) {
   QAngle v = luaL_checkplayer(L, 1)->EyeAngles();
-  lua_pushangle(L, v);
+  lua_pushangle(L, &v);
   return 1;
 }
 
 static int CBasePlayer_EyePosition (lua_State *L) {
-  lua_pushvector(L, luaL_checkplayer(L, 1)->EyePosition());
+  Vector v = luaL_checkplayer(L, 1)->EyePosition();
+  lua_pushvector(L, &v);
   return 1;
 }
 
 static int CBasePlayer_EyePositionAndVectors (lua_State *L) {
   Vector pPosition, pForward, pRight, pUp;
   luaL_checkplayer(L, 1)->EyePositionAndVectors(&pPosition, &pForward, &pRight, &pUp);
-  lua_pushvector(L, pPosition);
-  lua_pushvector(L, pForward);
-  lua_pushvector(L, pRight);
-  lua_pushvector(L, pUp);
+  lua_pushvector(L, &pPosition);
+  lua_pushvector(L, &pForward);
+  lua_pushvector(L, &pRight);
+  lua_pushvector(L, &pUp);
   return 4;
 }
 
 static int CBasePlayer_EyeVectors (lua_State *L) {
   Vector pForward, pRight, pUp;
   luaL_checkplayer(L, 1)->EyeVectors(&pForward, &pRight, &pUp);
-  lua_pushvector(L, pForward);
-  lua_pushvector(L, pRight);
-  lua_pushvector(L, pUp);
+  lua_pushvector(L, &pForward);
+  lua_pushvector(L, &pRight);
+  lua_pushvector(L, &pUp);
   return 3;
 }
 
@@ -139,7 +140,8 @@ static int CBasePlayer_GetActiveWeapon (lua_State *L) {
 }
 
 static int CBasePlayer_GetAutoaimVector (lua_State *L) {
-  lua_pushvector(L, luaL_checkplayer(L, 1)->GetAutoaimVector(luaL_checknumber(L, 2)));
+  Vector v = luaL_checkplayer(L, 1)->GetAutoaimVector(luaL_checknumber(L, 2));
+  lua_pushvector(L, &v);
   return 1;
 }
 
@@ -225,19 +227,19 @@ static int CBasePlayer_GetOffset_m_Local (lua_State *L) {
 
 static int CBasePlayer_GetPlayerMaxs (lua_State *L) {
   Vector v = luaL_checkplayer(L, 1)->GetPlayerMaxs();
-  lua_pushvector(L, v);
+  lua_pushvector(L, &v);
   return 1;
 }
 
 static int CBasePlayer_GetPlayerMins (lua_State *L) {
   Vector v = luaL_checkplayer(L, 1)->GetPlayerMins();
-  lua_pushvector(L, v);
+  lua_pushvector(L, &v);
   return 1;
 }
 
 static int CBasePlayer_GetPreviouslyPredictedOrigin (lua_State *L) {
   Vector v = luaL_checkplayer(L, 1)->GetPreviouslyPredictedOrigin();
-  lua_pushvector(L, v);
+  lua_pushvector(L, &v);
   return 1;
 }
 
@@ -356,7 +358,7 @@ static int CBasePlayer_LeaveVehicle (lua_State *L) {
 
 static int CBasePlayer_LocalEyeAngles (lua_State *L) {
   QAngle v = luaL_checkplayer(L, 1)->LocalEyeAngles();
-  lua_pushangle(L, v);
+  lua_pushangle(L, &v);
   return 1;
 }
 
@@ -461,7 +463,7 @@ static int CBasePlayer_SetFOV (lua_State *L) {
 }
 
 static int CBasePlayer_SetLadderNormal (lua_State *L) {
-  luaL_checkplayer(L, 1)->SetLadderNormal(luaL_checkvector(L, 2));
+  luaL_checkplayer(L, 1)->SetLadderNormal(*(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -481,7 +483,7 @@ static int CBasePlayer_SetPlayerUnderwater (lua_State *L) {
 }
 
 static int CBasePlayer_SetPreviouslyPredictedOrigin (lua_State *L) {
-  luaL_checkplayer(L, 1)->SetPreviouslyPredictedOrigin(luaL_checkvector(L, 2));
+  luaL_checkplayer(L, 1)->SetPreviouslyPredictedOrigin(*(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -511,7 +513,7 @@ static int CBasePlayer_SimulatePlayerSimulatedEntities (lua_State *L) {
 }
 
 static int CBasePlayer_SmoothViewOnStairs (lua_State *L) {
-  luaL_checkplayer(L, 1)->SmoothViewOnStairs(luaL_checkvector(L, 2));
+  luaL_checkplayer(L, 1)->SmoothViewOnStairs(*(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -541,7 +543,7 @@ static int CBasePlayer_UsingStandardWeaponsInVehicle (lua_State *L) {
 }
 
 static int CBasePlayer_ViewPunch (lua_State *L) {
-  luaL_checkplayer(L, 1)->ViewPunch(luaL_checkangle(L, 2));
+  luaL_checkplayer(L, 1)->ViewPunch(*(QAngle *)luaL_checkangle(L, 2));
   return 0;
 }
 
@@ -566,7 +568,8 @@ static int CBasePlayer_Weapon_SetLast (lua_State *L) {
 }
 
 static int CBasePlayer_Weapon_ShootPosition (lua_State *L) {
-  lua_pushvector(L, luaL_checkplayer(L, 1)->Weapon_ShootPosition());
+  Vector v = luaL_checkplayer(L, 1)->Weapon_ShootPosition();
+  lua_pushvector(L, &v);
   return 1;
 }
 

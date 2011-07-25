@@ -10,8 +10,6 @@
 #pragma once
 #endif
 
-#pragma warning (disable : 4238)
-
 
 /* type for CGameTrace functions */
 typedef CGameTrace lua_CGameTrace;
@@ -22,17 +20,17 @@ typedef CGameTrace lua_CGameTrace;
 ** access functions (stack -> C)
 */
 
-LUA_API lua_CGameTrace     (lua_totrace) (lua_State *L, int idx);
+LUA_API lua_CGameTrace     *(lua_totrace) (lua_State *L, int idx);
 
 
 /*
 ** push functions (C -> stack)
 */
-LUA_API void  (lua_pushtrace) (lua_State *L, lua_CGameTrace &tr);
+LUA_API void  (lua_pushtrace) (lua_State *L, lua_CGameTrace *tr);
 
 
 
-LUALIB_API lua_CGameTrace (luaL_checktrace) (lua_State *L, int narg);
+LUALIB_API lua_CGameTrace *(luaL_checktrace) (lua_State *L, int narg);
 
 
 int luaopen_CGameTrace(lua_State *L);

@@ -1535,16 +1535,16 @@ void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& f
 #if defined( LUA_SDK )
 	BEGIN_LUA_CALL_HOOK( "CalcPlayerView" );
 		lua_pushplayer( L, this );
-		lua_pushvector( L, eyeOrigin );
-		lua_pushangle( L, eyeAngles );
+		lua_pushvector( L, &eyeOrigin );
+		lua_pushangle( L, &eyeAngles );
 		lua_pushnumber( L, fov );
 	END_LUA_CALL_HOOK( 4, 3 );
 
 	// TODO: add Lua C API functions for lua_isvector(), etc.
 	if ( lua_isuserdata( L, -1 ) && luaL_checkudata( L, -1, "Vector" ) )
-		eyeOrigin = luaL_checkvector( L, -1 );
+		VectorCopy(*(Vector *)luaL_checkvector( L, -1 ), eyeOrigin);
 	if ( lua_isuserdata( L, -2 ) && luaL_checkudata( L, -2, "QAngle" ) )
-		eyeAngles = luaL_checkangle( L, -2 );
+		VectorCopy(*(QAngle *)luaL_checkangle( L, -2 ), eyeAngles);
 	if ( lua_isnumber( L, -3 ) )
 		fov = luaL_checknumber( L, -3 );
 

@@ -154,8 +154,8 @@ static int CBaseEntity_GetInputDispatchEffectPosition (lua_State *L) {
   Vector pVector;
   QAngle pAngle;
   luaL_checkentity(L, 1)->GetInputDispatchEffectPosition(luaL_checkstring(L, 2), pVector, pAngle);
-  lua_pushvector(L, pVector);
-  lua_pushangle(L, pAngle);
+  lua_pushvector(L, &pVector);
+  lua_pushangle(L, &pAngle);
   return 2;
 }
 
@@ -250,7 +250,7 @@ static int CBaseEntity_GetAutoAimRadius (lua_State *L) {
 }
 
 static int CBaseEntity_GetAutoAimCenter (lua_State *L) {
-  lua_pushvector(L, luaL_checkentity(L, 1)->GetAutoAimCenter());
+  lua_pushvector(L, &luaL_checkentity(L, 1)->GetAutoAimCenter());
   return 1;
 }
 

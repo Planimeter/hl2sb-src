@@ -82,7 +82,7 @@ static int physenv_GetAirDensity (lua_State *L) {
 static int physenv_GetGravity (lua_State *L) {
   Vector pGravityVector;
   physenv->GetGravity(&pGravityVector);
-  lua_pushvector(L, pGravityVector);
+  lua_pushvector(L, &pGravityVector);
   return 1;
 }
 
@@ -130,7 +130,7 @@ static int physenv_SetAirDensity (lua_State *L) {
 }
 
 static int physenv_SetGravity (lua_State *L) {
-  physenv->SetGravity(luaL_checkvector(L, 1));
+  physenv->SetGravity(*(Vector *)luaL_checkvector(L, 1));
   return 0;
 }
 
@@ -190,17 +190,17 @@ int luaopen_physenv (lua_State *L) {
 
 
 static int IPhysicsObject_ApplyForceCenter (lua_State *L) {
-  luaL_checkphysicsobject(L, 1)->ApplyForceCenter(luaL_checkvector(L, 2));
+  luaL_checkphysicsobject(L, 1)->ApplyForceCenter(*(Vector *)luaL_checkvector(L, 1));
   return 0;
 }
 
 static int IPhysicsObject_ApplyForceOffset (lua_State *L) {
-  luaL_checkphysicsobject(L, 1)->ApplyForceOffset(luaL_checkvector(L, 2), luaL_checkvector(L, 3));
+  luaL_checkphysicsobject(L, 1)->ApplyForceOffset(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3));
   return 0;
 }
 
 static int IPhysicsObject_ApplyTorqueCenter (lua_State *L) {
-  luaL_checkphysicsobject(L, 1)->ApplyTorqueCenter(luaL_checkvector(L, 2));
+  luaL_checkphysicsobject(L, 1)->ApplyTorqueCenter(*(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -215,28 +215,28 @@ static int IPhysicsObject_BecomeTrigger (lua_State *L) {
 }
 
 static int IPhysicsObject_CalculateAngularDrag (lua_State *L) {
-  lua_pushnumber(L, luaL_checkphysicsobject(L, 1)->CalculateAngularDrag(luaL_checkvector(L, 2)));
+  lua_pushnumber(L, luaL_checkphysicsobject(L, 1)->CalculateAngularDrag(*(Vector *)luaL_checkvector(L, 2)));
   return 1;
 }
 
 static int IPhysicsObject_CalculateForceOffset (lua_State *L) {
   Vector centerForce, centerTorque;
-  luaL_checkphysicsobject(L, 1)->CalculateForceOffset(luaL_checkvector(L, 2), luaL_checkvector(L, 3), &centerForce, &centerTorque);
-  lua_pushvector(L, centerForce);
-  lua_pushvector(L, centerTorque);
+  luaL_checkphysicsobject(L, 1)->CalculateForceOffset(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), &centerForce, &centerTorque);
+  lua_pushvector(L, &centerForce);
+  lua_pushvector(L, &centerTorque);
   return 2;
 }
 
 static int IPhysicsObject_CalculateLinearDrag (lua_State *L) {
-  lua_pushnumber(L, luaL_checkphysicsobject(L, 1)->CalculateLinearDrag(luaL_checkvector(L, 2)));
+  lua_pushnumber(L, luaL_checkphysicsobject(L, 1)->CalculateLinearDrag(*(Vector *)luaL_checkvector(L, 2)));
   return 1;
 }
 
 static int IPhysicsObject_CalculateVelocityOffset (lua_State *L) {
   Vector centerVelocity, centerAngularVelocity;
-  luaL_checkphysicsobject(L, 1)->CalculateVelocityOffset(luaL_checkvector(L, 2), luaL_checkvector(L, 3), &centerVelocity, &centerAngularVelocity);
-  lua_pushvector(L, centerVelocity);
-  lua_pushvector(L, centerAngularVelocity);
+  luaL_checkphysicsobject(L, 1)->CalculateVelocityOffset(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), &centerVelocity, &centerAngularVelocity);
+  lua_pushvector(L, &centerVelocity);
+  lua_pushvector(L, &centerAngularVelocity);
   return 2;
 }
 
@@ -269,7 +269,7 @@ static int IPhysicsObject_GetContactPoint (lua_State *L) {
   Vector contactPoint;
   IPhysicsObject *contactObject;
   lua_pushboolean(L, luaL_checkphysicsobject(L, 1)->GetContactPoint(&contactPoint, &contactObject));
-  lua_pushvector(L, contactPoint);
+  lua_pushvector(L, &contactPoint);
   lua_pushphysicsobject(L, contactObject);
   return 3;
 }
@@ -305,18 +305,18 @@ static int IPhysicsObject_GetGameIndex (lua_State *L) {
 static int IPhysicsObject_GetImplicitVelocity (lua_State *L) {
   Vector velocity, angularVelocity;
   luaL_checkphysicsobject(L, 1)->GetImplicitVelocity(&velocity, &angularVelocity);
-  lua_pushvector(L, velocity);
-  lua_pushvector(L, angularVelocity);
+  lua_pushvector(L, &velocity);
+  lua_pushvector(L, &angularVelocity);
   return 2;
 }
 
 static int IPhysicsObject_GetInertia (lua_State *L) {
-  lua_pushvector(L, luaL_checkphysicsobject(L, 1)->GetInertia());
+  lua_pushvector(L, &luaL_checkphysicsobject(L, 1)->GetInertia());
   return 1;
 }
 
 static int IPhysicsObject_GetInvInertia (lua_State *L) {
-  lua_pushvector(L, luaL_checkphysicsobject(L, 1)->GetInvInertia());
+  lua_pushvector(L, &luaL_checkphysicsobject(L, 1)->GetInvInertia());
   return 1;
 }
 
@@ -331,7 +331,7 @@ static int IPhysicsObject_GetMass (lua_State *L) {
 }
 
 static int IPhysicsObject_GetMassCenterLocalSpace (lua_State *L) {
-  lua_pushvector(L, luaL_checkphysicsobject(L, 1)->GetMassCenterLocalSpace());
+  lua_pushvector(L, &luaL_checkphysicsobject(L, 1)->GetMassCenterLocalSpace());
   return 1;
 }
 
@@ -349,8 +349,8 @@ static int IPhysicsObject_GetPosition (lua_State *L) {
   Vector worldPosition;
   QAngle angles;
   luaL_checkphysicsobject(L, 1)->GetPosition(&worldPosition, &angles);
-  lua_pushvector(L, worldPosition);
-  lua_pushangle(L, angles);
+  lua_pushvector(L, &worldPosition);
+  lua_pushangle(L, &angles);
   return 2;
 }
 
@@ -358,8 +358,8 @@ static int IPhysicsObject_GetShadowPosition (lua_State *L) {
   Vector position;
   QAngle angles;
   lua_pushinteger(L, luaL_checkphysicsobject(L, 1)->GetShadowPosition(&position, &angles));
-  lua_pushvector(L, position);
-  lua_pushangle(L, angles);
+  lua_pushvector(L, &position);
+  lua_pushangle(L, &angles);
   return 3;
 }
 
@@ -371,15 +371,15 @@ static int IPhysicsObject_GetSphereRadius (lua_State *L) {
 static int IPhysicsObject_GetVelocity (lua_State *L) {
   Vector velocity, angularVelocity;
   luaL_checkphysicsobject(L, 1)->GetVelocity(&velocity, &angularVelocity);
-  lua_pushvector(L, velocity);
-  lua_pushvector(L, angularVelocity);
+  lua_pushvector(L, &velocity);
+  lua_pushvector(L, &angularVelocity);
   return 2;
 }
 
 static int IPhysicsObject_GetVelocityAtPoint (lua_State *L) {
   Vector pVelocity;
-  luaL_checkphysicsobject(L, 1)->GetVelocityAtPoint(luaL_checkvector(L, 2), &pVelocity);
-  lua_pushvector(L, pVelocity);
+  luaL_checkphysicsobject(L, 1)->GetVelocityAtPoint(*(Vector *)luaL_checkvector(L, 2), &pVelocity);
+  lua_pushvector(L, &pVelocity);
   return 1;
 }
 
@@ -440,15 +440,15 @@ static int IPhysicsObject_IsTrigger (lua_State *L) {
 
 static int IPhysicsObject_LocalToWorld (lua_State *L) {
   Vector worldPosition;
-  luaL_checkphysicsobject(L, 1)->LocalToWorld(&worldPosition, luaL_checkvector(L, 2));
-  lua_pushvector(L, worldPosition);
+  luaL_checkphysicsobject(L, 1)->LocalToWorld(&worldPosition, *(Vector *)luaL_checkvector(L, 2));
+  lua_pushvector(L, &worldPosition);
   return 1;
 }
 
 static int IPhysicsObject_LocalToWorldVector (lua_State *L) {
   Vector worldVector;
-  luaL_checkphysicsobject(L, 1)->LocalToWorldVector(&worldVector, luaL_checkvector(L, 2));
-  lua_pushvector(L, worldVector);
+  luaL_checkphysicsobject(L, 1)->LocalToWorldVector(&worldVector, *(Vector *)luaL_checkvector(L, 2));
+  lua_pushvector(L, &worldVector);
   return 1;
 }
 
@@ -530,12 +530,12 @@ static int IPhysicsObject_SetShadow (lua_State *L) {
 }
 
 static int IPhysicsObject_SetVelocity (lua_State *L) {
-  luaL_checkphysicsobject(L, 1)->SetVelocity(&luaL_checkvector(L, 2), &(AngularImpulse)luaL_checkvector(L, 3));
+  luaL_checkphysicsobject(L, 1)->SetVelocity(luaL_checkvector(L, 2), luaL_checkvector(L, 3));
   return 0;
 }
 
 static int IPhysicsObject_SetVelocityInstantaneous (lua_State *L) {
-  luaL_checkphysicsobject(L, 1)->SetVelocityInstantaneous(&luaL_checkvector(L, 2), &(AngularImpulse)luaL_checkvector(L, 3));
+  luaL_checkphysicsobject(L, 1)->SetVelocityInstantaneous(luaL_checkvector(L, 2), luaL_checkvector(L, 3));
   return 0;
 }
 
@@ -551,15 +551,15 @@ static int IPhysicsObject_Wake (lua_State *L) {
 
 static int IPhysicsObject_WorldToLocal (lua_State *L) {
   Vector localPosition;
-  luaL_checkphysicsobject(L, 1)->WorldToLocal(&localPosition, luaL_checkvector(L, 2));
-  lua_pushvector(L, localPosition);
+  luaL_checkphysicsobject(L, 1)->WorldToLocal(&localPosition, *(Vector *)luaL_checkvector(L, 2));
+  lua_pushvector(L, &localPosition);
   return 1;
 }
 
 static int IPhysicsObject_WorldToLocalVector (lua_State *L) {
   Vector localVector;
-  luaL_checkphysicsobject(L, 1)->WorldToLocalVector(&localVector, luaL_checkvector(L, 2));
-  lua_pushvector(L, localVector);
+  luaL_checkphysicsobject(L, 1)->WorldToLocalVector(&localVector, *(Vector *)luaL_checkvector(L, 2));
+  lua_pushvector(L, &localVector);
   return 1;
 }
 

@@ -130,7 +130,7 @@ static int CBasePlayer_GetBonusChallenge (lua_State *L) {
 }
 
 static int CBasePlayer_SnapEyeAngles (lua_State *L) {
-  luaL_checkplayer(L, 1)->SnapEyeAngles(luaL_checkangle(L, 2));
+  luaL_checkplayer(L, 1)->SnapEyeAngles(*(QAngle *)luaL_checkangle(L, 2));
   return 0;
 }
 

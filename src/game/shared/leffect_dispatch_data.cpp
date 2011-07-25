@@ -107,13 +107,13 @@ static int CEffectData___index (lua_State *L) {
   else if (Q_strcmp(field, "m_nSurfaceProp") == 0)
     lua_pushinteger(L, data.m_nSurfaceProp);
   else if (Q_strcmp(field, "m_vAngles") == 0)
-    lua_pushangle(L, data.m_vAngles);
+    lua_pushangle(L, &data.m_vAngles);
   else if (Q_strcmp(field, "m_vNormal") == 0)
-    lua_pushvector(L, data.m_vNormal);
+    lua_pushvector(L, &data.m_vNormal);
   else if (Q_strcmp(field, "m_vOrigin") == 0)
-    lua_pushvector(L, data.m_vOrigin);
+    lua_pushvector(L, &data.m_vOrigin);
   else if (Q_strcmp(field, "m_vStart") == 0)
-    lua_pushvector(L, data.m_vStart);
+    lua_pushvector(L, &data.m_vStart);
   else {
     lua_getmetatable(L, 1);
     lua_pushvalue(L, 2);
@@ -151,13 +151,13 @@ static int CEffectData___newindex (lua_State *L) {
   else if (Q_strcmp(field, "m_nSurfaceProp") == 0)
     data.m_nSurfaceProp = luaL_checkinteger(L, 3);
   else if (Q_strcmp(field, "m_vAngles") == 0)
-    data.m_vAngles = luaL_checkangle(L, 3);
+    data.m_vAngles = *(QAngle *)luaL_checkangle(L, 3);
   else if (Q_strcmp(field, "m_vNormal") == 0)
-    data.m_vNormal = luaL_checkvector(L, 3);
+    data.m_vNormal = *(Vector *)luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "m_vOrigin") == 0)
-    data.m_vOrigin = luaL_checkvector(L, 3);
+    data.m_vOrigin = *(Vector *)luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "m_vStart") == 0)
-    data.m_vStart = luaL_checkvector(L, 3);
+    data.m_vStart = *(Vector *)luaL_checkvector(L, 3);
   return 0;
 }
 

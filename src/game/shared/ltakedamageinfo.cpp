@@ -123,12 +123,14 @@ static int CTakeDamageInfo_GetDamageCustom (lua_State *L) {
 }
 
 static int CTakeDamageInfo_GetDamageForce (lua_State *L) {
-  lua_pushvector(L, luaL_checkdamageinfo(L, 1).GetDamageForce());
+  Vector v = luaL_checkdamageinfo(L, 1).GetDamageForce();
+  lua_pushvector(L, &v);
   return 1;
 }
 
 static int CTakeDamageInfo_GetDamagePosition (lua_State *L) {
-  lua_pushvector(L, luaL_checkdamageinfo(L, 1).GetDamagePosition());
+  Vector v = luaL_checkdamageinfo(L, 1).GetDamagePosition();
+  lua_pushvector(L, &v);
   return 1;
 }
 
@@ -153,7 +155,8 @@ static int CTakeDamageInfo_GetMaxDamage (lua_State *L) {
 }
 
 static int CTakeDamageInfo_GetReportedPosition (lua_State *L) {
-  lua_pushvector(L, luaL_checkdamageinfo(L, 1).GetReportedPosition());
+  Vector v = luaL_checkdamageinfo(L, 1).GetReportedPosition();
+  lua_pushvector(L, &v);
   return 1;
 }
 
@@ -193,12 +196,12 @@ static int CTakeDamageInfo_SetDamageCustom (lua_State *L) {
 }
 
 static int CTakeDamageInfo_SetDamageForce (lua_State *L) {
-  luaL_checkdamageinfo(L, 1).SetDamageForce(luaL_checkvector(L, 2));
+  luaL_checkdamageinfo(L, 1).SetDamageForce(*(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CTakeDamageInfo_SetDamagePosition (lua_State *L) {
-  luaL_checkdamageinfo(L, 1).SetDamagePosition(luaL_checkvector(L, 2));
+  luaL_checkdamageinfo(L, 1).SetDamagePosition(*(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -223,7 +226,7 @@ static int CTakeDamageInfo_SetMaxDamage (lua_State *L) {
 }
 
 static int CTakeDamageInfo_SetReportedPosition (lua_State *L) {
-  luaL_checkdamageinfo(L, 1).SetReportedPosition(luaL_checkvector(L, 2));
+  luaL_checkdamageinfo(L, 1).SetReportedPosition(*(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 

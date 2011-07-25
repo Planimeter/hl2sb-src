@@ -66,16 +66,16 @@ static int CBaseAnimating_CalculateIKLocks (lua_State *L) {
 static int CBaseAnimating_ComputeEntitySpaceHitboxSurroundingBox (lua_State *L) {
   Vector pVecWorldMins, pVecWorldMaxs;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->ComputeEntitySpaceHitboxSurroundingBox(&pVecWorldMins, &pVecWorldMaxs));
-  lua_pushvector(L, pVecWorldMins);
-  lua_pushvector(L, pVecWorldMaxs);
+  lua_pushvector(L, &pVecWorldMins);
+  lua_pushvector(L, &pVecWorldMaxs);
   return 3;
 }
 
 static int CBaseAnimating_ComputeHitboxSurroundingBox (lua_State *L) {
   Vector pVecWorldMins, pVecWorldMaxs;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->ComputeHitboxSurroundingBox(&pVecWorldMins, &pVecWorldMaxs));
-  lua_pushvector(L, pVecWorldMins);
-  lua_pushvector(L, pVecWorldMaxs);
+  lua_pushvector(L, &pVecWorldMins);
+  lua_pushvector(L, &pVecWorldMaxs);
   return 3;
 }
 
@@ -103,8 +103,8 @@ static int CBaseAnimating_GetAttachment (lua_State *L) {
   Vector origin;
   QAngle angles;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachment(luaL_checkinteger(L, 2), origin, angles));
-  lua_pushvector(L, origin);
-  lua_pushangle(L, angles);
+  lua_pushvector(L, &origin);
+  lua_pushangle(L, &angles);
   return 3;
 }
 
@@ -112,8 +112,8 @@ static int CBaseAnimating_GetAttachmentLocal (lua_State *L) {
   Vector origin;
   QAngle angles;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachmentLocal(luaL_checkinteger(L, 2), origin, angles));
-  lua_pushvector(L, origin);
-  lua_pushangle(L, angles);
+  lua_pushvector(L, &origin);
+  lua_pushangle(L, &angles);
   return 3;
 }
 
@@ -141,8 +141,8 @@ static int CBaseAnimating_GetBonePosition (lua_State *L) {
   Vector origin;
   QAngle angles;
   luaL_checkanimating(L, 1)->GetBonePosition(luaL_checkinteger(L, 2), origin, angles);
-  lua_pushvector(L, origin);
-  lua_pushangle(L, angles);
+  lua_pushvector(L, &origin);
+  lua_pushangle(L, &angles);
   return 2;
 }
 
@@ -227,7 +227,7 @@ static int CBaseAnimating_GetSequenceGroundSpeed (lua_State *L) {
 static int CBaseAnimating_GetSequenceLinearMotion (lua_State *L) {
   Vector pVec;
   luaL_checkanimating(L, 1)->GetSequenceLinearMotion(luaL_checkinteger(L, 2), &pVec);
-  lua_pushvector(L, pVec);
+  lua_pushvector(L, &pVec);
   return 1;
 }
 

@@ -21,8 +21,8 @@
 */
 
 
-LUA_API lua_CGameTrace lua_totrace (lua_State *L, int idx) {
-  lua_CGameTrace tr = *(lua_CGameTrace *)luaL_checkudata(L, idx, "CGameTrace");
+LUA_API lua_CGameTrace *lua_totrace (lua_State *L, int idx) {
+  lua_CGameTrace *tr = (lua_CGameTrace *)luaL_checkudata(L, idx, "CGameTrace");
   return tr;
 }
 
@@ -33,20 +33,20 @@ LUA_API lua_CGameTrace lua_totrace (lua_State *L, int idx) {
 */
 
 
-LUA_API void lua_pushtrace (lua_State *L, lua_CGameTrace &tr) {
+LUA_API void lua_pushtrace (lua_State *L, lua_CGameTrace *tr) {
   if (&tr == NULL)
     lua_pushnil(L);
   else {
     lua_CGameTrace *ptr = (lua_CGameTrace *)lua_newuserdata(L, sizeof(lua_CGameTrace));
-    *ptr = tr;
+    ptr = tr;
     luaL_getmetatable(L, "CGameTrace");
     lua_setmetatable(L, -2);
   }
 }
 
 
-LUALIB_API lua_CGameTrace luaL_checktrace (lua_State *L, int narg) {
-  lua_CGameTrace d = lua_totrace(L, narg);
+LUALIB_API lua_CGameTrace *luaL_checktrace (lua_State *L, int narg) {
+  lua_CGameTrace *d = lua_totrace(L, narg);
   if (&d == NULL)  /* avoid extra test when d is not 0 */
     luaL_typerror(L, narg, "CGameTrace");
   return d;
@@ -54,77 +54,77 @@ LUALIB_API lua_CGameTrace luaL_checktrace (lua_State *L, int narg) {
 
 
 static int CGameTrace_DidHit (lua_State *L) {
-  lua_pushboolean(L, luaL_checktrace(L, 1).DidHit());
+  lua_pushboolean(L, luaL_checktrace(L, 1)->DidHit());
   return 1;
 }
 
 static int CGameTrace_DidHitNonWorldEntity (lua_State *L) {
-  lua_pushboolean(L, luaL_checktrace(L, 1).DidHitNonWorldEntity());
+  lua_pushboolean(L, luaL_checktrace(L, 1)->DidHitNonWorldEntity());
   return 1;
 }
 
 static int CGameTrace_DidHitWorld (lua_State *L) {
-  lua_pushboolean(L, luaL_checktrace(L, 1).DidHitWorld());
+  lua_pushboolean(L, luaL_checktrace(L, 1)->DidHitWorld());
   return 1;
 }
 
 static int CGameTrace_GetEntityIndex (lua_State *L) {
-  lua_pushinteger(L, luaL_checktrace(L, 1).GetEntityIndex());
+  lua_pushinteger(L, luaL_checktrace(L, 1)->GetEntityIndex());
   return 1;
 }
 
 static int CGameTrace_IsDispSurface (lua_State *L) {
-  lua_pushboolean(L, luaL_checktrace(L, 1).IsDispSurface());
+  lua_pushboolean(L, luaL_checktrace(L, 1)->IsDispSurface());
   return 1;
 }
 
 static int CGameTrace_IsDispSurfaceBuildable (lua_State *L) {
-  lua_pushboolean(L, luaL_checktrace(L, 1).IsDispSurfaceBuildable());
+  lua_pushboolean(L, luaL_checktrace(L, 1)->IsDispSurfaceBuildable());
   return 1;
 }
 
 static int CGameTrace_IsDispSurfaceProp1 (lua_State *L) {
-  lua_pushboolean(L, luaL_checktrace(L, 1).IsDispSurfaceProp1());
+  lua_pushboolean(L, luaL_checktrace(L, 1)->IsDispSurfaceProp1());
   return 1;
 }
 
 static int CGameTrace_IsDispSurfaceProp2 (lua_State *L) {
-  lua_pushboolean(L, luaL_checktrace(L, 1).IsDispSurfaceProp2());
+  lua_pushboolean(L, luaL_checktrace(L, 1)->IsDispSurfaceProp2());
   return 1;
 }
 
 static int CGameTrace_IsDispSurfaceWalkable (lua_State *L) {
-  lua_pushboolean(L, luaL_checktrace(L, 1).IsDispSurfaceWalkable());
+  lua_pushboolean(L, luaL_checktrace(L, 1)->IsDispSurfaceWalkable());
   return 1;
 }
 
 static int CGameTrace___index (lua_State *L) {
-  trace_t tr = luaL_checktrace(L, 1);
+  trace_t *tr = luaL_checktrace(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (Q_strcmp(field, "allsolid") == 0)
-    lua_pushboolean(L, tr.allsolid);
+    lua_pushboolean(L, tr->allsolid);
   else if (Q_strcmp(field, "contents") == 0)
-    lua_pushinteger(L, tr.contents);
+    lua_pushinteger(L, tr->contents);
   else if (Q_strcmp(field, "dispFlags") == 0)
-    lua_pushinteger(L, tr.dispFlags);
+    lua_pushinteger(L, tr->dispFlags);
   else if (Q_strcmp(field, "endpos") == 0)
-    lua_pushvector(L, tr.endpos);
+    lua_pushvector(L, &tr->endpos);
   else if (Q_strcmp(field, "fraction") == 0)
-    lua_pushnumber(L, tr.fraction);
+    lua_pushnumber(L, tr->fraction);
   else if (Q_strcmp(field, "fractionleftsolid") == 0)
-    lua_pushnumber(L, tr.fractionleftsolid);
+    lua_pushnumber(L, tr->fractionleftsolid);
   else if (Q_strcmp(field, "hitbox") == 0)
-    lua_pushinteger(L, tr.hitbox);
+    lua_pushinteger(L, tr->hitbox);
   else if (Q_strcmp(field, "hitgroup") == 0)
-    lua_pushinteger(L, tr.hitgroup);
+    lua_pushinteger(L, tr->hitgroup);
   else if (Q_strcmp(field, "m_pEnt") == 0)
-    lua_pushentity(L, tr.m_pEnt);
+    lua_pushentity(L, tr->m_pEnt);
   else if (Q_strcmp(field, "physicsbone") == 0)
-    lua_pushinteger(L, tr.physicsbone);
+    lua_pushinteger(L, tr->physicsbone);
   else if (Q_strcmp(field, "startpos") == 0)
-    lua_pushvector(L, tr.startpos);
+    lua_pushvector(L, &tr->startpos);
   else if (Q_strcmp(field, "startsolid") == 0)
-    lua_pushboolean(L, tr.startsolid);
+    lua_pushboolean(L, tr->startsolid);
   else {
     lua_getmetatable(L, 1);
     lua_pushvalue(L, 2);
@@ -134,32 +134,32 @@ static int CGameTrace___index (lua_State *L) {
 }
 
 static int CGameTrace___newindex (lua_State *L) {
-  trace_t tr = luaL_checktrace(L, 1);
+  trace_t *tr = luaL_checktrace(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (Q_strcmp(field, "allsolid") == 0)
-    tr.allsolid = luaL_checkboolean(L, 3);
+    tr->allsolid = luaL_checkboolean(L, 3);
   else if (Q_strcmp(field, "contents") == 0)
-    tr.contents = luaL_checkinteger(L, 3);
+    tr->contents = luaL_checkinteger(L, 3);
   else if (Q_strcmp(field, "dispFlags") == 0)
-    tr.dispFlags = luaL_checkinteger(L, 3);
+    tr->dispFlags = luaL_checkinteger(L, 3);
   else if (Q_strcmp(field, "endpos") == 0)
-    tr.endpos = luaL_checkvector(L, 3);
+    tr->endpos = *(Vector *)luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "fraction") == 0)
-    tr.fraction = luaL_checknumber(L, 3);
+    tr->fraction = luaL_checknumber(L, 3);
   else if (Q_strcmp(field, "fractionleftsolid") == 0)
-    tr.fractionleftsolid = luaL_checknumber(L, 3);
+    tr->fractionleftsolid = luaL_checknumber(L, 3);
   else if (Q_strcmp(field, "hitbox") == 0)
-    tr.hitbox = luaL_checkinteger(L, 3);
+    tr->hitbox = luaL_checkinteger(L, 3);
   else if (Q_strcmp(field, "hitgroup") == 0)
-    tr.hitgroup = luaL_checkinteger(L, 3);
+    tr->hitgroup = luaL_checkinteger(L, 3);
   else if (Q_strcmp(field, "m_pEnt") == 0)
-    tr.m_pEnt = lua_toentity(L, 3);
+    tr->m_pEnt = lua_toentity(L, 3);
   else if (Q_strcmp(field, "physicsbone") == 0)
-    tr.physicsbone = luaL_checkinteger(L, 3);
+    tr->physicsbone = luaL_checkinteger(L, 3);
   else if (Q_strcmp(field, "startpos") == 0)
-    tr.startpos = luaL_checkvector(L, 3);
+    tr->startpos = *(Vector *)luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "startsolid") == 0)
-    tr.startsolid = luaL_checkboolean(L, 3);
+    tr->startsolid = luaL_checkboolean(L, 3);
   return 0;
 }
 

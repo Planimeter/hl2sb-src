@@ -156,7 +156,7 @@ static int CBaseCombatWeapon_DisplayReloadHudHint (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_Drop (lua_State *L) {
-  luaL_checkweapon(L, 1)->Drop(luaL_checkvector(L, 2));
+  luaL_checkweapon(L, 1)->Drop(*(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 
