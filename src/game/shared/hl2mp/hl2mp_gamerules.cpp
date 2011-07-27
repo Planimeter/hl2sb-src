@@ -11,12 +11,15 @@
 #include <KeyValues.h>
 #include "ammodef.h"
 #include "hl2_shareddefs.h"
+#if defined ( LUA_SDK )
+#include "takedamageinfo.h"
 #include "luamanager.h"
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
 #include "ltakedamageinfo.h"
 #include "mathlib/lvector.h"
+#endif
 
 #ifdef CLIENT_DLL
 	#include "c_hl2mp_player.h"
@@ -335,9 +338,11 @@ bool CHL2MPRules::IsIntermission( void )
 void CHL2MPRules::PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &info )
 {
 #if defined ( LUA_SDK )
+	CTakeDamageInfo linfo = info;
+
 	BEGIN_LUA_CALL_HOOK( "PlayerKilled" );
 		lua_pushplayer( L, pVictim );
-		lua_pushdamageinfo( L, info );
+		lua_pushdamageinfo( L, &linfo );
 	END_LUA_CALL_HOOK( 2, 0 );
 #endif
 
@@ -367,15 +372,21 @@ bool CHL2MPRules::FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAtta
 bool CHL2MPRules::AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info )
 {
 #if defined ( LUA_SDK )
+	CTakeDamageInfo lInfo = info;
+
 	BEGIN_LUA_CALL_HOOK( "AllowDamage" );
 		lua_pushentity( L, pVictim );
-		lua_pushdamageinfo( L, info );
+		lua_pushdamageinfo( L, &lInfo );
 	END_LUA_CALL_HOOK( 2, 1 );
 
 	RETURN_LUA_BOOLEAN();
 #endif
 
+#if defined ( LUA_SDK )
+	return BaseClass::AllowDamage( pVictim, lInfo );
+#else
 	return BaseClass::AllowDamage( pVictim, info );
+#endif
 }
 
 void CHL2MPRules::PlayerThink( CBasePlayer *pPlayer )
@@ -896,9 +907,11 @@ float CHL2MPRules::FlPlayerFallDamage( CBasePlayer *pPlayer )
 void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info )
 {
 #if defined ( LUA_SDK )
+	CTakeDamageInfo lInfo = info;
+
 	BEGIN_LUA_CALL_HOOK( "DeathNotice" );
 		lua_pushplayer( L, pVictim );
-		lua_pushdamageinfo( L, info );
+		lua_pushdamageinfo( L, &lInfo );
 	END_LUA_CALL_HOOK( 2, 0 );
 #endif
 
@@ -908,14 +921,25 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 	int killer_ID = 0;
 
 	// Find the killer & the scorer
+#if defined ( LUA_SDK )
+	CBaseEntity *pInflictor = lInfo.GetInflictor();
+	CBaseEntity *pKiller = lInfo.GetAttacker();
+#else
 	CBaseEntity *pInflictor = info.GetInflictor();
 	CBaseEntity *pKiller = info.GetAttacker();
+#endif
 	CBasePlayer *pScorer = GetDeathScorer( pKiller, pInflictor );
 
 	// Custom kill type?
+#if defined ( LUA_SDK )
+	if ( lInfo.GetDamageCustom() )
+	{
+		killer_weapon_name = GetDamageCustomString( lInfo );
+#else
 	if ( info.GetDamageCustom() )
 	{
 		killer_weapon_name = GetDamageCustomString( info );
+#endif
 		if ( pScorer )
 		{
 			killer_ID = pScorer->GetUserID();

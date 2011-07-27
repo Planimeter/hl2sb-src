@@ -103,14 +103,12 @@ static int luasrc_UTIL_BloodImpact (lua_State *L) {
 }
 
 static int luasrc_UTIL_BloodDecalTrace (lua_State *L) {
-  trace_t *pTrace = luaL_checktrace(L, 1);
-  UTIL_BloodDecalTrace(pTrace, luaL_checkinteger(L, 2));
+  UTIL_BloodDecalTrace(luaL_checktrace(L, 1), luaL_checkinteger(L, 2));
   return 0;
 }
 
 static int luasrc_UTIL_DecalTrace (lua_State *L) {
-  trace_t *pTrace = luaL_checktrace(L, 1);
-  UTIL_DecalTrace(pTrace, luaL_checkstring(L, 2));
+  UTIL_DecalTrace(luaL_checktrace(L, 1), luaL_checkstring(L, 2));
   return 0;
 }
 

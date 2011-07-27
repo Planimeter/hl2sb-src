@@ -1,0 +1,1 @@
+clang++ -cc1 -ast-print-xml -DCLANG -DNO_CSTEAMID_STL -detailed-preprocessing-record temp.cpp

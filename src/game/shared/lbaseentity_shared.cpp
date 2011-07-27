@@ -195,8 +195,7 @@ static int CBaseEntity_DamageDecal (lua_State *L) {
 }
 
 static int CBaseEntity_DecalTrace (lua_State *L) {
-  trace_t *pTrace = luaL_checktrace(L, 2);
-  luaL_checkentity(L, 1)->DecalTrace(pTrace, luaL_checkstring(L, 3));
+  luaL_checkentity(L, 1)->DecalTrace(luaL_checktrace(L, 2), luaL_checkstring(L, 3));
   return 0;
 }
 
@@ -211,8 +210,8 @@ static int CBaseEntity_DestroyDataObject (lua_State *L) {
 }
 
 static int CBaseEntity_DispatchTraceAttack (lua_State *L) {
-  trace_t *ptr = luaL_checktrace(L, 4);
-  luaL_checkentity(L, 1)->DispatchTraceAttack(luaL_checkdamageinfo(L, 2), *(Vector *)luaL_checkvector(L, 2), ptr);
+  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
+  luaL_checkentity(L, 1)->DispatchTraceAttack(info, *(Vector *)luaL_checkvector(L, 3), luaL_checktrace(L, 4));
   return 0;
 }
 
@@ -593,8 +592,7 @@ static int CBaseEntity_HasNPCsOnIt (lua_State *L) {
 }
 
 static int CBaseEntity_ImpactTrace (lua_State *L) {
-  trace_t *pTrace = luaL_checktrace(L, 2);
-  luaL_checkentity(L, 1)->ImpactTrace(pTrace, luaL_checkinteger(L, 3), (char *)luaL_optstring(L, 4, 0));
+  luaL_checkentity(L, 1)->ImpactTrace(luaL_checktrace(L, 2), luaL_checkinteger(L, 3), (char *)luaL_optstring(L, 4, 0));
   return 0;
 }
 
@@ -1228,8 +1226,7 @@ static int CBaseEntity_Touch (lua_State *L) {
 }
 
 static int CBaseEntity_TraceBleed (lua_State *L) {
-  trace_t *ptr = luaL_checktrace(L, 4);
-  luaL_checkentity(L, 1)->TraceBleed(luaL_checknumber(L, 2), *(Vector *)luaL_checkvector(L, 3), ptr, luaL_checkinteger(L, 5));
+  luaL_checkentity(L, 1)->TraceBleed(luaL_checknumber(L, 2), *(Vector *)luaL_checkvector(L, 3), luaL_checktrace(L, 4), luaL_checkinteger(L, 5));
   return 0;
 }
 

@@ -137,43 +137,59 @@ void C_HL2MP_Player::UpdateIDTarget()
 	}
 }
 
-#if defined ( LUA_SDK )
-void C_HL2MP_Player::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDirection, trace_t *ptr )
-#else
 void C_HL2MP_Player::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
-#endif
 {
 #if defined ( LUA_SDK )
-	// Andrew; push a copy of the vector, bring the changes back out of Lua
-	// and set vecDir to the new value if it's been modified.
-	Vector vecDir = vecDirection;
+	// Andrew; push a copy of the damageinfo/vector, bring the changes back out
+	// of Lua and set info/vecDir to the new value if it's been modified.
+	CTakeDamageInfo lInfo = info;
+	Vector lvecDir = vecDir;
 
 	BEGIN_LUA_CALL_HOOK( "PlayerTraceAttack" );
 		lua_pushplayer( L, this );
-		lua_pushdamageinfo( L, info );
-		lua_pushvector( L, &vecDir );
+		lua_pushdamageinfo( L, &lInfo );
+		lua_pushvector( L, &lvecDir );
 		lua_pushtrace( L, ptr );
 	END_LUA_CALL_HOOK( 4, 1 );
 
 	RETURN_LUA_NONE();
 #endif
 
+#if defined ( LUA_SDK )
+	Vector vecOrigin = ptr->endpos - lvecDir * 4;
+#else
 	Vector vecOrigin = ptr->endpos - vecDir * 4;
+#endif
 
 	float flDistance = 0.0f;
 	
+#if defined ( LUA_SDK )
+	if ( lInfo.GetAttacker() )
+	{
+		flDistance = (ptr->endpos - lInfo.GetAttacker()->GetAbsOrigin()).Length();
+	}
+#else
 	if ( info.GetAttacker() )
 	{
 		flDistance = (ptr->endpos - info.GetAttacker()->GetAbsOrigin()).Length();
 	}
+#endif
 
 	if ( m_takedamage )
 	{
+#if defined ( LUA_SDK )
+		AddMultiDamage( lInfo, this );
+#else
 		AddMultiDamage( info, this );
+#endif
 
 		int blood = BloodColor();
 		
+#if defined ( LUA_SDK )
+		CBaseEntity *pAttacker = lInfo.GetAttacker();
+#else
 		CBaseEntity *pAttacker = info.GetAttacker();
+#endif
 
 		if ( pAttacker )
 		{
@@ -183,8 +199,13 @@ void C_HL2MP_Player::TraceAttack( const CTakeDamageInfo &info, const Vector &vec
 
 		if ( blood != DONT_BLEED )
 		{
+#if defined ( LUA_SDK )
+			SpawnBlood( vecOrigin, lvecDir, blood, flDistance );// a little surface blood.
+			TraceBleed( flDistance, lvecDir, ptr, lInfo.GetDamageType() );
+#else
 			SpawnBlood( vecOrigin, vecDir, blood, flDistance );// a little surface blood.
 			TraceBleed( flDistance, vecDir, ptr, info.GetDamageType() );
+#endif
 		}
 	}
 }

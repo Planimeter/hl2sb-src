@@ -464,7 +464,7 @@ static const luaL_Reg QAnglemeta[] = {
 
 
 static int luasrc_QAngle (lua_State *L) {
-  QAngle &v = QAngle((vec_t)luaL_optnumber(L, 1, 0.0f), (vec_t)luaL_optnumber(L, 2, 0.0f), (vec_t)luaL_optnumber(L, 3, 0.0f));
+  QAngle v = QAngle((vec_t)luaL_optnumber(L, 1, 0.0f), (vec_t)luaL_optnumber(L, 2, 0.0f), (vec_t)luaL_optnumber(L, 3, 0.0f));
   lua_pushangle(L, &v);
   return 1;
 }

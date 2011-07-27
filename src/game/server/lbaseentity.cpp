@@ -250,12 +250,14 @@ static int CBaseEntity_GetAutoAimRadius (lua_State *L) {
 }
 
 static int CBaseEntity_GetAutoAimCenter (lua_State *L) {
-  lua_pushvector(L, &luaL_checkentity(L, 1)->GetAutoAimCenter());
+  Vector v = luaL_checkentity(L, 1)->GetAutoAimCenter();
+  lua_pushvector(L, &v);
   return 1;
 }
 
 static int CBaseEntity_PassesDamageFilter (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->PassesDamageFilter(luaL_checkdamageinfo(L, 2)));
+  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
+  lua_pushboolean(L, luaL_checkentity(L, 1)->PassesDamageFilter(info));
   return 1;
 }
 
@@ -265,12 +267,14 @@ static int CBaseEntity_CanBeHitByMeleeAttack (lua_State *L) {
 }
 
 static int CBaseEntity_OnTakeDamage (lua_State *L) {
-  lua_pushinteger(L, luaL_checkentity(L, 1)->OnTakeDamage(luaL_checkdamageinfo(L, 2)));
+  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
+  lua_pushinteger(L, luaL_checkentity(L, 1)->OnTakeDamage(info));
   return 1;
 }
 
 static int CBaseEntity_TakeDamage (lua_State *L) {
-  luaL_checkentity(L, 1)->TakeDamage(luaL_checkdamageinfo(L, 2));
+  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
+  luaL_checkentity(L, 1)->TakeDamage(info);
   return 0;
 }
 
@@ -280,12 +284,14 @@ static int CBaseEntity_TakeHealth (lua_State *L) {
 }
 
 static int CBaseEntity_Event_Killed (lua_State *L) {
-  luaL_checkentity(L, 1)->Event_Killed(luaL_checkdamageinfo(L, 2));
+  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
+  luaL_checkentity(L, 1)->Event_Killed(info);
   return 0;
 }
 
 static int CBaseEntity_Event_KilledOther (lua_State *L) {
-  luaL_checkentity(L, 1)->Event_KilledOther(luaL_checkentity(L, 2), luaL_checkdamageinfo(L, 3));
+  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 3);
+  luaL_checkentity(L, 1)->Event_KilledOther(luaL_checkentity(L, 2), info);
   return 0;
 }
 

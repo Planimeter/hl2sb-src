@@ -1140,8 +1140,10 @@ int CHL2MP_Player::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 void CHL2MP_Player::DeathSound( const CTakeDamageInfo &info )
 {
 #if defined ( LUA_SDK )
+	CTakeDamageInfo lInfo = info;
+
 	BEGIN_LUA_CALL_HOOK( "PlayerDeathSound" );
-		lua_pushdamageinfo( L, info );
+		lua_pushdamageinfo( L, &lInfo );
 	END_LUA_CALL_HOOK( 1, 1 );
 
 	RETURN_LUA_NONE();

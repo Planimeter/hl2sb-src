@@ -50,7 +50,7 @@ static int luasrc_UTIL_SetSize (lua_State *L) {
 
 static int luasrc_UTIL_ClearTrace (lua_State *L) {
   trace_t *trace = luaL_checktrace(L, 1);
-  UTIL_ClearTrace((trace_t &)trace);
+  UTIL_ClearTrace(*trace);
   lua_pushtrace(L, trace);
   return 1;
 }
@@ -245,14 +245,12 @@ static int luasrc_UTIL_RandomBloodVector (lua_State *L) {
 }
 
 static int luasrc_UTIL_ImpactTrace (lua_State *L) {
-  trace_t *pTrace = luaL_checktrace(L, 1);
-  UTIL_ImpactTrace(pTrace, luaL_checkinteger(L, 2), const_cast<char *>(luaL_optstring(L, 3, 0)));
+  UTIL_ImpactTrace(luaL_checktrace(L, 1), luaL_checkinteger(L, 2), const_cast<char *>(luaL_optstring(L, 3, 0)));
   return 0;
 }
 
 static int luasrc_UTIL_PlayerDecalTrace (lua_State *L) {
-  trace_t *pTrace = luaL_checktrace(L, 1);
-  UTIL_PlayerDecalTrace(pTrace, luaL_checkinteger(L, 2));
+  UTIL_PlayerDecalTrace(luaL_checktrace(L, 1), luaL_checkinteger(L, 2));
   return 0;
 }
 

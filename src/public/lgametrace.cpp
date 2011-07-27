@@ -38,7 +38,7 @@ LUA_API void lua_pushtrace (lua_State *L, lua_CGameTrace *tr) {
     lua_pushnil(L);
   else {
     lua_CGameTrace *ptr = (lua_CGameTrace *)lua_newuserdata(L, sizeof(lua_CGameTrace));
-    ptr = tr;
+    *ptr = *tr;
     luaL_getmetatable(L, "CGameTrace");
     lua_setmetatable(L, -2);
   }
