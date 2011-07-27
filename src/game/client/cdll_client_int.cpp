@@ -1263,7 +1263,7 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 	luasrc_init();
 
 	luasrc_dofolder( L, LUA_PATH_ENUM );
-	luasrc_dofolder( L, LUA_PATH_EXTENTIONS );
+	luasrc_dofolder( L, LUA_PATH_EXTENSIONS );
 	luasrc_dofolder( L, LUA_PATH_MODULES );
 	luasrc_dofolder( L, LUA_PATH_INCLUDES );
 	luasrc_dofolder( L, LUA_PATH_AUTORUN );
