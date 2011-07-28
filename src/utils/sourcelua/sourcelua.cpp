@@ -457,7 +457,10 @@ void CSourceLua::FireGameEvent( KeyValues * event )
 			lua_pushinteger( L, pValue->GetUint64() );
 			break;
 		case KeyValues::TYPE_COLOR:
-			lua_pushcolor( L, pValue->GetColor() );
+			{
+				Color clr = pValue->GetColor();
+				lua_pushcolor( L, &clr );
+			}
 			break;
 			
 		default:

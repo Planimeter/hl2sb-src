@@ -22,7 +22,7 @@ static int cvar_AllocateDLLIdentifier (lua_State *L) {
 }
 
 static int cvar_ConsoleColorPrintf (lua_State *L) {
-  cvar->ConsoleColorPrintf(luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
+  cvar->ConsoleColorPrintf(*(Color *)luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
   return 0;
 }
 

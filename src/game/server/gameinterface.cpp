@@ -1305,7 +1305,9 @@ void CServerGameDLL::LevelShutdown( void )
 
 	g_nCurrentChapterIndex = -1;
 
+#if defined ( LUA_SDK )
 	luasrc_shutdown();
+#endif
 }
 
 //-----------------------------------------------------------------------------

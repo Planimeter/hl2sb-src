@@ -31,7 +31,7 @@ static int debugoverlay_AddBoxOverlay (lua_State *L) {
 }
 
 static int debugoverlay_AddBoxOverlay2 (lua_State *L) {
-  debugoverlay->AddBoxOverlay2(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), *(QAngle *)luaL_checkangle(L, 4), luaL_checkcolor(L, 5), luaL_checkcolor(L, 6), luaL_checknumber(L, 7));
+  debugoverlay->AddBoxOverlay2(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), *(QAngle *)luaL_checkangle(L, 4), *(Color *)luaL_checkcolor(L, 5), *(Color *)luaL_checkcolor(L, 6), luaL_checknumber(L, 7));
   return 0;
 }
 

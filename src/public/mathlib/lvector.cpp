@@ -41,7 +41,7 @@ LUA_API lua_QAngle *lua_toangle (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushvector (lua_State *L, lua_Vector *v) {
-  if (&v == NULL)
+  if (v == NULL)
     lua_pushnil(L);
   else {
     lua_Vector *pVec = (lua_Vector *)lua_newuserdata(L, sizeof(lua_Vector));
@@ -53,7 +53,7 @@ LUA_API void lua_pushvector (lua_State *L, lua_Vector *v) {
 
 
 LUA_API void lua_pushangle (lua_State *L, lua_QAngle *v) {
-  if (&v == NULL)
+  if (v == NULL)
     lua_pushnil(L);
   else {
     lua_QAngle *pVec = (lua_QAngle *)lua_newuserdata(L, sizeof(lua_QAngle));
@@ -66,7 +66,7 @@ LUA_API void lua_pushangle (lua_State *L, lua_QAngle *v) {
 
 LUALIB_API lua_Vector *luaL_checkvector (lua_State *L, int narg) {
   lua_Vector *d = lua_tovector(L, narg);
-  if (&d == NULL)  /* avoid extra test when d is not 0 */
+  if (d == NULL)  /* avoid extra test when d is not 0 */
     luaL_typerror(L, narg, "Vector");
   return d;
 }
@@ -74,7 +74,7 @@ LUALIB_API lua_Vector *luaL_checkvector (lua_State *L, int narg) {
 
 LUALIB_API lua_QAngle *luaL_checkangle (lua_State *L, int narg) {
   lua_QAngle *d = lua_toangle(L, narg);
-  if (&d == NULL)  /* avoid extra test when d is not 0 */
+  if (d == NULL)  /* avoid extra test when d is not 0 */
     luaL_typerror(L, narg, "QAngle");
   return d;
 }

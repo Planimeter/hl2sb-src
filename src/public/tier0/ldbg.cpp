@@ -77,7 +77,7 @@ static int luasrc_DevLog (lua_State *L) {
 }
 
 static int luasrc_ConColorMsg (lua_State *L) {
-  ConColorMsg(luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
+  ConColorMsg(*(Color *)luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
   return 0;
 }
 
@@ -97,7 +97,7 @@ static int luasrc_ConLog (lua_State *L) {
 }
 
 static int luasrc_ConDColorMsg (lua_State *L) {
-  ConDColorMsg(luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
+  ConDColorMsg(*(Color *)luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
   return 0;
 }
 

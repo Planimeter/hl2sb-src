@@ -88,7 +88,7 @@ static int luasrc_CBaseEntity_PrecacheModel (lua_State *L) {
 }
 
 static int luasrc_CBaseEntity_SetAbsOrigin (lua_State *L) {
-  CBaseEntity_SetAbsOrigin(luaL_checkentity(L, 1), luaL_checkvector(L, 2));
+  CBaseEntity_SetAbsOrigin(luaL_checkentity(L, 1), *(Vector *)luaL_checkvector(L, 2));
   return 0;
 }
 

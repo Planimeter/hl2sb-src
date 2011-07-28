@@ -121,7 +121,11 @@ void CWeaponHL2MPBase::WeaponSound( WeaponSound_t sound_type, float soundtime /*
 #ifdef CLIENT_DLL
 
 		// If we have some sounds from the weapon classname.txt file, play a random one of them
+#if defined ( LUA_SDK )
+		const char *shootsound = GetShootSound( sound_type ); 
+#else
 		const char *shootsound = GetWpnData().aShootSounds[ sound_type ]; 
+#endif
 		if ( !shootsound || !shootsound[0] )
 			return;
 

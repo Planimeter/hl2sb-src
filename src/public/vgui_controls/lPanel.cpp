@@ -92,22 +92,22 @@ static int Panel_DisableMouseInputForThisPanel (lua_State *L) {
 }
 
 static int Panel_DrawBox (lua_State *L) {
-  luaL_checkpanel(L, 1)->DrawBox(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkcolor(L, 6), luaL_checknumber(L, 7), luaL_optboolean(L, 8, 0));
+  luaL_checkpanel(L, 1)->DrawBox(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), *(Color *)luaL_checkcolor(L, 6), luaL_checknumber(L, 7), luaL_optboolean(L, 8, 0));
   return 0;
 }
 
 static int Panel_DrawBoxFade (lua_State *L) {
-  luaL_checkpanel(L, 1)->DrawBoxFade(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkcolor(L, 6), luaL_checknumber(L, 7), luaL_checkinteger(L, 8), luaL_checkinteger(L, 9), luaL_checkboolean(L, 10), luaL_optboolean(L, 11, 0));
+  luaL_checkpanel(L, 1)->DrawBoxFade(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), *(Color *)luaL_checkcolor(L, 6), luaL_checknumber(L, 7), luaL_checkinteger(L, 8), luaL_checkinteger(L, 9), luaL_checkboolean(L, 10), luaL_optboolean(L, 11, 0));
   return 0;
 }
 
 static int Panel_DrawHollowBox (lua_State *L) {
-  luaL_checkpanel(L, 1)->DrawHollowBox(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkcolor(L, 6), luaL_checknumber(L, 7));
+  luaL_checkpanel(L, 1)->DrawHollowBox(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), *(Color *)luaL_checkcolor(L, 6), luaL_checknumber(L, 7));
   return 0;
 }
 
 static int Panel_DrawTexturedBox (lua_State *L) {
-  luaL_checkpanel(L, 1)->DrawTexturedBox(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkcolor(L, 6), luaL_checknumber(L, 7));
+  luaL_checkpanel(L, 1)->DrawTexturedBox(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), *(Color *)luaL_checkcolor(L, 6), luaL_checknumber(L, 7));
   return 0;
 }
 
@@ -117,7 +117,7 @@ static int Panel_EditKeyBindings (lua_State *L) {
 }
 
 static int Panel_FillRectSkippingPanel (lua_State *L) {
-  luaL_checkpanel(L, 1)->FillRectSkippingPanel(luaL_checkcolor(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkinteger(L, 6), luaL_checkpanel(L, 7));
+  luaL_checkpanel(L, 1)->FillRectSkippingPanel(*(Color *)luaL_checkcolor(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkinteger(L, 6), luaL_checkpanel(L, 7));
   return 0;
 }
 
@@ -142,7 +142,8 @@ static int Panel_GetAlpha (lua_State *L) {
 }
 
 static int Panel_GetBgColor (lua_State *L) {
-  lua_pushcolor(L, luaL_checkpanel(L, 1)->GetBgColor());
+  Color clr = luaL_checkpanel(L, 1)->GetBgColor();
+  lua_pushcolor(L, &clr);
   return 1;
 }
 
@@ -195,7 +196,8 @@ static int Panel_GetDescription (lua_State *L) {
 }
 
 static int Panel_GetDragFrameColor (lua_State *L) {
-  lua_pushcolor(L, luaL_checkpanel(L, 1)->GetDragFrameColor());
+  Color clr = luaL_checkpanel(L, 1)->GetDragFrameColor();
+  lua_pushcolor(L, &clr);
   return 1;
 }
 
@@ -210,12 +212,14 @@ static int Panel_GetDragStartTolerance (lua_State *L) {
 }
 
 static int Panel_GetDropFrameColor (lua_State *L) {
-  lua_pushcolor(L, luaL_checkpanel(L, 1)->GetDropFrameColor());
+  Color clr = luaL_checkpanel(L, 1)->GetDropFrameColor();
+  lua_pushcolor(L, &clr);
   return 1;
 }
 
 static int Panel_GetFgColor (lua_State *L) {
-  lua_pushcolor(L, luaL_checkpanel(L, 1)->GetFgColor());
+  Color clr = luaL_checkpanel(L, 1)->GetFgColor();
+  lua_pushcolor(L, &clr);
   return 1;
 }
 
@@ -777,7 +781,7 @@ static int Panel_SetAutoResize (lua_State *L) {
 }
 
 static int Panel_SetBgColor (lua_State *L) {
-  luaL_checkpanel(L, 1)->SetBgColor(luaL_checkcolor(L, 2));
+  luaL_checkpanel(L, 1)->SetBgColor(*(Color *)luaL_checkcolor(L, 2));
   return 0;
 }
 
@@ -822,7 +826,7 @@ static int Panel_SetEnabled (lua_State *L) {
 }
 
 static int Panel_SetFgColor (lua_State *L) {
-  luaL_checkpanel(L, 1)->SetFgColor(luaL_checkcolor(L, 2));
+  luaL_checkpanel(L, 1)->SetFgColor(*(Color *)luaL_checkcolor(L, 2));
   return 0;
 }
 
