@@ -16,4 +16,6 @@
 //-----------------------------------------------------------------------------
 bool Steam_MountSteamContent( int nExtraAppId = -1 );
 
+void MountUserContent();
+
 #endif // MOUNTSTEAMCONTENT_H

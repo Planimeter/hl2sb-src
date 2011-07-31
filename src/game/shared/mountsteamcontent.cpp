@@ -5,6 +5,8 @@
 //===========================================================================//
 
 #include "cbase.h"
+#include "filesystem.h"
+#include "KeyValues.h"
 #include "mountsteamcontent.h"
 // Andrew; grab only what we need from Open Steamworks.
 #include "SteamTypes.h"
@@ -71,4 +73,61 @@ bool Steam_MountSteamContent( int nExtraAppId )
 	delete[] App.szUnkString;
 
 	return true;
+}
+
+//Andrew; this allows us to mount content the user wants on top of the existing
+//game content which is automatically loaded by the engine, and then by the
+//game code
+void MountUserContent()
+{
+	KeyValues *pMainFile, *pFileSystemInfo;
+#ifdef CLIENT_DLL
+	const char *gamePath = engine->GetGameDirectory();
+#else
+	char gamePath[256];
+	engine->GetGameDir( gamePath, 256 );
+	Q_StripTrailingSlash( gamePath );
+#endif
+
+	pMainFile = new KeyValues( "gamecontent.txt" );
+#ifdef CLIENT_DLL
+#define UTIL_VarArgs VarArgs //Andrew; yep.
+#endif
+//On linux because of case sensitiviy we need to check for both.
+#ifdef _LINUX
+	if ( pMainFile->LoadFromFile( filesystem, UTIL_VarArgs("%s/GameContent.txt", gamePath), "MOD" ) )
+	{
+		pFileSystemInfo = pMainFile->FindKey( "FileSystem" );
+		if (pFileSystemInfo)
+		{
+			for ( KeyValues *pKey = pFileSystemInfo->GetFirstSubKey(); pKey; pKey = pKey->GetNextKey() )
+			{
+				if ( strcmp( pKey->GetName(), "AppId" ) == 0 )
+				{
+					int nExtraContentId = pKey->GetInt();
+					if (nExtraContentId)
+						Steam_MountSteamContent( nExtraContentId );
+				}
+			}
+		}
+	}
+	else
+#endif
+	if ( pMainFile->LoadFromFile( filesystem, UTIL_VarArgs("%s/gamecontent.txt", gamePath), "MOD" ) )
+	{
+		pFileSystemInfo = pMainFile->FindKey( "FileSystem" );
+		if (pFileSystemInfo)
+		{
+			for ( KeyValues *pKey = pFileSystemInfo->GetFirstSubKey(); pKey; pKey = pKey->GetNextKey() )
+			{
+				if ( strcmp( pKey->GetName(), "AppId" ) == 0 )
+				{
+					int nExtraContentId = pKey->GetInt();
+					if (nExtraContentId)
+						Steam_MountSteamContent( nExtraContentId );
+				}
+			}
+		}
+	}
+	pMainFile->deleteThis();
 }

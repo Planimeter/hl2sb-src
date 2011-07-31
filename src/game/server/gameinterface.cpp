@@ -84,7 +84,14 @@
 #include "steam/steam_api.h"
 #include "tier3/tier3.h"
 #include "serverbenchmark_base.h"
+
+#ifdef LUA_SDK
 #include "luamanager.h"
+#endif
+
+#ifdef HL2SB
+#include "mountsteamcontent.h"
+#endif
 
 #ifdef CSTRIKE_DLL // BOTPORT: TODO: move these ifdefs out
 #include "bot/bot.h"
@@ -618,6 +625,11 @@ bool CServerGameDLL::DLLInit( CreateInterfaceFn appSystemFactory,
 
 	//Tony; mount an extra appId if it exists.
 	MountAdditionalContent();
+
+#if defined ( HL2SB )
+	//Andrew; then mount everything the user wants to use.
+	MountUserContent();
+#endif
 
 	// cache the globals
 	gpGlobals = pGlobals;

@@ -93,7 +93,14 @@
 #include "cdll_bounded_cvars.h"
 #include "matsys_controls/matsyscontrols.h"
 #include "GameStats.h"
+
+#ifdef LUA_SDK
 #include "luamanager.h"
+#endif
+
+#ifdef HL2SB
+#include "mountsteamcontent.h"
+#endif
 
 #ifdef PORTAL
 #include "PortalRender.h"
@@ -793,6 +800,11 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 
 	//Tony; mount an extra appId if it exists.
 	MountAdditionalContent();
+
+#if defined ( HL2SB )
+	//Andrew; then mount everything the user wants to use.
+	MountUserContent();
+#endif
 
 	if ( CommandLine()->FindParm( "-textmode" ) )
 		g_bTextMode = true;
