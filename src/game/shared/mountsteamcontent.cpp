@@ -127,7 +127,6 @@ void MountUserContent()
 				if ( strcmp( pKey->GetName(), "AppId" ) == 0 )
 				{
 					int nExtraContentId = pKey->GetInt();
-					Msg( "Got AppID %n, attempting to mount...\n", nExtraContentId );
 					if (nExtraContentId)
 						Steam_MountSteamContent( nExtraContentId );
 				}
