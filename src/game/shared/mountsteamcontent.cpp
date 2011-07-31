@@ -35,13 +35,13 @@ bool Steam_MountSteamContent( int nExtraAppId )
 
 	TSteamApp App;
 	App.szName = new char[ 255 ];
-	App.uMaxNameChars = sizeof( App.szName );
+	App.uMaxNameChars = 255;
 	App.szLatestVersionLabel = new char[ 255 ];
-	App.uMaxLatestVersionLabelChars = sizeof( App.szLatestVersionLabel );
+	App.uMaxLatestVersionLabelChars = 255;
 	App.szCurrentVersionLabel = new char[ 255 ];
-	App.uMaxCurrentVersionLabelChars = sizeof( App.uMaxCurrentVersionLabelChars );
+	App.uMaxCurrentVersionLabelChars = 255;
 	App.szInstallDirName = new char[ 255 ];
-	App.uMaxInstallDirNameChars = sizeof( App.szInstallDirName );
+	App.uMaxInstallDirNameChars = 255;
 	App.szUnkString = new char[ 255 ];
 
 	if( pSteam006->EnumerateApp( nExtraAppId, &App, &Error ) != 1 || Error.eSteamError != eSteamErrorNone )
@@ -54,6 +54,10 @@ bool Steam_MountSteamContent( int nExtraAppId )
 
 		return false;
 	}
+
+#ifdef CLIENT_DLL
+	Msg( "Mounting %s...\n", App.szName );
+#endif
 
 	for( unsigned int n = 0; n < App.uNumDependencies; n++ )
 	{
@@ -123,6 +127,7 @@ void MountUserContent()
 				if ( strcmp( pKey->GetName(), "AppId" ) == 0 )
 				{
 					int nExtraContentId = pKey->GetInt();
+					Msg( "Got AppID %n, attempting to mount...\n", nExtraContentId );
 					if (nExtraContentId)
 						Steam_MountSteamContent( nExtraContentId );
 				}
