@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\lua-5.1.4\src;..\..\lua-5.1.4\etc;.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;hl2mp\UI;.\hl2mp;..\..\game\shared\hl2mp;.\hl2;.\hl2\elements;..\..\game\shared\hl2;..\..\game\shared\Multiplayer;..\..\game\shared\episodic"
+				AdditionalIncludeDirectories="..\..\lua-5.1.4\src;..\..\lua-5.1.4\etc;..\..\open-steamworks\Open Steamworks;.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;hl2mp\UI;.\hl2mp;..\..\game\shared\hl2mp;.\hl2;.\hl2\elements;..\..\game\shared\hl2;..\..\game\shared\Multiplayer;..\..\game\shared\episodic"
 				PreprocessorDefinitions="WIN32;_WIN32;_DEBUG;DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;NO_STRING_T;CLIENT_DLL;VECTOR;PROTECTED_THINGS_ENABLE;fopen=dont_use_fopen;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;ENABLE_HTMLWINDOW;HL2MP;HL2SB;HL2_CLIENT_DLL;HL2_EPISODIC;VERSION_SAFE_STEAM_API_INTERFACES;MP_SDK;LUA_SDK"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -170,7 +170,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..\..\lua-5.1.4\src;..\..\lua-5.1.4\etc;.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;hl2mp\UI;.\hl2mp;..\..\game\shared\hl2mp;.\hl2;.\hl2\elements;..\..\game\shared\hl2;..\..\game\shared\Multiplayer;..\..\game\shared\episodic"
+				AdditionalIncludeDirectories="..\..\lua-5.1.4\src;..\..\lua-5.1.4\etc;..\..\open-steamworks\Open Steamworks;.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;hl2mp\UI;.\hl2mp;..\..\game\shared\hl2mp;.\hl2;.\hl2\elements;..\..\game\shared\hl2;..\..\game\shared\Multiplayer;..\..\game\shared\episodic"
 				PreprocessorDefinitions="WIN32;_WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;NO_STRING_T;CLIENT_DLL;VECTOR;PROTECTED_THINGS_ENABLE;fopen=dont_use_fopen;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;ENABLE_HTMLWINDOW;HL2MP;HL2SB;HL2_CLIENT_DLL;HL2_EPISODIC;VERSION_SAFE_STEAM_API_INTERFACES;MP_SDK;LUA_SDK"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -1511,6 +1511,14 @@
 			</File>
 			<File
 				RelativePath=".\message.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\mountsteamcontent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\mountsteamcontent.h"
 				>
 			</File>
 			<File

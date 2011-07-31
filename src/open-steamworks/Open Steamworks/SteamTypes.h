@@ -35,8 +35,13 @@
 		#define _CRT_SECURE_NO_WARNINGS // we don't use unsafe functions unsafely!
 	#endif
 
+// Andrew; Don't include these in Source modifications
+#if defined ( HL2_DLL ) || defined ( HL2_CLIENT_DLL )
+	#pragma warning(disable:4245)
+#else
 	#include <sdkddkver.h>
 	#include <windows.h>
+#endif
 
 	#undef SendMessage // for ISteamGameCoordinator001 to work right..
 	#undef CreateProcess // for ISteam2Bridge
