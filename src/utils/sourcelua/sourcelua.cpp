@@ -11,7 +11,11 @@
 
 #include <stdio.h>
 #include "interface.h"
+#ifdef SOURCELUA_2009
+#include "filesystemV18.h"
+#else
 #include "filesystem.h"
+#endif
 #include "engine/iserverplugin.h"
 #include "eiface.h"
 #include "igameevents.h"

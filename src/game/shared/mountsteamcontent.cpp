@@ -55,7 +55,7 @@ bool Steam_MountSteamContent( int nExtraAppId )
 		return false;
 	}
 
-#ifdef CLIENT_DLL
+#ifdef GAME_DLL
 	Msg( "Mounting %s...\n", App.szName );
 #endif
 
@@ -67,7 +67,11 @@ bool Steam_MountSteamContent( int nExtraAppId )
 			continue;
 
 		if( !pSteam006->MountFilesystem( Info.AppId, Info.szMountName, &Error ) || Error.eSteamError != eSteamErrorNone )
+		{
+#ifdef GAME_DLL
 			Warning( "%s\n", Error.szDesc );
+#endif
+		}
 	}
 
 	delete[] App.szName;
@@ -77,6 +81,38 @@ bool Steam_MountSteamContent( int nExtraAppId )
 	delete[] App.szUnkString;
 
 	return true;
+}
+
+typedef struct
+{
+	const char *m_pPathName;
+	int m_nAppId;
+} gamePaths_t;
+gamePaths_t g_GamePaths[10] =
+{
+	{ "hl2",		220 },
+	{ "cstrike",	240 },
+	{ "hl",			280 },
+	{ "dod",		300 },
+	{ "lostcoast",	340 },
+	{ "hldm",		360 },
+	{ "episodic",	380 },
+	{ "portal",		400 },
+	{ "ep2",		420 },
+	{ "tf",			440 }
+};
+
+void AddSearchPathByAppId( int nAppId )
+{
+	for ( int i=0; i < ARRAYSIZE( g_GamePaths ); i++ )
+	{
+		int iVal = g_GamePaths[i].m_nAppId;
+		if ( iVal == nAppId )
+		{
+			const char *pathName = g_GamePaths[i].m_pPathName;
+			filesystem->AddSearchPath( pathName, "GAME", PATH_ADD_TO_TAIL );
+		}
+	}
 }
 
 //Andrew; this allows us to mount content the user wants on top of the existing
@@ -110,7 +146,10 @@ void MountUserContent()
 				{
 					int nExtraContentId = pKey->GetInt();
 					if (nExtraContentId)
+					{
+						AddSearchPathByAppId( nExtraContentId );
 						Steam_MountSteamContent( nExtraContentId );
+					}
 				}
 			}
 		}
@@ -128,7 +167,10 @@ void MountUserContent()
 				{
 					int nExtraContentId = pKey->GetInt();
 					if (nExtraContentId)
+					{
+						AddSearchPathByAppId( nExtraContentId );
 						Steam_MountSteamContent( nExtraContentId );
+					}
 				}
 			}
 		}
