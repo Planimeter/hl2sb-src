@@ -11,8 +11,9 @@
 
 #include <stdio.h>
 #include "interface.h"
-#ifdef SOURCELUA_2009
-#include "filesystemV18.h"
+#ifdef SOURCELUA_2011
+#include "filesystem_passthruV19.h"
+#include "filesystemV19.h"
 #else
 #include "filesystem.h"
 #endif
@@ -175,6 +176,11 @@ bool CSourceLua::Load(	CreateInterfaceFn interfaceFactory, CreateInterfaceFn gam
 		Warning( "Unable to load modelinfo, ignoring\n" );
 	if ( (filesystem = (IFileSystem *)interfaceFactory(FILESYSTEM_INTERFACE_VERSION,NULL)) == NULL )
 		Warning( "Unable to load filesystem, ignoring\n" );
+#ifdef SOURCELUA_2011
+	else
+		// Andrew; this is dumb.
+		g_pFullFileSystem = filesystem;
+#endif
 	if ( (datacache = (IDataCache*)interfaceFactory(DATACACHE_INTERFACE_VERSION, NULL )) == NULL )
 		Warning( "Unable to load datacache, ignoring\n" );
 	if ( (soundemitterbase = (ISoundEmitterSystemBase *)interfaceFactory(SOUNDEMITTERSYSTEM_INTERFACE_VERSION, NULL)) == NULL )
