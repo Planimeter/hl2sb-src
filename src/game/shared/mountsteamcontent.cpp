@@ -31,7 +31,28 @@ bool Steam_MountSteamContent( int nExtraAppId )
 	if( !pSteam006 )
 		return false;
 
+	char szUser[ 255 ];
+	uint32 userChars;
+	TSteamGlobalUserID globalId;
+
 	TSteamError Error;
+
+	if ( !pSteam006->GetUser( szUser, sizeof( szUser ), &userChars, &globalId, &Error ) )
+	{
+		Warning( "%s\n", Error.szDesc );
+		return false;
+	}
+
+	int pbOwned;
+
+	if ( !pSteam006->CheckAppOwnership( nExtraAppId, &pbOwned, &globalId, &Error ) )
+	{
+		Warning( "%s\n", Error.szDesc );
+		return false;
+	}
+
+	if ( !pbOwned )
+		return false;
 
 	TSteamApp App;
 	App.szName = new char[ 255 ];
