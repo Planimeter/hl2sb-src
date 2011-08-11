@@ -103,24 +103,67 @@ void ResetEntityFactoryDatabase( void )
 #endif
 
 
-acttable_t CHL2MPScriptedWeapon::m_acttable[] = 
-{
-	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_PISTOL,					false },
-	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_PISTOL,			false },
+// acttable_t CHL2MPScriptedWeapon::m_acttable[] = 
+// {
+// 	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_PISTOL,					false },
+// 	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_PISTOL,			false },
+// 
+// 	{ ACT_MP_RUN,						ACT_HL2MP_RUN_PISTOL,					false },
+// 	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_PISTOL,			false },
+// 
+// 	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL,	false },
+// 	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL,	false },
+// 
+// 	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_PISTOL,		false },
+// 	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_PISTOL,		false },
+// 
+// 	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_PISTOL,					false },
+// };
 
-	{ ACT_MP_RUN,						ACT_HL2MP_RUN_PISTOL,					false },
-	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_PISTOL,			false },
+// IMPLEMENT_ACTTABLE( CHL2MPScriptedWeapon );
 
-	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL,	false },
-	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL,	false },
+// These functions serve as skeletons for the our weapons' actions to be
+// implemented in Lua.
+acttable_t *CHL2MPScriptedWeapon::ActivityList( void ) {
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "m_acttable" );
+	lua_remove( L, -2 );
+	if ( lua_istable( L, -1 ) )
+	{
+		for( int i = 0 ; i < LUA_MAX_WEAPON_ACTIVITIES ; i++ )
+		{
+			lua_pushinteger( L, i );
+			lua_gettable( L, -2 );
+			if ( lua_istable( L, -1 ) )
+			{
+				m_acttable[i].baseAct = ACT_INVALID;
+				lua_pushinteger( L, 1 );
+				lua_gettable( L, -2 );
+				if ( lua_isnumber( L, -1 ) )
+					m_acttable[i].baseAct = lua_tointeger( L, -1 );
+				lua_pop( L, 1 );
 
-	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_PISTOL,		false },
-	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_PISTOL,		false },
+				m_acttable[i].weaponAct = ACT_INVALID;
+				lua_pushinteger( L, 2 );
+				lua_gettable( L, -2 );
+				if ( lua_isnumber( L, -1 ) )
+					m_acttable[i].weaponAct = lua_tointeger( L, -1 );
+				lua_pop( L, 1 );
 
-	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_PISTOL,					false },
-};
-
-IMPLEMENT_ACTTABLE( CHL2MPScriptedWeapon );
+				m_acttable[i].required = false;
+				lua_pushinteger( L, 3 );
+				lua_gettable( L, -2 );
+				if ( lua_isboolean( L, -1 ) )
+					m_acttable[i].required = (bool)lua_toboolean( L, -1 );
+				lua_pop( L, 1 );
+			}
+			lua_pop( L, 1 );
+		}
+	}
+	lua_pop( L, 1 );
+	return m_acttable;
+}
+int CHL2MPScriptedWeapon::ActivityListCount( void ) { return LUA_MAX_WEAPON_ACTIVITIES; }
 
 //-----------------------------------------------------------------------------
 // Purpose: 

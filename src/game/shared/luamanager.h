@@ -13,21 +13,24 @@
 
 #include "lua.hpp"
 
-#define LUA_ROOT                "lua" // Can't be "LUA_PATH" because luaconf.h uses it.
-#define LUA_PATH_CACHE          "cache\\lua"
-#define LUA_PATH_ENUM           LUA_ROOT "\\includes\\enum"
-#define LUA_PATH_EXTENSIONS     LUA_ROOT "\\includes\\extensions"
-#define LUA_PATH_MODULES        LUA_ROOT "\\includes\\modules"
-#define LUA_PATH_INCLUDES       LUA_ROOT "\\includes"
-#define LUA_PATH_AUTORUN        LUA_ROOT "\\autorun"
-#define LUA_PATH_AUTORUN_CLIENT LUA_ROOT "\\autorun\\client"
-#define LUA_PATH_AUTORUN_SERVER LUA_ROOT "\\autorun\\server"
-#define LUA_PATH_ENTITIES       LUA_ROOT "\\entities"
-#define LUA_PATH_WEAPONS        LUA_ROOT "\\weapons"
+#define LUA_ROOT					"lua" // Can't be "LUA_PATH" because luaconf.h uses it.
+#define LUA_PATH_CACHE				"cache\\lua"
+#define LUA_PATH_ENUM				LUA_ROOT "\\includes\\enum"
+#define LUA_PATH_EXTENSIONS			LUA_ROOT "\\includes\\extensions"
+#define LUA_PATH_MODULES			LUA_ROOT "\\includes\\modules"
+#define LUA_PATH_INCLUDES			LUA_ROOT "\\includes"
+#define LUA_PATH_AUTORUN			LUA_ROOT "\\autorun"
+#define LUA_PATH_AUTORUN_CLIENT		LUA_ROOT "\\autorun\\client"
+#define LUA_PATH_AUTORUN_SERVER		LUA_ROOT "\\autorun\\server"
+#define LUA_PATH_ENTITIES			LUA_ROOT "\\entities"
+#define LUA_PATH_WEAPONS			LUA_ROOT "\\weapons"
 
 
-#define LUA_BASE_WEAPON         "weapon_hl2mpbase_scriptedweapon"
-#define LUA_BASE_GAMEMODE       "deathmatch"
+#define LUA_BASE_WEAPON				"weapon_hl2mpbase_scriptedweapon"
+#define LUA_BASE_GAMEMODE			"deathmatch"
+
+
+#define LUA_MAX_WEAPON_ACTIVITIES	32
 
 
 #pragma warning( disable: 4800 )	// forcing value to bool 'true' or 'false' (performance warning)

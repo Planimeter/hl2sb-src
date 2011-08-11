@@ -5,6 +5,7 @@
 //=============================================================================//
 
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
+#include "luamanager.h"
 
 #ifndef BASEHLCOMBATWEAPON_H
 #define BASEHLCOMBATWEAPON_H
@@ -32,7 +33,11 @@ public:
 	
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
-	DECLARE_ACTTABLE();
+	// DECLARE_ACTTABLE();
+
+	acttable_t m_acttable[LUA_MAX_WEAPON_ACTIVITIES];
+	acttable_t *ActivityList( void );
+	int ActivityListCount( void );
 
 	void			Precache( void );
 	void			InitScriptedWeapon( void );
