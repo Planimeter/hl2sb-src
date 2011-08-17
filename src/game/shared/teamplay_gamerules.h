@@ -77,7 +77,15 @@ public:
 	virtual void DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info );
 	virtual const char *GetGameDescription( void ) { return "Teamplay"; }  // this is the game name that gets seen in the server browser
 	virtual void PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &info );
+#endif
+#ifdef LUA_SDK
 	virtual void Think ( void );
+#else
+#ifndef CLIENT_DLL
+	virtual void Think ( void );
+#endif
+#endif
+#ifndef CLIENT_DLL
 	virtual int GetTeamIndex( const char *pTeamName );
 	virtual const char *GetIndexedTeamName( int teamIndex );
 	virtual bool IsValidTeam( const char *pTeamName );

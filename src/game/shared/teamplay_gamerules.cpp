@@ -61,6 +61,49 @@ void CTeamplayRules::Precache( void )
 	}
 }
 
+#endif
+#ifdef LUA_SDK
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTeamplayRules::Think ( void )
+{
+#ifndef CLIENT_DLL
+	BaseClass::Think();
+
+	///// Check game rules /////
+
+	if ( g_fGameOver )   // someone else quit the game already
+	{
+		BaseClass::Think();
+		return;
+	}
+
+	float flTimeLimit = mp_timelimit.GetFloat() * 60;
+	
+	if ( flTimeLimit != 0 && gpGlobals->curtime >= flTimeLimit )
+	{
+		ChangeLevel();
+		return;
+	}
+
+	float flFragLimit = fraglimit.GetFloat();
+	if ( flFragLimit )
+	{
+		// check if any team is over the frag limit
+		for ( int i = 0; i < num_teams; i++ )
+		{
+			if ( team_scores[i] >= flFragLimit )
+			{
+				ChangeLevel();
+				return;
+			}
+		}
+	}
+#endif
+}
+#else
+#ifndef CLIENT_DLL
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -98,6 +141,9 @@ void CTeamplayRules::Think ( void )
 		}
 	}
 }
+#endif
+#endif
+#ifndef CLIENT_DLL
 
 //=========================================================
 // ClientCommand

@@ -1323,6 +1323,26 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 	{
 	}
 
+#endif
+#ifdef LUA_SDK
+	void CHalfLife2::Think( void )
+	{
+#ifndef CLIENT_DLL
+		BaseClass::Think();
+
+		if( physcannon_mega_enabled.GetBool() == true )
+		{
+			m_bMegaPhysgun = true;
+		}
+		else
+		{
+			// FIXME: Is there a better place for this?
+			m_bMegaPhysgun = ( GlobalEntity_GetState("super_phys_gun") == GLOBAL_ON );
+		}
+#endif
+	}
+#else
+#ifndef CLIENT_DLL
 	void CHalfLife2::Think( void )
 	{
 		BaseClass::Think();
@@ -1337,6 +1357,9 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 			m_bMegaPhysgun = ( GlobalEntity_GetState("super_phys_gun") == GLOBAL_ON );
 		}
 	}
+#endif
+#endif
+#ifndef CLIENT_DLL
 
 	//-----------------------------------------------------------------------------
 	// Purpose: Returns how much damage the given ammo type should do to the victim
