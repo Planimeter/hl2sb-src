@@ -250,7 +250,9 @@ public:
 				if ( pEntity->IsEFlagSet(EFL_NO_GAME_PHYSICS_SIMULATION) )
 				{
 					m_simThinkList[m_entinfoIndex[index]].nextThinkTick = pEntity->GetFirstThinkTick();
+#ifndef HL2SB
 					Assert(m_simThinkList[m_entinfoIndex[index]].nextThinkTick>=0);
+#endif
 				}
 			}
 			else
@@ -259,9 +261,6 @@ public:
 				if ( pEntity->IsEFlagSet(EFL_NO_GAME_PHYSICS_SIMULATION) )
 				{
 					m_simThinkList[m_entinfoIndex[index]].nextThinkTick = pEntity->GetFirstThinkTick();
-					// FIXME: removing, why would this ever need to be asserted? Is it assumed
-					// every entity with no physics simulation has an initial think ran for at
-					// least one frame?
 #ifndef HL2SB
 					Assert(m_simThinkList[m_entinfoIndex[index]].nextThinkTick>=0);
 #endif
