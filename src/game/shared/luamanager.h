@@ -35,9 +35,6 @@
 
 #pragma warning( disable: 4800 )	// forcing value to bool 'true' or 'false' (performance warning)
 
-//Andrew; while we're in development, let's just leave this at 1
-#define DEBUG_LUA_STACK 1
-
 #define BEGIN_LUA_CALL_HOOK(functionName) \
   lua_getglobal(L, "hook"); \
   if (lua_istable(L, -1)) { \

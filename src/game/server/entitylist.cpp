@@ -201,11 +201,13 @@ public:
 			// only copy out entities that will simulate or think this frame
 			if ( m_simThinkList[i].nextThinkTick <= gpGlobals->tickcount )
 			{
-				Assert(m_simThinkList[i].nextThinkTick>=0);
+				// FIXME: Why isn't a check for this done so entities can be
+				// removed from the list and later just request simulation?
+				// Assert(m_simThinkList[i].nextThinkTick>=0);
 				int entinfoIndex = m_simThinkList[i].entEntry;
 				const CEntInfo *pInfo = gEntList.GetEntInfoPtrByIndex( entinfoIndex );
 				pList[out] = (CBaseEntity *)pInfo->m_pEntity;
-				Assert(m_simThinkList[i].nextThinkTick==0 || pList[out]->GetFirstThinkTick()==m_simThinkList[i].nextThinkTick);
+				// Assert(m_simThinkList[i].nextThinkTick==0 || pList[out]->GetFirstThinkTick()==m_simThinkList[i].nextThinkTick);
 				Assert( gEntList.IsEntityPtr( pList[out] ) );
 				out++;
 			}
@@ -250,7 +252,10 @@ public:
 				if ( pEntity->IsEFlagSet(EFL_NO_GAME_PHYSICS_SIMULATION) )
 				{
 					m_simThinkList[m_entinfoIndex[index]].nextThinkTick = pEntity->GetFirstThinkTick();
-					Assert(m_simThinkList[m_entinfoIndex[index]].nextThinkTick>=0);
+					// FIXME: removing, why would this ever need to be asserted? Is it assumed
+					// every entity with no physics simulation has an initial think ran for at
+					// least one frame?
+					// Assert(m_simThinkList[m_entinfoIndex[index]].nextThinkTick>=0);
 				}
 				else
 				{

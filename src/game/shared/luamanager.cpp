@@ -173,7 +173,8 @@ void luasrc_setmodulepaths(lua_State *L) {
 
   //Andrew; set package.cpath.
   lua_getfield(L, -1, "cpath");
-  char lookupCPath[MAX_PATH];
+  //MAX_PATH + package.cpath:len();
+  char lookupCPath[MAX_PATH+99];
   Q_snprintf( lookupCPath, sizeof( lookupCPath ), "%s\\%s;%s", gamePath,
 #ifdef _WIN32
     LUA_PATH_MODULES "\\?.dll",
@@ -189,7 +190,8 @@ void luasrc_setmodulepaths(lua_State *L) {
 
   //Andrew; set package.path.
   lua_getfield(L, -1, "path");
-  char lookupPath[MAX_PATH];
+  //MAX_PATH + package.path:len();
+  char lookupPath[MAX_PATH+197];
   Q_snprintf( lookupPath, sizeof( lookupPath ), "%s\\%s;%s", gamePath, LUA_PATH_MODULES "\\?.lua", luaL_checkstring(L, -1) );
   Q_strlower( lookupPath );
   Q_FixSlashes( lookupPath );
@@ -672,7 +674,7 @@ static int DoFileCompletion( const char *partial, char commands[ COMMAND_COMPLET
 	}
 #endif
 
-#if DEBUG_LUA_STACK
+#if DEBUG
 #ifdef CLIENT_DLL
 	CON_COMMAND( lua_dumpstack_cl, "Prints the Lua stack" )
 	{
