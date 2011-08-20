@@ -275,7 +275,12 @@ float CPropHL2Buggy::GetUprightStrength( void )
 void CPropHL2Buggy::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
 {
 	// Fall back and get in the vehicle instead, skip giving ammo
+#ifndef HL2SB
+	BaseClass::BaseClass::Use( pActivator, pCaller, useType, value );
+#else
+	// Andrew; don't skip giving ammo with the jeep
 	BaseClass::Use( pActivator, pCaller, useType, value );
+#endif
 }
 
 #define	MIN_WHEEL_DUST_SPEED	5

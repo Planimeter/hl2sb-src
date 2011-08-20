@@ -39,9 +39,14 @@
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 #include "decals.h"
 #include "obstacle_pushaway.h"
-#include "luamanager.h"
-#include "lbaseplayer_shared.h"
-#include "mathlib/lvector.h"
+
+#if defined( LUA_SDK )
+
+	#include "luamanager.h"
+	#include "lbaseplayer_shared.h"
+	#include "mathlib/lvector.h"
+
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

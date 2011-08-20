@@ -36,7 +36,9 @@ private:
 	CNetworkVar( bool,	m_bDelayedFire1 );	// Fire primary when finished reloading
 	CNetworkVar( bool,	m_bDelayedFire2 );	// Fire secondary when finished reloading
 	CNetworkVar( bool,	m_bDelayedReload );	// Reload when finished pump
+#ifdef HL2SB
 	CNetworkVar( bool,	m_bInReload );
+#endif
 
 public:
 	virtual const Vector& GetBulletSpread( void )
@@ -48,7 +50,9 @@ public:
 	virtual int				GetMinBurst() { return 1; }
 	virtual int				GetMaxBurst() { return 3; }
 
+#ifdef HL2SB
 	bool Holster( CBaseCombatWeapon *pSwitchingTo );
+#endif
 	bool StartReload( void );
 	bool Reload( void );
 	void FillClip( void );
@@ -79,13 +83,17 @@ BEGIN_NETWORK_TABLE( CWeaponShotgun, DT_WeaponShotgun )
 	RecvPropBool( RECVINFO( m_bDelayedFire1 ) ),
 	RecvPropBool( RECVINFO( m_bDelayedFire2 ) ),
 	RecvPropBool( RECVINFO( m_bDelayedReload ) ),
+#ifdef HL2SB
 	RecvPropBool( RECVINFO( m_bInReload ) ),
+#endif
 #else
 	SendPropBool( SENDINFO( m_bNeedPump ) ),
 	SendPropBool( SENDINFO( m_bDelayedFire1 ) ),
 	SendPropBool( SENDINFO( m_bDelayedFire2 ) ),
 	SendPropBool( SENDINFO( m_bDelayedReload ) ),
+#ifdef HL2SB
 	SendPropBool( SENDINFO( m_bInReload ) ),
+#endif
 #endif
 END_NETWORK_TABLE()
 
@@ -95,7 +103,9 @@ BEGIN_PREDICTION_DATA( CWeaponShotgun )
 	DEFINE_PRED_FIELD( m_bDelayedFire1, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_bDelayedFire2, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_bDelayedReload, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
+#ifdef HL2SB
 	DEFINE_PRED_FIELD( m_bInReload, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
+#endif
 END_PREDICTION_DATA()
 #endif
 
@@ -122,12 +132,14 @@ acttable_t	CWeaponShotgun::m_acttable[] =
 IMPLEMENT_ACTTABLE(CWeaponShotgun);
 
 
+#ifdef HL2SB
 bool CWeaponShotgun::Holster( CBaseCombatWeapon *pSwitchingTo )
 {
 	m_bInReload = false;
 
 	return BaseClass::Holster( pSwitchingTo );
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Override so only reload one shell at a time

@@ -344,7 +344,9 @@ public:
 	virtual void	Render2DEffectsPostHUD( const CViewSetup &view );
 
 
+#ifdef HL2SB
 	virtual void    MP_PostSimulate();
+#endif
 
 	void			DisableFog( void );
 

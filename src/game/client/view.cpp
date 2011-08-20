@@ -879,6 +879,7 @@ void CViewRender::Render( vrect_t *rect )
 	render->PopView( GetFrustum() );
 }
 
+#if HL2SB
 void CViewRender::MP_PostSimulate()
 {
 	C_BasePlayer *pLocal = C_BasePlayer::GetLocalPlayer();
@@ -932,6 +933,7 @@ void CViewRender::MP_PostSimulate()
 
 
 }
+#endif
 
 static void GetPos( const CCommand &args, Vector &vecOrigin, QAngle &angles )
 {

@@ -39,7 +39,9 @@
 #include "vgui/isurface.h"
 #include "voice_status.h"
 #include "fx.h"
+#ifdef LUA_SDK
 #include "luamanager.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

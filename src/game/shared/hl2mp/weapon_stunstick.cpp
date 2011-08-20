@@ -35,8 +35,10 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef HL2SB
 ConVar    sk_plr_dmg_stunstick	( "sk_plr_dmg_stunstick","0",FCVAR_REPLICATED );
 ConVar    sk_npc_dmg_stunstick	( "sk_npc_dmg_stunstick","0",FCVAR_REPLICATED );
+#endif
 
 extern ConVar metropolice_move_and_melee;
 

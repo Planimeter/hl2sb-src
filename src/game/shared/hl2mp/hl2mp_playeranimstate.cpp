@@ -161,16 +161,21 @@ void CHL2MPPlayerAnimState::Update( float eyeYaw, float eyePitch )
 		ComputePoseParam_AimYaw( pStudioHdr );
 	}
 
-#ifdef CLIENT_DLL
+#ifdef CLIENT_DLL 
 	if ( C_BasePlayer::ShouldDrawLocalPlayer() )
 	{
 		m_pHL2MPPlayer->SetPlaybackRate( 1.0f );
 	}
-#else
+#endif
+
+#ifdef HL2SB
+#ifndef CLIENT_DLL
 	ComputePlaybackRate();
+#endif
 #endif
 }
 
+#ifdef HL2SB
 
 void CHL2MPPlayerAnimState::ComputePlaybackRate()
 {
@@ -188,6 +193,7 @@ void CHL2MPPlayerAnimState::ComputePlaybackRate()
 	}
 }
 
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : event - 
@@ -562,7 +568,12 @@ void CHL2MPPlayerAnimState::ComputePoseParam_MoveYaw( CStudioHdr *pStudioHdr )
 	// view direction relative to movement
 	float flYaw;	 
 
+#ifndef HL2SB
+	QAngle	angles = GetBasePlayer()->GetLocalAngles();
+	float ang = angles[ YAW ];
+#else
 	float ang = m_flEyeYaw;
+#endif
 	if ( ang > 180.0f )
 	{
 		ang -= 360.0f;

@@ -1440,7 +1440,9 @@ void CHLClient::LevelShutdown( void )
 	// string tables are cleared on disconnect from a server, so reset our global pointers to NULL
 	ResetStringTablePointers();
 
+#ifdef LUA_SDK
 	luasrc_shutdown();
+#endif
 }
 
 
@@ -1852,9 +1854,11 @@ void OnRenderStart()
 
 	C_BaseAnimating::ThreadedBoneSetup();
 
+#ifdef HL2SB
 	//Tony; in multiplayer do some extra stuff. like re-calc the view if in a vehicle!
 	if ( engine->GetMaxClients() > 1 )
 		view->MP_PostSimulate();
+#endif
 
 	{
 		VPROF_("Client TempEnts", 0, VPROF_BUDGETGROUP_CLIENT_SIM, false, BUDGETFLAG_CLIENT);

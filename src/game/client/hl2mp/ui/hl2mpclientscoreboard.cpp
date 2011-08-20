@@ -25,7 +25,9 @@
 #include "voice_status.h"
 #include "vgui_avatarimage.h"
 
+#ifdef LUA_SDK
 #include "luamanager.h"
+#endif
 
 using namespace vgui;
 

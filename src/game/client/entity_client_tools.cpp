@@ -12,8 +12,11 @@
 #include "particles/particles.h"
 #include "particle_parse.h"
 #include "rendertexture.h"
-#include "luamanager.h"
-#include "lbaseentity_shared.h"
+
+#ifdef LUA_SDK
+	#include "luamanager.h"
+	#include "lbaseentity_shared.h"
+#endif
 
 #ifdef PORTAL
 	#include "portalrender.h"

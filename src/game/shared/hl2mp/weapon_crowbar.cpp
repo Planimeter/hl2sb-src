@@ -30,8 +30,10 @@
 #define	CROWBAR_REFIRE	0.4f
 
 
+#ifdef HL2SB
 ConVar    sk_plr_dmg_crowbar		( "sk_plr_dmg_crowbar","0",FCVAR_REPLICATED );
 ConVar    sk_npc_dmg_crowbar		( "sk_npc_dmg_crowbar","0",FCVAR_REPLICATED );
+#endif
 
 //-----------------------------------------------------------------------------
 // CWeaponCrowbar

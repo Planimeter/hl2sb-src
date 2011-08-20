@@ -17,8 +17,11 @@
 #include "ai_initutils.h"
 #include "globalstate.h"
 #include "datacache/imdlcache.h"
+
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
+#endif // LUA_SDK
 
 #ifdef HL2_DLL
 #include "npc_playercompanion.h"
@@ -203,11 +206,15 @@ public:
 			{
 				// FIXME: Why isn't a check for this done so entities can be
 				// removed from the list and later just request simulation?
-				// Assert(m_simThinkList[i].nextThinkTick>=0);
+#ifndef HL2SB
+				Assert(m_simThinkList[i].nextThinkTick>=0);
+#endif
 				int entinfoIndex = m_simThinkList[i].entEntry;
 				const CEntInfo *pInfo = gEntList.GetEntInfoPtrByIndex( entinfoIndex );
 				pList[out] = (CBaseEntity *)pInfo->m_pEntity;
-				// Assert(m_simThinkList[i].nextThinkTick==0 || pList[out]->GetFirstThinkTick()==m_simThinkList[i].nextThinkTick);
+#ifndef HL2SB
+				Assert(m_simThinkList[i].nextThinkTick==0 || pList[out]->GetFirstThinkTick()==m_simThinkList[i].nextThinkTick);
+#endif
 				Assert( gEntList.IsEntityPtr( pList[out] ) );
 				out++;
 			}
@@ -255,7 +262,9 @@ public:
 					// FIXME: removing, why would this ever need to be asserted? Is it assumed
 					// every entity with no physics simulation has an initial think ran for at
 					// least one frame?
-					// Assert(m_simThinkList[m_entinfoIndex[index]].nextThinkTick>=0);
+#ifndef HL2SB
+					Assert(m_simThinkList[m_entinfoIndex[index]].nextThinkTick>=0);
+#endif
 				}
 				else
 				{

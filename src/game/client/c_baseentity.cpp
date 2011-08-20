@@ -40,7 +40,9 @@
 #include "decals.h"
 #include "cdll_bounded_cvars.h"
 #include "inetchannelinfo.h"
+#ifdef LUA_SDK
 #include "luamanager.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

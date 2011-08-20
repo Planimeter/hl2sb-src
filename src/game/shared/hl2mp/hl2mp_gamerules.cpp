@@ -10,15 +10,19 @@
 #include "gameeventdefs.h"
 #include <KeyValues.h>
 #include "ammodef.h"
-#include "hl2_shareddefs.h"
-#if defined ( LUA_SDK )
-#include "takedamageinfo.h"
-#include "luamanager.h"
-#include "lbasecombatweapon_shared.h"
-#include "lbaseentity_shared.h"
-#include "lbaseplayer_shared.h"
-#include "ltakedamageinfo.h"
-#include "mathlib/lvector.h"
+
+#ifdef HL2SB
+	#include "hl2_shareddefs.h"
+#endif
+
+#ifdef LUA_SDK
+	#include "takedamageinfo.h"
+	#include "luamanager.h"
+	#include "lbasecombatweapon_shared.h"
+	#include "lbaseentity_shared.h"
+	#include "lbaseplayer_shared.h"
+	#include "ltakedamageinfo.h"
+	#include "mathlib/lvector.h"
 #endif
 
 #ifdef CLIENT_DLL
@@ -43,9 +47,9 @@
 	#include "hl2mp_gameinterface.h"
 	#include "hl2mp_cvars.h"
 
-// #ifdef DEBUG	
+#if defined( DEBUG ) || defined( LUA_SDK )	
 	#include "hl2mp_bot_temp.h"
-// #endif
+#endif
 
 extern void respawn(CBaseEntity *pEdict, bool fCopyCorpse);
 
@@ -818,7 +822,13 @@ float CHL2MPRules::FlItemRespawnTime( CItem *pItem )
 //=========================================================
 bool CHL2MPRules::CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem )
 {
-#if defined ( LUA_SDK )
+#if !defined ( LUA_SDK )
+	if ( weaponstay.GetInt() > 0 )
+	{
+		if ( pPlayer->Weapon_OwnsThisType( pItem->GetClassname(), pItem->GetSubType() ) )
+			 return false;
+	}
+#else
 	BEGIN_LUA_CALL_HOOK( "CanHavePlayerItem" );
 		lua_pushplayer( L, pPlayer );
 		lua_pushweapon( L, pItem );
@@ -1163,20 +1173,31 @@ void CHL2MPRules::InitHUD( CBasePlayer *pPlayer )
 
 const char *CHL2MPRules::GetGameDescription( void )
 { 
-#if defined ( LUA_SDK )
+#if !defined ( LUA_SDK )
+	if ( IsTeamplay() )
+		return "Team Deathmatch"; 
+#else
 	BEGIN_LUA_CALL_HOOK( "GetGameDescription" );
 	END_LUA_CALL_HOOK( 0, 1 );
 
 	RETURN_LUA_STRING();
 #endif
 
-	return "Half-Life 2: Sandbox";
+#if !defined( HL2SB )
+	return "Deathmatch"; 
+#else
+	return "Half-Life 2 Sandbox";
+#endif
 } 
 
 
 float CHL2MPRules::GetMapRemainingTime()
 {
-#if defined ( LUA_SDK )
+#if !defined ( LUA_SDK )
+	// if timelimit is disabled, return 0
+	if ( mp_timelimit.GetInt() <= 0 )
+		return 0;
+#else
 	BEGIN_LUA_CALL_HOOK( "GetMapRemainingTime" );
 	END_LUA_CALL_HOOK( 0, 1 );
 
@@ -1195,7 +1216,9 @@ float CHL2MPRules::GetMapRemainingTime()
 //-----------------------------------------------------------------------------
 void CHL2MPRules::Precache( void )
 {
-#if defined ( LUA_SDK )
+#if !defined ( LUA_SDK )
+	CBaseEntity::PrecacheScriptSound( "AlyxEmp.Charge" );
+#else
 	BEGIN_LUA_CALL_HOOK( "Precache" );
 	END_LUA_CALL_HOOK( 0, 0 );
 #endif
@@ -1264,6 +1287,18 @@ CAmmoDef *GetAmmoDef()
 	{
 		bInitted = true;
 
+#ifndef HL2SB
+		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	0,			0,			60,			BULLET_IMPULSE(200, 1225),	0 );
+		def.AddAmmoType("AR2AltFire",		DMG_DISSOLVE,				TRACER_NONE,			0,			0,			3,			0,							0 );
+		def.AddAmmoType("Pistol",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	0,			0,			150,		BULLET_IMPULSE(200, 1225),	0 );
+		def.AddAmmoType("SMG1",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	0,			0,			225,		BULLET_IMPULSE(200, 1225),	0 );
+		def.AddAmmoType("357",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	0,			0,			12,			BULLET_IMPULSE(800, 5000),	0 );
+		def.AddAmmoType("XBowBolt",			DMG_BULLET,					TRACER_LINE,			0,			0,			10,			BULLET_IMPULSE(800, 8000),	0 );
+		def.AddAmmoType("Buckshot",			DMG_BULLET | DMG_BUCKSHOT,	TRACER_LINE,			0,			0,			30,			BULLET_IMPULSE(400, 1200),	0 );
+		def.AddAmmoType("RPG_Round",		DMG_BURN,					TRACER_NONE,			0,			0,			3,			0,							0 );
+		def.AddAmmoType("SMG1_Grenade",		DMG_BURN,					TRACER_NONE,			0,			0,			3,			0,							0 );
+		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			0,			0,			5,			0,							0 );
+#else
 		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar2",			"sk_npc_dmg_ar2",			"sk_max_ar2",			BULLET_IMPULSE(200, 1225), 0 );
 		def.AddAmmoType("AlyxGun",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_alyxgun",		"sk_npc_dmg_alyxgun",		"sk_max_alyxgun",		BULLET_IMPULSE(200, 1225), 0 );
 		def.AddAmmoType("Pistol",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_pistol",		"sk_npc_dmg_pistol",		"sk_max_pistol",		BULLET_IMPULSE(200, 1225), 0 );
@@ -1338,6 +1373,7 @@ CAmmoDef *GetAmmoDef()
 		def.AddAmmoType("CombineHeavyCannon",	DMG_BULLET,				TRACER_LINE,			40,	40, NULL, 10 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED ); // hit like a 10 kg weight at 750 ft/s
 		def.AddAmmoType("ammo_proto1",			DMG_BULLET,				TRACER_LINE,			0, 0, 10, 0, 0 );
 #endif // HL2_EPISODIC
+#endif // HL2SB
 	}
 
 	return &def;
@@ -1353,7 +1389,7 @@ CAmmoDef *GetAmmoDef()
 
 #else
 
-// #ifdef DEBUG
+#if defined( DEBUG ) || defined( LUA_SDK )
 
 	// Handler for the "bot" command.
 	void Bot_f()
@@ -1375,12 +1411,16 @@ CAmmoDef *GetAmmoDef()
 	}
 
 
-	ConCommand cc_Bot( "bot", Bot_f, "Add a bot."/*, FCVAR_CHEAT */ );
+#ifndef LUA_SDK
+	ConCommand cc_Bot( "bot", Bot_f, "Add a bot.", FCVAR_CHEAT );
+#else
+	ConCommand cc_Bot( "bot", Bot_f, "Add a bot." );
+#endif
 
-// #endif
+#endif
 
 	bool CHL2MPRules::FShouldSwitchWeapon( CBasePlayer *pPlayer, CBaseCombatWeapon *pWeapon )
-	{	
+	{		
 #if defined ( LUA_SDK )
 		BEGIN_LUA_CALL_HOOK( "FShouldSwitchWeapon" );
 			lua_pushplayer( L, pPlayer );
@@ -1734,6 +1774,7 @@ const char *CHL2MPRules::GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer )
 	return pszFormat;
 }
 
+#ifdef HL2SB
 //------------------------------------------------------------------------------
 // Purpose : Initialize all default class relationships
 // Input   :
@@ -2663,4 +2704,5 @@ void CHL2MPRules::InitDefaultAIRelationships( void )
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE,			CLASS_PLAYER_ALLY_VITAL,D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE,			CLASS_HACKED_ROLLERMINE,D_LI, 0);
 }
+#endif
 #endif

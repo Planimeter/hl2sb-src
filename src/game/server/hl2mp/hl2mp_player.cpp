@@ -23,9 +23,11 @@
 #include "GameStats.h"
 #include "tier0/vprof.h"
 #include "bone_setup.h"
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseplayer_shared.h"
 #include "ltakedamageinfo.h"
+#endif
 
 #include "engine/IEngineSound.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
@@ -575,6 +577,8 @@ bool CHL2MP_Player::Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmodelinde
 
 void CHL2MP_Player::PreThink( void )
 {
+	//Andrew; See http://forums.steampowered.com/forums/showthread.php?t=1372727
+#ifdef HL2SB
 	QAngle vOldAngles = GetLocalAngles();
 	QAngle vTempAngles = GetLocalAngles();
 
@@ -586,13 +590,16 @@ void CHL2MP_Player::PreThink( void )
 	}
 
 	SetLocalAngles( vTempAngles );
+#endif
 
 	BaseClass::PreThink();
 	State_PreThink();
 
 	//Reset bullet force accumulator, only lasts one frame
 	m_vecTotalBulletForce = vec3_origin;
+#ifdef HL2SB
 	SetLocalAngles( vOldAngles );
+#endif
 }
 
 void CHL2MP_Player::PostThink( void )

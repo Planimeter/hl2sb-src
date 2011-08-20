@@ -21,11 +21,14 @@
 #include "collisionutils.h"
 #include "c_team.h"
 #include "obstacle_pushaway.h"
+
+#if defined( LUA_SDK )
 #include "luamanager.h"
 #include "lbaseplayer_shared.h"
 #include "lgametrace.h"
 #include "ltakedamageinfo.h"
 #include "mathlib/lvector.h"
+#endif
 
 // Don't alias here
 #if defined( CHL2MP_Player )

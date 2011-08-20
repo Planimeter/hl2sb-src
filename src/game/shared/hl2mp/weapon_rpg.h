@@ -70,8 +70,10 @@ public:
 
 	static CMissile *Create( const Vector &vecOrigin, const QAngle &vecAngles, edict_t *pentOwner );
 
+#ifdef HL2SB
 	static void AddCustomDetonator( CBaseEntity *pEntity, float radius, float height = -1 );
 	static void RemoveCustomDetonator( CBaseEntity *pEntity );
+#endif
 
 protected:
 	virtual void DoExplosion();	
@@ -89,6 +91,7 @@ protected:
 	float					m_flMarkDeadTime;
 	float					m_flDamage;
 
+#ifdef HL2SB
 	struct CustomDetonator_t
 	{
 		EHANDLE hEntity;
@@ -97,6 +100,7 @@ protected:
 	};
 
 	static CUtlVector<CustomDetonator_t> gm_CustomDetonators;
+#endif
 
 private:
 	float					m_flGracePeriodEndsAt;

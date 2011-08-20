@@ -72,11 +72,13 @@
 #include "weapon_physcannon.h"
 #endif
 
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseplayer_shared.h"
 #include "lgametrace.h"
 #include "ltakedamageinfo.h"
 #include "mathlib/lvector.h"
+#endif
 
 ConVar autoaim_max_dist( "autoaim_max_dist", "2160" ); // 2160 = 180 feet
 ConVar autoaim_max_deflect( "autoaim_max_deflect", "0.99" );

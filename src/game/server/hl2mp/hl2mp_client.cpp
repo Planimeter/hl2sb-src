@@ -111,7 +111,11 @@ const char *GetGameDescription()
 	if ( g_pGameRules ) // this function may be called before the world has spawned, and the game rules initialized
 		return g_pGameRules->GetGameDescription();
 	else
+#ifndef HL2SB
+		return "Half-Life 2 Deathmatch";
+#else
 		return "Half-Life 2 Sandbox";
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -181,10 +185,10 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
 
-// #ifdef DEBUG
+#if defined( DEBUG ) || defined( LUA_SDK )
 	extern void Bot_RunAll();
 	Bot_RunAll();
-// #endif
+#endif
 }
 
 //=========================================================

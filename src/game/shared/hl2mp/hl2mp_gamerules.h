@@ -108,10 +108,12 @@ public:
 	virtual void CreateStandardEntities( void );
 	virtual void ClientSettingsChanged( CBasePlayer *pPlayer );
 	virtual int PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget );
+#ifdef LUA_SDK
 #ifndef CLIENT_DLL
 	virtual bool PlayerCanHearChat( CBasePlayer *pListener, CBasePlayer *pSpeaker );
 	virtual bool ClientConnected( edict_t *pEntity, const char *pszName, const char *pszAddress, char *reject, int maxrejectlen );
 	virtual void InitHUD( CBasePlayer *pl );
+#endif
 #endif
 	virtual void GoToIntermission( void );
 	virtual void DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info );
@@ -139,12 +141,16 @@ public:
 	void    CheckChatForReadySignal( CHL2MP_Player *pPlayer, const char *chatmsg );
 	const char *GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer );
 
+#ifdef HL2SB
 	virtual void InitDefaultAIRelationships( void );
+#endif
 #endif
 	virtual void ClientDisconnected( edict_t *pClient );
 
+#ifdef LUA_SDK
 #ifndef CLIENT_DLL
 	virtual float FlPlayerFallDamage( CBasePlayer *pPlayer );
+#endif
 #endif
 
 	bool CheckGameOver( void );
@@ -154,6 +160,7 @@ public:
 
 	
 	bool	IsTeamplay( void ) { return m_bTeamPlayEnabled;	}
+#ifdef LUA_SDK
 #ifndef CLIENT_DLL
 	bool	FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker );
 	bool	AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info );
@@ -162,6 +169,7 @@ public:
 	void	PlayerThink( CBasePlayer *pPlayer );
 	bool	FPlayerCanRespawn( CBasePlayer *pPlayer );
 	float	FlPlayerSpawnTime( CBasePlayer *pPlayer );
+#endif
 #endif
 	void	CheckAllPlayersReady( void );
 	

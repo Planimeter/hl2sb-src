@@ -44,8 +44,10 @@
 #include "weapon_physcannon.h"
 #endif
 
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseplayer_shared.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -970,7 +972,9 @@ void CC_Player_PhysSwap( void )
 
 			if ( !Q_stricmp( strWeaponName, "weapon_physcannon" ) )
 			{
-				// PhysCannonForceDrop( pWeapon, NULL );
+#ifndef HL2SB
+				PhysCannonForceDrop( pWeapon, NULL );
+#endif
 				pPlayer->SelectLastItem();
 			}
 			else

@@ -673,6 +673,7 @@ CMissile *CMissile::Create( const Vector &vecOrigin, const QAngle &vecAngles, ed
 }
 
 
+#ifdef HL2SB
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 CUtlVector<CMissile::CustomDetonator_t> CMissile::gm_CustomDetonators;
@@ -699,6 +700,7 @@ void CMissile::RemoveCustomDetonator( CBaseEntity *pEntity )
 		}
 	}
 }
+#endif
 
 
 //-----------------------------------------------------------------------------

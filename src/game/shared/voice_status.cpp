@@ -29,8 +29,10 @@
 #include "tier0/dbg.h"
 #include "cdll_int.h"
 #include <vgui/IPanel.h>
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseplayer_shared.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
