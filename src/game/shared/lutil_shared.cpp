@@ -124,31 +124,51 @@ static int luasrc_UTIL_PlayerByIndex (lua_State *L) {
 
 
 static const luaL_Reg util_funcs[] = {
-  {"UTIL_VecToYaw",  luasrc_UTIL_VecToYaw},
-  {"UTIL_VecToPitch",  luasrc_UTIL_VecToPitch},
-  {"UTIL_YawToVector",  luasrc_UTIL_YawToVector},
-  {"UTIL_TraceLine",  luasrc_UTIL_TraceLine},
-  {"UTIL_TraceHull",  luasrc_UTIL_TraceHull},
-  {"UTIL_TraceEntity",  luasrc_UTIL_TraceEntity},
-  {"UTIL_EntityHasMatchingRootParent",  luasrc_UTIL_EntityHasMatchingRootParent},
-  {"UTIL_PointContents",  luasrc_UTIL_PointContents},
-  {"UTIL_TraceModel",  luasrc_UTIL_TraceModel},
-  {"UTIL_ParticleTracer",  luasrc_UTIL_ParticleTracer},
-  {"UTIL_Tracer",  luasrc_UTIL_Tracer},
-  {"UTIL_IsLowViolence",  luasrc_UTIL_IsLowViolence},
-  {"UTIL_ShouldShowBlood",  luasrc_UTIL_ShouldShowBlood},
-  {"UTIL_BloodDrips",  luasrc_UTIL_BloodDrips},
-  {"UTIL_BloodImpact",  luasrc_UTIL_BloodImpact},
-  {"UTIL_BloodDecalTrace",  luasrc_UTIL_BloodDecalTrace},
-  {"UTIL_DecalTrace",  luasrc_UTIL_DecalTrace},
-  {"UTIL_IsSpaceEmpty",  luasrc_UTIL_IsSpaceEmpty},
-  {"UTIL_PlayerByIndex",  luasrc_UTIL_PlayerByIndex},
+  // {"UTIL_VecToYaw",  luasrc_UTIL_VecToYaw},
+  {"VecToYaw",  luasrc_UTIL_VecToYaw},
+  // {"UTIL_VecToPitch",  luasrc_UTIL_VecToPitch},
+  {"VecToPitch",  luasrc_UTIL_VecToPitch},
+  // {"UTIL_YawToVector",  luasrc_UTIL_YawToVector},
+  {"YawToVector",  luasrc_UTIL_YawToVector},
+  // {"UTIL_TraceLine",  luasrc_UTIL_TraceLine},
+  {"TraceLine",  luasrc_UTIL_TraceLine},
+  // {"UTIL_TraceHull",  luasrc_UTIL_TraceHull},
+  {"TraceHull",  luasrc_UTIL_TraceHull},
+  // {"UTIL_TraceEntity",  luasrc_UTIL_TraceEntity},
+  {"TraceEntity",  luasrc_UTIL_TraceEntity},
+  // {"UTIL_EntityHasMatchingRootParent",  luasrc_UTIL_EntityHasMatchingRootParent},
+  {"EntityHasMatchingRootParent",  luasrc_UTIL_EntityHasMatchingRootParent},
+  // {"UTIL_PointContents",  luasrc_UTIL_PointContents},
+  {"PointContents",  luasrc_UTIL_PointContents},
+  // {"UTIL_TraceModel",  luasrc_UTIL_TraceModel},
+  {"TraceModel",  luasrc_UTIL_TraceModel},
+  // {"UTIL_ParticleTracer",  luasrc_UTIL_ParticleTracer},
+  {"ParticleTracer",  luasrc_UTIL_ParticleTracer},
+  // {"UTIL_Tracer",  luasrc_UTIL_Tracer},
+  {"Tracer",  luasrc_UTIL_Tracer},
+  // {"UTIL_IsLowViolence",  luasrc_UTIL_IsLowViolence},
+  {"IsLowViolence",  luasrc_UTIL_IsLowViolence},
+  // {"UTIL_ShouldShowBlood",  luasrc_UTIL_ShouldShowBlood},
+  {"ShouldShowBlood",  luasrc_UTIL_ShouldShowBlood},
+  // {"UTIL_BloodDrips",  luasrc_UTIL_BloodDrips},
+  {"BloodDrips",  luasrc_UTIL_BloodDrips},
+  // {"UTIL_BloodImpact",  luasrc_UTIL_BloodImpact},
+  {"BloodImpact",  luasrc_UTIL_BloodImpact},
+  // {"UTIL_BloodDecalTrace",  luasrc_UTIL_BloodDecalTrace},
+  {"BloodDecalTrace",  luasrc_UTIL_BloodDecalTrace},
+  // {"UTIL_DecalTrace",  luasrc_UTIL_DecalTrace},
+  {"DecalTrace",  luasrc_UTIL_DecalTrace},
+  // {"UTIL_IsSpaceEmpty",  luasrc_UTIL_IsSpaceEmpty},
+  {"IsSpaceEmpty",  luasrc_UTIL_IsSpaceEmpty},
+  // {"UTIL_PlayerByIndex",  luasrc_UTIL_PlayerByIndex},
+  {"PlayerByIndex",  luasrc_UTIL_PlayerByIndex},
   {NULL, NULL}
 };
 
 
 int luaopen_UTIL_shared (lua_State *L) {
-  luaL_register(L, "_G", util_funcs);
+  // luaL_register(L, "_G", util_funcs);
+  luaL_register(L, "UTIL", util_funcs);
   lua_pop(L, 1);
   return 1;
 }

@@ -35,6 +35,13 @@
 
 #pragma warning( disable: 4800 )	// forcing value to bool 'true' or 'false' (performance warning)
 
+#define BEGIN_LUA_SET_LIBRARY(libraryName) \
+  const char *lib = libraryName; \
+  lua_newtable(L);
+
+#define END_LUA_SET_LIBRARY() \
+  lua_setglobal(L, lib);
+
 #define BEGIN_LUA_CALL_HOOK(functionName) \
   lua_getglobal(L, "hook"); \
   if (lua_istable(L, -1)) { \

@@ -46,6 +46,7 @@ static const luaL_Reg randomlib[] = {
 };
 
 
+#if 0
 static int luasrc_RandomSeed (lua_State *L) {
   RandomSeed(luaL_checkinteger(L, 1));
   return 0;
@@ -80,6 +81,7 @@ static const luaL_Reg random_funcs[] = {
   {"RandomGaussianFloat",  luasrc_RandomGaussianFloat},
   {NULL, NULL}
 };
+#endif
 
 
 /*
@@ -87,8 +89,10 @@ static const luaL_Reg random_funcs[] = {
 */
 int luaopen_random (lua_State *L) {
   luaL_register(L, "random", randomlib);
-  luaL_register(L, "_G", random_funcs);
-  lua_pop(L, 2);
+  // Andrew; this has always been redundant.
+  // luaL_register(L, "_G", random_funcs);
+  // lua_pop(L, 2);
+  lua_pop(L, 1);
   return 1;
 }
 

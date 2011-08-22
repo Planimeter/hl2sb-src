@@ -168,24 +168,36 @@ static const luaL_Reg util_funcs[] = {
   {"InterpolateAngles",  luasrc_InterpolateAngles},
   {"ScreenHeight",  luasrc_ScreenHeight},
   {"ScreenWidth",  luasrc_ScreenWidth},
-  {"UTIL_AngleDiff",  luasrc_UTIL_AngleDiff},
-  {"UTIL_Bubbles",  luasrc_UTIL_Bubbles},
-  {"UTIL_ScreenShake",  luasrc_UTIL_ScreenShake},
-  {"UTIL_Tracer",  luasrc_UTIL_Tracer},
-  {"UTIL_Smoke",  luasrc_UTIL_Smoke},
-  {"UTIL_SetOrigin",  luasrc_UTIL_SetOrigin},
-  {"UTIL_PrecacheOther",  luasrc_UTIL_PrecacheOther},
+  // {"UTIL_AngleDiff",  luasrc_UTIL_AngleDiff},
+  {"AngleDiff",  luasrc_UTIL_AngleDiff},
+  // {"UTIL_Bubbles",  luasrc_UTIL_Bubbles},
+  {"Bubbles",  luasrc_UTIL_Bubbles},
+  // {"UTIL_ScreenShake",  luasrc_UTIL_ScreenShake},
+  {"ScreenShake",  luasrc_UTIL_ScreenShake},
+  // {"UTIL_Tracer",  luasrc_UTIL_Tracer},
+  {"Tracer",  luasrc_UTIL_Tracer},
+  // {"UTIL_Smoke",  luasrc_UTIL_Smoke},
+  {"Smoke",  luasrc_UTIL_Smoke},
+  // {"UTIL_SetOrigin",  luasrc_UTIL_SetOrigin},
+  {"SetOrigin",  luasrc_UTIL_SetOrigin},
+  // {"UTIL_PrecacheOther",  luasrc_UTIL_PrecacheOther},
+  {"PrecacheOther",  luasrc_UTIL_PrecacheOther},
   {"ClientPrint",  luasrc_ClientPrint},
-  {"UTIL_EntitiesInBox",  luasrc_UTIL_EntitiesInBox},
-  {"UTIL_EntitiesInSphere",  luasrc_UTIL_EntitiesInSphere},
-  {"UTIL_SafeName",  luasrc_UTIL_SafeName},
-  {"UTIL_BoundToWorldSize",  luasrc_UTIL_BoundToWorldSize},
+  // {"UTIL_EntitiesInBox",  luasrc_UTIL_EntitiesInBox},
+  {"EntitiesInBox",  luasrc_UTIL_EntitiesInBox},
+  // {"UTIL_EntitiesInSphere",  luasrc_UTIL_EntitiesInSphere},
+  {"EntitiesInSphere",  luasrc_UTIL_EntitiesInSphere},
+  // {"UTIL_SafeName",  luasrc_UTIL_SafeName},
+  {"SafeName",  luasrc_UTIL_SafeName},
+  // {"UTIL_BoundToWorldSize",  luasrc_UTIL_BoundToWorldSize},
+  {"BoundToWorldSize",  luasrc_UTIL_BoundToWorldSize},
   {NULL, NULL}
 };
 
 
 int luaopen_UTIL (lua_State *L) {
-  luaL_register(L, "_G", util_funcs);
+  // luaL_register(L, "_G", util_funcs);
+  luaL_register(L, "UTIL", util_funcs);
   lua_pop(L, 1);
   return 1;
 }
