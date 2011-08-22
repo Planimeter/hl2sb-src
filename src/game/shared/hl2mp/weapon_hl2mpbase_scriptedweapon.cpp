@@ -170,7 +170,7 @@ int CHL2MPScriptedWeapon::ActivityListCount( void ) { return LUA_MAX_WEAPON_ACTI
 //-----------------------------------------------------------------------------
 CHL2MPScriptedWeapon::CHL2MPScriptedWeapon( void )
 {
-	m_pLuaWeaponInfo = new FileWeaponInfo_t();
+	m_pLuaWeaponInfo = dynamic_cast< CHL2MPSWeaponInfo* >( CreateWeaponInfo() );
 }
 
 //-----------------------------------------------------------------------------
@@ -325,6 +325,15 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 			}
 			lua_pop( L, 1 );
 		}
+	}
+	lua_pop( L, 1 );
+
+	lua_getref( L, m_nRefCount );
+	lua_getfield( L, -1, "damage" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->m_iPlayerDamage = luaL_checkinteger( L, -1 );
 	}
 	lua_pop( L, 1 );
 

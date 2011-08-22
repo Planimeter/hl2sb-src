@@ -120,7 +120,11 @@ public:
 			static int warningCount = 0;
 			if ( ++warningCount < 10 )
 			{
+				// Andrew; we don't care about this in HL2SB mainly due to the
+				// Sandbox gamemode.
+#ifndef HL2SB
 				AssertMsg2( 0, "Node (%i) out of range (%i total)\n", id, m_iNumNodes ); 
+#endif
 			}
 		}
 		return NULL; 
