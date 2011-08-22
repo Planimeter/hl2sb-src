@@ -151,11 +151,7 @@ static void base_open (lua_State *L) {
 #ifdef CLIENT_DLL
   lua_pushboolean(L, 1);
   lua_setglobal(L, "_CLIENT");  /* set global _CLIENT */
-  lua_pushboolean(L, 0);
-  lua_setglobal(L, "_GAME");  /* set global _GAME */
 #else
-  lua_pushboolean(L, 0);
-  lua_setglobal(L, "_CLIENT");  /* set global _CLIENT */
   lua_pushboolean(L, 1);
   lua_setglobal(L, "_GAME");  /* set global _GAME */
 #endif
