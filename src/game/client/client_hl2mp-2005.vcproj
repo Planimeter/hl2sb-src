@@ -2769,10 +2769,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\hl2\c_weapon_gravitygun.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\shared\hl2\citadel_effects_shared.h"
 					>
 				</File>

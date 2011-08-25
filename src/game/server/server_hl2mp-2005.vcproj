@@ -4552,10 +4552,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\physgun.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\hl2mp\te_hl2mp_shotgun_shot.cpp"
 						>
 					</File>
