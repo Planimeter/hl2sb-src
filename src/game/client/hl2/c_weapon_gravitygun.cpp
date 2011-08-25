@@ -98,6 +98,8 @@ private:
 	C_WeaponGravityGun( const C_WeaponGravityGun & );
 
 	C_BeamQuadratic	m_beam;
+
+	DECLARE_ACTTABLE();
 };
 
 STUB_WEAPON_CLASS_IMPLEMENT( weapon_physgun, C_WeaponGravityGun );
@@ -109,6 +111,25 @@ IMPLEMENT_CLIENTCLASS_DT( C_WeaponGravityGun, DT_WeaponGravityGun, CWeaponGravit
 	RecvPropInt( RECVINFO_NAME(m_beam.m_glueTouching, m_glueTouching) ),
 	RecvPropInt( RECVINFO_NAME(m_beam.m_viewModelIndex, m_viewModelIndex) ),
 END_RECV_TABLE()
+
+acttable_t	C_WeaponGravityGun::m_acttable[] = 
+{
+	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_PHYSGUN,					false },
+	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_PHYSGUN,			false },
+
+	{ ACT_MP_RUN,						ACT_HL2MP_RUN_PHYSGUN,					false },
+	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_PHYSGUN,			false },
+
+	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
+	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
+
+	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
+	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
+
+	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_PHYSGUN,					false },
+};
+
+IMPLEMENT_ACTTABLE(C_WeaponGravityGun);
 
 
 C_BeamQuadratic::C_BeamQuadratic()
