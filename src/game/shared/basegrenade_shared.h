@@ -29,17 +29,9 @@
 class CTakeDamageInfo;
 
 //Andrew; See http://www.mail-archive.com/hlcoders@list.valvesoftware.com/msg28578.html
-#if !defined( HL2SB )
-#if !defined( CLIENT_DLL )
-class CBaseGrenade : public CBaseCombatCharacter, public CDefaultPlayerPickupVPhysics
-#else
-class CBaseGrenade : public CBaseCombatCharacter
-#endif
-{
-#else
 //Tony; Compromise! in episodic single player, inherit CBaseCombatCharacter for the barnacle interaction, otherwise this will never get called.
 class CBaseGrenade : 
-	#if defined( HL2_EPISODIC )
+	#if defined( HL2_EPISODIC ) || defined ( HL2MP )	//Tony; HL2MP needs this too for tripmine grenades.
 		public CBaseCombatCharacter
 	#else
 		public CBaseAnimating
@@ -48,7 +40,6 @@ class CBaseGrenade :
 		, public CDefaultPlayerPickupVPhysics
 	#endif
 {		//Tony; the ugliest class definition ever, but it saves characters, or something. Should I be shot for this?
-#endif
 	DECLARE_CLASS( CBaseGrenade, CBaseAnimating );
 public:
 
