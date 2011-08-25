@@ -507,6 +507,7 @@ bool luasrc_SetGamemode (const char *gamemode) {
   }
 }
 
+#ifdef LUA_SDK
 #ifdef CLIENT_DLL
 	CON_COMMAND( lua_dostring_cl, "Run a Lua string" )
 	{
@@ -713,5 +714,6 @@ static int DoFileCompletion( const char *partial, char commands[ COMMAND_COMPLET
 	  if (n>0)
 	    Warning( "Warning: %d object(s) left on the stack!\n", n );
 	}
+#endif
 #endif
 #endif

@@ -125,6 +125,7 @@ void ResetEntityFactoryDatabase( void )
 // These functions serve as skeletons for the our weapons' actions to be
 // implemented in Lua.
 acttable_t *CHL2MPScriptedWeapon::ActivityList( void ) {
+#ifdef LUA_SDK
 	lua_getref( L, m_nRefCount );
 	lua_getfield( L, -1, "m_acttable" );
 	lua_remove( L, -2 );
@@ -161,6 +162,7 @@ acttable_t *CHL2MPScriptedWeapon::ActivityList( void ) {
 		}
 	}
 	lua_pop( L, 1 );
+#endif
 	return m_acttable;
 }
 int CHL2MPScriptedWeapon::ActivityListCount( void ) { return LUA_MAX_WEAPON_ACTIVITIES; }
@@ -181,7 +183,9 @@ CHL2MPScriptedWeapon::~CHL2MPScriptedWeapon( void )
 	delete m_pLuaWeaponInfo;
 	// Andrew; This is actually done in CBaseEntity. I'm doing it here because
 	// this is the class that initialized the reference.
+#ifdef LUA_SDK
 	lua_unref( L, m_nRefCount );
+#endif
 }
 
 extern const char *pWeaponSoundCategories[ NUM_SHOOT_SOUND_TYPES ];
@@ -355,11 +359,13 @@ void CHL2MPScriptedWeapon::OnDataChanged( DataUpdateType_t updateType )
 			SetClassname( m_iScriptedClassname.Get() );
 			InitScriptedWeapon();
 
+#ifdef LUA_SDK
 			BEGIN_LUA_CALL_WEAPON_METHOD( "Initialize" );
 			END_LUA_CALL_WEAPON_METHOD( 0, 0 );
 			
 			BEGIN_LUA_CALL_WEAPON_METHOD( "Precache" );
 			END_LUA_CALL_WEAPON_METHOD( 0, 0 );
+#endif
 		}
 	}
 }

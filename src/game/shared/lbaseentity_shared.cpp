@@ -741,10 +741,13 @@ static int CBaseEntity_IsTransparent (lua_State *L) {
   return 1;
 }
 
+//Andrew; this is silly.
+#ifdef LUA_SDK
 static int CBaseEntity_IsWeapon (lua_State *L) {
   lua_pushboolean(L, luaL_checkentity(L, 1)->IsWeapon());
   return 1;
 }
+#endif
 
 static int CBaseEntity_KeyValue (lua_State *L) {
   switch(lua_type(L, 3)) {
@@ -1518,7 +1521,9 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"IsSolidFlagSet", CBaseEntity_IsSolidFlagSet},
   {"IsStandable", CBaseEntity_IsStandable},
   {"IsTransparent", CBaseEntity_IsTransparent},
+#ifdef LUA_SDK
   {"IsWeapon", CBaseEntity_IsWeapon},
+#endif
   {"KeyValue", CBaseEntity_KeyValue},
   {"LocalEyeAngles", CBaseEntity_LocalEyeAngles},
   {"NextMovePeer", CBaseEntity_NextMovePeer},
