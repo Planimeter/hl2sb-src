@@ -467,7 +467,7 @@ BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 	RecvPropVector( RECVINFO_NAME(m_gravCallback.m_targetPosition, m_targetPosition) ),
 	RecvPropVector( RECVINFO_NAME(m_gravCallback.m_worldPosition, m_worldPosition) ),
 	RecvPropInt( RECVINFO(m_active) ),
-//	RecvPropModelIndex( RECVINFO(m_viewModelIndex) ),
+	RecvPropInt( RECVINFO(m_viewModelIndex) ),
 #else
 	SendPropVector( SENDINFO_NAME(m_gravCallback.m_targetPosition, m_targetPosition), -1, SPROP_COORD ),
 	SendPropVector( SENDINFO_NAME(m_gravCallback.m_worldPosition, m_worldPosition), -1, SPROP_COORD ),
@@ -673,6 +673,7 @@ void CWeaponGravityGun::EffectUpdate( void )
 		IPhysicsObject *pPhys = pObject->VPhysicsGetObject();
 		if ( pPhys && pPhys->IsAsleep() )
 		{
+			// on the odd chance that it's gone to sleep while under anti-gravity
 			pPhys->Wake();
 		}
 
@@ -1028,11 +1029,6 @@ void CWeaponGravityGun::WeaponIdle( void )
 	if ( HasWeaponIdleTimeElapsed() )
 	{
 		SendWeaponAnim( ACT_VM_IDLE );
-		if ( m_active )
-		{
-			EffectDestroy();
-			SoundDestroy();
-		}
 	}
 }
 
@@ -1059,6 +1055,11 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	// -----------------------
 	else 
 	{
+		if ( m_active )
+		{
+			EffectDestroy();
+			SoundDestroy();
+		}
 		WeaponIdle( );
 		return;
 	}
