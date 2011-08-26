@@ -386,6 +386,7 @@ public:
 	DECLARE_CLASS( CWeaponGravityGun, CBaseHL2MPCombatWeapon );
 
 	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
 
 	CWeaponGravityGun();
 	void Spawn( void );
@@ -475,6 +476,11 @@ BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 	SendPropModelIndex( SENDINFO(m_viewModelIndex) ),
 #endif
 END_NETWORK_TABLE()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA( CWeaponGravityGun )
+END_PREDICTION_DATA()
+#endif
 
 LINK_ENTITY_TO_CLASS( weapon_physgun, CWeaponGravityGun );
 PRECACHE_WEAPON_REGISTER(weapon_physgun);
