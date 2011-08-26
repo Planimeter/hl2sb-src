@@ -11,6 +11,9 @@
 #include "player.h"
 #endif
 #include "gamerules.h"
+#ifdef CLIENT_DLL
+#include "ClientEffectPrecacheSystem.h"
+#endif
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
 #ifndef CLIENT_DLL
 #include "baseviewmodel.h"
@@ -46,6 +49,52 @@ static int g_physgunBeam;
 #define MAX_PELLETS	16
 
 class CWeaponGravityGun;
+
+#ifdef CLIENT_DLL
+CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffectGravityGun )
+CLIENTEFFECT_MATERIAL( "sprites/physbeam" )
+CLIENTEFFECT_REGISTER_END()
+
+class C_BeamQuadratic : public CDefaultClientRenderable
+{
+public:
+	C_BeamQuadratic();
+	void			Update( C_BaseEntity *pOwner );
+
+	const matrix3x4_t &C_BeamQuadratic::RenderableToWorldTransform( void )
+	{
+		return RenderableToWorldTransform();
+	}
+
+	// IClientRenderable
+	virtual const Vector&			GetRenderOrigin( void ) { return m_worldPosition; }
+	virtual const QAngle&			GetRenderAngles( void ) { return vec3_angle; }
+	virtual bool					ShouldDraw( void ) { return true; }
+	virtual bool					IsTransparent( void ) { return true; }
+	virtual bool					ShouldReceiveProjectedTextures( int flags ) { return false; }
+	virtual int						DrawModel( int flags );
+
+	// Returns the bounds relative to the origin (render bounds)
+	virtual void	GetRenderBounds( Vector& mins, Vector& maxs )
+	{
+		ClearBounds( mins, maxs );
+		AddPointToBounds( vec3_origin, mins, maxs );
+		AddPointToBounds( m_targetPosition, mins, maxs );
+		AddPointToBounds( m_worldPosition, mins, maxs );
+		mins -= GetRenderOrigin();
+		maxs -= GetRenderOrigin();
+	}
+
+	C_BaseEntity			*m_pOwner;
+	Vector					m_targetPosition;
+	Vector					m_worldPosition;
+	int						m_active;
+	int						m_glueTouching;
+	int						m_viewModelIndex;
+};
+
+
+#endif
 
 class CGravControllerPoint : public IMotionEvent
 {
@@ -389,6 +438,35 @@ public:
 	DECLARE_PREDICTABLE();
 
 	CWeaponGravityGun();
+
+#ifdef CLIENT_DLL
+	int KeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding )
+	{
+		if ( gHUD.m_iKeyBits & IN_ATTACK )
+		{
+			switch ( keynum )
+			{
+			case MOUSE_WHEEL_UP:
+				gHUD.m_iKeyBits |= IN_WEAPON1;
+				return 0;
+
+			case MOUSE_WHEEL_DOWN:
+				gHUD.m_iKeyBits |= IN_WEAPON2;
+				return 0;
+			}
+		}
+
+		// Allow engine to process
+		return BaseClass::KeyInput( down, keynum, pszCurrentBinding );
+	}
+
+	void OnDataChanged( DataUpdateType_t updateType )
+	{
+		BaseClass::OnDataChanged( updateType );
+		m_beam.Update( this );
+	}
+#endif
+
 	void Spawn( void );
 	void OnRestore( void );
 	void Precache( void );
@@ -446,6 +524,10 @@ public:
 	CBaseEntity *GetBeamEntity();
 
 private:
+#ifdef CLIENT_DLL
+	C_BeamQuadratic	m_beam;
+#endif
+
 	CNetworkVar( int, m_active );
 	bool		m_useDown;
 	EHANDLE		m_hObject;
@@ -453,7 +535,6 @@ private:
 	float		m_movementLength;
 	float		m_lastYaw;
 	int			m_soundState;
-	CNetworkVar( int, m_viewModelIndex );
 	Vector		m_originalObjectPosition;
 
 	CGravControllerPoint		m_gravCallback;
@@ -465,15 +546,16 @@ IMPLEMENT_NETWORKCLASS_ALIASED( WeaponGravityGun, DT_WeaponGravityGun )
 
 BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 #ifdef CLIENT_DLL
+	RecvPropVector( RECVINFO_NAME(m_beam.m_targetPosition,m_targetPosition) ),
+	RecvPropVector( RECVINFO_NAME(m_beam.m_worldPosition, m_worldPosition) ),
+	RecvPropInt( RECVINFO_NAME(m_beam.m_active, m_active) ),
 	RecvPropVector( RECVINFO_NAME(m_gravCallback.m_targetPosition, m_targetPosition) ),
 	RecvPropVector( RECVINFO_NAME(m_gravCallback.m_worldPosition, m_worldPosition) ),
 	RecvPropInt( RECVINFO(m_active) ),
-	RecvPropInt( RECVINFO(m_viewModelIndex) ),
 #else
 	SendPropVector( SENDINFO_NAME(m_gravCallback.m_targetPosition, m_targetPosition), -1, SPROP_COORD ),
 	SendPropVector( SENDINFO_NAME(m_gravCallback.m_worldPosition, m_worldPosition), -1, SPROP_COORD ),
 	SendPropInt( SENDINFO(m_active), 1, SPROP_UNSIGNED ),
-	SendPropModelIndex( SENDINFO(m_viewModelIndex) ),
 #endif
 END_NETWORK_TABLE()
 
@@ -504,6 +586,73 @@ acttable_t	CWeaponGravityGun::m_acttable[] =
 
 IMPLEMENT_ACTTABLE(CWeaponGravityGun);
 
+
+#ifdef CLIENT_DLL
+C_BeamQuadratic::C_BeamQuadratic()
+{
+	m_pOwner = NULL;
+}
+
+void C_BeamQuadratic::Update( C_BaseEntity *pOwner )
+{
+	m_pOwner = pOwner;
+	if ( m_active )
+	{
+		if ( m_hRenderHandle == INVALID_CLIENT_RENDER_HANDLE )
+		{
+			ClientLeafSystem()->AddRenderable( this, RENDER_GROUP_TRANSLUCENT_ENTITY );
+		}
+		else
+		{
+			ClientLeafSystem()->RenderableChanged( m_hRenderHandle );
+		}
+	}
+	else if ( !m_active && m_hRenderHandle != INVALID_CLIENT_RENDER_HANDLE )
+	{
+		ClientLeafSystem()->RemoveRenderable( m_hRenderHandle );
+	}
+}
+
+
+int	C_BeamQuadratic::DrawModel( int )
+{
+	Vector points[3];
+	QAngle tmpAngle;
+
+	if ( !m_active )
+		return 0;
+
+	C_BaseEntity *pEnt = cl_entitylist->GetEnt( m_viewModelIndex );
+	if ( !pEnt )
+		return 0;
+	pEnt->GetAttachment( 1, points[0], tmpAngle );
+
+	points[1] = 0.5 * (m_targetPosition + points[0]);
+	
+	// a little noise 11t & 13t should be somewhat non-periodic looking
+	//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
+	points[2] = m_worldPosition;
+
+	IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
+	Vector color;
+	if ( m_glueTouching )
+	{
+		color.Init(1,0,0);
+	}
+	else
+	{
+		color.Init(1,1,1);
+	}
+
+	float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
+	CMatRenderContextPtr pRenderContext( materials );
+	pRenderContext->Bind( pMat );
+	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
+	return 1;
+}
+
+#endif
+
 //---------------------------------------------------------
 // Save/Restore
 //---------------------------------------------------------
@@ -516,7 +665,6 @@ BEGIN_DATADESC( CWeaponGravityGun )
 	DEFINE_FIELD( m_movementLength,		FIELD_FLOAT ),
 	DEFINE_FIELD( m_lastYaw,				FIELD_FLOAT ),
 	DEFINE_FIELD( m_soundState,			FIELD_INTEGER ),
-	DEFINE_FIELD( m_viewModelIndex,		FIELD_INTEGER ),
 	DEFINE_FIELD( m_originalObjectPosition,	FIELD_POSITION_VECTOR ),
 	DEFINE_EMBEDDED( m_gravCallback ),
 	// Physptrs can't be saved in embedded classes..
@@ -593,13 +741,15 @@ void CWeaponGravityGun::EffectUpdate( void )
 	if ( !pOwner )
 		return;
 
-	m_viewModelIndex = pOwner->entindex();
+#ifdef CLIENT_DLL
+	m_beam.m_viewModelIndex = pOwner->entindex();
 	// Make sure I've got a view model
 	CBaseViewModel *vm = pOwner->GetViewModel();
 	if ( vm )
 	{
-		m_viewModelIndex = vm->entindex();
+		m_beam.m_viewModelIndex = vm->entindex();
 	}
+#endif
 
 	pOwner->EyeVectors( &forward, &right, NULL );
 
@@ -980,13 +1130,15 @@ void CWeaponGravityGun::SecondaryAttack( void )
 	if ( pOwner->GetAmmoCount(m_iSecondaryAmmoType) <= 0 )
 		return;
 
-	m_viewModelIndex = pOwner->entindex();
+#ifdef CLIENT_DLL
+	m_beam.m_viewModelIndex = pOwner->entindex();
 	// Make sure I've got a view model
 	CBaseViewModel *vm = pOwner->GetViewModel();
 	if ( vm )
 	{
-		m_viewModelIndex = vm->entindex();
+		m_beam.m_viewModelIndex = vm->entindex();
 	}
+#endif
 
 	Vector forward;
 	pOwner->EyeVectors( &forward );
