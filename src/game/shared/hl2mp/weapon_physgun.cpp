@@ -119,29 +119,10 @@ public:
 		m_timeToArrive = gpGlobals->frametime;
 	}
 
-	void SetAutoAlign( const Vector &localDir, const Vector &localPos, const Vector &worldAlignDir, const Vector &worldAlignPos )
-	{
-		m_align = true;
-		m_localAlignNormal = -localDir;
-		m_localAlignPosition = localPos;
-		m_targetAlignNormal = worldAlignDir;
-		m_targetAlignPosition = worldAlignPos;
-	}
-
-	void ClearAutoAlign()
-	{
-		m_align = false;
-	}
-
 	IMotionEvent::simresult_e Simulate( IPhysicsMotionController *pController, IPhysicsObject *pObject, float deltaTime, Vector &linear, AngularImpulse &angular );
 	Vector			m_localPosition;
 	Vector			m_targetPosition;
 	Vector			m_worldPosition;
-	Vector			m_localAlignNormal;
-	Vector			m_localAlignPosition;
-	Vector			m_targetAlignNormal;
-	Vector			m_targetAlignPosition;
-	bool			m_align;
 	float			m_saveDamping;
 	float			m_maxVel;
 	float			m_maxAcceleration;
@@ -159,11 +140,6 @@ BEGIN_SIMPLE_DATADESC( CGravControllerPoint )
 	DEFINE_FIELD( m_localPosition,		FIELD_VECTOR ),
 	DEFINE_FIELD( m_targetPosition,		FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( m_worldPosition,		FIELD_POSITION_VECTOR ),
-	DEFINE_FIELD( m_localAlignNormal,		FIELD_VECTOR ),
-	DEFINE_FIELD( m_localAlignPosition,	FIELD_VECTOR ),
-	DEFINE_FIELD( m_targetAlignNormal,	FIELD_VECTOR ),
-	DEFINE_FIELD( m_targetAlignPosition,	FIELD_POSITION_VECTOR ),
-	DEFINE_FIELD( m_align,				FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_saveDamping,			FIELD_FLOAT ),
 	DEFINE_FIELD( m_maxVel,				FIELD_FLOAT ),
 	DEFINE_FIELD( m_maxAcceleration,		FIELD_FLOAT ),
@@ -274,150 +250,29 @@ IMotionEvent::simresult_e CGravControllerPoint::Simulate( IPhysicsMotionControll
 	linear = vec3_origin;
 	angular = vec3_origin;
 
-	if ( m_align )
+	// clamp future velocity to max speed
+	Vector nextVel = delta + vel;
+	float nextSpeed = nextVel.Length();
+	if ( nextSpeed > m_maxVel )
 	{
-		QAngle angles;
-		Vector origin;
-		Vector axis;
-		AngularImpulse torque;
-
-		pObject->GetShadowPosition( &origin, &angles );
-		// align local normal to target normal
-		VMatrix tmp = SetupMatrixOrgAngles( origin, angles );
-		Vector worldNormal = tmp.VMul3x3( m_localAlignNormal );
-		axis = CrossProduct( worldNormal, m_targetAlignNormal );
-		float trig = VectorNormalize(axis);
-		float alignRotation = RAD2DEG(asin(trig));
-		axis *= alignRotation;
-		if ( alignRotation < 10 )
-		{
-			float dot = DotProduct( worldNormal, m_targetAlignNormal );
-			// probably 180 degrees off
-			if ( dot < 0 )
-			{
-				if ( worldNormal.x < 0.5 )
-				{
-					axis.Init(10,0,0);
-				}
-				else
-				{
-					axis.Init(0,0,10);
-				}
-				alignRotation = 10;
-			}
-		}
-		
-		// Solve for the rotation around the target normal (at the local align pos) that will 
-		// move the grabbed spot to the destination.
-		Vector worldRotCenter = tmp.VMul4x3( m_localAlignPosition );
-		Vector rotSrc = world - worldRotCenter;
-		Vector rotDest = m_targetPosition - worldRotCenter;
-
-		// Get a basis in the plane perpendicular to m_targetAlignNormal
-		Vector srcN = rotSrc;
-		VectorNormalize( srcN );
-		Vector tangent = CrossProduct( srcN, m_targetAlignNormal );
-		float len = VectorNormalize( tangent );
-
-		// needs at least ~5 degrees, or forget rotation (0.08 ~= sin(5))
-		if ( len > 0.08 )
-		{
-			Vector binormal = CrossProduct( m_targetAlignNormal, tangent );
-
-			// Now project the src & dest positions into that plane
-			Vector planeSrc( DotProduct( rotSrc, tangent ), DotProduct( rotSrc, binormal ), 0 );
-			Vector planeDest( DotProduct( rotDest, tangent ), DotProduct( rotDest, binormal ), 0 );
-
-			float rotRadius = VectorNormalize( planeSrc );
-			float destRadius = VectorNormalize( planeDest );
-			if ( rotRadius > 0.1 )
-			{
-				if ( destRadius < rotRadius )
-				{
-					destRadius = rotRadius;
-				}
-				//float ratio = rotRadius / destRadius;
-				float angleSrc = atan2( planeSrc.y, planeSrc.x );
-				float angleDest = atan2( planeDest.y, planeDest.x );
-				float angleDiff = angleDest - angleSrc;
-				angleDiff = RAD2DEG(angleDiff);
-				axis += m_targetAlignNormal * angleDiff;
-				//world = m_targetPosition;// + rotDest * (1-ratio);
-//				NDebugOverlay::Line( worldRotCenter, worldRotCenter-m_targetAlignNormal*50, 255, 0, 0, false, 0.1 );
-//				NDebugOverlay::Line( worldRotCenter, worldRotCenter+tangent*50, 0, 255, 0, false, 0.1 );
-//				NDebugOverlay::Line( worldRotCenter, worldRotCenter+binormal*50, 0, 0, 255, false, 0.1 );
-			}
-		}
-
-		torque = tmp.VMul3x3Transpose( axis );
-		torque *= fracRemainingSimTime * invDeltaTime;
-		torque -= angVel * 1.0;	 // damping
-		for ( int i = 0; i < 3; i++ )
-		{
-			if ( torque[i] > 0 )
-			{
-				if ( torque[i] > m_maxAngularAcceleration[i] )
-					torque[i] = m_maxAngularAcceleration[i];
-			}
-			else
-			{
-				if ( torque[i] < -m_maxAngularAcceleration[i] )
-					torque[i] = -m_maxAngularAcceleration[i];
-			}
-		}
-		torque *= invDeltaTime;
-		angular += torque;
-		// Calculate an acceleration that pulls the object toward the constraint
-		// When you're out of alignment, don't pull very hard
-		float factor = fabsf(alignRotation);
-		if ( factor < 5 )
-		{
-			factor = clamp( factor, 0, 5 ) * (1/5);
-			alignDir = m_targetAlignPosition - worldRotCenter;
-			// Limit movement to the part along m_targetAlignNormal if worldRotCenter is on the backside of 
-			// of the target plane (one inch epsilon)!
-			float planeForward = DotProduct( alignDir, m_targetAlignNormal );
-			if ( planeForward > 1 )
-			{
-				alignDir = m_targetAlignNormal * planeForward;
-			}
-			Vector accel = alignDir * invDeltaTime * fracRemainingSimTime * (1-factor) * 0.20 * invDeltaTime;
-			float mag = accel.Length();
-			if ( mag > m_maxAcceleration )
-			{
-				accel *= (m_maxAcceleration/mag);
-			}
-			linear += accel;
-		}
-		linear -= vel*damping*invDeltaTime;
-		// UNDONE: Factor in the change in worldRotCenter due to applied torque!
+		nextVel *= (m_maxVel / nextSpeed);
+		delta = nextVel - vel;
 	}
-	else
+
+	delta *= invDeltaTime;
+
+	float linearAccel = delta.Length();
+	if ( linearAccel > m_maxAcceleration )
 	{
-		// clamp future velocity to max speed
-		Vector nextVel = delta + vel;
-		float nextSpeed = nextVel.Length();
-		if ( nextSpeed > m_maxVel )
-		{
-			nextVel *= (m_maxVel / nextSpeed);
-			delta = nextVel - vel;
-		}
-
-		delta *= invDeltaTime;
-
-		float linearAccel = delta.Length();
-		if ( linearAccel > m_maxAcceleration )
-		{
-			delta *= m_maxAcceleration / linearAccel;
-		}
-
-		Vector accel;
-		AngularImpulse angAccel;
-		pObject->CalculateForceOffset( delta, world, &accel, &angAccel );
-		
-		linear += accel;
-		angular += angAccel;
+		delta *= m_maxAcceleration / linearAccel;
 	}
+
+	Vector accel;
+	AngularImpulse angAccel;
+	pObject->CalculateForceOffset( delta, world, &accel, &angAccel );
+	
+	linear += accel;
+	angular += angAccel;
 	
 	return SIM_GLOBAL_ACCELERATION;
 }
@@ -483,17 +338,10 @@ public:
 	}
 
 	bool Reload( void );
-	void Equip( CBaseCombatCharacter *pOwner )
-	{
-		// add constraint ammo
-		pOwner->SetAmmoCount( MAX_PELLETS, m_iSecondaryAmmoType );
-		BaseClass::Equip( pOwner );
-	}
 	void Drop(const Vector &vecVelocity)
 	{
-		CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-		pOwner->SetAmmoCount( 0, m_iSecondaryAmmoType );
-		// destroy all constraints
+		EffectDestroy();
+		SoundDestroy();
 		BaseClass::Drop(vecVelocity);
 	}
 
@@ -648,6 +496,7 @@ int	C_BeamQuadratic::DrawModel( int )
 	float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
 	CMatRenderContextPtr pRenderContext( materials );
 	pRenderContext->Bind( pMat );
+	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, -scrollOffset );
 	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
 	return 1;
 }
@@ -997,6 +846,11 @@ void CWeaponGravityGun::SoundUpdate( void )
 
 			// blend the "mass" sounds between 50 and 500 kg
 			IPhysicsObject *pPhys = m_hObject->VPhysicsGetObject();
+			if ( pPhys == NULL )
+			{
+				// we no longer exist!
+				break;
+			}
 			
 			float fade = UTIL_LineFraction( pPhys->GetMass(), 50, 500, 1.0 );
 
