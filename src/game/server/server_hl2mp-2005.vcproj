@@ -4628,6 +4628,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\shared\hl2mp\weapon_physgun.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\shared\hl2mp\weapon_pistol.cpp"
 						>
 					</File>
