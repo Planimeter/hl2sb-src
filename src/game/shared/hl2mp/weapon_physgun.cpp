@@ -478,6 +478,7 @@ public:
 	virtual bool Holster( CBaseCombatWeapon *pSwitchingTo )
 	{
 		EffectDestroy();
+		SoundDestroy();
 		return BaseClass::Holster( pSwitchingTo );
 	}
 
