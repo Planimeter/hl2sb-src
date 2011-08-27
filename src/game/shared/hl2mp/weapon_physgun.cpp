@@ -31,6 +31,12 @@
 #include "player_pickup.h"
 #endif
 #include "soundemittersystem/isoundemittersystembase.h"
+#ifdef CLIENT_DLL
+#include "model_types.h"
+#include "view_shared.h"
+#include "view.h"
+#include "iviewrender.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -39,14 +45,11 @@ ConVar phys_gunmass("phys_gunmass", "200", FCVAR_REPLICATED);
 ConVar phys_gunvel("phys_gunvel", "400", FCVAR_REPLICATED);
 ConVar phys_gunforce("phys_gunforce", "5e5", FCVAR_REPLICATED );
 ConVar phys_guntorque("phys_guntorque", "100", FCVAR_REPLICATED );
-ConVar phys_gunglueradius("phys_gunglueradius", "128", FCVAR_REPLICATED );
 
 static int g_physgunBeam;
 #define PHYSGUN_BEAM_SPRITE		"sprites/physbeam.vmt"
 
 #define	PHYSGUN_SKIN	1
-
-#define MAX_PELLETS	16
 
 class CWeaponGravityGun;
 
@@ -315,10 +318,13 @@ public:
 		return BaseClass::KeyInput( down, keynum, pszCurrentBinding );
 	}
 
+	int	 DrawModel( int flags );
+	void ViewModelDrawn( C_BaseViewModel *pBaseViewModel );
+	bool IsTransparent( void );
 	void OnDataChanged( DataUpdateType_t updateType )
 	{
 		BaseClass::OnDataChanged( updateType );
-		m_beam.Update( this );
+		// m_beam.Update( this );
 	}
 #endif
 
@@ -449,7 +455,7 @@ void C_BeamQuadratic::Update( C_BaseEntity *pOwner )
 	{
 		if ( m_hRenderHandle == INVALID_CLIENT_RENDER_HANDLE )
 		{
-			ClientLeafSystem()->AddRenderable( this, RENDER_GROUP_TRANSLUCENT_ENTITY );
+			ClientLeafSystem()->AddRenderable( this, RENDER_GROUP_VIEW_MODEL_TRANSLUCENT );
 		}
 		else
 		{
@@ -465,6 +471,11 @@ void C_BeamQuadratic::Update( C_BaseEntity *pOwner )
 
 int	C_BeamQuadratic::DrawModel( int )
 {
+	C_BasePlayer *pOwner = (C_BasePlayer *)m_pOwner->GetOwnerEntity();
+
+	if ( !pOwner )
+		return 0;
+
 	Vector points[3];
 	QAngle tmpAngle;
 
@@ -493,10 +504,34 @@ int	C_BeamQuadratic::DrawModel( int )
 		color.Init(1,1,1);
 	}
 
+	float flWidthRatio = engine->GetScreenAspectRatio() / ( 4.0f / 3.0f );
+
+	// Now draw it.
+	CViewSetup beamView;
+	beamView.x = 0;
+	beamView.y = 0;
+	beamView.width = ScreenWidth();
+	beamView.height = ScreenHeight();
+
+	beamView.m_bOrtho = false;
+
+	// scale the FOV for aspect ratios other than 4/3
+	beamView.fov = ScaleFOVByWidthRatio( pOwner->GetFOV(), flWidthRatio );
+
+	beamView.origin = pOwner->EyePosition();
+	beamView.angles = pOwner->EyeAngles();
+	beamView.zNear = view->GetZNear();
+	beamView.zFar = view->GetZFar();
+
+	Frustum dummyFrustum;
+	render->Push3DView( beamView, 0, NULL, dummyFrustum );
+
 	float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
 	CMatRenderContextPtr pRenderContext( materials );
 	pRenderContext->Bind( pMat );
 	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
+
+	render->PopView( dummyFrustum );
 	return 1;
 }
 
@@ -1043,6 +1078,71 @@ void CWeaponGravityGun::WeaponIdle( void )
 		SendWeaponAnim( ACT_VM_IDLE );
 	}
 }
+
+#ifdef CLIENT_DLL
+//-----------------------------------------------------------------------------
+// Purpose: Third-person function call to render world model
+//-----------------------------------------------------------------------------
+int CWeaponGravityGun::DrawModel( int flags )
+{
+	// Only render these on the transparent pass
+	if ( flags & STUDIO_TRANSPARENCY )
+	{
+		C_BasePlayer *pOwner = ToBasePlayer( GetOwner() );
+
+		if ( !pOwner )
+			return 0;
+
+		Vector points[3];
+		QAngle tmpAngle;
+
+		if ( !m_active )
+			return 0;
+
+		GetAttachment( 1, points[0], tmpAngle );
+
+		points[1] = 0.5 * (m_gravCallback.m_targetPosition + points[0]);
+		
+		// a little noise 11t & 13t should be somewhat non-periodic looking
+		//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
+		points[2] = m_gravCallback.m_worldPosition;
+
+		IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
+		Vector color;
+		color.Init(1,1,1);
+
+		float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
+		CMatRenderContextPtr pRenderContext( materials );
+		pRenderContext->Bind( pMat );
+		DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
+		return 1;
+	}
+
+	// Only do this on the opaque pass
+	return BaseClass::DrawModel( flags );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: First-person function call after viewmodel has been drawn
+//-----------------------------------------------------------------------------
+void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
+{
+	// Render our effects
+	m_beam.Update( this );
+
+	// Pass this back up
+	BaseClass::ViewModelDrawn( pBaseViewModel );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: We are always considered transparent
+//-----------------------------------------------------------------------------
+bool CWeaponGravityGun::IsTransparent( void )
+{
+	return true;
+}
+
+#endif
 
 void CWeaponGravityGun::ItemPostFrame( void )
 {
