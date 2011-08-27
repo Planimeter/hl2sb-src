@@ -321,11 +321,6 @@ public:
 	int	 DrawModel( int flags );
 	void ViewModelDrawn( C_BaseViewModel *pBaseViewModel );
 	bool IsTransparent( void );
-	void OnDataChanged( DataUpdateType_t updateType )
-	{
-		BaseClass::OnDataChanged( updateType );
-		// m_beam.Update( this );
-	}
 #endif
 
 	void Spawn( void );
@@ -379,18 +374,15 @@ public:
 	CBaseEntity *GetBeamEntity();
 
 private:
-#ifdef CLIENT_DLL
-	C_BeamQuadratic	m_beam;
-#endif
-
 	CNetworkVar( int, m_active );
 	bool		m_useDown;
-	EHANDLE		m_hObject;
+	CNetworkHandle( CBaseEntity, m_hObject );
 	float		m_distance;
 	float		m_movementLength;
 	float		m_lastYaw;
 	int			m_soundState;
 	Vector		m_originalObjectPosition;
+	CNetworkVector	( m_worldPosition );
 
 	CGravControllerPoint		m_gravCallback;
 
@@ -401,15 +393,12 @@ IMPLEMENT_NETWORKCLASS_ALIASED( WeaponGravityGun, DT_WeaponGravityGun )
 
 BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 #ifdef CLIENT_DLL
-	RecvPropVector( RECVINFO_NAME(m_beam.m_targetPosition,m_targetPosition) ),
-	RecvPropVector( RECVINFO_NAME(m_beam.m_worldPosition, m_worldPosition) ),
-	RecvPropInt( RECVINFO_NAME(m_beam.m_active, m_active) ),
-	RecvPropVector( RECVINFO_NAME(m_gravCallback.m_targetPosition, m_targetPosition) ),
-	RecvPropVector( RECVINFO_NAME(m_gravCallback.m_worldPosition, m_worldPosition) ),
+	RecvPropEHandle( RECVINFO( m_hObject ) ),
+	RecvPropVector( RECVINFO( m_worldPosition ) ),
 	RecvPropInt( RECVINFO(m_active) ),
 #else
-	SendPropVector( SENDINFO_NAME(m_gravCallback.m_targetPosition, m_targetPosition), -1, SPROP_COORD ),
-	SendPropVector( SENDINFO_NAME(m_gravCallback.m_worldPosition, m_worldPosition), -1, SPROP_COORD ),
+	SendPropEHandle( SENDINFO( m_hObject ) ),
+	SendPropVector(SENDINFO( m_worldPosition ), -1, SPROP_COORD),
 	SendPropInt( SENDINFO(m_active), 1, SPROP_UNSIGNED ),
 #endif
 END_NETWORK_TABLE()
@@ -441,94 +430,6 @@ acttable_t	CWeaponGravityGun::m_acttable[] =
 
 IMPLEMENT_ACTTABLE(CWeaponGravityGun);
 
-
-#ifdef CLIENT_DLL
-C_BeamQuadratic::C_BeamQuadratic()
-{
-	m_pOwner = NULL;
-}
-
-void C_BeamQuadratic::Update( C_BaseEntity *pOwner )
-{
-	m_pOwner = pOwner;
-	if ( m_active )
-	{
-		if ( m_hRenderHandle == INVALID_CLIENT_RENDER_HANDLE )
-		{
-			ClientLeafSystem()->AddRenderable( this, RENDER_GROUP_VIEW_MODEL_TRANSLUCENT );
-		}
-		else
-		{
-			ClientLeafSystem()->RenderableChanged( m_hRenderHandle );
-		}
-	}
-	else if ( !m_active && m_hRenderHandle != INVALID_CLIENT_RENDER_HANDLE )
-	{
-		ClientLeafSystem()->RemoveRenderable( m_hRenderHandle );
-	}
-}
-
-
-int	C_BeamQuadratic::DrawModel( int )
-{
-	C_BasePlayer *pOwner = (C_BasePlayer *)m_pOwner->GetOwnerEntity();
-
-	if ( !pOwner )
-		return 0;
-
-	Vector points[3];
-	QAngle tmpAngle;
-
-	if ( !m_active )
-		return 0;
-
-	C_BaseEntity *pEnt = cl_entitylist->GetEnt( m_viewModelIndex );
-	if ( !pEnt )
-		return 0;
-	pEnt->GetAttachment( 1, points[0], tmpAngle );
-
-	points[1] = 0.5 * (m_targetPosition + points[0]);
-	
-	// a little noise 11t & 13t should be somewhat non-periodic looking
-	//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
-	points[2] = m_worldPosition;
-
-	IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
-	Vector color;
-	color.Init(1,1,1);
-
-	float flWidthRatio = engine->GetScreenAspectRatio() / ( 4.0f / 3.0f );
-
-	// Now draw it.
-	CViewSetup beamView;
-	beamView.x = 0;
-	beamView.y = 0;
-	beamView.width = ScreenWidth();
-	beamView.height = ScreenHeight();
-
-	beamView.m_bOrtho = false;
-
-	// scale the FOV for aspect ratios other than 4/3
-	beamView.fov = ScaleFOVByWidthRatio( pOwner->GetFOV(), flWidthRatio );
-
-	beamView.origin = pOwner->EyePosition();
-	beamView.angles = pOwner->EyeAngles();
-	beamView.zNear = view->GetZNear();
-	beamView.zFar = view->GetZFar();
-
-	Frustum dummyFrustum;
-	render->Push3DView( beamView, 0, NULL, dummyFrustum );
-
-	float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
-	CMatRenderContextPtr pRenderContext( materials );
-	pRenderContext->Bind( pMat );
-	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
-
-	render->PopView( dummyFrustum );
-	return 1;
-}
-
-#endif
 
 //---------------------------------------------------------
 // Save/Restore
@@ -602,6 +503,22 @@ void CWeaponGravityGun::Precache( void )
 	PrecacheScriptSound( "Weapon_Physgun.HeavyObject" );
 }
 
+//Andrew; I think I win, Henry.
+static Vector UTIL_WorldToLocal( const Vector &origin, const QAngle &vAngles, const Vector &vecWorldTarget )
+{
+	VMatrix tmp;
+	tmp.SetupMatrixOrgAngles( origin, vAngles );
+	return tmp.VMul4x3Transpose( vecWorldTarget );
+}
+
+//Andrew; Twice.
+static Vector UTIL_LocalToWorld( const Vector &origin, const QAngle &vAngles, const Vector &vecLocalTarget )
+{
+	VMatrix tmp;
+	tmp.SetupMatrixOrgAngles( origin, vAngles );
+	return tmp.VMul4x3( vecLocalTarget );
+}
+
 void CWeaponGravityGun::EffectCreate( void )
 {
 	EffectUpdate();
@@ -617,16 +534,6 @@ void CWeaponGravityGun::EffectUpdate( void )
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 	if ( !pOwner )
 		return;
-
-#ifdef CLIENT_DLL
-	m_beam.m_viewModelIndex = pOwner->entindex();
-	// Make sure I've got a view model
-	CBaseViewModel *vm = pOwner->GetViewModel();
-	if ( vm )
-	{
-		m_beam.m_viewModelIndex = vm->entindex();
-	}
-#endif
 
 	pOwner->EyeVectors( &forward, &right, NULL );
 
@@ -949,6 +856,7 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start,
 	{
 		m_distance = distance;
 
+		m_worldPosition = UTIL_WorldToLocal( pObject->GetAbsOrigin(), pObject->GetAbsAngles(), end );
 		m_gravCallback.AttachEntity( pObject, pPhysics, end );
 		float mass = pPhysics->GetMass();
 //		Msg( "Object mass: %.2f lbs (%.2f kg)\n", kg2lbs(mass), mass );
@@ -1011,16 +919,6 @@ void CWeaponGravityGun::SecondaryAttack( void )
 
 	if ( pOwner->GetAmmoCount(m_iSecondaryAmmoType) <= 0 )
 		return;
-
-#ifdef CLIENT_DLL
-	m_beam.m_viewModelIndex = pOwner->entindex();
-	// Make sure I've got a view model
-	CBaseViewModel *vm = pOwner->GetViewModel();
-	if ( vm )
-	{
-		m_beam.m_viewModelIndex = vm->entindex();
-	}
-#endif
 
 	Vector forward;
 	pOwner->EyeVectors( &forward );
@@ -1092,14 +990,22 @@ int CWeaponGravityGun::DrawModel( int flags )
 		if ( !m_active )
 			return 0;
 
+		C_BaseEntity *pObject = m_hObject;
+		if ( pObject == NULL )
+			return 0;
+
 		GetAttachment( 1, points[0], tmpAngle );
 
-		points[1] = 0.5 * (m_gravCallback.m_targetPosition + points[0]);
-		
 		// a little noise 11t & 13t should be somewhat non-periodic looking
 		//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
-		points[2] = m_gravCallback.m_worldPosition;
+		points[2] = UTIL_LocalToWorld(pObject->GetAbsOrigin(), pObject->GetAbsAngles(), m_worldPosition);
 
+		Vector forward, right, up;
+		QAngle playerAngles = pOwner->EyeAngles();
+		AngleVectors( playerAngles, &forward, &right, &up );
+		Vector vecSrc = pOwner->Weapon_ShootPosition( );
+		points[1] = vecSrc + 0.5f * (forward * points[2].DistTo(points[0]));
+		
 		IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
 		Vector color;
 		color.Init(1,1,1);
@@ -1120,11 +1026,69 @@ int CWeaponGravityGun::DrawModel( int flags )
 //-----------------------------------------------------------------------------
 void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 {
-	// Render our effects
-	m_beam.Update( this );
-
 	// Pass this back up
 	BaseClass::ViewModelDrawn( pBaseViewModel );
+
+	// Render our effects
+	C_BasePlayer *pOwner = ToBasePlayer( GetOwner() );
+
+	if ( !pOwner )
+		return;
+
+	Vector points[3];
+	QAngle tmpAngle;
+
+	if ( !m_active )
+		return;
+
+	C_BaseEntity *pObject = m_hObject;
+	if ( pObject == NULL )
+		return;
+
+	pBaseViewModel->GetAttachment( 1, points[0], tmpAngle );
+
+	// a little noise 11t & 13t should be somewhat non-periodic looking
+	//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
+	points[2] = UTIL_LocalToWorld(pObject->GetAbsOrigin(), pObject->GetAbsAngles(), m_worldPosition);
+
+	Vector forward, right, up;
+	QAngle playerAngles = pOwner->EyeAngles();
+	AngleVectors( playerAngles, &forward, &right, &up );
+	Vector vecSrc = pOwner->Weapon_ShootPosition( );
+	points[1] = vecSrc + 0.5f * (forward * points[2].DistTo(points[0]));
+	
+	IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
+	Vector color;
+	color.Init(1,1,1);
+
+	float flWidthRatio = engine->GetScreenAspectRatio() / ( 4.0f / 3.0f );
+
+	// Now draw it.
+	CViewSetup beamView;
+	beamView.x = 0;
+	beamView.y = 0;
+	beamView.width = ScreenWidth();
+	beamView.height = ScreenHeight();
+
+	beamView.m_bOrtho = false;
+
+	// scale the FOV for aspect ratios other than 4/3
+	beamView.fov = ScaleFOVByWidthRatio( pOwner->GetFOV(), flWidthRatio );
+
+	beamView.origin = pOwner->EyePosition();
+	beamView.angles = pOwner->EyeAngles();
+	beamView.zNear = view->GetZNear();
+	beamView.zFar = view->GetZFar();
+
+	Frustum dummyFrustum;
+	render->Push3DView( beamView, 0, NULL, dummyFrustum );
+
+	float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
+	CMatRenderContextPtr pRenderContext( materials );
+	pRenderContext->Bind( pMat );
+	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
+
+	render->PopView( dummyFrustum );
 }
 
 //-----------------------------------------------------------------------------
