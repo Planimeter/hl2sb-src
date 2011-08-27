@@ -495,14 +495,7 @@ int	C_BeamQuadratic::DrawModel( int )
 
 	IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
 	Vector color;
-	if ( m_glueTouching )
-	{
-		color.Init(1,0,0);
-	}
-	else
-	{
-		color.Init(1,1,1);
-	}
+	color.Init(1,1,1);
 
 	float flWidthRatio = engine->GetScreenAspectRatio() / ( 4.0f / 3.0f );
 
