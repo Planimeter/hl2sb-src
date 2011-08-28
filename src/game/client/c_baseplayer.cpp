@@ -209,6 +209,13 @@ END_RECV_TABLE()
 
 		RecvPropVector		( RECVINFO( m_vecBaseVelocity ) ),
 
+#ifdef ARGG
+		// adnan
+		// get the use angles
+		RecvPropVector		( RECVINFO( m_vecUseAngles ) ),
+		// end adnan
+#endif
+
 		RecvPropEHandle		( RECVINFO( m_hConstraintEntity)),
 		RecvPropVector		( RECVINFO( m_vecConstraintCenter) ),
 		RecvPropFloat		( RECVINFO( m_flConstraintRadius )),
