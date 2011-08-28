@@ -617,16 +617,20 @@ void CWeaponGravityGun::SoundDestroy( void )
 
 void CWeaponGravityGun::SoundStop( void )
 {
+	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+	if ( !pOwner )
+		return;
+
 	switch( m_soundState )
 	{
 	case SS_SCANNING:
-		GetOwner()->StopSound( "Weapon_Physgun.Scanning" );
+		pOwner->StopSound( "Weapon_Physgun.Scanning" );
 		break;
 	case SS_LOCKEDON:
-		GetOwner()->StopSound( "Weapon_Physgun.Scanning" );
-		GetOwner()->StopSound( "Weapon_Physgun.LockedOn" );
-		GetOwner()->StopSound( "Weapon_Physgun.LightObject" );
-		GetOwner()->StopSound( "Weapon_Physgun.HeavyObject" );
+		pOwner->StopSound( "Weapon_Physgun.Scanning" );
+		pOwner->StopSound( "Weapon_Physgun.LockedOn" );
+		pOwner->StopSound( "Weapon_Physgun.LightObject" );
+		pOwner->StopSound( "Weapon_Physgun.HeavyObject" );
 		break;
 	}
 }
