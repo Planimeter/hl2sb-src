@@ -438,6 +438,12 @@ public:
 	virtual bool			ShouldDraw( void );
 	virtual bool			ShouldDrawPickup( void );
 	virtual void			HandleInput( void ) { return; };
+#ifdef ARGG
+	// adnan
+	// does this weapon need to override the setting of view angles?
+	virtual bool			OverrideViewAngles( void ) { return false; };
+	// end adnan
+#endif
 	virtual void			OverrideMouseInput( float *x, float *y ) { return; };
 	virtual int				KeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding ) { return 1; }
 	virtual bool			AddLookShift( void ) { return true; };

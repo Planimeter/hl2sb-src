@@ -276,7 +276,6 @@ public:
 
 	void PrimaryAttack( void );
 	void SecondaryAttack( void );
-	void WeaponIdle( void );
 	void ItemPostFrame( void );
 	virtual bool Holster( CBaseCombatWeapon *pSwitchingTo )
 	{
@@ -858,6 +857,9 @@ void CWeaponGravityGun::PrimaryAttack( void )
 
 void CWeaponGravityGun::SecondaryAttack( void )
 {
+	// Andrew; do nothing for now.
+	return;
+
 	m_flNextSecondaryAttack = gpGlobals->curtime + 0.1;
 	if ( m_active )
 	{
@@ -912,14 +914,6 @@ void CWeaponGravityGun::SecondaryAttack( void )
 	pBeam->RelinkBeam();
 	pBeam->LiveForTime( 0.1 );
 
-}
-
-void CWeaponGravityGun::WeaponIdle( void )
-{
-	if ( HasWeaponIdleTimeElapsed() )
-	{
-		SendWeaponAnim( ACT_VM_IDLE );
-	}
 }
 
 #ifdef CLIENT_DLL
