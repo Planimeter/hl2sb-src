@@ -58,44 +58,6 @@ CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffectGravityGun )
 CLIENTEFFECT_MATERIAL( "sprites/physbeam" )
 CLIENTEFFECT_REGISTER_END()
 
-class C_BeamQuadratic : public CDefaultClientRenderable
-{
-public:
-	C_BeamQuadratic();
-	void			Update( C_BaseEntity *pOwner );
-
-	const matrix3x4_t &C_BeamQuadratic::RenderableToWorldTransform( void )
-	{
-		return RenderableToWorldTransform();
-	}
-
-	// IClientRenderable
-	virtual const Vector&			GetRenderOrigin( void ) { return m_worldPosition; }
-	virtual const QAngle&			GetRenderAngles( void ) { return vec3_angle; }
-	virtual bool					ShouldDraw( void ) { return true; }
-	virtual bool					IsTransparent( void ) { return true; }
-	virtual bool					ShouldReceiveProjectedTextures( int flags ) { return false; }
-	virtual int						DrawModel( int flags );
-
-	// Returns the bounds relative to the origin (render bounds)
-	virtual void	GetRenderBounds( Vector& mins, Vector& maxs )
-	{
-		ClearBounds( mins, maxs );
-		AddPointToBounds( vec3_origin, mins, maxs );
-		AddPointToBounds( m_targetPosition, mins, maxs );
-		AddPointToBounds( m_worldPosition, mins, maxs );
-		mins -= GetRenderOrigin();
-		maxs -= GetRenderOrigin();
-	}
-
-	C_BaseEntity			*m_pOwner;
-	Vector					m_targetPosition;
-	Vector					m_worldPosition;
-	int						m_active;
-	int						m_glueTouching;
-	int						m_viewModelIndex;
-};
-
 
 #endif
 
@@ -112,14 +74,27 @@ public:
 	{
 		m_maxVel = maxVel;
 	}
-	void SetTargetPosition( const Vector &target )
+	void SetTargetPosition( const Vector &target, const QAngle &targetOrientation )
 	{
-		m_targetPosition = target;
-		if ( m_attachedEntity == NULL )
-		{
-			m_worldPosition = target;
-		}
+		m_shadow.targetPosition = target;
+		m_shadow.targetRotation = targetOrientation;
+
 		m_timeToArrive = gpGlobals->frametime;
+
+		CBaseEntity *pAttached = m_attachedEntity;
+		if ( pAttached )
+		{
+			IPhysicsObject *pObj = pAttached->VPhysicsGetObject();
+			
+			if ( pObj != NULL )
+			{
+				pObj->Wake();
+			}
+			else
+			{
+				DetachEntity();
+			}
+		}
 	}
 
 	IMotionEvent::simresult_e Simulate( IPhysicsMotionController *pController, IPhysicsObject *pObject, float deltaTime, Vector &linear, AngularImpulse &angular );
@@ -127,6 +102,7 @@ public:
 	Vector			m_targetPosition;
 	Vector			m_worldPosition;
 	float			m_saveDamping;
+	float			m_saveMass;
 	float			m_maxVel;
 	float			m_maxAcceleration;
 	Vector			m_maxAngularAcceleration;
@@ -135,6 +111,9 @@ public:
 	float			m_timeToArrive;
 
 	IPhysicsMotionController *m_controller;
+
+private:
+	hlshadowcontrol_params_t	m_shadow;
 };
 
 
@@ -144,6 +123,7 @@ BEGIN_SIMPLE_DATADESC( CGravControllerPoint )
 	DEFINE_FIELD( m_targetPosition,		FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( m_worldPosition,		FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( m_saveDamping,			FIELD_FLOAT ),
+	DEFINE_FIELD( m_saveMass,			FIELD_FLOAT ),
 	DEFINE_FIELD( m_maxVel,				FIELD_FLOAT ),
 	DEFINE_FIELD( m_maxAcceleration,		FIELD_FLOAT ),
 	DEFINE_FIELD( m_maxAngularAcceleration,	FIELD_VECTOR ),
@@ -159,6 +139,13 @@ END_DATADESC()
 
 CGravControllerPoint::CGravControllerPoint( void )
 {
+	m_shadow.dampFactor = 0.8;
+	m_shadow.teleportDistance = 0;
+	// make this controller really stiff!
+	m_shadow.maxSpeed = 5000;
+	m_shadow.maxAngular = 10000;
+	m_shadow.maxDampSpeed = 5000;
+	m_shadow.maxDampAngular = 10000;
 	m_attachedEntity = NULL;
 }
 
@@ -168,18 +155,23 @@ CGravControllerPoint::~CGravControllerPoint( void )
 }
 
 
-void CGravControllerPoint::AttachEntity( CBaseEntity *pEntity, IPhysicsObject *pPhys, const Vector &position )
+void CGravControllerPoint::AttachEntity( CBaseEntity *pEntity, IPhysicsObject *pPhys, const Vector &vGrabPosition )
 {
 	m_attachedEntity = pEntity;
-	pPhys->WorldToLocal( &m_localPosition, position );
-	m_worldPosition = position;
+	pPhys->WorldToLocal( &m_localPosition, vGrabPosition );
+	m_worldPosition = vGrabPosition;
 	pPhys->GetDamping( NULL, &m_saveDamping );
+	m_saveMass = pPhys->GetMass();
 	float damping = 2;
 	pPhys->SetDamping( NULL, &damping );
+	pPhys->SetMass( 50000 );
 	m_controller = physenv->CreateMotionController( this );
 	m_controller->AttachObject( pPhys, true );
 	m_controller->SetPriority( IPhysicsMotionController::HIGH_PRIORITY );
-	SetTargetPosition( position );
+	Vector position;
+	QAngle angles;
+	pPhys->GetPosition( &position, &angles );
+	SetTargetPosition( vGrabPosition, angles );
 	m_maxAcceleration = phys_gunforce.GetFloat() * pPhys->GetInvMass();
 	m_targetRotation = pEntity->GetAbsAngles();
 	float torque = phys_guntorque.GetFloat();
@@ -197,6 +189,7 @@ void CGravControllerPoint::DetachEntity( void )
 			// on the odd chance that it's gone to sleep while under anti-gravity
 			pPhys->Wake();
 			pPhys->SetDamping( NULL, &m_saveDamping );
+			pPhys->SetMass( m_saveMass );
 		}
 	}
 	m_attachedEntity = NULL;
@@ -221,63 +214,17 @@ void AxisAngleQAngle( const Vector &axis, float angle, QAngle &outAngles )
 
 IMotionEvent::simresult_e CGravControllerPoint::Simulate( IPhysicsMotionController *pController, IPhysicsObject *pObject, float deltaTime, Vector &linear, AngularImpulse &angular )
 {
-	Vector vel;
-	AngularImpulse angVel;
-
-	float fracRemainingSimTime = 1.0;
-	if ( m_timeToArrive > 0 )
-	{
-		fracRemainingSimTime *= deltaTime / m_timeToArrive;
-		if ( fracRemainingSimTime > 1 )
-		{
-			fracRemainingSimTime = 1;
-		}
-	}
+	hlshadowcontrol_params_t shadowParams = m_shadow;
+#ifndef CLIENT_DLL
+	m_timeToArrive = pObject->ComputeShadowControl( shadowParams, m_timeToArrive, deltaTime );
+#else
+	m_timeToArrive = pObject->ComputeShadowControl( shadowParams, (TICK_INTERVAL*2), deltaTime );
+#endif
 	
-	m_timeToArrive -= deltaTime;
-	if ( m_timeToArrive < 0 )
-	{
-		m_timeToArrive = 0;
-	}
+	linear.Init();
+	angular.Init();
 
-	float invDeltaTime = (1.0f / deltaTime);
-	Vector world;
-	pObject->LocalToWorld( &world, m_localPosition );
-	m_worldPosition = world;
-	pObject->GetVelocity( &vel, &angVel );
-	//pObject->GetVelocityAtPoint( world, &vel );
-	float damping = 1.0;
-	world += vel * deltaTime * damping;
-	Vector delta = (m_targetPosition - world) * fracRemainingSimTime * invDeltaTime;
-	Vector alignDir;
-	linear = vec3_origin;
-	angular = vec3_origin;
-
-	// clamp future velocity to max speed
-	Vector nextVel = delta + vel;
-	float nextSpeed = nextVel.Length();
-	if ( nextSpeed > m_maxVel )
-	{
-		nextVel *= (m_maxVel / nextSpeed);
-		delta = nextVel - vel;
-	}
-
-	delta *= invDeltaTime;
-
-	float linearAccel = delta.Length();
-	if ( linearAccel > m_maxAcceleration )
-	{
-		delta *= m_maxAcceleration / linearAccel;
-	}
-
-	Vector accel;
-	AngularImpulse angAccel;
-	pObject->CalculateForceOffset( delta, world, &accel, &angAccel );
-	
-	linear += accel;
-	angular += angAccel;
-	
-	return SIM_GLOBAL_ACCELERATION;
+	return SIM_LOCAL_ACCELERATION;
 }
 
 
@@ -644,13 +591,14 @@ void CWeaponGravityGun::EffectUpdate( void )
 			newPosition = tr.endpos;
 		}
 
-		m_gravCallback.SetTargetPosition( newPosition );
+		Vector offset = UTIL_LocalToWorld( newPosition, m_gravCallback.m_targetRotation, m_worldPosition );
+		m_gravCallback.SetTargetPosition( newPosition + (newPosition - offset), m_gravCallback.m_targetRotation );
 		Vector dir = (newPosition - pObject->GetLocalOrigin());
 		m_movementLength = dir.Length();
 	}
 	else
 	{
-		m_gravCallback.SetTargetPosition( end );
+		m_gravCallback.SetTargetPosition( end, m_gravCallback.m_targetRotation );
 	}
 }
 
@@ -857,7 +805,7 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start,
 		m_distance = distance;
 
 		m_worldPosition = UTIL_WorldToLocal( pObject->GetAbsOrigin(), pObject->GetAbsAngles(), end );
-		m_gravCallback.AttachEntity( pObject, pPhysics, end );
+		m_gravCallback.AttachEntity( pObject, pPhysics, pObject->GetAbsOrigin() );
 		float mass = pPhysics->GetMass();
 //		Msg( "Object mass: %.2f lbs (%.2f kg)\n", kg2lbs(mass), mass );
 		float vel = phys_gunvel.GetFloat();
