@@ -138,9 +138,9 @@ CGravControllerPoint::CGravControllerPoint( void )
 	m_shadow.teleportDistance = 0;
 	// make this controller really stiff!
 	m_shadow.maxSpeed = 5000;
-	m_shadow.maxAngular = 10000;
-	m_shadow.maxDampSpeed = 5000;
-	m_shadow.maxDampAngular = 10000;
+	m_shadow.maxAngular = m_shadow.maxSpeed;
+	m_shadow.maxDampSpeed = m_shadow.maxSpeed*2;
+	m_shadow.maxDampAngular = m_shadow.maxAngular*2;
 	m_attachedEntity = NULL;
 }
 
