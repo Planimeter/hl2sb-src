@@ -323,6 +323,7 @@ private:
 	float		m_lastYaw;
 	int			m_soundState;
 	Vector		m_originalObjectPosition;
+	Vector		m_targetPosition;
 	CNetworkVector	( m_worldPosition );
 
 	CGravControllerPoint		m_gravCallback;
@@ -592,7 +593,8 @@ void CWeaponGravityGun::EffectUpdate( void )
 	}
 	else
 	{
-		m_gravCallback.SetTargetPosition( end, m_gravCallback.m_targetRotation );
+		m_targetPosition = end;
+		//m_gravCallback.SetTargetPosition( end, m_gravCallback.m_targetRotation );
 	}
 }
 
@@ -922,14 +924,21 @@ int CWeaponGravityGun::DrawModel( int flags )
 			return 0;
 
 		C_BaseEntity *pObject = m_hObject;
-		if ( pObject == NULL )
-			return 0;
+		//if ( pObject == NULL )
+		//	return 0;
 
 		GetAttachment( 1, points[0], tmpAngle );
 
 		// a little noise 11t & 13t should be somewhat non-periodic looking
 		//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
-		points[2] = UTIL_LocalToWorld(pObject->GetAbsOrigin(), pObject->GetAbsAngles(), m_worldPosition);
+		if ( pObject == NULL )
+		{
+			points[2] = m_targetPosition;
+		}
+		else
+		{
+			points[2] = UTIL_LocalToWorld(pObject->GetAbsOrigin(), pObject->GetAbsAngles(), m_worldPosition);
+		}
 
 		Vector forward, right, up;
 		QAngle playerAngles = pOwner->EyeAngles();
@@ -973,14 +982,21 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 		return;
 
 	C_BaseEntity *pObject = m_hObject;
-	if ( pObject == NULL )
-		return;
+	//if ( pObject == NULL )
+	//	return;
 
 	pBaseViewModel->GetAttachment( 1, points[0], tmpAngle );
 
 	// a little noise 11t & 13t should be somewhat non-periodic looking
 	//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
-	points[2] = UTIL_LocalToWorld(pObject->GetAbsOrigin(), pObject->GetAbsAngles(), m_worldPosition);
+	if ( pObject == NULL )
+	{
+		points[2] = m_targetPosition;
+	}
+	else
+	{
+		points[2] = UTIL_LocalToWorld(pObject->GetAbsOrigin(), pObject->GetAbsAngles(), m_worldPosition);
+	}
 
 	Vector forward, right, up;
 	QAngle playerAngles = pOwner->EyeAngles();
