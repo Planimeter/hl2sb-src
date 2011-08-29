@@ -268,6 +268,9 @@ public:
 	int	 DrawModel( int flags );
 	void ViewModelDrawn( C_BaseViewModel *pBaseViewModel );
 	bool IsTransparent( void );
+
+	// We need to render opaque and translucent pieces
+	RenderGroup_t	GetRenderGroup( void ) {	return RENDER_GROUP_TWOPASS;	}
 #endif
 
 	void Spawn( void );
