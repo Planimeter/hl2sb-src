@@ -41,11 +41,6 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-ConVar phys_gunmass("phys_gunmass", "200", FCVAR_REPLICATED);
-ConVar phys_gunvel("phys_gunvel", "400", FCVAR_REPLICATED);
-ConVar phys_gunforce("phys_gunforce", "5e5", FCVAR_REPLICATED );
-ConVar phys_guntorque("phys_guntorque", "100", FCVAR_REPLICATED );
-
 static int g_physgunBeam;
 #define PHYSGUN_BEAM_SPRITE		"sprites/physbeam.vmt"
 
@@ -172,10 +167,7 @@ void CGravControllerPoint::AttachEntity( CBaseEntity *pEntity, IPhysicsObject *p
 	QAngle angles;
 	pPhys->GetPosition( &position, &angles );
 	SetTargetPosition( vGrabPosition, angles );
-	m_maxAcceleration = phys_gunforce.GetFloat() * pPhys->GetInvMass();
 	m_targetRotation = pEntity->GetAbsAngles();
-	float torque = phys_guntorque.GetFloat();
-	m_maxAngularAcceleration = torque * pPhys->GetInvInertia();
 }
 
 void CGravControllerPoint::DetachEntity( void )
@@ -812,16 +804,6 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start,
 
 		m_worldPosition = UTIL_WorldToLocal( pObject->GetAbsOrigin(), pObject->GetAbsAngles(), end );
 		m_gravCallback.AttachEntity( pObject, pPhysics, pObject->GetAbsOrigin() );
-		float mass = pPhysics->GetMass();
-//		Msg( "Object mass: %.2f lbs (%.2f kg)\n", kg2lbs(mass), mass );
-		float vel = phys_gunvel.GetFloat();
-		if ( mass > phys_gunmass.GetFloat() )
-		{
-			vel = (vel*phys_gunmass.GetFloat())/mass;
-		}
-		m_gravCallback.SetMaxVelocity( vel );
-//		Msg( "Object mass: %.2f lbs (%.2f kg) %f %f %f\n", kg2lbs(mass), mass, pObject->GetAbsOrigin().x, pObject->GetAbsOrigin().y, pObject->GetAbsOrigin().z );
-//		Msg( "ANG: %f %f %f\n", pObject->GetAbsAngles().x, pObject->GetAbsAngles().y, pObject->GetAbsAngles().z );
 
 		m_originalObjectPosition = pObject->GetAbsOrigin();
 
