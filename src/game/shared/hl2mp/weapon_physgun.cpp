@@ -966,9 +966,6 @@ int CWeaponGravityGun::DrawModel( int flags )
 //-----------------------------------------------------------------------------
 void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 {
-	// Pass this back up
-	BaseClass::ViewModelDrawn( pBaseViewModel );
-
 	// Render our effects
 	C_BasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
@@ -1036,6 +1033,9 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
 
 	render->PopView( dummyFrustum );
+
+	// Pass this back up
+	BaseClass::ViewModelDrawn( pBaseViewModel );
 }
 
 //-----------------------------------------------------------------------------

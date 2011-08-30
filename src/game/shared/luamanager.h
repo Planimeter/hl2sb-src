@@ -93,6 +93,22 @@
     luasrc_pcall(L, args, nresults, 0); \
   }
 
+#define BEGIN_LUA_CALL_ENTITY_METHOD(functionName) \
+  lua_getref(L, m_nRefCount); \
+  lua_getfield(L, -1, functionName); \
+  lua_remove(L, -2); \
+  if (lua_isfunction(L, -1)) { \
+    int args = 0; \
+	lua_pushentity(L, this); \
+	++args;
+
+#define END_LUA_CALL_ENTITY_METHOD(nArgs, nresults) \
+	args += nArgs; \
+	luasrc_pcall(L, args, nresults, 0); \
+  } \
+  else \
+    lua_pop(L, 1);
+
 #define RETURN_LUA_NONE() \
   if (lua_gettop(L) == 1) { \
     if (lua_isboolean(L, -1)) { \

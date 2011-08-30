@@ -2174,6 +2174,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\luabaseentity.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\luabaseentity.h"
+				>
+			</File>
+			<File
 				RelativePath="..\shared\luacachefile.cpp"
 				>
 			</File>
