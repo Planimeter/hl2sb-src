@@ -7,16 +7,16 @@
 //===========================================================================//
 
 #include "cbase.h"
-#include "luabaseentity.h"
+#include "basescripted.h"
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-IMPLEMENT_NETWORKCLASS_ALIASED( LuaBaseEntity, DT_LuaBaseEntity )
+IMPLEMENT_NETWORKCLASS_ALIASED( BaseScripted, DT_BaseScripted )
 
-BEGIN_NETWORK_TABLE( CLuaBaseEntity, DT_LuaBaseEntity )
+BEGIN_NETWORK_TABLE( CBaseScripted, DT_BaseScripted )
 #ifdef CLIENT_DLL
 	RecvPropString( RECVINFO( m_iScriptedClassname ) ),
 #else
@@ -24,25 +24,25 @@ BEGIN_NETWORK_TABLE( CLuaBaseEntity, DT_LuaBaseEntity )
 #endif
 END_NETWORK_TABLE()
 
-BEGIN_PREDICTION_DATA(	CLuaBaseEntity )
+BEGIN_PREDICTION_DATA(	CBaseScripted )
 END_PREDICTION_DATA()
 
 #ifdef CLIENT_DLL
-static C_BaseEntity *CCLuaBaseEntityFactory( void )
+static C_BaseEntity *CCBaseScriptedFactory( void )
 {
-	return static_cast< C_BaseEntity * >( new CLuaBaseEntity );
+	return static_cast< C_BaseEntity * >( new CBaseScripted );
 };
 #endif
 
 #ifndef CLIENT_DLL
-static CUtlDict< CEntityFactory<CLuaBaseEntity>*, unsigned short > m_EntityFactoryDatabase;
+static CUtlDict< CEntityFactory<CBaseScripted>*, unsigned short > m_EntityFactoryDatabase;
 #endif
 
 void RegisterScriptedBaseEntity( const char *className )
 {
 #ifdef CLIENT_DLL
-	GetClassMap().Add( className, "CLuaBaseEntity", sizeof( CLuaBaseEntity ),
-		&CCLuaBaseEntityFactory );
+	GetClassMap().Add( className, "CBaseScripted", sizeof( CBaseScripted ),
+		&CCBaseScriptedFactory );
 #else
 	if ( EntityFactoryDictionary()->FindFactory( className ) )
 	{
@@ -55,14 +55,14 @@ void RegisterScriptedBaseEntity( const char *className )
 		return;
 	}
 
-	CEntityFactory<CLuaBaseEntity> *pFactory = new CEntityFactory<CLuaBaseEntity>( className );
+	CEntityFactory<CBaseScripted> *pFactory = new CEntityFactory<CBaseScripted>( className );
 
 	lookup = m_EntityFactoryDatabase.Insert( className, pFactory );
 	Assert( lookup != m_EntityFactoryDatabase.InvalidIndex() );
 #endif
 }
 
-CLuaBaseEntity::CLuaBaseEntity( void )
+CBaseScripted::CBaseScripted( void )
 {
 #ifdef LUA_SDK
 	// We're done in CBaseEntity
@@ -70,7 +70,7 @@ CLuaBaseEntity::CLuaBaseEntity( void )
 #endif
 }
 
-CLuaBaseEntity::~CLuaBaseEntity( void )
+CBaseScripted::~CBaseScripted( void )
 {
 	// Andrew; This is actually done in CBaseEntity. I'm doing it here because
 	// this is the class that initialized the reference.
@@ -79,7 +79,7 @@ CLuaBaseEntity::~CLuaBaseEntity( void )
 #endif
 }
 
-void CLuaBaseEntity::InitScriptedEntity( void )
+void CBaseScripted::InitScriptedEntity( void )
 {
 #if defined ( LUA_SDK )
 #ifndef CLIENT_DLL
@@ -129,7 +129,7 @@ void CLuaBaseEntity::InitScriptedEntity( void )
 }
 
 #ifdef CLIENT_DLL
-void CLuaBaseEntity::OnDataChanged( DataUpdateType_t updateType )
+void CBaseScripted::OnDataChanged( DataUpdateType_t updateType )
 {
 	BaseClass::OnDataChanged( updateType );
 
@@ -148,7 +148,7 @@ void CLuaBaseEntity::OnDataChanged( DataUpdateType_t updateType )
 	}
 }
 
-const char *CLuaBaseEntity::GetScriptedClassname( void )
+const char *CBaseScripted::GetScriptedClassname( void )
 {
 	if ( m_iScriptedClassname.Get() )
 		return m_iScriptedClassname.Get();
@@ -156,14 +156,14 @@ const char *CLuaBaseEntity::GetScriptedClassname( void )
 }
 #endif
 
-void CLuaBaseEntity::Precache( void )
+void CBaseScripted::Precache( void )
 {
 	BaseClass::Precache();
 
 	InitScriptedEntity();
 }
 
-void CLuaBaseEntity::Think()
+void CBaseScripted::Think()
 {
 #ifdef LUA_SDK
 	BEGIN_LUA_CALL_ENTITY_METHOD( "Think" );

@@ -6,27 +6,27 @@
 //
 //=============================================================================//
 
-#ifndef LUA_BASEENTITY_H
-#define LUA_BASEENTITY_H
+#ifndef BASESCRIPTED_H
+#define BASESCRIPTED_H
 
 #include "predictable_entity.h"
 #include "baseentity_shared.h"
 
 #if defined( CLIENT_DLL )
-#define CLuaBaseEntity C_LuaBaseEntity
+#define CBaseScripted C_BaseScripted
 
 #endif 
 
-class CLuaBaseEntity : /* public CBaseEntity */ public CBaseAnimating
+class CBaseScripted : /* public CBaseEntity */ public CBaseAnimating
 {
 public:
-	// DECLARE_CLASS( CLuaBaseEntity, CBaseEntity );
-	DECLARE_CLASS( CLuaBaseEntity, CBaseAnimating );
+	// DECLARE_CLASS( CBaseScripted, CBaseEntity );
+	DECLARE_CLASS( CBaseScripted, CBaseAnimating );
 	DECLARE_PREDICTABLE();
 	DECLARE_NETWORKCLASS();
 
-	CLuaBaseEntity();
-	~CLuaBaseEntity();
+	CBaseScripted();
+	~CBaseScripted();
 
 	bool	IsScripted( void ) const { return true; }
 	
@@ -44,7 +44,7 @@ public:
 #endif
 
 private:
-	CLuaBaseEntity( const CLuaBaseEntity & ); // not defined, not accessible
+	CBaseScripted( const CBaseScripted & ); // not defined, not accessible
 
 	CNetworkString( m_iScriptedClassname, 255 );
 };
