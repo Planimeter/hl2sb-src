@@ -242,6 +242,10 @@ void CCredits::InputRollOutroCredits( inputdata_t &inputdata )
 void CCredits::InputShowLogo( inputdata_t &inputdata )
 {
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#ifdef HL2SB
+	if ( !pPlayer )
+		return;
+#endif
 
 	CSingleUserRecipientFilter user( pPlayer );
 	user.MakeReliable();

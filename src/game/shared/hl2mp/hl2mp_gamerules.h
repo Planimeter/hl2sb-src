@@ -171,6 +171,11 @@ public:
 	float	FlPlayerSpawnTime( CBasePlayer *pPlayer );
 #endif
 #endif
+#ifdef HL2SB
+#ifndef CLIENT_DLL
+	virtual bool IsAlyxInDarknessMode();
+#endif
+#endif
 	void	CheckAllPlayersReady( void );
 	
 private:

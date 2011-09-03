@@ -611,6 +611,19 @@ CBasePlayer *UTIL_GetLocalPlayer( void )
 {
 	if ( gpGlobals->maxClients > 1 )
 	{
+		// HACKHACK: We change the behavior of UTIL_GetLocalPlayer() here to be
+		// compatible with multiplayer games for the sake of not crashing.
+#ifdef HL2SB
+		for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
+		{
+			CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
+			if(!pEnt || !pEnt->IsPlayer())
+				continue;
+
+			// Return the first player we can get a hold of.
+			return pEnt;
+		}
+#else
 		if ( developer.GetBool() )
 		{
 			Assert( !"UTIL_GetLocalPlayer" );
@@ -621,6 +634,7 @@ CBasePlayer *UTIL_GetLocalPlayer( void )
 		}
 
 		return NULL;
+#endif
 	}
 
 	return UTIL_PlayerByIndex( 1 );

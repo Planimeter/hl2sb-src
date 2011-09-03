@@ -5319,7 +5319,8 @@ bool CBasePlayer::CanEnterVehicle( IServerVehicle *pVehicle, int nRole )
 #ifdef LUA_SDK
 	BEGIN_LUA_CALL_HOOK( "CanEnterVehicle" );
 		lua_pushplayer( L, this );
-		lua_pushentity( L, (CBaseEntity *)pVehicle);
+		// FIXME: implement lua_pushvehicle()!
+		lua_pushentity( L, pVehicle->GetVehicleEnt());
 		lua_pushinteger( L, nRole );
 	END_LUA_CALL_HOOK( 3, 1 );
 

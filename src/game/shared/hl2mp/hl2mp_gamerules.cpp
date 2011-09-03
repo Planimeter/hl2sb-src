@@ -44,6 +44,9 @@
 	#include "weapon_hl2mpbasehlmpcombatweapon.h"
 	#include "team.h"
 	#include "voice_gamemgr.h"
+#ifdef HL2SB
+	#include "globalstate.h"
+#endif
 	#include "hl2mp_gameinterface.h"
 	#include "hl2mp_cvars.h"
 
@@ -80,6 +83,17 @@ extern CBaseEntity	 *g_pLastRebelSpawn;
 #define WEAPON_MAX_DISTANCE_FROM_SPAWN 64
 
 #endif
+
+#ifdef HL2SB
+#ifdef CLIENT_DLL
+#else
+
+#ifdef HL2_EPISODIC
+extern ConVar  alyx_darkness_force;
+#endif // HL2_EPISODIC
+
+#endif // CLIENT_DLL
+#endif // HL2SB
 
 
 REGISTER_GAMERULES_CLASS( CHL2MPRules );
@@ -1232,6 +1246,25 @@ bool CHL2MPRules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 	return BaseClass::ShouldCollide( collisionGroup0, collisionGroup1 ); 
 
 }
+
+#if !defined( CLIENT_DLL ) && defined( HL2SB )
+//-----------------------------------------------------------------------------
+// Returns whether or not Alyx cares about light levels in order to see.
+//-----------------------------------------------------------------------------
+bool CHL2MPRules::IsAlyxInDarknessMode()
+{
+#ifdef HL2_EPISODIC
+	if ( alyx_darkness_force.GetBool() )
+		return true;
+
+	return ( GlobalEntity_GetState( "ep_alyx_darknessmode" ) == GLOBAL_ON );
+#else
+	return false;
+#endif // HL2_EPISODIC
+}
+
+
+#endif
 
 bool CHL2MPRules::ClientCommand( CBaseEntity *pEdict, const CCommand &args )
 {
