@@ -55,6 +55,15 @@ bool Steam_MountSteamContent( int nExtraAppId )
 		return false;
 	}
 
+	int bIsAppSubscribed = 0;
+	int Reserved = 0;
+	pSteam006->IsAppSubscribed( nExtraAppId, &bIsAppSubscribed, &Reserved, &Error );
+
+	if ( !bIsAppSubscribed )
+	{
+		return false;
+	}
+
 #ifdef GAME_DLL
 	Msg( "Mounting %s...\n", App.szName );
 #endif

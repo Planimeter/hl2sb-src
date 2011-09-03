@@ -26,6 +26,7 @@
 #define LUA_PATH_WEAPONS			LUA_ROOT "\\weapons"
 
 
+#define LUA_BASE_ENTITY_CLASS		"CBaseEntity"
 #define LUA_BASE_WEAPON				"weapon_hl2mpbase_scriptedweapon"
 #define LUA_BASE_GAMEMODE			"deathmatch"
 
@@ -241,7 +242,7 @@ LUA_API void  (luasrc_dofolder) (lua_State *L, const char *path);
 
 LUA_API int   (luasrc_pcall) (lua_State *L, int nargs, int nresults, int errfunc);
 
-// void    luasrc_LoadEntities (void);
+void       luasrc_LoadEntities (void);
 void       luasrc_LoadWeapons (void);
 
 bool       luasrc_LoadGamemode (const char *gamemode);

@@ -17,23 +17,39 @@
 
 #endif 
 
-class CLuaBaseEntity : public CBaseEntity
+class CLuaBaseEntity : /* public CBaseEntity */ public CBaseAnimating
 {
 public:
-	DECLARE_CLASS( CLuaBaseEntity, CBaseEntity );
+	// DECLARE_CLASS( CLuaBaseEntity, CBaseEntity );
+	DECLARE_CLASS( CLuaBaseEntity, CBaseAnimating );
 	DECLARE_PREDICTABLE();
 	DECLARE_NETWORKCLASS();
 
 	CLuaBaseEntity();
-	virtual ~CLuaBaseEntity();
+	~CLuaBaseEntity();
 
+	bool	IsScripted( void ) const { return true; }
+	
 	// CBaseEntity overrides.
 public:
-	virtual void	Think();	
+	void	Think();	
+
+	// void	Spawn( void );
+	void	Precache( void );
+	void	InitScriptedEntity( void );
+
+#ifdef CLIENT_DLL
+	virtual void	OnDataChanged( DataUpdateType_t updateType );
+	virtual const char *GetScriptedClassname( void );
+#endif
 
 private:
 	CLuaBaseEntity( const CLuaBaseEntity & ); // not defined, not accessible
+
+	CNetworkString( m_iScriptedClassname, 255 );
 };
+
+void RegisterScriptedBaseEntity( const char *szClassname );
 
 #endif
 

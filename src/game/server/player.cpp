@@ -74,6 +74,7 @@
 
 #ifdef LUA_SDK
 #include "luamanager.h"
+#include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
 #include "lgametrace.h"
 #include "ltakedamageinfo.h"
@@ -5315,6 +5316,16 @@ void CBasePlayer::VelocityPunch( const Vector &vecForce )
 //-----------------------------------------------------------------------------
 bool CBasePlayer::CanEnterVehicle( IServerVehicle *pVehicle, int nRole )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "CanEnterVehicle" );
+		lua_pushplayer( L, this );
+		lua_pushentity( L, (CBaseEntity *)pVehicle);
+		lua_pushinteger( L, nRole );
+	END_LUA_CALL_HOOK( 3, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	// Must not have a passenger there already
 	if ( pVehicle->GetPassenger( nRole ) )
 		return false;

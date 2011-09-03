@@ -11,6 +11,7 @@
 #endif
 #include "steam/isteamfriends.h"
 #include "networkstringtabledefs.h"
+#include "luabaseentity.h"
 #include "weapon_hl2mpbase_scriptedweapon.h"
 #include "luamanager.h"
 #ifdef CLIENT_DLL
@@ -353,6 +354,80 @@ LUA_API int luasrc_pcall (lua_State *L, int nargs, int nresults, int errfunc) {
 	lua_pop(L, 1);
   }
   return iError;
+}
+
+void luasrc_LoadEntities (void)
+{
+	FileFindHandle_t fh;
+
+	char filename[ MAX_PATH ] = { 0 };
+	char fullpath[ MAX_PATH ] = { 0 };
+	char className[ 255 ] = { 0 };
+
+	char const *fn = g_pFullFileSystem->FindFirstEx( LUA_PATH_ENTITIES "\\*", "MOD", &fh );
+	if ( fn )
+	{
+		do
+		{
+			Q_strcpy( className, fn );
+			Q_strlower( className );
+			if ( fn[0] != '.' )
+			{
+				if ( g_pFullFileSystem->FindIsDirectory( fh ) )
+				{
+#ifdef CLIENT_DLL
+					Q_snprintf( filename, sizeof( filename ), LUA_PATH_ENTITIES "\\%s\\cl_init.lua", className );
+#else
+					Q_snprintf( filename, sizeof( filename ), LUA_PATH_ENTITIES "\\%s\\init.lua", className );
+#endif
+					if ( filesystem->FileExists( filename, "MOD" ) )
+					{
+						filesystem->RelativePathToFullPath( filename, "MOD", fullpath, sizeof( fullpath ) );
+						lua_newtable( L );
+						char path[ MAX_PATH ];
+						Q_snprintf( path, sizeof( path ), "entities\\%s", className );
+						lua_pushstring( L, path );
+						lua_setfield( L, -2, "__folder" );
+						lua_pushstring( L, LUA_BASE_ENTITY_CLASS );
+						lua_setfield( L, -2, "__base" );
+						lua_setglobal( L, "ENT" );
+						if ( luasrc_dofile( L, fullpath ) == 0 )
+						{
+							lua_getglobal( L, "entity" );
+							if ( lua_istable( L, -1 ) )
+							{
+								lua_getfield( L, -1, "Register" );
+								if ( lua_isfunction( L, -1 ) )
+								{
+									lua_remove( L, -2 );
+									lua_getglobal( L, "ENT" );
+									lua_pushstring( L, className );
+									luasrc_pcall( L, 2, 0, 0 );
+									// TODO: Create other types of entity classes
+									RegisterScriptedBaseEntity( className );
+								}
+								else
+								{
+									lua_pop( L, 2 );
+								}
+							}
+							else
+							{
+								lua_pop( L, 1 );
+							}
+						}
+						lua_pushnil( L );
+						lua_setglobal( L, "ENT" );
+					}
+				}
+			}
+
+			fn = g_pFullFileSystem->FindNext( fh );
+
+		} while ( fn );
+
+		g_pFullFileSystem->FindClose( fh );
+	}
 }
 
 void luasrc_LoadWeapons (void)

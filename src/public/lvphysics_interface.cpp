@@ -34,6 +34,21 @@ LUA_API lua_IPhysicsObject *lua_tophysicsobject (lua_State *L, int idx) {
 */
 
 
+// FIXME?: So here's the deal folks; in the Source SDK storing physics objects
+// long-term is not done frequently. This is because physics objects are, for
+// the majority of the time, tied to plain physics props or other similar
+// movable entities.
+// 
+// In the Lau SDK, we want to promote the storage of the entity in variables in
+// Lua instead, which mirrors internal code storing entities in handles. There
+// are no handles for IPhysicsObjects in the Source SDK, so here we use a
+// pointer to a pointer.
+// 
+// This means this object is unsafe in Lua, since the entity which this physics
+// object is tied to could be gone when you attempt to use it.
+// 
+// Henry wrote up a handle system for this, so if we need to end up using that
+// due to unforeseen logical issues, we will.
 LUA_API void lua_pushphysicsobject (lua_State *L, lua_IPhysicsObject *pPhysicsObject) {
   if (pPhysicsObject == NULL)
     lua_pushnil(L);
@@ -46,6 +61,11 @@ LUA_API void lua_pushphysicsobject (lua_State *L, lua_IPhysicsObject *pPhysicsOb
 }
 
 
+// Andrew; we'll never end up finding a NULL physics object here, because we'll
+// always return nil to Lua. This is a placeholder for if we do switch over to
+// a handle system. All other objects which return an "attempt to index a NULL
+// * object" are there for consistency, but we may never actually end up seeing
+// NULL objects there either.
 LUALIB_API lua_IPhysicsObject *luaL_checkphysicsobject (lua_State *L, int narg) {
   lua_IPhysicsObject *d = lua_tophysicsobject(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
