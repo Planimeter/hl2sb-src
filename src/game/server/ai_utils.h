@@ -23,10 +23,22 @@
 
 inline CBasePlayer *AI_GetSinglePlayer()
 {
+#ifdef HL2SB
+	for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
+	{
+		CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
+		if(!pEnt || !pEnt->IsPlayer())
+			continue;
+
+		// Return the first player we can get a hold of.
+		return pEnt;
+	}
+#else
 	if ( gpGlobals->maxClients > 1 )
 	{
 		return NULL;
 	}
+#endif
 	
 	return UTIL_GetLocalPlayer();
 }
