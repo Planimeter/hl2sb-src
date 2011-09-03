@@ -26,7 +26,7 @@
 #define LUA_PATH_WEAPONS			LUA_ROOT "\\weapons"
 
 
-#define LUA_BASE_ENTITY_CLASS		"CBaseEntity"
+#define LUA_BASE_ENTITY_CLASS		"CBaseAnimating"
 #define LUA_BASE_WEAPON				"weapon_hl2mpbase_scriptedweapon"
 #define LUA_BASE_GAMEMODE			"deathmatch"
 
