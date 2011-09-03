@@ -378,6 +378,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\basescripted.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\basescripted.h"
+				>
+			</File>
+			<File
 				RelativePath="..\shared\baseviewmodel_shared.cpp"
 				>
 			</File>
@@ -1443,14 +1451,6 @@
 			</File>
 			<File
 				RelativePath="..\shared\ltakedamageinfo.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\shared\luabaseentity.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\shared\luabaseentity.h"
 				>
 			</File>
 			<File

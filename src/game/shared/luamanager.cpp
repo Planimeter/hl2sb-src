@@ -11,7 +11,7 @@
 #endif
 #include "steam/isteamfriends.h"
 #include "networkstringtabledefs.h"
-#include "luabaseentity.h"
+#include "basescripted.h"
 #include "weapon_hl2mpbase_scriptedweapon.h"
 #include "luamanager.h"
 #ifdef CLIENT_DLL
