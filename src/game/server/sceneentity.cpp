@@ -2932,7 +2932,11 @@ void CSceneEntity::StartEvent( float currenttime, CChoreoScene *scene, CChoreoEv
 				event->SetEndTime( event->GetStartTime() + 1.0 );
 			}
 
+#ifdef HL2SB
+			if ( pActor )
+#else
 			if ( pActor && !IsMultiplayer() )
+#endif
 			{
 				CBaseEntity *pActor2 = NULL;
 				if ( event->GetParameters3( ) && strlen( event->GetParameters3( ) ) > 0 )
@@ -2957,7 +2961,11 @@ void CSceneEntity::StartEvent( float currenttime, CChoreoScene *scene, CChoreoEv
 		break;
 	case CChoreoEvent::FACE:
 		{
+#ifdef HL2SB
+			if ( pActor )
+#else
 			if ( pActor && !IsMultiplayer() )
+#endif
 			{
 				CBaseEntity *pActor2 = FindNamedEntity( event->GetParameters( ), pActor );
 				if ( pActor2 )

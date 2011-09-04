@@ -36,6 +36,9 @@
 #include "ai_interactions.h"
 #include "weapon_flaregun.h"
 #include "env_debughistory.h"
+#ifdef HL2SB
+#include "hl2mp_gamerules.h"
+#endif
 
 extern Vector PointOnLineNearestPoint(const Vector& vStartPos, const Vector& vEndPos, const Vector& vPoint);
 
@@ -1576,7 +1579,11 @@ bool CNPC_Alyx::CanSeeEntityInDarkness( CBaseEntity *pEntity )
 //-----------------------------------------------------------------------------
 bool CNPC_Alyx::QuerySeeEntity( CBaseEntity *pEntity, bool bOnlyHateOrFearIfNPC)
 {
+#ifdef HL2SB
+	if ( HL2MPRules()->IsAlyxInDarknessMode() )
+#else
 	if ( HL2GameRules()->IsAlyxInDarknessMode() )
+#endif
 	{
 		if ( !CanSeeEntityInDarkness( pEntity ) )
 			return false;
@@ -1700,7 +1707,11 @@ int CNPC_Alyx::SelectSchedule( void )
 {
     // If we're in darkness mode, and the player has the flashlight off, and we hear a zombie footstep,
 	// and the player isn't nearby, deliberately turn away from the zombie to let the zombie grab me.
+#ifdef HL2SB
+	if ( HL2MPRules()->IsAlyxInDarknessMode() && m_NPCState == NPC_STATE_ALERT )
+#else
 	if ( HL2GameRules()->IsAlyxInDarknessMode() && m_NPCState == NPC_STATE_ALERT )
+#endif
 	{
 		if ( HasCondition ( COND_HEAR_COMBAT ) && !HasCondition(COND_SEE_PLAYER) )
 		{

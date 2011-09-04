@@ -718,8 +718,21 @@ void CPropJeepEpisodic::CreateCargoTrigger( void )
 //-----------------------------------------------------------------------------
 void CPropJeepEpisodic::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
 {
+#ifdef HL2SB
+	// Andrew; don't skip giving ammo with the jeep if we're the buggy
+	if ( !strcmp( STRING( GetModelName() ), "models/buggy.mdl" ) )
+	{
+		BaseClass::Use( pActivator, pCaller, useType, value );
+	}
+	else
+	{
+		// Fall back and get in the vehicle instead, skip giving ammo
+		BaseClass::BaseClass::Use( pActivator, pCaller, useType, value );
+	}
+#else
 	// Fall back and get in the vehicle instead, skip giving ammo
 	BaseClass::BaseClass::Use( pActivator, pCaller, useType, value );
+#endif
 }
 
 #define	MIN_WHEEL_DUST_SPEED	5
@@ -1352,6 +1365,12 @@ void CPropJeepEpisodic::DriveVehicle( float flFrameTime, CUserCmd *ucmd, int iBu
 //-----------------------------------------------------------------------------
 void CPropJeepEpisodic::CreateHazardLights( void )
 {
+	// How about no.
+#ifdef HL2SB
+	if ( strcmp( STRING( GetModelName() ), "models/vehicle.mdl" ) )
+		return;
+#endif
+
 	static const char *s_szAttach[NUM_HAZARD_LIGHTS] =
 	{
 		"rearlight_r",
