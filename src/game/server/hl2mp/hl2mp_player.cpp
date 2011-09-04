@@ -55,6 +55,18 @@ LINK_ENTITY_TO_CLASS( player, CHL2MP_Player );
 LINK_ENTITY_TO_CLASS( info_player_combine, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_rebel, CPointEntity );
 
+// Andrew; we may end up using other game content - these allow us to use other
+// maps besides deathmatch ones.
+#ifdef HL2SB
+
+LINK_ENTITY_TO_CLASS( info_player_counterterrorist, CPointEntity );
+LINK_ENTITY_TO_CLASS( info_player_terrorist, CPointEntity );
+
+LINK_ENTITY_TO_CLASS( info_player_allies, CPointEntity );
+LINK_ENTITY_TO_CLASS( info_player_axis, CPointEntity );
+
+#endif
+
 extern void SendProxy_Origin( const SendProp *pProp, const void *pStruct, const void *pData, DVariant *pOut, int iElement, int objectID );
 
 BEGIN_SEND_TABLE_NOBASE( CHL2MP_Player, DT_HL2MPLocalPlayerExclusive )
@@ -1208,10 +1220,86 @@ CBaseEntity* CHL2MP_Player::EntSelectSpawnPoint( void )
 
 		if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
 		{
+			// Andrew; this could be neater, or the entire function could be
+			// rewritten to pool together our various point classes and select
+			// one randomly. For now, we'll prefer spawnpoints by appid if we
+			// can't find anything from deathmatch.
+#ifdef HL2SB
+			if ( GetTeamNumber() == TEAM_COMBINE )
+			{
+				pSpawnpointName = "info_player_terrorist";
+				pLastSpawnPoint = g_pLastCombineSpawn;
+			}
+			else if ( GetTeamNumber() == TEAM_REBELS )
+			{
+				pSpawnpointName = "info_player_counterterrorist";
+				pLastSpawnPoint = g_pLastRebelSpawn;
+			}
+
+			// try once more for dod
+			if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
+			{
+				if ( GetTeamNumber() == TEAM_COMBINE )
+				{
+					pSpawnpointName = "info_player_axis";
+					pLastSpawnPoint = g_pLastCombineSpawn;
+				}
+				else if ( GetTeamNumber() == TEAM_REBELS )
+				{
+					pSpawnpointName = "info_player_allies";
+					pLastSpawnPoint = g_pLastRebelSpawn;
+				}
+
+				// three strikes, you're out!
+				if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
+				{
+					pSpawnpointName = "info_player_deathmatch";
+					pLastSpawnPoint = g_pLastSpawn;
+				}
+			}
+#else
 			pSpawnpointName = "info_player_deathmatch";
 			pLastSpawnPoint = g_pLastSpawn;
+#endif
 		}
 	}
+#ifdef HL2SB
+	else
+	{
+		if ( random->RandomInt(0,1) )
+		{
+			pSpawnpointName = "info_player_terrorist";
+			pLastSpawnPoint = g_pLastCombineSpawn;
+		}
+		else
+		{
+			pSpawnpointName = "info_player_counterterrorist";
+			pLastSpawnPoint = g_pLastRebelSpawn;
+		}
+
+		// try once more for dod
+		if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
+		{
+			if ( random->RandomInt(0,1) )
+			{
+				pSpawnpointName = "info_player_axis";
+				pLastSpawnPoint = g_pLastCombineSpawn;
+			}
+			else
+			{
+				pSpawnpointName = "info_player_allies";
+				pLastSpawnPoint = g_pLastRebelSpawn;
+			}
+
+			// three strikes, you're out!
+			if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
+			{
+				pSpawnpointName = "info_player_deathmatch";
+				pLastSpawnPoint = g_pLastSpawn;
+			}
+		}
+	}
+#endif
 
 	pSpot = pLastSpawnPoint;
 	// Randomize the start spot
