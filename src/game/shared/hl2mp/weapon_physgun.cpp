@@ -962,6 +962,9 @@ int CWeaponGravityGun::DrawModel( int flags )
 	// Only render these on the transparent pass
 	if ( flags & STUDIO_TRANSPARENCY )
 	{
+		if ( !m_active )
+			return 0;
+
 		C_BasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
 		if ( !pOwner )
@@ -969,9 +972,6 @@ int CWeaponGravityGun::DrawModel( int flags )
 
 		Vector points[3];
 		QAngle tmpAngle;
-
-		if ( !m_active )
-			return 0;
 
 		C_BaseEntity *pObject = m_hObject;
 		//if ( pObject == NULL )
@@ -1019,6 +1019,9 @@ int CWeaponGravityGun::DrawModel( int flags )
 //-----------------------------------------------------------------------------
 void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 {
+	if ( !m_active )
+		return;
+
 	// Render our effects
 	C_BasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
@@ -1027,9 +1030,6 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 
 	Vector points[3];
 	QAngle tmpAngle;
-
-	if ( !m_active )
-		return;
 
 	C_BaseEntity *pObject = m_hObject;
 	//if ( pObject == NULL )
