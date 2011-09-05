@@ -237,6 +237,36 @@ public:
 	CWeaponGravityGun();
 
 #ifdef CLIENT_DLL
+	void GetRenderBounds( Vector& mins, Vector& maxs )
+	{
+		BaseClass::GetRenderBounds( mins, maxs );
+
+		// add to the bounds, don't clear them.
+		// ClearBounds( mins, maxs );
+		AddPointToBounds( vec3_origin, mins, maxs );
+		AddPointToBounds( m_targetPosition, mins, maxs );
+		AddPointToBounds( m_worldPosition, mins, maxs );
+		CBaseEntity *pEntity = GetBeamEntity();
+		if ( pEntity )
+		{
+			mins -= pEntity->GetRenderOrigin();
+			maxs -= pEntity->GetRenderOrigin();
+		}
+	}
+
+	void GetRenderBoundsWorldspace( Vector& mins, Vector& maxs )
+	{
+		BaseClass::GetRenderBoundsWorldspace( mins, maxs );
+
+		// add to the bounds, don't clear them.
+		// ClearBounds( mins, maxs );
+		AddPointToBounds( vec3_origin, mins, maxs );
+		AddPointToBounds( m_targetPosition, mins, maxs );
+		AddPointToBounds( m_worldPosition, mins, maxs );
+		mins -= GetRenderOrigin();
+		maxs -= GetRenderOrigin();
+	}
+
 	int KeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding )
 	{
 		if ( gHUD.m_iKeyBits & IN_ATTACK )
@@ -292,6 +322,8 @@ public:
 	void AttachObject( CBaseEntity *pEdict, const Vector& start, const Vector &end, float distance );
 	void DetachObject( void );
 
+	void TraceLine( trace_t *ptr );
+
 	void EffectCreate( void );
 	void EffectUpdate( void );
 	void EffectDestroy( void );
@@ -323,7 +355,7 @@ private:
 	float		m_lastYaw;
 	int			m_soundState;
 	Vector		m_originalObjectPosition;
-	Vector		m_targetPosition;
+	CNetworkVector	( m_targetPosition );
 	CNetworkVector	( m_worldPosition );
 
 	CGravControllerPoint		m_gravCallback;
@@ -336,10 +368,12 @@ IMPLEMENT_NETWORKCLASS_ALIASED( WeaponGravityGun, DT_WeaponGravityGun )
 BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 #ifdef CLIENT_DLL
 	RecvPropEHandle( RECVINFO( m_hObject ) ),
+	RecvPropVector( RECVINFO( m_targetPosition ) ),
 	RecvPropVector( RECVINFO( m_worldPosition ) ),
 	RecvPropInt( RECVINFO(m_active) ),
 #else
 	SendPropEHandle( SENDINFO( m_hObject ) ),
+	SendPropVector(SENDINFO( m_targetPosition ), -1, SPROP_COORD),
 	SendPropVector(SENDINFO( m_worldPosition ), -1, SPROP_COORD),
 	SendPropInt( SENDINFO(m_active), 1, SPROP_UNSIGNED ),
 #endif
@@ -468,6 +502,23 @@ void CWeaponGravityGun::EffectCreate( void )
 }
 
 
+// Andrew; added so we can trace both in EffectUpdate and DrawModel with the same results
+void CWeaponGravityGun::TraceLine( trace_t *ptr )
+{
+	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+	if ( !pOwner )
+		return;
+
+	Vector start, angles, forward, right;
+	pOwner->EyeVectors( &forward, &right, NULL );
+
+	start = pOwner->Weapon_ShootPosition();
+	Vector end = start + forward * 4096;
+
+	UTIL_TraceLine( start, end, MASK_SHOT, pOwner, COLLISION_GROUP_NONE, ptr );
+}
+
+
 void CWeaponGravityGun::EffectUpdate( void )
 {
 	Vector start, angles, forward, right;
@@ -480,10 +531,9 @@ void CWeaponGravityGun::EffectUpdate( void )
 	pOwner->EyeVectors( &forward, &right, NULL );
 
 	start = pOwner->Weapon_ShootPosition();
-	Vector end = start + forward * 4096;
 
-	UTIL_TraceLine( start, end, MASK_SHOT, pOwner, COLLISION_GROUP_NONE, &tr );
-	end = tr.endpos;
+	TraceLine( &tr );
+	Vector end = tr.endpos;
 	float distance = tr.fraction * 4096;
 	if ( tr.fraction != 1 )
 	{
@@ -933,7 +983,10 @@ int CWeaponGravityGun::DrawModel( int flags )
 		//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
 		if ( pObject == NULL )
 		{
-			points[2] = m_targetPosition;
+			//points[2] = m_targetPosition;
+			trace_t tr;
+			TraceLine( &tr );
+			points[2] = tr.endpos;
 		}
 		else
 		{
@@ -988,7 +1041,10 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	//points[1].z += 4*sin( gpGlobals->curtime*11 ) + 5*cos( gpGlobals->curtime*13 );
 	if ( pObject == NULL )
 	{
-		points[2] = m_targetPosition;
+		//points[2] = m_targetPosition;
+		trace_t tr;
+		TraceLine( &tr );
+		points[2] = tr.endpos;
 	}
 	else
 	{
