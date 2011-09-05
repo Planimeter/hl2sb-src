@@ -1086,7 +1086,15 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
 	CMatRenderContextPtr pRenderContext( materials );
 	pRenderContext->Bind( pMat );
+#if 1
+	// HACK HACK:  Munge the depth range to prevent view model from poking into walls, etc.
+	// Force clipped down range
+	pRenderContext->DepthRange( 0.1f, 0.2f );
+#endif
 	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
+#if 1
+	pRenderContext->DepthRange( 0.0f, 1.0f );
+#endif
 
 	render->PopView( dummyFrustum );
 
