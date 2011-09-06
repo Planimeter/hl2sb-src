@@ -88,6 +88,8 @@ void CBaseScripted::InitScriptedEntity( void )
 		return;
 #endif
 
+	SetThink( &CBaseScripted::ScriptedThink );
+
 	char className[ 255 ];
 #if defined ( CLIENT_DLL )
 	if ( strlen( GetScriptedClassname() ) > 0 )
@@ -139,11 +141,6 @@ void CBaseScripted::OnDataChanged( DataUpdateType_t updateType )
 		{
 			SetClassname( m_iScriptedClassname.Get() );
 			InitScriptedEntity();
-
-#ifdef LUA_SDK
-			BEGIN_LUA_CALL_ENTITY_METHOD( "Precache" );
-			END_LUA_CALL_ENTITY_METHOD( 0, 0 );
-#endif
 		}
 	}
 }
@@ -163,13 +160,21 @@ void CBaseScripted::Precache( void )
 	InitScriptedEntity();
 }
 
-void CBaseScripted::Think()
+#ifdef CLIENT_DLL
+void CBaseScripted::ClientThink()
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_ENTITY_METHOD( "ClientThink" );
+	END_LUA_CALL_ENTITY_METHOD( 0, 0 );
+#endif
+}
+#endif
+
+void CBaseScripted::ScriptedThink()
 {
 #ifdef LUA_SDK
 	BEGIN_LUA_CALL_ENTITY_METHOD( "Think" );
 	END_LUA_CALL_ENTITY_METHOD( 0, 0 );
 #endif
-
-	BaseClass::Think( );
 }
 

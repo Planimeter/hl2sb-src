@@ -22,6 +22,7 @@
 #define LUA_PATH_AUTORUN			LUA_ROOT "\\autorun"
 #define LUA_PATH_AUTORUN_CLIENT		LUA_ROOT "\\autorun\\client"
 #define LUA_PATH_AUTORUN_SERVER		LUA_ROOT "\\autorun\\server"
+#define LUA_PATH_EFFECTS			LUA_ROOT "\\effects"
 #define LUA_PATH_ENTITIES			LUA_ROOT "\\entities"
 #define LUA_PATH_WEAPONS			LUA_ROOT "\\weapons"
 
@@ -242,6 +243,7 @@ LUA_API void  (luasrc_dofolder) (lua_State *L, const char *path);
 
 LUA_API int   (luasrc_pcall) (lua_State *L, int nargs, int nresults, int errfunc);
 
+// void    luasrc_LoadEffects (void);
 void       luasrc_LoadEntities (void);
 void       luasrc_LoadWeapons (void);
 

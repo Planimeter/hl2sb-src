@@ -32,13 +32,19 @@ public:
 	
 	// CBaseEntity overrides.
 public:
-	void	Think();	
+	// void	Think();	
+	void	ScriptedThink();	
 
 	// void	Spawn( void );
 	void	Precache( void );
 	void	InitScriptedEntity( void );
 
 #ifdef CLIENT_DLL
+// IClientThinkable.
+public:
+	// Called whenever you registered for a think message (with SetNextClientThink).
+	virtual void	ClientThink();
+
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual const char *GetScriptedClassname( void );
 #endif

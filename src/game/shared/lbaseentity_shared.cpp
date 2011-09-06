@@ -1083,6 +1083,11 @@ static int CBaseEntity_SetMoveType (lua_State *L) {
   return 0;
 }
 
+static int CBaseEntity_SetNextThink (lua_State *L) {
+  luaL_checkentity(L, 1)->SetNextThink(luaL_checknumber(L, 2));
+  return 0;
+}
+
 static int CBaseEntity_SetOwnerEntity (lua_State *L) {
   luaL_checkentity(L, 1)->SetOwnerEntity(luaL_checkentity(L, 2));
   return 0;
@@ -1592,6 +1597,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"SetModelName", CBaseEntity_SetModelName},
   {"SetMoveCollide", CBaseEntity_SetMoveCollide},
   {"SetMoveType", CBaseEntity_SetMoveType},
+  {"SetNextThink", CBaseEntity_SetNextThink},
   {"SetOwnerEntity", CBaseEntity_SetOwnerEntity},
   {"SetParent", CBaseEntity_SetParent},
   {"SetPlayerSimulated", CBaseEntity_SetPlayerSimulated},
