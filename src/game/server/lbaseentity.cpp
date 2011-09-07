@@ -325,6 +325,96 @@ static int CBaseEntity_AddPointsToTeam (lua_State *L) {
   return 0;
 }
 
+static int CBaseEntity_OnControls (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->OnControls(luaL_checkentity(L, 2)));
+  return 1;
+}
+
+static int CBaseEntity_HasTarget (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->HasTarget(MAKE_STRING( luaL_checkstring(L, 2) )));
+  return 1;
+}
+
+static int CBaseEntity_IsNetClient (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsNetClient());
+  return 1;
+}
+
+static int CBaseEntity_IsTemplate (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsTemplate());
+  return 1;
+}
+
+static int CBaseEntity_IsViewable (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsViewable());
+  return 1;
+}
+
+static int CBaseEntity_IsInAnyTeam (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsInAnyTeam());
+  return 1;
+}
+
+static int CBaseEntity_TeamID (lua_State *L) {
+  lua_pushstring(L, luaL_checkentity(L, 1)->TeamID());
+  return 1;
+}
+
+static int CBaseEntity_CanStandOn (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->CanStandOn(luaL_checkentity(L, 2)));
+  return 1;
+}
+
+static int CBaseEntity_GetEnemy (lua_State *L) {
+  lua_pushentity(L, luaL_checkentity(L, 1)->GetEnemy());
+  return 1;
+}
+
+static int CBaseEntity_VelocityPunch (lua_State *L) {
+  luaL_checkentity(L, 1)->VelocityPunch(*(Vector *)luaL_checkvector(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_GetNextTarget (lua_State *L) {
+  lua_pushentity(L, luaL_checkentity(L, 1)->GetNextTarget());
+  return 1;
+}
+
+static int CBaseEntity_Use (lua_State *L) {
+  luaL_checkentity(L, 1)->Use(luaL_checkentity(L, 2), luaL_checkentity(L, 3), (USE_TYPE)luaL_checkinteger(L, 4), luaL_checknumber(L, 5));
+  return 0;
+}
+
+static int CBaseEntity_StartTouch (lua_State *L) {
+  luaL_checkentity(L, 1)->StartTouch(luaL_checkentity(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_Touch (lua_State *L) {
+  luaL_checkentity(L, 1)->Touch(luaL_checkentity(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_EndTouch (lua_State *L) {
+  luaL_checkentity(L, 1)->EndTouch(luaL_checkentity(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_StartBlocked (lua_State *L) {
+  luaL_checkentity(L, 1)->StartBlocked(luaL_checkentity(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_Blocked (lua_State *L) {
+  luaL_checkentity(L, 1)->Blocked(luaL_checkentity(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_EndBlocked (lua_State *L) {
+  luaL_checkentity(L, 1)->EndBlocked();
+  return 0;
+}
+
 
 static const luaL_Reg CBaseEntitymeta[] = {
   {"RecalcHasPlayerChildBit", CBaseEntity_RecalcHasPlayerChildBit},
@@ -387,6 +477,24 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"IsWorld", CBaseEntity_IsWorld},
   {"AddPoints", CBaseEntity_AddPoints},
   {"AddPointsToTeam", CBaseEntity_AddPointsToTeam},
+  {"OnControls", CBaseEntity_OnControls},
+  {"HasTarget", CBaseEntity_HasTarget},
+  {"IsNetClient", CBaseEntity_IsNetClient},
+  {"IsTemplate", CBaseEntity_IsTemplate},
+  {"IsViewable", CBaseEntity_IsViewable},
+  {"IsInAnyTeam", CBaseEntity_IsInAnyTeam},
+  {"TeamID", CBaseEntity_TeamID},
+  {"CanStandOn", CBaseEntity_CanStandOn},
+  {"GetEnemy", CBaseEntity_GetEnemy},
+  {"VelocityPunch", CBaseEntity_VelocityPunch},
+  {"GetNextTarget", CBaseEntity_GetNextTarget},
+  {"Use", CBaseEntity_Use},
+  {"StartTouch", CBaseEntity_StartTouch},
+  {"Touch", CBaseEntity_Touch},
+  {"EndTouch", CBaseEntity_EndTouch},
+  {"StartBlocked", CBaseEntity_StartBlocked},
+  {"Blocked", CBaseEntity_Blocked},
+  {"EndBlocked", CBaseEntity_EndBlocked},
   {NULL, NULL}
 };
 
