@@ -415,6 +415,223 @@ static int CBaseEntity_EndBlocked (lua_State *L) {
   return 0;
 }
 
+static int CBaseEntity_PhysicsTouchTriggers (lua_State *L) {
+  luaL_checkentity(L, 1)->PhysicsTouchTriggers();
+  return 0;
+}
+
+static int CBaseEntity_SUB_DoNothing (lua_State *L) {
+  luaL_checkentity(L, 1)->SUB_DoNothing();
+  return 0;
+}
+
+static int CBaseEntity_SUB_StartFadeOut (lua_State *L) {
+  luaL_checkentity(L, 1)->SUB_StartFadeOut(luaL_optnumber(L, 2, 10.0f), luaL_optboolean(L, 3, true));
+  return 0;
+}
+
+static int CBaseEntity_SUB_StartFadeOutInstant (lua_State *L) {
+  luaL_checkentity(L, 1)->SUB_StartFadeOutInstant();
+  return 0;
+}
+
+static int CBaseEntity_SUB_FadeOut (lua_State *L) {
+  luaL_checkentity(L, 1)->SUB_FadeOut();
+  return 0;
+}
+
+static int CBaseEntity_SUB_Vanish (lua_State *L) {
+  luaL_checkentity(L, 1)->SUB_Vanish();
+  return 0;
+}
+
+static int CBaseEntity_SUB_CallUseToggle (lua_State *L) {
+  luaL_checkentity(L, 1)->SUB_CallUseToggle();
+  return 0;
+}
+
+static int CBaseEntity_SUB_PerformFadeOut (lua_State *L) {
+  luaL_checkentity(L, 1)->SUB_PerformFadeOut();
+  return 0;
+}
+
+static int CBaseEntity_SUB_AllowedToFade (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->SUB_AllowedToFade());
+  return 1;
+}
+
+static int CBaseEntity_Teleport (lua_State *L) {
+  luaL_checkentity(L, 1)->Teleport(luaL_checkvector(L, 2), luaL_checkangle(L, 3), luaL_checkvector(L, 4));
+  return 0;
+}
+
+static int CBaseEntity_ShouldToggle (lua_State *L) {
+  lua_pushinteger(L, luaL_checkentity(L, 1)->ShouldToggle((USE_TYPE)luaL_checkinteger(L, 2), luaL_checkinteger(L, 3)));
+  return 1;
+}
+
+static int CBaseEntity_Respawn (lua_State *L) {
+  lua_pushentity(L, luaL_checkentity(L, 1)->Respawn());
+  return 1;
+}
+
+static int CBaseEntity_TraceAttackToTriggers (lua_State *L) {
+  luaL_checkentity(L, 1)->TraceAttackToTriggers(*(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2), *(Vector *)luaL_checkvector(L, 3), *(Vector *)luaL_checkvector(L, 4), *(Vector *)luaL_checkvector(L, 5));
+  return 0;
+}
+
+static int CBaseEntity_Intersects (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->Intersects(luaL_checkentity(L, 2)));
+  return 1;
+}
+
+static int CBaseEntity_IsLockedByMaster (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsLockedByMaster());
+  return 1;
+}
+
+static int CBaseEntity_SetMaxHealth (lua_State *L) {
+  luaL_checkentity(L, 1)->SetMaxHealth(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_DumpResponseCriteria (lua_State *L) {
+  luaL_checkentity(L, 1)->DumpResponseCriteria();
+  return 0;
+}
+
+static int CBaseEntity_Create (lua_State *L) {
+  lua_pushentity(L, CBaseEntity::Create(luaL_checkstring(L, 1), *(Vector *)luaL_checkvector(L, 2), *(QAngle *)luaL_checkangle(L, 3), luaL_optentity(L, 4, NULL)));
+  return 1;
+}
+
+static int CBaseEntity_CreateNoSpawn (lua_State *L) {
+  lua_pushentity(L, CBaseEntity::CreateNoSpawn(luaL_checkstring(L, 1), *(Vector *)luaL_checkvector(L, 2), *(QAngle *)luaL_checkangle(L, 3), luaL_optentity(L, 4, NULL)));
+  return 1;
+}
+
+static int CBaseEntity_GetDamageType (lua_State *L) {
+  lua_pushinteger(L, luaL_checkentity(L, 1)->GetDamageType());
+  return 1;
+}
+
+static int CBaseEntity_GetDamage (lua_State *L) {
+  lua_pushnumber(L, luaL_checkentity(L, 1)->GetDamage());
+  return 1;
+}
+
+static int CBaseEntity_SetDamage (lua_State *L) {
+  luaL_checkentity(L, 1)->SetDamage(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_BodyTarget (lua_State *L) {
+  Vector v = luaL_checkentity(L, 1)->BodyTarget(*(Vector *)luaL_checkvector(L, 2), luaL_optboolean(L, 3, true));
+  lua_pushvector(L, &v);
+  return 1;
+}
+
+static int CBaseEntity_HeadTarget (lua_State *L) {
+  Vector v = luaL_checkentity(L, 1)->HeadTarget(*(Vector *)luaL_checkvector(L, 2));
+  lua_pushvector(L, &v);
+  return 1;
+}
+
+static int CBaseEntity_GetSmoothedVelocity (lua_State *L) {
+  Vector v = luaL_checkentity(L, 1)->GetSmoothedVelocity();
+  lua_pushvector(L, &v);
+  return 1;
+}
+
+static int CBaseEntity_GetVelocity (lua_State *L) {
+  Vector vVelocity;
+  AngularImpulse vAngVelocity;
+  luaL_checkentity(L, 1)->GetVelocity(&vVelocity, &vAngVelocity);
+  lua_pushvector(L, &vVelocity);
+  Vector v = (Vector)vAngVelocity;
+  lua_pushvector(L, &v);
+  return 2;
+}
+
+static int CBaseEntity_GetFriction (lua_State *L) {
+  lua_pushnumber(L, luaL_checkentity(L, 1)->GetFriction());
+  return 1;
+}
+
+static int CBaseEntity_FVisible (lua_State *L) {
+  if (lua_isuserdata(L, 2) && luaL_checkudata(L, 2, "Vector"))
+	lua_pushboolean(L, luaL_checkentity(L, 1)->FVisible(*(Vector *)luaL_checkvector(L, 2), luaL_optinteger(L, 3, MASK_BLOCKLOS)));
+  else
+	lua_pushboolean(L, luaL_checkentity(L, 1)->FVisible(luaL_checkentity(L, 2), luaL_optinteger(L, 3, MASK_BLOCKLOS)));
+  return 1;
+}
+
+static int CBaseEntity_GetReceivedDamageScale (lua_State *L) {
+  lua_pushnumber(L, luaL_checkentity(L, 1)->GetReceivedDamageScale(luaL_checkentity(L, 2)));
+  return 1;
+}
+
+static int CBaseEntity_GetGroundVelocityToApply (lua_State *L) {
+  Vector vecGroundVel;
+  luaL_checkentity(L, 1)->GetGroundVelocityToApply(vecGroundVel);
+  lua_pushvector(L, &vecGroundVel);
+  return 1;
+}
+
+static int CBaseEntity_PhysicsSplash (lua_State *L) {
+  lua_pushboolean(L, luaL_checkentity(L, 1)->PhysicsSplash(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5)));
+  return 1;
+}
+
+static int CBaseEntity_Splash (lua_State *L) {
+  luaL_checkentity(L, 1)->Splash();
+  return 0;
+}
+
+static int CBaseEntity_ClearSolidFlags (lua_State *L) {
+  luaL_checkentity(L, 1)->ClearSolidFlags();
+  return 0;
+}
+
+static int CBaseEntity_SetElasticity (lua_State *L) {
+  luaL_checkentity(L, 1)->SetElasticity(luaL_checknumber(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_SetShadowCastDistance (lua_State *L) {
+  if (!lua_isnoneornil(L, 3))
+	luaL_checkentity(L, 1)->SetShadowCastDistance(luaL_checknumber(L, 2), luaL_checknumber(L, 3));
+  else
+	luaL_checkentity(L, 1)->SetShadowCastDistance(luaL_checknumber(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_GetLocalTime (lua_State *L) {
+  lua_pushnumber(L, luaL_checkentity(L, 1)->GetLocalTime());
+  return 1;
+}
+
+static int CBaseEntity_IncrementLocalTime (lua_State *L) {
+  luaL_checkentity(L, 1)->IncrementLocalTime(luaL_checknumber(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_GetMoveDoneTime (lua_State *L) {
+  lua_pushnumber(L, luaL_checkentity(L, 1)->GetMoveDoneTime());
+  return 1;
+}
+
+static int CBaseEntity_SetMoveDoneTime (lua_State *L) {
+  luaL_checkentity(L, 1)->SetMoveDoneTime(luaL_checknumber(L, 2));
+  return 0;
+}
+
+static int CBaseEntity_GetSoundEmissionOrigin (lua_State *L) {
+  Vector v = luaL_checkentity(L, 1)->GetSoundEmissionOrigin();
+  lua_pushvector(L, &v);
+  return 1;
+}
+
 
 static const luaL_Reg CBaseEntitymeta[] = {
   {"RecalcHasPlayerChildBit", CBaseEntity_RecalcHasPlayerChildBit},
@@ -495,6 +712,46 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"StartBlocked", CBaseEntity_StartBlocked},
   {"Blocked", CBaseEntity_Blocked},
   {"EndBlocked", CBaseEntity_EndBlocked},
+  {"PhysicsTouchTriggers", CBaseEntity_PhysicsTouchTriggers},
+  {"SUB_DoNothing", CBaseEntity_SUB_DoNothing},
+  {"SUB_StartFadeOut", CBaseEntity_SUB_StartFadeOut},
+  {"SUB_StartFadeOutInstant", CBaseEntity_SUB_StartFadeOutInstant},
+  {"SUB_FadeOut", CBaseEntity_SUB_FadeOut},
+  {"SUB_Vanish", CBaseEntity_SUB_Vanish},
+  {"SUB_CallUseToggle", CBaseEntity_SUB_CallUseToggle},
+  {"SUB_PerformFadeOut", CBaseEntity_SUB_PerformFadeOut},
+  {"SUB_AllowedToFade", CBaseEntity_SUB_AllowedToFade},
+  {"Teleport", CBaseEntity_Teleport},
+  {"ShouldToggle", CBaseEntity_ShouldToggle},
+  {"Respawn", CBaseEntity_Respawn},
+  {"TraceAttackToTriggers", CBaseEntity_TraceAttackToTriggers},
+  {"Intersects", CBaseEntity_Intersects},
+  {"IsLockedByMaster", CBaseEntity_IsLockedByMaster},
+  {"SetMaxHealth", CBaseEntity_SetMaxHealth},
+  {"DumpResponseCriteria", CBaseEntity_DumpResponseCriteria},
+  {"Create", CBaseEntity_Create},
+  {"CreateNoSpawn", CBaseEntity_CreateNoSpawn},
+  {"GetDamageType", CBaseEntity_GetDamageType},
+  {"GetDamage", CBaseEntity_GetDamage},
+  {"SetDamage", CBaseEntity_SetDamage},
+  {"BodyTarget", CBaseEntity_BodyTarget},
+  {"HeadTarget", CBaseEntity_HeadTarget},
+  {"GetSmoothedVelocity", CBaseEntity_GetSmoothedVelocity},
+  {"GetVelocity", CBaseEntity_GetVelocity},
+  {"GetFriction", CBaseEntity_GetFriction},
+  {"FVisible", CBaseEntity_FVisible},
+  {"GetReceivedDamageScale", CBaseEntity_GetReceivedDamageScale},
+  {"GetGroundVelocityToApply", CBaseEntity_GetGroundVelocityToApply},
+  {"PhysicsSplash", CBaseEntity_PhysicsSplash},
+  {"Splash", CBaseEntity_Splash},
+  {"ClearSolidFlags", CBaseEntity_ClearSolidFlags},
+  {"SetElasticity", CBaseEntity_SetElasticity},
+  {"SetShadowCastDistance", CBaseEntity_SetShadowCastDistance},
+  {"GetLocalTime", CBaseEntity_GetLocalTime},
+  {"IncrementLocalTime", CBaseEntity_IncrementLocalTime},
+  {"GetMoveDoneTime", CBaseEntity_GetMoveDoneTime},
+  {"SetMoveDoneTime", CBaseEntity_SetMoveDoneTime},
+  {"GetSoundEmissionOrigin", CBaseEntity_GetSoundEmissionOrigin},
   {NULL, NULL}
 };
 
