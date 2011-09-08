@@ -996,8 +996,17 @@ int CWeaponGravityGun::DrawModel( int flags )
 		Vector forward, right, up;
 		QAngle playerAngles = pOwner->EyeAngles();
 		AngleVectors( playerAngles, &forward, &right, &up );
-		Vector vecSrc = pOwner->Weapon_ShootPosition( );
-		points[1] = vecSrc + 0.5f * (forward * points[2].DistTo(points[0]));
+		if ( pObject == NULL )
+		{
+			Vector vecDir = points[2] - points[0];
+			VectorNormalize( vecDir );
+			points[1] = points[0] + 0.5f * (vecDir * points[2].DistTo(points[0]));
+		}
+		else
+		{
+			Vector vecSrc = pOwner->Weapon_ShootPosition( );
+			points[1] = vecSrc + 0.5f * (forward * points[2].DistTo(points[0]));
+		}
 		
 		IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
 		Vector color;

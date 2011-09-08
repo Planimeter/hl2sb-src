@@ -1173,7 +1173,7 @@ static const luaL_Reg Panelmeta[] = {
 
 
 static int luasrc_Panel (lua_State *L) {
-  Panel *pPanel = new EditablePanel(g_pClientMode->GetViewport(), luaL_checkstring(L, 1), scheme()->GetDefaultScheme());
+  Panel *pPanel = (new EditablePanel(g_pClientMode->GetViewport(), luaL_checkstring(L, 1), scheme()->GetDefaultScheme()))->CreateControlByName(luaL_checkstring(L, 1));
   if (pPanel && !lua_isnoneornil(L, 2))
 	pPanel->SetParent(luaL_checkpanel(L, 2));
   lua_pushpanel(L, pPanel);
