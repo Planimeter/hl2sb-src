@@ -47,6 +47,14 @@ LUA_API void lua_pushpanel (lua_State *L, Panel *pPanel) {
 }
 
 
+LUA_API void lua_pushpanel (lua_State *L, VPANEL panel) {
+  PHandle *hPanel = (PHandle *)lua_newuserdata(L, sizeof(CBaseHandle));
+  hPanel->Set(ivgui()->PanelToHandle(panel));
+  luaL_getmetatable(L, "Panel");
+  lua_setmetatable(L, -2);
+}
+
+
 LUALIB_API lua_Panel *luaL_checkpanel (lua_State *L, int narg) {
   lua_Panel *d = lua_topanel(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
@@ -1165,8 +1173,9 @@ static const luaL_Reg Panelmeta[] = {
 
 
 static int luasrc_Panel (lua_State *L) {
-  Panel *pPanel = (new EditablePanel(g_pClientMode->GetViewport(), luaL_checkstring(L, 1), scheme()->GetDefaultScheme()))->CreateControlByName(luaL_checkstring(L, 1));
-  //pPanel->SetParent(enginevgui->GetPanel( PANEL_GAMEUIDLL ));
+  Panel *pPanel = new EditablePanel(g_pClientMode->GetViewport(), luaL_checkstring(L, 1), scheme()->GetDefaultScheme());
+  if (pPanel && !lua_isnoneornil(L, 2))
+	pPanel->SetParent(luaL_checkpanel(L, 2));
   lua_pushpanel(L, pPanel);
   return 1;
 }
@@ -1191,7 +1200,7 @@ int luaopen_Panel (lua_State *L) {
   // Andrew; Don't be mislead, INVALID_PANEL is not NULL internally, but we
   // need a name other than NULL, because NULL has already been assigned as an
   // entity.
-  lua_pushpanel(L, 0);
+  lua_pushpanel(L, INVALID_PANEL);
   lua_setglobal(L, "INVALID_PANEL");  /* set global INVALID_PANEL */
   return 1;
 }

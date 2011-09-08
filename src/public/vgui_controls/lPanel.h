@@ -32,6 +32,7 @@ LUA_API lua_Panel     *(lua_topanel) (lua_State *L, int idx);
 ** push functions (C -> stack)
 */
 LUA_API void  (lua_pushpanel) (lua_State *L, lua_Panel *pPanel);
+LUA_API void  (lua_pushpanel) (lua_State *L, VPANEL panel);
 
 
 

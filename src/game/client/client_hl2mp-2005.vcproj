@@ -1402,6 +1402,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\lienginevgui.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\materialsystem\limaterial.cpp"
 				>
 			</File>
@@ -4603,6 +4607,10 @@
 			</File>
 			<File
 				RelativePath="..\..\public\licvar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\public\lienginevgui.h"
 				>
 			</File>
 			<File
