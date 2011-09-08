@@ -905,6 +905,56 @@ static int Panel_SetSize (lua_State *L) {
   return 0;
 }
 
+static int Panel_SetSkipChildDuringPainting (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetSkipChildDuringPainting(luaL_checkpanel(L, 2));
+  return 0;
+}
+
+static int Panel_SetStartDragWhenMouseExitsPanel (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetStartDragWhenMouseExitsPanel(luaL_checkboolean(L, 2));
+  return 0;
+}
+
+static int Panel_SetTabPosition (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetTabPosition(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int Panel_SetTall (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetTall(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int Panel_SetTriplePressAllowed (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetTriplePressAllowed(luaL_checkboolean(L, 2));
+  return 0;
+}
+
+static int Panel_SetVisible (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetVisible(luaL_checkboolean(L, 2));
+  return 0;
+}
+
+static int Panel_SetWide (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetWide(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int Panel_SetZPos (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetZPos(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int Panel_ShouldHandleInputMessage (lua_State *L) {
+  lua_pushboolean(L, luaL_checkpanel(L, 1)->ShouldHandleInputMessage());
+  return 1;
+}
+
+static int Panel_StringToKeyCode (lua_State *L) {
+  lua_pushinteger(L, luaL_checkpanel(L, 1)->StringToKeyCode(luaL_checkstring(L, 2)));
+  return 1;
+}
+
 static int Panel___index (lua_State *L) {
   Panel *pPanel = lua_topanel(L, 1);
   if (pPanel == NULL) {  /* avoid extra test when d is not 0 */
@@ -1097,6 +1147,16 @@ static const luaL_Reg Panelmeta[] = {
   {"SetProportional", Panel_SetProportional},
   {"SetSilentMode", Panel_SetSilentMode},
   {"SetSize", Panel_SetSize},
+  {"SetSkipChildDuringPainting", Panel_SetSkipChildDuringPainting},
+  {"SetStartDragWhenMouseExitsPanel", Panel_SetStartDragWhenMouseExitsPanel},
+  {"SetTabPosition", Panel_SetTabPosition},
+  {"SetTall", Panel_SetTall},
+  {"SetTriplePressAllowed", Panel_SetTriplePressAllowed},
+  {"SetVisible", Panel_SetVisible},
+  {"SetWide", Panel_SetWide},
+  {"SetZPos", Panel_SetZPos},
+  {"ShouldHandleInputMessage", Panel_ShouldHandleInputMessage},
+  {"StringToKeyCode", Panel_StringToKeyCode},
   {"__index", Panel___index},
   {"__eq", Panel___eq},
   {"__tostring", Panel___tostring},
