@@ -1362,6 +1362,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lc_baseentity.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lcdll_int.cpp"
 				>
 			</File>

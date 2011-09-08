@@ -16,6 +16,7 @@
 #include "luamanager.h"
 #ifdef CLIENT_DLL
 #include "lc_baseanimating.h"
+#include "lc_baseentity.h"
 #include "lcdll_int.h"
 #include "lcdll_util.h"
 #include "liclientshadowmgr.h"
@@ -217,9 +218,7 @@ void luasrc_init (void) {
   luaopen_CBaseAnimating(L);
   luaopen_engine(L);
   luaopen_CBaseCombatWeapon(L);
-#ifdef GAME_DLL
   luaopen_CBaseEntity(L);
-#endif
   luaopen_CBaseEntity_shared(L);
 #ifdef GAME_DLL
   luaopen_CBasePlayer(L);
