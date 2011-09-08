@@ -1200,7 +1200,7 @@ int luaopen_Panel (lua_State *L) {
   // Andrew; Don't be mislead, INVALID_PANEL is not NULL internally, but we
   // need a name other than NULL, because NULL has already been assigned as an
   // entity.
-  lua_pushpanel(L, INVALID_PANEL);
+  lua_pushpanel(L, (Panel *)0);
   lua_setglobal(L, "INVALID_PANEL");  /* set global INVALID_PANEL */
   return 1;
 }
