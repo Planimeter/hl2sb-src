@@ -18,6 +18,7 @@
 #include "lc_baseanimating.h"
 #include "lcdll_int.h"
 #include "lcdll_util.h"
+#include "liclientshadowmgr.h"
 #include "lienginevgui.h"
 #include "vgui/LISurface.h"
 #include "vgui_controls/lPanel.h"
@@ -245,6 +246,7 @@ void luasrc_init (void) {
   luaopen_steamapicontext(L);
   luaopen_CTakeDamageInfo(L);
 #ifdef CLIENT_DLL
+  luaopen_g_pClientShadowMgr(L);
   luaopen_enginevgui(L);
   luaopen_surface(L);
   luaopen_Panel(L);

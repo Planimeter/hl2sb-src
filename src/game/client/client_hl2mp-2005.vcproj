@@ -1398,6 +1398,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\liclientshadowmgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\licvar.cpp"
 				>
 			</File>
