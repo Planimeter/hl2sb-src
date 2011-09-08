@@ -56,6 +56,7 @@ private:
 };
 
 void RegisterScriptedBaseEntity( const char *szClassname );
+void ResetEntityFactoryDatabase( void );
 
 #endif
 

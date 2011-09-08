@@ -55,24 +55,27 @@ static C_BaseEntity *CCHL2MPScriptedWeaponFactory( void )
 #endif
 
 #ifndef CLIENT_DLL
-static CUtlDict< CEntityFactory<CHL2MPScriptedWeapon>*, unsigned short > m_EntityFactoryDatabase;
+static CUtlDict< CEntityFactory<CHL2MPScriptedWeapon>*, unsigned short > m_WeaponFactoryDatabase;
 #endif
 
 void RegisterScriptedWeapon( const char *className )
 {
 #ifdef CLIENT_DLL
+	if ( GetClassMap().Lookup( className ) )
+	{
+		return;
+	}
+
 	GetClassMap().Add( className, "CHL2MPScriptedWeapon", sizeof( CHL2MPScriptedWeapon ),
-		&CCHL2MPScriptedWeaponFactory );
+		&CCHL2MPScriptedWeaponFactory, true );
 #else
-	// Complain about duplicately defined scripted weapon names...
-	// Andrew; I get that this works, but why? Whatever. Rate me box.
 	if ( EntityFactoryDictionary()->FindFactory( className ) )
 	{
 		return;
 	}
 
-	unsigned short lookup = m_EntityFactoryDatabase.Find( className );
-	if ( lookup != m_EntityFactoryDatabase.InvalidIndex() )
+	unsigned short lookup = m_WeaponFactoryDatabase.Find( className );
+	if ( lookup != m_WeaponFactoryDatabase.InvalidIndex() )
 	{
 		return;
 	}
@@ -80,27 +83,29 @@ void RegisterScriptedWeapon( const char *className )
 	// Andrew; This fixes months worth of pain and anguish.
 	CEntityFactory<CHL2MPScriptedWeapon> *pFactory = new CEntityFactory<CHL2MPScriptedWeapon>( className );
 
-	lookup = m_EntityFactoryDatabase.Insert( className, pFactory );
-	Assert( lookup != m_EntityFactoryDatabase.InvalidIndex() );
+	lookup = m_WeaponFactoryDatabase.Insert( className, pFactory );
+	Assert( lookup != m_WeaponFactoryDatabase.InvalidIndex() );
 #endif
 	// BUGBUG: When attempting to precache weapons registered during runtime,
 	// they don't appear as valid registered entities.
 	// static CPrecacheRegister precache_weapon_(&CPrecacheRegister::PrecacheFn_Other, className);
 }
 
-#ifndef CLIENT_DLL
-void ResetEntityFactoryDatabase( void )
+void ResetWeaponFactoryDatabase( void )
 {
-#if 0
-	int c = m_EntityFactoryDatabase.Count(); 
+#ifdef CLIENT_DLL
+#ifdef LUA_SDK
+	GetClassMap().RemoveAllScripted();
+#endif
+#else
+	int c = m_WeaponFactoryDatabase.Count(); 
 	for ( int i = 0; i < c; ++i )
 	{
-		delete m_EntityFactoryDatabase[ i ];
+		delete m_WeaponFactoryDatabase[ i ];
 	}
-	m_EntityFactoryDatabase.RemoveAll();
+	m_WeaponFactoryDatabase.RemoveAll();
 #endif
 }
-#endif
 
 
 // acttable_t CHL2MPScriptedWeapon::m_acttable[] = 

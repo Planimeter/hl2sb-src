@@ -86,6 +86,6 @@ private:
 };
 
 void RegisterScriptedWeapon( const char *szClassname );
-void ResetEntityFactoryDatabase( void );
+void ResetWeaponFactoryDatabase( void );
 
 #endif // BASEHLCOMBATWEAPON_H

@@ -282,9 +282,8 @@ void luasrc_shutdown (void) {
   RemoveGlobalChangeCallbacks();
   ResetConVarDatabase();
 
-#ifndef CLIENT_DLL
   ResetEntityFactoryDatabase();
-#endif
+  ResetWeaponFactoryDatabase();
 
   lua_close(L);
 }

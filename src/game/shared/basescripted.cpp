@@ -41,8 +41,13 @@ static CUtlDict< CEntityFactory<CBaseScripted>*, unsigned short > m_EntityFactor
 void RegisterScriptedBaseEntity( const char *className )
 {
 #ifdef CLIENT_DLL
+	if ( GetClassMap().Lookup( className ) )
+	{
+		return;
+	}
+
 	GetClassMap().Add( className, "CBaseScripted", sizeof( CBaseScripted ),
-		&CCBaseScriptedFactory );
+		&CCBaseScriptedFactory, true );
 #else
 	if ( EntityFactoryDictionary()->FindFactory( className ) )
 	{
@@ -59,6 +64,22 @@ void RegisterScriptedBaseEntity( const char *className )
 
 	lookup = m_EntityFactoryDatabase.Insert( className, pFactory );
 	Assert( lookup != m_EntityFactoryDatabase.InvalidIndex() );
+#endif
+}
+
+void ResetEntityFactoryDatabase( void )
+{
+#ifdef CLIENT_DLL
+#ifdef LUA_SDK
+	GetClassMap().RemoveAllScripted();
+#endif
+#else
+	int c = m_EntityFactoryDatabase.Count(); 
+	for ( int i = 0; i < c; ++i )
+	{
+		delete m_EntityFactoryDatabase[ i ];
+	}
+	m_EntityFactoryDatabase.RemoveAll();
 #endif
 }
 

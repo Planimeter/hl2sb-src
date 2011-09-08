@@ -83,6 +83,9 @@ abstract_class IEntityFactoryDictionary
 {
 public:
 	virtual void InstallFactory( IEntityFactory *pFactory, const char *pClassName ) = 0;
+#ifdef LUA_SDK
+	virtual void RemoveFactory( IEntityFactory *pFactory, const char *pClassName ) = 0;
+#endif
 	virtual IServerNetworkable *Create( const char *pClassName ) = 0;
 	virtual void Destroy( const char *pClassName, IServerNetworkable *pNetworkable ) = 0;
 	virtual IEntityFactory *FindFactory( const char *pClassName ) = 0;
@@ -111,7 +114,17 @@ public:
 	CEntityFactory( const char *pClassName )
 	{
 		EntityFactoryDictionary()->InstallFactory( this, pClassName );
+#ifdef LUA_SDK
+		strcpy( classname, pClassName );
+#endif
 	}
+
+#ifdef LUA_SDK
+	~CEntityFactory()
+	{
+		EntityFactoryDictionary()->RemoveFactory( this, classname );
+	}
+#endif
 
 	IServerNetworkable *Create( const char *pClassName )
 	{
@@ -131,6 +144,11 @@ public:
 	{
 		return sizeof(T);
 	}
+
+#ifdef LUA_SDK
+private:
+	char classname[255];
+#endif
 };
 
 #define LINK_ENTITY_TO_CLASS(mapClassName,DLLClassName) \

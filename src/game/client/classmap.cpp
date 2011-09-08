@@ -17,8 +17,14 @@ public:
 	classentry_t()
 	{
 		mapname[ 0 ] = 0;
+#ifdef LUA_SDK
+		classname[ 0 ] = 0;
+#endif
 		factory = 0;
 		size = -1;
+#ifdef LUA_SDK
+		scripted = false;
+#endif
 	}
 
 	char const *GetMapName() const
@@ -45,6 +51,9 @@ public:
 
 	DISPATCHFUNCTION	factory;
 	int					size;
+#if defined ( LUA_SDK )
+	bool				scripted;
+#endif
 private:
 	char				mapname[ 40 ];
 #if defined ( LUA_SDK )
@@ -55,7 +64,12 @@ private:
 class CClassMap : public IClassMap
 {
 public:
+#ifdef LUA_SDK
+	virtual void			Add( const char *mapname, const char *classname, int size, DISPATCHFUNCTION factory /*= 0*/, bool scripted );
+	virtual void			RemoveAllScripted( void );
+#else
 	virtual void			Add( const char *mapname, const char *classname, int size, DISPATCHFUNCTION factory /*= 0*/ );
+#endif
 	virtual const char		*Lookup( const char *classname );
 	virtual C_BaseEntity	*CreateEntity( const char *mapname );
 	virtual int				GetClassSize( const char *classname );
@@ -70,7 +84,11 @@ IClassMap& GetClassMap( void )
 	return g_Classmap;
 }
 
+#ifdef LUA_SDK
+void CClassMap::Add( const char *mapname, const char *classname, int size, DISPATCHFUNCTION factory = 0, bool scripted = false )
+#else
 void CClassMap::Add( const char *mapname, const char *classname, int size, DISPATCHFUNCTION factory = 0 )
+#endif
 {
 #if defined ( LUA_SDK )
 	int c = m_ClassDict.Count();
@@ -106,11 +124,32 @@ void CClassMap::Add( const char *mapname, const char *classname, int size, DISPA
 	element.size = size;
 #if defined ( LUA_SDK )
 	element.SetClassName( classname );
+	element.scripted = scripted;
 	m_ClassDict.Insert( mapname, element );
 #else
 	m_ClassDict.Insert( classname, element );
 #endif
 }
+
+#ifdef LUA_SDK
+void CClassMap::RemoveAllScripted( void )
+{
+	int c = m_ClassDict.Count();
+	int i;
+
+	for ( i = 0; i < c; i++ )
+	{
+		classentry_t *lookup = &m_ClassDict[ i ];
+		if ( !lookup )
+			continue;
+
+		if ( lookup->scripted )
+		{
+			m_ClassDict.RemoveAt( i );
+		}
+	}
+}
+#endif
 
 #if defined ( LUA_SDK )
 const char *CClassMap::Lookup( const char *classname )
