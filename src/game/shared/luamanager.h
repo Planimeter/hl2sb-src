@@ -101,7 +101,7 @@
   lua_remove(L, -2); \
   if (lua_isfunction(L, -1)) { \
     int args = 0; \
-	lua_pushentity(L, this); \
+	lua_pushanimating(L, this); \
 	++args;
 
 #define END_LUA_CALL_ENTITY_METHOD(nArgs, nresults) \

@@ -9,7 +9,11 @@
 #include "cbase.h"
 #include "basescripted.h"
 #include "luamanager.h"
-#include "lbaseentity_shared.h"
+#ifdef CLIENT_DLL
+#include "lc_baseanimating.h"
+#else
+#include "lbaseanimating.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
