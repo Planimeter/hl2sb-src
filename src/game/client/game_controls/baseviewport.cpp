@@ -49,6 +49,11 @@
 #include "ienginevgui.h"
 #include "iclientmode.h"
 
+// lua hooks
+#ifdef LUA_SDK
+#include "luamanager.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -611,6 +616,10 @@ void CBaseViewport::SetParent(vgui::VPANEL parent)
 //-----------------------------------------------------------------------------
 void CBaseViewport::ActivateClientUI() 
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "ActivateClientUI" );
+	END_LUA_CALL_HOOK( 0, 0 );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -618,6 +627,10 @@ void CBaseViewport::ActivateClientUI()
 //-----------------------------------------------------------------------------
 void CBaseViewport::HideClientUI()
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "HideClientUI" );
+	END_LUA_CALL_HOOK( 0, 0 );
+#endif
 }
 
 //-----------------------------------------------------------------------------

@@ -1166,7 +1166,7 @@ static const luaL_Reg Panelmeta[] = {
 
 static int luasrc_Panel (lua_State *L) {
   Panel *pPanel = (new EditablePanel(g_pClientMode->GetViewport(), luaL_checkstring(L, 1), scheme()->GetDefaultScheme()))->CreateControlByName(luaL_checkstring(L, 1));
-  pPanel->SetParent(enginevgui->GetPanel( PANEL_GAMEUIDLL ));
+  //pPanel->SetParent(enginevgui->GetPanel( PANEL_GAMEUIDLL ));
   lua_pushpanel(L, pPanel);
   return 1;
 }
