@@ -30,6 +30,10 @@
 #include "mathlib/lvector.h"
 #endif
 
+#if defined( ARGG )
+#include "iclientmode.h"
+#endif
+
 // Don't alias here
 #if defined( CHL2MP_Player )
 #undef CHL2MP_Player	
@@ -1461,6 +1465,13 @@ bool C_HL2MP_Player::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
 	static QAngle angMoveAngle( 0.0f, 0.0f, 0.0f );
 
 	VectorCopy( pCmd->viewangles, angMoveAngle );
+
+#ifdef ARGG
+	if( (g_pClientMode->OverrideViewAngles()) )
+	{
+		pCmd->viewangles = m_vecUseAngles;
+	}
+#endif
 
 	BaseClass::CreateMove( flInputSampleTime, pCmd );
 

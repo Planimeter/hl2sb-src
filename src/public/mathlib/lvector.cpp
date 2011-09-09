@@ -164,8 +164,8 @@ static int Vector_Negate (lua_State *L) {
 }
 
 static int Vector_NormalizeInPlace (lua_State *L) {
-  luaL_checkvector(L, 1)->NormalizeInPlace();
-  return 0;
+  lua_pushnumber(L, luaL_checkvector(L, 1)->NormalizeInPlace());
+  return 1;
 }
 
 static int Vector_Random (lua_State *L) {
