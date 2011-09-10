@@ -5,6 +5,22 @@
 // $NoKeywords: $
 //=============================================================================//
 
+// Andrew; this is a heavily modified c_weapon_gravitygun.cpp + physgun.cpp for
+// multiplayer purposes. We're including this file separate from
+// weapon_physgun.cpp, because after revision 92, all of our changes will be
+// based off this file, which should be considered a heavily cleaned up Physics
+// Gun, which adhears as much to the original Valve codebase as possible while
+// still including massive overhauls in physics handling, render code, etc.
+//
+// It's notable to mention here that ARGG is included, however absolutely not
+// required for the functioning of this weapon, and the only reason why it's
+// still present in this revision is due to physics handling requiring it
+// before we continue on to further updates, which will mainly be visual ones.
+//
+// Lastly, the only present issue with this revision, in particular, is the
+// handling of EmitSound, in which a CSoundEnvelopeController should really be
+// used instead, for performance concerns.
+
 #include "cbase.h"
 #include "beam_shared.h"
 #ifndef CLIENT_DLL
@@ -32,8 +48,6 @@
 #endif
 #include "soundemittersystem/isoundemittersystembase.h"
 #ifdef CLIENT_DLL
-#include "fx_interpvalue.h"
-#include "input.h"
 #include "model_types.h"
 #include "view_shared.h"
 #include "view.h"
@@ -320,36 +334,12 @@ public:
 		return BaseClass::KeyInput( down, keynum, pszCurrentBinding );
 	}
 
-	void OnDataChanged( DataUpdateType_t updateType )
-	{
-		BaseClass::OnDataChanged( updateType );
-
-		if ( updateType == DATA_UPDATE_CREATED )
-		{
-			SetNextClientThink( CLIENT_THINK_ALWAYS );
-		}
-
-		if ( m_active )
-		{
-			m_ElementParameter.InitFromCurrent( 1.0f, 0.03f, INTERP_SPLINE );
-		}
-		else
-		{	
-			m_ElementParameter.InitFromCurrent( 0.0f, 0.03f, INTERP_SPLINE );
-		}
-	}
-
 	int	 DrawModel( int flags );
 	void ViewModelDrawn( C_BaseViewModel *pBaseViewModel );
 	bool IsTransparent( void );
-	void ClientThink( void );
-
-	void			UpdateElementPosition( void );
 
 	// We need to render opaque and translucent pieces
 	RenderGroup_t	GetRenderGroup( void ) {	return RENDER_GROUP_TWOPASS;	}
-
-	CInterpolatedValue		m_ElementParameter;							// Used to interpolate the position of the articulated elements
 #endif
 
 	void Spawn( void );
@@ -1306,47 +1296,6 @@ bool CWeaponGravityGun::IsTransparent( void )
 }
 
 #endif
-
-#ifdef CLIENT_DLL
-
-//-----------------------------------------------------------------------------
-// Purpose: Update the pose parameter for the gun
-//-----------------------------------------------------------------------------
-void CWeaponGravityGun::UpdateElementPosition( void )
-{
-	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-
-	float flElementPosition = m_ElementParameter.Interp( gpGlobals->curtime );
-
-	if ( IsCarriedByLocalPlayer() && !::input->CAM_IsThirdPerson() )
-	{
-		if ( pOwner != NULL )	
-		{
-			CBaseViewModel *vm = pOwner->GetViewModel();
-			
-			if ( vm != NULL )
-			{
-				vm->SetPoseParameter( "active", flElementPosition );
-			}
-		}
-	}
-	else
-	{
-		SetPoseParameter( "active", flElementPosition );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Think function for the client
-//-----------------------------------------------------------------------------
-
-void CWeaponGravityGun::ClientThink( void )
-{
-	// Update our elements visually
-	UpdateElementPosition();
-}
-
-#endif // CLIENT_DLL
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
