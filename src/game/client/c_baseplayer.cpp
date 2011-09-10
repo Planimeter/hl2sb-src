@@ -1222,7 +1222,7 @@ void C_BasePlayer::OverrideView( CViewSetup *pSetup )
 			// use the useAngles!
 				// override with the angles the server sends to us as useAngles
 				// use the useAngles only if we're holding and rotating with the grav gun
-			// pSetup->angles = m_vecUseAngles;
+			pSetup->angles = m_vecUseAngles;
 		}
 	}
 	// end adnan

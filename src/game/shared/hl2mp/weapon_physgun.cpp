@@ -400,7 +400,11 @@ private:
 #ifdef ARGG
 	// adnan
 	// this is how we tell if we're rotating what we're holding
+#ifndef CLIENT_DLL
 	CNetworkVar( bool, m_bIsCurrentlyRotating );
+#else
+	bool m_bIsCurrentlyRotating;
+#endif
 	// end adnan
 #endif
 
@@ -1309,7 +1313,8 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	//  then set us in the orbiting state
 	//  - this will indicate to OverrideMouseInput that we should zero the input and update our delta angles
 	//  UPDATE: not anymore.  now this just sets our state variables.
-	if( m_gravCallback.m_attachedEntity ) {
+	CBaseEntity *pObject = m_hObject;
+	if( pObject ) {
 
 		if((pOwner->m_nButtons & IN_USE) ) {
 			m_gravCallback.m_bHasRotatedCarryAngles = true;
@@ -1317,7 +1322,7 @@ void CWeaponGravityGun::ItemPostFrame( void )
 			// did we JUST hit use?
 			//  if so, grab the current angles to begin with as the rotated angles
 			if( !(pOwner->m_afButtonLast & IN_USE) ) {
-				m_gravCallback.m_vecRotatedCarryAngles = m_gravCallback.m_attachedEntity->GetAbsAngles();
+				m_gravCallback.m_vecRotatedCarryAngles = pObject->GetAbsAngles();
 			}
 
 			m_bIsCurrentlyRotating = true;

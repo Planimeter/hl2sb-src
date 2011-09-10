@@ -1467,9 +1467,15 @@ bool C_HL2MP_Player::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
 	VectorCopy( pCmd->viewangles, angMoveAngle );
 
 #ifdef ARGG
+	static QAngle angLastAngle( 0.0f, 0.0f, 0.0f );
+
 	if( (g_pClientMode->OverrideViewAngles()) )
 	{
-		pCmd->viewangles = m_vecUseAngles;
+		VectorCopy( angLastAngle, pCmd->viewangles );
+	}
+	else
+	{
+		VectorCopy( pCmd->viewangles, angLastAngle );
 	}
 #endif
 
