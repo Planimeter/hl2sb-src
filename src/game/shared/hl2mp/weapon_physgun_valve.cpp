@@ -12,11 +12,6 @@
 // Gun, which adhears as much to the original Valve codebase as possible while
 // still including massive overhauls in physics handling, render code, etc.
 //
-// It's notable to mention here that ARGG is included, however absolutely not
-// required for the functioning of this weapon, and the only reason why it's
-// still present in this revision is due to physics handling requiring it
-// before we continue on to further updates, which will mainly be visual ones.
-//
 // Lastly, the only present issue with this revision, in particular, is the
 // handling of EmitSound, in which a CSoundEnvelopeController should really be
 // used instead, for performance concerns.
@@ -124,14 +119,6 @@ public:
 	QAngle			m_targetRotation;
 	float			m_timeToArrive;
 
-#ifdef ARGG
-	// adnan
-	// set up the modified pickup angles... allow the player to rotate the object in their grip
-	QAngle		m_vecRotatedCarryAngles;
-	bool			m_bHasRotatedCarryAngles;
-	// end adnan
-#endif
-
 	IPhysicsMotionController *m_controller;
 
 private:
@@ -152,13 +139,6 @@ BEGIN_SIMPLE_DATADESC( CGravControllerPoint )
 	DEFINE_FIELD( m_attachedEntity,		FIELD_EHANDLE ),
 	DEFINE_FIELD( m_targetRotation,		FIELD_VECTOR ),
 	DEFINE_FIELD( m_timeToArrive,			FIELD_FLOAT ),
-#ifdef ARGG
-	// adnan
-	// set up the fields for our added vars
-	DEFINE_FIELD( m_vecRotatedCarryAngles, FIELD_VECTOR ),
-	DEFINE_FIELD( m_bHasRotatedCarryAngles, FIELD_BOOLEAN ),
-	// end adnan
-#endif
 
 	// Physptrs can't be saved in embedded classes... this is to silence classcheck
 	// DEFINE_PHYSPTR( m_controller ),
@@ -176,14 +156,6 @@ CGravControllerPoint::CGravControllerPoint( void )
 	m_shadow.maxDampSpeed = m_shadow.maxSpeed*2;
 	m_shadow.maxDampAngular = m_shadow.maxAngular*2;
 	m_attachedEntity = NULL;
-
-#ifdef ARGG
-	// adnan
-	// initialize our added vars
-	m_vecRotatedCarryAngles = vec3_angle;
-	m_bHasRotatedCarryAngles = false;
-	// end adnan
-#endif
 }
 
 CGravControllerPoint::~CGravControllerPoint( void )
@@ -209,12 +181,6 @@ void CGravControllerPoint::AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEnt
 	pPhys->GetPosition( &position, &angles );
 	SetTargetPosition( vGrabPosition, angles );
 	m_targetRotation = angles;
-#ifdef ARGG
-	// adnan
-	// we need to grab the preferred/non preferred carry angles here for the rotatedcarryangles
-	m_vecRotatedCarryAngles = m_targetRotation;
-	// end adnan
-#endif
 }
 
 void CGravControllerPoint::DetachEntity( void )
@@ -346,13 +312,6 @@ public:
 	void OnRestore( void );
 	void Precache( void );
 
-#ifdef ARGG
-	// adnan
-	// for overriding the mouse -> view angles (but still calc view angles)
-	bool OverrideViewAngles( void );
-	// end adnan
-#endif
-
 	void PrimaryAttack( void );
 	void SecondaryAttack( void );
 	void ItemPreFrame( void );
@@ -414,17 +373,6 @@ private:
 	CNetworkVector	( m_targetPosition );
 	CNetworkVector	( m_worldPosition );
 
-#ifdef ARGG
-	// adnan
-	// this is how we tell if we're rotating what we're holding
-#ifndef CLIENT_DLL
-	CNetworkVar( bool, m_bIsCurrentlyRotating );
-#else
-	bool m_bIsCurrentlyRotating;
-#endif
-	// end adnan
-#endif
-
 	CGravControllerPoint		m_gravCallback;
 
 	DECLARE_ACTTABLE();
@@ -438,31 +386,16 @@ BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 	RecvPropVector( RECVINFO( m_targetPosition ) ),
 	RecvPropVector( RECVINFO( m_worldPosition ) ),
 	RecvPropInt( RECVINFO(m_active) ),
-#ifdef ARGG
-	// adnan
-	// also receive if we're rotating what we're holding (by pressing use)
-	RecvPropBool( RECVINFO( m_bIsCurrentlyRotating ) ),
-	// end adnan
-#endif
 #else
 	SendPropEHandle( SENDINFO( m_hObject ) ),
 	SendPropVector(SENDINFO( m_targetPosition ), -1, SPROP_COORD),
 	SendPropVector(SENDINFO( m_worldPosition ), -1, SPROP_COORD),
 	SendPropInt( SENDINFO(m_active), 1, SPROP_UNSIGNED ),
-#ifdef ARGG
-	// adnan
-	// need to seind if we're rotating what we're holding
-	SendPropBool( SENDINFO( m_bIsCurrentlyRotating ) ),
-	// end adnan
-#endif
 #endif
 END_NETWORK_TABLE()
 
 #ifdef CLIENT_DLL
 BEGIN_PREDICTION_DATA( CWeaponGravityGun )
-#ifdef ARGG
-	DEFINE_PRED_FIELD( m_bIsCurrentlyRotating,	FIELD_BOOLEAN,	FTYPEDESC_INSENDTABLE ),
-#endif
 END_PREDICTION_DATA()
 #endif
 
@@ -541,73 +474,10 @@ bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEnt
 		return false;
 	}
 
-#ifdef ARGG
-	// adnan
-	// if we've been rotating it, set it to its proper new angles (change m_attachedAnglesPlayerSpace while modifier)
-	//Pickup_GetRotatedCarryAngles( pEntity, pPlayer, pPlayer->EntityToWorldTransform(), angles );
-	// added the ... && (mousedx | mousedy) so we dont have to calculate if no mouse movement
-	// UPDATE: m_vecRotatedCarryAngles has become a temp variable... can be cleaned up by using actual temp vars
-#ifdef CLIENT_DLL
-	if( m_bHasRotatedCarryAngles && (pPlayer->m_pCurrentCommand->mousedx || pPlayer->m_pCurrentCommand->mousedy) )
-#else
-	if( m_bHasRotatedCarryAngles && (pPlayer->GetCurrentCommand()->mousedx || pPlayer->GetCurrentCommand()->mousedy) )
-#endif
-	{
-		// method II: relative orientation
-		// UPDATE: this could definitely be cleaned up
-		//  - need to go from angles to VMatrix instead of angles -> matrix3x4_t -> VMatrix
-		//    OR
-		//  - need to have a general MatrixMultiply() and MatrixToAngles() for matrix3x4_t's
-		matrix3x4_t deltaRotation, currentRotation;
-		VMatrix vDeltaRotation, vCurrentRotation, vNewRotation;
-		
-		AngleMatrix( m_targetRotation, currentRotation );
-
-#ifdef CLIENT_DLL
-		m_vecRotatedCarryAngles[YAW] = pPlayer->m_pCurrentCommand->mousedx*0.05;
-		m_vecRotatedCarryAngles[PITCH] = pPlayer->m_pCurrentCommand->mousedy*-0.05;
-#else
-		m_vecRotatedCarryAngles[YAW] = pPlayer->GetCurrentCommand()->mousedx*0.05;
-		m_vecRotatedCarryAngles[PITCH] = pPlayer->GetCurrentCommand()->mousedy*-0.05;
-#endif
-		m_vecRotatedCarryAngles[ROLL] = 0;
-		AngleMatrix( m_vecRotatedCarryAngles, deltaRotation );
-
-		vDeltaRotation.CopyFrom3x4(deltaRotation);
-		vCurrentRotation.CopyFrom3x4(currentRotation);
-
-		MatrixMultiply(vDeltaRotation, vCurrentRotation, vNewRotation);
-		MatrixToAngles( vNewRotation, m_targetRotation );
-	}
-	// end adnan
-#endif
-
 	SetTargetPosition( m_targetPosition, m_targetRotation );
 
 	return true;
 }
-
-#ifdef ARGG
-// adnan
-// this is where we say that we dont want ot apply the current calculated view angles
-//-----------------------------------------------------------------------------
-// Purpose: Allow weapons to override mouse input to viewangles (for orbiting)
-//-----------------------------------------------------------------------------
-bool CWeaponGravityGun::OverrideViewAngles( void )
-{
-	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
-	
-	if(!pPlayer)
-		return false;
-
-	if(m_bIsCurrentlyRotating) {
-		return true;
-	}
-
-	return false;
-}
-// end adnan
-#endif
 
 //=========================================================
 //=========================================================
@@ -1081,61 +951,6 @@ void CWeaponGravityGun::SecondaryAttack( void )
 {
 	// Andrew; do nothing for now.
 	return;
-
-	m_flNextSecondaryAttack = gpGlobals->curtime + 0.1;
-	if ( m_active )
-	{
-		EffectDestroy();
-		SoundDestroy();
-		return;
-	}
-
-	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-	Assert( pOwner );
-
-	if ( pOwner->GetAmmoCount(m_iSecondaryAmmoType) <= 0 )
-		return;
-
-	Vector forward;
-	pOwner->EyeVectors( &forward );
-
-	Vector start = pOwner->Weapon_ShootPosition();
-	Vector end = start + forward * 4096;
-
-	trace_t tr;
-	UTIL_TraceLine( start, end, MASK_SHOT, pOwner, COLLISION_GROUP_NONE, &tr );
-	if ( tr.fraction == 1.0 || (tr.surface.flags & SURF_SKY) )
-		return;
-
-	CBaseEntity *pHit = tr.m_pEnt;
-	
-	if ( pHit->entindex() == 0 )
-	{
-		pHit = NULL;
-	}
-	else
-	{
-		// if the object has no physics object, or isn't a physprop or brush entity, then don't glue
-		if ( !pHit->VPhysicsGetObject() || pHit->GetMoveType() != MOVETYPE_VPHYSICS )
-			return;
-	}
-
-	QAngle angles;
-	WeaponSound( SINGLE );
-
-	VectorAngles( tr.plane.normal, angles );
-	Vector endPoint = tr.endpos + tr.plane.normal;
-
-	// UNDONE: Probably should just do this client side
-	CBaseEntity *pEnt = GetBeamEntity();
-	CBeam *pBeam = CBeam::BeamCreate( PHYSGUN_BEAM_SPRITE, 1.5 );
-	pBeam->PointEntInit( endPoint, pEnt );
-	pBeam->SetEndAttachment( 1 );
-	pBeam->SetBrightness( 255 );
-	pBeam->SetColor( 255, 0, 0 );
-	pBeam->RelinkBeam();
-	pBeam->LiveForTime( 0.1 );
-
 }
 
 #ifdef CLIENT_DLL
@@ -1327,40 +1142,6 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 	if (!pOwner)
 		return;
-
-#ifdef ARGG
-	// adnan
-	// this is where we check if we're orbiting the object
-	
-	// if we're holding something and pressing use,
-	//  then set us in the orbiting state
-	//  - this will indicate to OverrideMouseInput that we should zero the input and update our delta angles
-	//  UPDATE: not anymore.  now this just sets our state variables.
-	CBaseEntity *pObject = m_hObject;
-	if( pObject ) {
-
-		if((pOwner->m_nButtons & IN_USE) ) {
-			m_gravCallback.m_bHasRotatedCarryAngles = true;
-			
-			// did we JUST hit use?
-			//  if so, grab the current angles to begin with as the rotated angles
-			if( !(pOwner->m_afButtonLast & IN_USE) ) {
-				m_gravCallback.m_vecRotatedCarryAngles = pObject->GetAbsAngles();
-			}
-
-			m_bIsCurrentlyRotating = true;
-		} else {
-			m_gravCallback.m_bHasRotatedCarryAngles = false;
-
-			m_bIsCurrentlyRotating = false;
-		}
-	} else {
-		m_bIsCurrentlyRotating = false;
-
-		m_gravCallback.m_bHasRotatedCarryAngles = false;
-	}
-	// end adnan
-#endif
 
 	if ( pOwner->m_afButtonPressed & IN_ATTACK2 )
 	{
