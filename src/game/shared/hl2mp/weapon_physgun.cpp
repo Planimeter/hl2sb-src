@@ -1063,63 +1063,7 @@ void CWeaponGravityGun::PrimaryAttack( void )
 
 void CWeaponGravityGun::SecondaryAttack( void )
 {
-	// Andrew; do nothing for now.
 	return;
-
-	m_flNextSecondaryAttack = gpGlobals->curtime + 0.1;
-	if ( m_active )
-	{
-		EffectDestroy();
-		SoundDestroy();
-		return;
-	}
-
-	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-	Assert( pOwner );
-
-	if ( pOwner->GetAmmoCount(m_iSecondaryAmmoType) <= 0 )
-		return;
-
-	Vector forward;
-	pOwner->EyeVectors( &forward );
-
-	Vector start = pOwner->Weapon_ShootPosition();
-	Vector end = start + forward * 4096;
-
-	trace_t tr;
-	UTIL_TraceLine( start, end, MASK_SHOT, pOwner, COLLISION_GROUP_NONE, &tr );
-	if ( tr.fraction == 1.0 || (tr.surface.flags & SURF_SKY) )
-		return;
-
-	CBaseEntity *pHit = tr.m_pEnt;
-	
-	if ( pHit->entindex() == 0 )
-	{
-		pHit = NULL;
-	}
-	else
-	{
-		// if the object has no physics object, or isn't a physprop or brush entity, then don't glue
-		if ( !pHit->VPhysicsGetObject() || pHit->GetMoveType() != MOVETYPE_VPHYSICS )
-			return;
-	}
-
-	QAngle angles;
-	WeaponSound( SINGLE );
-
-	VectorAngles( tr.plane.normal, angles );
-	Vector endPoint = tr.endpos + tr.plane.normal;
-
-	// UNDONE: Probably should just do this client side
-	CBaseEntity *pEnt = GetBeamEntity();
-	CBeam *pBeam = CBeam::BeamCreate( PHYSGUN_BEAM_SPRITE, 1.5 );
-	pBeam->PointEntInit( endPoint, pEnt );
-	pBeam->SetEndAttachment( 1 );
-	pBeam->SetBrightness( 255 );
-	pBeam->SetColor( 255, 0, 0 );
-	pBeam->RelinkBeam();
-	pBeam->LiveForTime( 0.1 );
-
 }
 
 #ifdef CLIENT_DLL

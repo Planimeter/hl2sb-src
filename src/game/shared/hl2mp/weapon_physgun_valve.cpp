@@ -949,7 +949,6 @@ void CWeaponGravityGun::PrimaryAttack( void )
 
 void CWeaponGravityGun::SecondaryAttack( void )
 {
-	// Andrew; do nothing for now.
 	return;
 }
 
