@@ -70,7 +70,7 @@ public:
 		m_maxVel = maxVel;
 	}
 
-	bool UpdateObject( CBasePlayer *pPlayer );
+	bool UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEntity );
 
 	void SetTargetPosition( const Vector &target, const QAngle &targetOrientation )
 	{
@@ -505,14 +505,12 @@ CWeaponGravityGun::CWeaponGravityGun()
 }
 
 
-#ifndef CLIENT_DLL
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // adnan
 // want to add an angles modifier key
-bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer )
+bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEntity )
 {
-	CBaseEntity *pEntity = m_attachedEntity;
 	if ( !pEntity || pPlayer->GetGroundEntity() == pEntity || !pEntity->VPhysicsGetObject() )
 	{
 		return false;
@@ -531,7 +529,11 @@ bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer )
 	//Pickup_GetRotatedCarryAngles( pEntity, pPlayer, pPlayer->EntityToWorldTransform(), angles );
 	// added the ... && (mousedx | mousedy) so we dont have to calculate if no mouse movement
 	// UPDATE: m_vecRotatedCarryAngles has become a temp variable... can be cleaned up by using actual temp vars
+#ifdef CLIENT_DLL
+	if( m_bHasRotatedCarryAngles && (pPlayer->m_pCurrentCommand->mousedx || pPlayer->m_pCurrentCommand->mousedy) )
+#else
 	if( m_bHasRotatedCarryAngles && (pPlayer->GetCurrentCommand()->mousedx || pPlayer->GetCurrentCommand()->mousedy) )
+#endif
 	{
 		// method II: relative orientation
 		// UPDATE: this could definitely be cleaned up
@@ -543,8 +545,13 @@ bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer )
 		
 		AngleMatrix( m_targetRotation, currentRotation );
 
+#ifdef CLIENT_DLL
+		m_vecRotatedCarryAngles[YAW] = pPlayer->m_pCurrentCommand->mousedx*0.05;
+		m_vecRotatedCarryAngles[PITCH] = pPlayer->m_pCurrentCommand->mousedy*-0.05;
+#else
 		m_vecRotatedCarryAngles[YAW] = pPlayer->GetCurrentCommand()->mousedx*0.05;
 		m_vecRotatedCarryAngles[PITCH] = pPlayer->GetCurrentCommand()->mousedy*-0.05;
+#endif
 		m_vecRotatedCarryAngles[ROLL] = 0;
 		AngleMatrix( m_vecRotatedCarryAngles, deltaRotation );
 
@@ -561,7 +568,6 @@ bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer )
 
 	return true;
 }
-#endif
 
 #ifdef ARGG
 // adnan
@@ -970,19 +976,21 @@ void CWeaponGravityGun::EffectDestroy( void )
 	DetachObject();
 }
 
-#ifndef CLIENT_DLL
 void CWeaponGravityGun::UpdateObject( void )
 {
 	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 	Assert( pPlayer );
 
-	if ( !m_gravCallback.UpdateObject( pPlayer ) )
+	CBaseEntity *pObject = m_hObject;
+	if ( !pObject )
+		return;
+
+	if ( !m_gravCallback.UpdateObject( pPlayer, pObject ) )
 	{
 		DetachObject();
 		return;
 	}
 }
-#endif
 
 void CWeaponGravityGun::DetachObject( void )
 {
@@ -1278,18 +1286,6 @@ bool CWeaponGravityGun::IsTransparent( void )
 void CWeaponGravityGun::ItemPreFrame()
 {
 	BaseClass::ItemPreFrame();
-
-	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-
-	if ( pOwner == NULL )
-		return;
-
-	CBaseViewModel *vm = pOwner->GetViewModel();
-	
-	if ( vm != NULL )
-	{
-		vm->SetPoseParameter( "active", 1.0f );
-	}
 
 #ifndef CLIENT_DLL
 	// Update the object if the weapon is switched on.
