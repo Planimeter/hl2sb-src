@@ -232,21 +232,6 @@ void CBasePlayer::ItemPostFrame()
 #endif
 
 			{
-#if defined( ARGG )
-				// adnan
-				// if we just pressed use, get the current angles and set them to the useAngles
-				if( !(m_afButtonLast & IN_USE) && (m_nButtons & IN_USE) ) {
-					m_vecUseAngles = pl.v_angle;
-				}
-
-				// if we just let go of use, set the current angles to what they just were
-				//  to preserve continuity
-				if( (m_afButtonLast & IN_USE) && !(m_nButtons & IN_USE) ) {
-					pl.v_angle = m_vecUseAngles;
-				}
-
-				// end adnan
-#endif
 				GetActiveWeapon()->ItemPostFrame( );
 			}
 		}

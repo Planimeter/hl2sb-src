@@ -1037,6 +1037,7 @@ private:
 	EHANDLE					m_hViewEntity;
 
 #ifdef ARGG
+public:
 	// adnan
 	// send the use angles for the current player... set when they press use
 	// UPDATE: this could be improved somehow by only storing these on the server side
@@ -1044,6 +1045,9 @@ private:
 	//  - ... maybe not
 	CNetworkQAngle( m_vecUseAngles );
 	// end adnan
+
+private:
+
 #endif
 
 	// Movement constraints

@@ -192,7 +192,7 @@ void CGravControllerPoint::AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEnt
 	QAngle angles;
 	pPhys->GetPosition( &position, &angles );
 	SetTargetPosition( vGrabPosition, angles );
-	m_targetRotation = TransformAnglesToLocalSpace( angles, pPlayer->EntityToWorldTransform() );
+	m_targetRotation = angles;
 #ifdef ARGG
 	// adnan
 	// we need to grab the preferred/non preferred carry angles here for the rotatedcarryangles
@@ -392,6 +392,7 @@ private:
 	CNetworkHandle( CBaseEntity, m_hObject );
 	float		m_distance;
 	float		m_movementLength;
+	float		m_lastYaw;
 	int			m_soundState;
 	Vector		m_originalObjectPosition;
 	CNetworkVector	( m_targetPosition );
@@ -482,6 +483,7 @@ BEGIN_DATADESC( CWeaponGravityGun )
 	DEFINE_FIELD( m_hObject,				FIELD_EHANDLE ),
 	DEFINE_FIELD( m_distance,			FIELD_FLOAT ),
 	DEFINE_FIELD( m_movementLength,		FIELD_FLOAT ),
+	DEFINE_FIELD( m_lastYaw,				FIELD_FLOAT ),
 	DEFINE_FIELD( m_soundState,			FIELD_INTEGER ),
 	DEFINE_FIELD( m_originalObjectPosition,	FIELD_POSITION_VECTOR ),
 	DEFINE_EMBEDDED( m_gravCallback ),
@@ -700,10 +702,17 @@ void CWeaponGravityGun::EffectUpdate( void )
 	{
 		CBaseEntity *pEntity = tr.m_pEnt;
 		AttachObject( pEntity, start, tr.endpos, distance );
+		m_lastYaw = pOwner->EyeAngles().y;
 	}
 
-	// Add the incremental player pitch and yaw to the target transform
-	QAngle rotation = TransformAnglesToWorldSpace( m_gravCallback.m_targetRotation, pOwner->EntityToWorldTransform() );
+	// Add the incremental player yaw to the target transform
+	matrix3x4_t curMatrix, incMatrix, nextMatrix;
+
+	AngleMatrix( m_gravCallback.m_targetRotation, curMatrix );
+	AngleMatrix( QAngle(0,pOwner->EyeAngles().y - m_lastYaw,0), incMatrix );
+	ConcatTransforms( incMatrix, curMatrix, nextMatrix );
+	MatrixAngles( nextMatrix, m_gravCallback.m_targetRotation );
+	m_lastYaw = pOwner->EyeAngles().y;
 
 	CBaseEntity *pObject = m_hObject;
 	if ( pObject )
@@ -781,8 +790,8 @@ void CWeaponGravityGun::EffectUpdate( void )
 			newPosition = tr.endpos;
 		}
 
-		Vector offset = UTIL_LocalToWorld( newPosition, rotation, m_worldPosition );
-		m_gravCallback.SetTargetPosition( newPosition + (newPosition - offset), rotation );
+		Vector offset = UTIL_LocalToWorld( newPosition, m_gravCallback.m_targetRotation, m_worldPosition );
+		m_gravCallback.SetTargetPosition( newPosition + (newPosition - offset), m_gravCallback.m_targetRotation );
 		Vector dir = (newPosition - pObject->GetLocalOrigin());
 		m_movementLength = dir.Length();
 	}
@@ -1303,6 +1312,26 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	if (!pOwner)
 		return;
 
+#if defined( ARGG )
+	CBaseEntity *pObject = m_hObject;
+	if ( pObject )
+	{
+		// adnan
+		// if we just pressed use, get the current angles and set them to the useAngles
+		if( !(pOwner->m_afButtonLast & IN_USE) && (pOwner->m_nButtons & IN_USE) ) {
+			pOwner->m_vecUseAngles = pOwner->pl.v_angle;
+		}
+
+		// if we just let go of use, set the current angles to what they just were
+		//  to preserve continuity
+		if( (pOwner->m_afButtonLast & IN_USE) && !(pOwner->m_nButtons & IN_USE) ) {
+			pOwner->pl.v_angle = pOwner->m_vecUseAngles;
+		}
+
+		// end adnan
+	}
+#endif
+
 #ifdef ARGG
 	// adnan
 	// this is where we check if we're orbiting the object
@@ -1311,7 +1340,6 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	//  then set us in the orbiting state
 	//  - this will indicate to OverrideMouseInput that we should zero the input and update our delta angles
 	//  UPDATE: not anymore.  now this just sets our state variables.
-	CBaseEntity *pObject = m_hObject;
 	if( pObject ) {
 
 		if((pOwner->m_nButtons & IN_USE) ) {
