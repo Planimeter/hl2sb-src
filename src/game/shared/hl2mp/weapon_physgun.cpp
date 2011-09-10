@@ -398,17 +398,6 @@ private:
 	CNetworkVector	( m_targetPosition );
 	CNetworkVector	( m_worldPosition );
 
-#ifdef ARGG
-	// adnan
-	// this is how we tell if we're rotating what we're holding
-#ifndef CLIENT_DLL
-	CNetworkVar( bool, m_bIsCurrentlyRotating );
-#else
-	bool m_bIsCurrentlyRotating;
-#endif
-	// end adnan
-#endif
-
 	CGravControllerPoint		m_gravCallback;
 
 	DECLARE_ACTTABLE();
@@ -422,31 +411,16 @@ BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 	RecvPropVector( RECVINFO( m_targetPosition ) ),
 	RecvPropVector( RECVINFO( m_worldPosition ) ),
 	RecvPropInt( RECVINFO(m_active) ),
-#ifdef ARGG
-	// adnan
-	// also receive if we're rotating what we're holding (by pressing use)
-	RecvPropBool( RECVINFO( m_bIsCurrentlyRotating ) ),
-	// end adnan
-#endif
 #else
 	SendPropEHandle( SENDINFO( m_hObject ) ),
 	SendPropVector(SENDINFO( m_targetPosition ), -1, SPROP_COORD),
 	SendPropVector(SENDINFO( m_worldPosition ), -1, SPROP_COORD),
 	SendPropInt( SENDINFO(m_active), 1, SPROP_UNSIGNED ),
-#ifdef ARGG
-	// adnan
-	// need to seind if we're rotating what we're holding
-	SendPropBool( SENDINFO( m_bIsCurrentlyRotating ) ),
-	// end adnan
-#endif
 #endif
 END_NETWORK_TABLE()
 
 #ifdef CLIENT_DLL
 BEGIN_PREDICTION_DATA( CWeaponGravityGun )
-#ifdef ARGG
-	DEFINE_PRED_FIELD( m_bIsCurrentlyRotating,	FIELD_BOOLEAN,	FTYPEDESC_INSENDTABLE ),
-#endif
 END_PREDICTION_DATA()
 #endif
 
@@ -513,14 +487,7 @@ CWeaponGravityGun::CWeaponGravityGun()
 // want to add an angles modifier key
 bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEntity )
 {
-	if ( !pEntity || pPlayer->GetGroundEntity() == pEntity || !pEntity->VPhysicsGetObject() )
-	{
-		return false;
-	}
-
-	//Adrian: Oops, our object became motion disabled, let go!
-	IPhysicsObject *pPhys = pEntity->VPhysicsGetObject();
-	if ( pPhys && pPhys->IsMoveable() == false )
+	if ( !pEntity || !pEntity->VPhysicsGetObject() )
 	{
 		return false;
 	}
@@ -584,8 +551,10 @@ bool CWeaponGravityGun::OverrideViewAngles( void )
 	if(!pPlayer)
 		return false;
 
-	if(m_bIsCurrentlyRotating) {
-		return true;
+	if (pPlayer->m_nButtons & IN_ATTACK) {
+		if (pPlayer->m_nButtons & IN_USE) {
+			return true;
+		}
 	}
 
 	return false;
@@ -690,10 +659,9 @@ void CWeaponGravityGun::EffectUpdate( void )
 	float distance = tr.fraction * 4096;
 	if ( tr.fraction != 1 )
 	{
-		// too close to the player, drop the object
-		if ( distance < 36 )
+		// too close to the player
+		if ( distance < 36 && m_hObject == NULL )
 		{
-			DetachObject();
 			return;
 		}
 	}
@@ -701,8 +669,18 @@ void CWeaponGravityGun::EffectUpdate( void )
 	if ( m_hObject == NULL && tr.DidHitNonWorldEntity() )
 	{
 		CBaseEntity *pEntity = tr.m_pEnt;
-		AttachObject( pEntity, start, tr.endpos, distance );
+		if ( pOwner->GetGroundEntity() != pEntity )
+		{
+			AttachObject( pEntity, start, tr.endpos, distance );
+		}
 		m_lastYaw = pOwner->EyeAngles().y;
+	}
+
+	CBaseEntity *pObject = m_hObject;
+	if ( pOwner->GetGroundEntity() == pObject )
+	{
+		DetachObject();
+		return;
 	}
 
 	// Add the incremental player yaw to the target transform
@@ -714,7 +692,6 @@ void CWeaponGravityGun::EffectUpdate( void )
 	MatrixAngles( nextMatrix, m_gravCallback.m_targetRotation );
 	m_lastYaw = pOwner->EyeAngles().y;
 
-	CBaseEntity *pObject = m_hObject;
 	if ( pObject )
 	{
 		if ( m_useDown )
@@ -1256,26 +1233,6 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	if (!pOwner)
 		return;
 
-#if defined( ARGG )
-	CBaseEntity *pObject = m_hObject;
-	if ( pObject )
-	{
-		// adnan
-		// if we just pressed use, get the current angles and set them to the useAngles
-		if( !(pOwner->m_afButtonLast & IN_USE) && (pOwner->m_nButtons & IN_USE) ) {
-			pOwner->m_vecUseAngles = pOwner->pl.v_angle;
-		}
-
-		// if we just let go of use, set the current angles to what they just were
-		//  to preserve continuity
-		if( (pOwner->m_afButtonLast & IN_USE) && !(pOwner->m_nButtons & IN_USE) ) {
-			pOwner->pl.v_angle = pOwner->m_vecUseAngles;
-		}
-
-		// end adnan
-	}
-#endif
-
 #ifdef ARGG
 	// adnan
 	// this is where we check if we're orbiting the object
@@ -1284,6 +1241,7 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	//  then set us in the orbiting state
 	//  - this will indicate to OverrideMouseInput that we should zero the input and update our delta angles
 	//  UPDATE: not anymore.  now this just sets our state variables.
+	CBaseEntity *pObject = m_hObject;
 	if( pObject ) {
 
 		if((pOwner->m_nButtons & IN_USE) ) {
@@ -1294,16 +1252,10 @@ void CWeaponGravityGun::ItemPostFrame( void )
 			if( !(pOwner->m_afButtonLast & IN_USE) ) {
 				m_gravCallback.m_vecRotatedCarryAngles = pObject->GetAbsAngles();
 			}
-
-			m_bIsCurrentlyRotating = true;
 		} else {
 			m_gravCallback.m_bHasRotatedCarryAngles = false;
-
-			m_bIsCurrentlyRotating = false;
 		}
 	} else {
-		m_bIsCurrentlyRotating = false;
-
 		m_gravCallback.m_bHasRotatedCarryAngles = false;
 	}
 	// end adnan
@@ -1313,8 +1265,14 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	{
 		SecondaryAttack();
 	}
-	else if ( pOwner->m_nButtons & IN_ATTACK )
+	if ( pOwner->m_nButtons & IN_ATTACK )
 	{
+#if defined( ARGG )
+		if( (pOwner->m_nButtons & IN_USE) ) {
+			pOwner->m_vecUseAngles = pOwner->pl.v_angle;
+		}
+#endif
+
 		PrimaryAttack();
 	}
 	else if ( pOwner->m_afButtonPressed & IN_RELOAD )

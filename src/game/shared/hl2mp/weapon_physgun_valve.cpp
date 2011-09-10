@@ -576,10 +576,9 @@ void CWeaponGravityGun::EffectUpdate( void )
 	float distance = tr.fraction * 4096;
 	if ( tr.fraction != 1 )
 	{
-		// too close to the player, drop the object
-		if ( distance < 36 )
+		// too close to the player
+		if ( distance < 36 && m_hObject == NULL )
 		{
-			DetachObject();
 			return;
 		}
 	}
@@ -587,8 +586,18 @@ void CWeaponGravityGun::EffectUpdate( void )
 	if ( m_hObject == NULL && tr.DidHitNonWorldEntity() )
 	{
 		CBaseEntity *pEntity = tr.m_pEnt;
-		AttachObject( pEntity, start, tr.endpos, distance );
+		if ( pOwner->GetGroundEntity() != pEntity )
+		{
+			AttachObject( pEntity, start, tr.endpos, distance );
+		}
 		m_lastYaw = pOwner->EyeAngles().y;
+	}
+
+	CBaseEntity *pObject = m_hObject;
+	if ( pOwner->GetGroundEntity() == pObject )
+	{
+		DetachObject();
+		return;
 	}
 
 	// Add the incremental player yaw to the target transform
@@ -600,7 +609,6 @@ void CWeaponGravityGun::EffectUpdate( void )
 	MatrixAngles( nextMatrix, m_gravCallback.m_targetRotation );
 	m_lastYaw = pOwner->EyeAngles().y;
 
-	CBaseEntity *pObject = m_hObject;
 	if ( pObject )
 	{
 		if ( m_useDown )
@@ -1146,7 +1154,7 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	{
 		SecondaryAttack();
 	}
-	else if ( pOwner->m_nButtons & IN_ATTACK )
+	if ( pOwner->m_nButtons & IN_ATTACK )
 	{
 		PrimaryAttack();
 	}
