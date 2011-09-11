@@ -962,6 +962,11 @@ void CWeaponGravityGun::DetachObject( void )
 		Pickup_OnPhysGunDrop( m_hObject, pOwner, DROPPED_BY_CANNON );
 #endif
 
+		IPhysicsObject *pPhysics = m_hObject->VPhysicsGetObject();
+		if ( pPhysics )
+		{
+			PhysClearGameFlags( pPhysics, FVPHYSICS_PLAYER_HELD );
+		}
 		m_gravCallback.DetachEntity();
 		m_hObject = NULL;
 	}
@@ -985,6 +990,7 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start,
 		m_originalObjectPosition = pObject->GetAbsOrigin();
 
 		pPhysics->Wake();
+		PhysSetGameFlags( pPhysics, FVPHYSICS_PLAYER_HELD );
 
 #ifndef CLIENT_DLL
 		Pickup_OnPhysGunPickup( pObject, pOwner );
