@@ -1111,7 +1111,7 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	{
 		PrimaryAttack();
 	}
-	else if ( pOwner->m_afButtonPressed & IN_RELOAD )
+	if ( pOwner->m_afButtonPressed & IN_RELOAD )
 	{
 		Reload();
 	}
