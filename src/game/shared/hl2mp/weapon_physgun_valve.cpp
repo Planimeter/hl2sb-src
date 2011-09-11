@@ -76,10 +76,6 @@ public:
 	~CGravControllerPoint( void );
 	void AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEntity, IPhysicsObject *pPhys, const Vector &position );
 	void DetachEntity( void );
-	void SetMaxVelocity( float maxVel )
-	{
-		m_maxVel = maxVel;
-	}
 
 	bool UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEntity );
 
@@ -112,7 +108,6 @@ public:
 	Vector			m_worldPosition;
 	float			m_saveDamping;
 	float			m_saveMass;
-	float			m_maxVel;
 	float			m_maxAcceleration;
 	Vector			m_maxAngularAcceleration;
 	EHANDLE			m_attachedEntity;
@@ -133,7 +128,6 @@ BEGIN_SIMPLE_DATADESC( CGravControllerPoint )
 	DEFINE_FIELD( m_worldPosition,		FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( m_saveDamping,			FIELD_FLOAT ),
 	DEFINE_FIELD( m_saveMass,			FIELD_FLOAT ),
-	DEFINE_FIELD( m_maxVel,				FIELD_FLOAT ),
 	DEFINE_FIELD( m_maxAcceleration,		FIELD_FLOAT ),
 	DEFINE_FIELD( m_maxAngularAcceleration,	FIELD_VECTOR ),
 	DEFINE_FIELD( m_attachedEntity,		FIELD_EHANDLE ),
@@ -518,22 +512,6 @@ void CWeaponGravityGun::Precache( void )
 	PrecacheScriptSound( "Weapon_Physgun.HeavyObject" );
 }
 
-//Andrew; I think I win, Henry.
-static Vector UTIL_WorldToLocal( const Vector &origin, const QAngle &vAngles, const Vector &vecWorldTarget )
-{
-	VMatrix tmp;
-	tmp.SetupMatrixOrgAngles( origin, vAngles );
-	return tmp.VMul4x3Transpose( vecWorldTarget );
-}
-
-//Andrew; Twice.
-static Vector UTIL_LocalToWorld( const Vector &origin, const QAngle &vAngles, const Vector &vecLocalTarget )
-{
-	VMatrix tmp;
-	tmp.SetupMatrixOrgAngles( origin, vAngles );
-	return tmp.VMul4x3( vecLocalTarget );
-}
-
 void CWeaponGravityGun::EffectCreate( void )
 {
 	EffectUpdate();
@@ -650,34 +628,9 @@ void CWeaponGravityGun::EffectUpdate( void )
 		}
 
 		Vector newPosition = start + forward * m_distance;
-		// 24 is a little larger than 16 * sqrt(2) (extent of player bbox)
-		// HACKHACK: We do this so we can "ignore" the player and the object we're manipulating
-		// If we had a filter for tracelines, we could simply filter both ents and start from "start"
-		Vector awayfromPlayer = start + forward * 24;
-
-		UTIL_TraceLine( start, awayfromPlayer, MASK_SOLID, pOwner, COLLISION_GROUP_NONE, &tr );
-		if ( tr.fraction == 1 )
-		{
-			UTIL_TraceLine( awayfromPlayer, newPosition, MASK_SOLID, pObject, COLLISION_GROUP_NONE, &tr );
-			Vector dir = tr.endpos - newPosition;
-			float distance = VectorNormalize(dir);
-			float maxDist = m_gravCallback.m_maxVel * gpGlobals->frametime;
-			if ( distance >  maxDist )
-			{
-				newPosition += dir * maxDist;
-		}
-		else
-		{
-			newPosition = tr.endpos;
-		}
-		}
-		else
-		{
-			newPosition = tr.endpos;
-		}
-
-		Vector offset = UTIL_LocalToWorld( newPosition, m_gravCallback.m_targetRotation, m_worldPosition );
-		m_gravCallback.SetTargetPosition( newPosition + (newPosition - offset), m_gravCallback.m_targetRotation );
+		Vector offset;
+		pObject->EntityToWorldSpace( m_worldPosition, &offset );
+		m_gravCallback.SetTargetPosition( newPosition + (pObject->GetAbsOrigin() - offset), m_gravCallback.m_targetRotation );
 		Vector dir = (newPosition - pObject->GetLocalOrigin());
 		m_movementLength = dir.Length();
 	}
@@ -918,7 +871,9 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start,
 	{
 		m_distance = distance;
 
-		m_worldPosition = UTIL_WorldToLocal( pObject->GetAbsOrigin(), pObject->GetAbsAngles(), end );
+		Vector worldPosition;
+		pObject->WorldToEntitySpace( end, &worldPosition );
+		m_worldPosition = worldPosition;
 		m_gravCallback.AttachEntity( pOwner, pObject, pPhysics, pObject->GetAbsOrigin() );
 
 		m_originalObjectPosition = pObject->GetAbsOrigin();
@@ -995,7 +950,7 @@ int CWeaponGravityGun::DrawModel( int flags )
 		}
 		else
 		{
-			points[2] = UTIL_LocalToWorld(pObject->GetAbsOrigin(), pObject->GetAbsAngles(), m_worldPosition);
+			pObject->EntityToWorldSpace( m_worldPosition, &points[2] );
 		}
 
 		Vector forward, right, up;
@@ -1062,7 +1017,7 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	}
 	else
 	{
-		points[2] = UTIL_LocalToWorld(pObject->GetAbsOrigin(), pObject->GetAbsAngles(), m_worldPosition);
+		pObject->EntityToWorldSpace(m_worldPosition, &points[2]);
 	}
 
 	Vector forward, right, up;
