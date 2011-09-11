@@ -526,7 +526,7 @@ void CWeaponGravityGun::TraceLine( trace_t *ptr )
 	if ( !pOwner )
 		return;
 
-	Vector start, angles, forward, right;
+	Vector start, forward, right;
 	pOwner->EyeVectors( &forward, &right, NULL );
 
 	start = pOwner->Weapon_ShootPosition();
@@ -538,7 +538,7 @@ void CWeaponGravityGun::TraceLine( trace_t *ptr )
 
 void CWeaponGravityGun::EffectUpdate( void )
 {
-	Vector start, angles, forward, right;
+	Vector start, forward, right;
 	trace_t tr;
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
@@ -1103,21 +1103,14 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	if (!pOwner)
 		return;
 
-	if ( pOwner->m_afButtonPressed & IN_ATTACK2 )
-	{
-		SecondaryAttack();
-	}
 	if ( pOwner->m_nButtons & IN_ATTACK )
 	{
+		if ( pOwner->m_afButtonPressed & IN_ATTACK2 )
+		{
+			SecondaryAttack();
+		}
 		PrimaryAttack();
 	}
-	if ( pOwner->m_afButtonPressed & IN_RELOAD )
-	{
-		Reload();
-	}
-	// -----------------------
-	//  No buttons down
-	// -----------------------
 	else 
 	{
 		if ( m_active )
@@ -1127,6 +1120,10 @@ void CWeaponGravityGun::ItemPostFrame( void )
 		}
 		WeaponIdle( );
 		return;
+	}
+	if ( pOwner->m_afButtonPressed & IN_RELOAD )
+	{
+		Reload();
 	}
 }
 

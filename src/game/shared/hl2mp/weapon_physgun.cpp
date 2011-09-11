@@ -90,6 +90,8 @@ public:
 			}
 		}
 	}
+	QAngle TransformAnglesToPlayerSpace( const QAngle &anglesIn, CBasePlayer *pPlayer );
+	QAngle TransformAnglesFromPlayerSpace( const QAngle &anglesIn, CBasePlayer *pPlayer );
 
 	IMotionEvent::simresult_e Simulate( IPhysicsMotionController *pController, IPhysicsObject *pObject, float deltaTime, Vector &linear, AngularImpulse &angular );
 	Vector			m_localPosition;
@@ -170,6 +172,25 @@ CGravControllerPoint::~CGravControllerPoint( void )
 }
 
 
+QAngle CGravControllerPoint::TransformAnglesToPlayerSpace( const QAngle &anglesIn, CBasePlayer *pPlayer )
+{
+	matrix3x4_t test;
+	QAngle angleTest = pPlayer->EyeAngles();
+	angleTest.x = 0;
+	AngleMatrix( angleTest, test );
+	return TransformAnglesToLocalSpace( anglesIn, test );
+}
+
+QAngle CGravControllerPoint::TransformAnglesFromPlayerSpace( const QAngle &anglesIn, CBasePlayer *pPlayer )
+{
+	matrix3x4_t test;
+	QAngle angleTest = pPlayer->EyeAngles();
+	angleTest.x = 0;
+	AngleMatrix( angleTest, test );
+	return TransformAnglesToWorldSpace( anglesIn, test );
+}
+
+
 void CGravControllerPoint::AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEntity, IPhysicsObject *pPhys, const Vector &vGrabPosition )
 {
 	m_attachedEntity = pEntity;
@@ -186,7 +207,7 @@ void CGravControllerPoint::AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEnt
 	QAngle angles;
 	pPhys->GetPosition( &position, &angles );
 	SetTargetPosition( vGrabPosition, angles );
-	m_targetRotation = angles;
+	m_targetRotation = TransformAnglesToPlayerSpace( angles, pPlayer );
 #ifdef ARGG
 	// adnan
 	// we need to grab the preferred/non preferred carry angles here for the rotatedcarryangles
@@ -386,7 +407,6 @@ private:
 	CNetworkHandle( CBaseEntity, m_hObject );
 	float		m_distance;
 	float		m_movementLength;
-	float		m_lastYaw;
 	int			m_soundState;
 	Vector		m_originalObjectPosition;
 	CNetworkVector	( m_targetPosition );
@@ -451,7 +471,6 @@ BEGIN_DATADESC( CWeaponGravityGun )
 	DEFINE_FIELD( m_hObject,				FIELD_EHANDLE ),
 	DEFINE_FIELD( m_distance,			FIELD_FLOAT ),
 	DEFINE_FIELD( m_movementLength,		FIELD_FLOAT ),
-	DEFINE_FIELD( m_lastYaw,				FIELD_FLOAT ),
 	DEFINE_FIELD( m_soundState,			FIELD_INTEGER ),
 	DEFINE_FIELD( m_originalObjectPosition,	FIELD_POSITION_VECTOR ),
 	DEFINE_EMBEDDED( m_gravCallback ),
@@ -601,7 +620,7 @@ void CWeaponGravityGun::TraceLine( trace_t *ptr )
 	if ( !pOwner )
 		return;
 
-	Vector start, angles, forward, right;
+	Vector start, forward, right;
 	pOwner->EyeVectors( &forward, &right, NULL );
 
 	start = pOwner->Weapon_ShootPosition();
@@ -613,7 +632,7 @@ void CWeaponGravityGun::TraceLine( trace_t *ptr )
 
 void CWeaponGravityGun::EffectUpdate( void )
 {
-	Vector start, angles, forward, right;
+	Vector start, forward, right;
 	trace_t tr;
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
@@ -632,17 +651,10 @@ void CWeaponGravityGun::EffectUpdate( void )
 	{
 		CBaseEntity *pEntity = tr.m_pEnt;
 		AttachObject( pEntity, start, tr.endpos, distance );
-		m_lastYaw = pOwner->EyeAngles().y;
 	}
 
 	// Add the incremental player yaw to the target transform
-	matrix3x4_t curMatrix, incMatrix, nextMatrix;
-
-	AngleMatrix( m_gravCallback.m_targetRotation, curMatrix );
-	AngleMatrix( QAngle(0,pOwner->EyeAngles().y - m_lastYaw,0), incMatrix );
-	ConcatTransforms( incMatrix, curMatrix, nextMatrix );
-	MatrixAngles( nextMatrix, m_gravCallback.m_targetRotation );
-	m_lastYaw = pOwner->EyeAngles().y;
+	QAngle angles = m_gravCallback.TransformAnglesFromPlayerSpace( m_gravCallback.m_targetRotation, pOwner );
 
 	CBaseEntity *pObject = m_hObject;
 	if ( pObject )
@@ -696,7 +708,7 @@ void CWeaponGravityGun::EffectUpdate( void )
 		Vector newPosition = start + forward * m_distance;
 		Vector offset;
 		pObject->EntityToWorldSpace( m_worldPosition, &offset );
-		m_gravCallback.SetTargetPosition( newPosition + (pObject->GetAbsOrigin() - offset), m_gravCallback.m_targetRotation );
+		m_gravCallback.SetTargetPosition( newPosition + (pObject->GetAbsOrigin() - offset), angles );
 		Vector dir = (newPosition - pObject->GetLocalOrigin());
 		m_movementLength = dir.Length();
 	}
@@ -1197,10 +1209,6 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	// end adnan
 #endif
 
-	if ( pOwner->m_afButtonPressed & IN_ATTACK2 )
-	{
-		SecondaryAttack();
-	}
 	if ( pOwner->m_nButtons & IN_ATTACK )
 	{
 #if defined( ARGG )
@@ -1208,16 +1216,13 @@ void CWeaponGravityGun::ItemPostFrame( void )
 			pOwner->m_vecUseAngles = pOwner->pl.v_angle;
 		}
 #endif
+		if ( pOwner->m_afButtonPressed & IN_ATTACK2 )
+		{
+			SecondaryAttack();
+		}
 
 		PrimaryAttack();
 	}
-	if ( pOwner->m_afButtonPressed & IN_RELOAD )
-	{
-		Reload();
-	}
-	// -----------------------
-	//  No buttons down
-	// -----------------------
 	else 
 	{
 		if ( m_active )
@@ -1227,6 +1232,10 @@ void CWeaponGravityGun::ItemPostFrame( void )
 		}
 		WeaponIdle( );
 		return;
+	}
+	if ( pOwner->m_afButtonPressed & IN_RELOAD )
+	{
+		Reload();
 	}
 }
 
