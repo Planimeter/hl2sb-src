@@ -505,14 +505,9 @@ bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEnt
 #endif
 	{
 		// method II: relative orientation
-		// UPDATE: this could definitely be cleaned up
-		//  - need to go from angles to VMatrix instead of angles -> matrix3x4_t -> VMatrix
-		//    OR
-		//  - need to have a general MatrixMultiply() and MatrixToAngles() for matrix3x4_t's
-		matrix3x4_t deltaRotation, currentRotation;
 		VMatrix vDeltaRotation, vCurrentRotation, vNewRotation;
 		
-		AngleMatrix( m_targetRotation, currentRotation );
+		MatrixFromAngles( m_targetRotation, vCurrentRotation );
 
 #ifdef CLIENT_DLL
 		m_vecRotatedCarryAngles[YAW] = pPlayer->m_pCurrentCommand->mousedx*0.05;
@@ -522,10 +517,7 @@ bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEnt
 		m_vecRotatedCarryAngles[PITCH] = pPlayer->GetCurrentCommand()->mousedy*-0.05;
 #endif
 		m_vecRotatedCarryAngles[ROLL] = 0;
-		AngleMatrix( m_vecRotatedCarryAngles, deltaRotation );
-
-		vDeltaRotation.CopyFrom3x4(deltaRotation);
-		vCurrentRotation.CopyFrom3x4(currentRotation);
+		MatrixFromAngles( m_vecRotatedCarryAngles, vDeltaRotation );
 
 		MatrixMultiply(vDeltaRotation, vCurrentRotation, vNewRotation);
 		MatrixToAngles( vNewRotation, m_targetRotation );
