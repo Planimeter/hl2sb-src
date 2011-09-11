@@ -1220,7 +1220,16 @@ void CWeaponGravityGun::ItemPostFrame( void )
 		{
 			SecondaryAttack();
 		}
-
+		else if ( pOwner->m_nButtons & IN_ATTACK2 )
+		{
+			if ( m_active )
+			{
+				EffectDestroy();
+				SoundDestroy();
+			}
+			WeaponIdle( );
+			return;
+		}
 		PrimaryAttack();
 	}
 	else 
