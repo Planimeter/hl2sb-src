@@ -101,6 +101,11 @@ static int Vector_Dot (lua_State *L) {
   return 1;
 }
 
+static int Vector_Init (lua_State *L) {
+  luaL_checkvector(L, 1)->Init(luaL_optnumber(L, 2, 0.0f), luaL_optnumber(L, 3, 0.0f), luaL_optnumber(L, 4, 0.0f));
+  return 0;
+}
+
 static int Vector_Invalidate (lua_State *L) {
   luaL_checkvector(L, 1)->Invalidate();
   return 0;
@@ -219,42 +224,37 @@ static int Vector___tostring (lua_State *L) {
 }
 
 static int Vector___eq (lua_State *L) {
-  lua_pushboolean(L, luaL_checkvector(L, 1) == luaL_checkvector(L, 2));
+  lua_pushboolean(L, *(Vector *)luaL_checkvector(L, 1) == *(Vector *)luaL_checkvector(L, 2));
   return 1;
 }
 
 static int Vector___add (lua_State *L) {
-  Vector c;
-  VectorAdd(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), c);
-  lua_pushvector(L, &c);
+  Vector res = *(Vector *)luaL_checkvector(L, 1) + *(Vector *)luaL_checkvector(L, 2);
+  lua_pushvector(L, &res);
   return 1;
 }
 
 static int Vector___sub (lua_State *L) {
-  Vector c;
-  VectorSubtract(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), c);
-  lua_pushvector(L, &c);
+  Vector res = *(Vector *)luaL_checkvector(L, 1) - *(Vector *)luaL_checkvector(L, 2);
+  lua_pushvector(L, &res);
   return 1;
 }
 
 static int Vector___mul (lua_State *L) {
-  Vector result;
-  VectorScale(*(Vector *)luaL_checkvector(L, 1), luaL_checknumber(L, 2), result);
-  lua_pushvector(L, &result);
+  Vector res = *(Vector *)luaL_checkvector(L, 1) * luaL_checknumber(L, 2);
+  lua_pushvector(L, &res);
   return 1;
 }
 
 static int Vector___div (lua_State *L) {
-  Vector c;
-  VectorDivide(*(Vector *)luaL_checkvector(L, 1), luaL_checknumber(L, 2), c);
-  lua_pushvector(L, &c);
+  Vector res = *(Vector *)luaL_checkvector(L, 1) / luaL_checknumber(L, 2);
+  lua_pushvector(L, &res);
   return 1;
 }
 
 static int Vector___unm (lua_State *L) {
-  Vector a = *(Vector *)luaL_checkvector(L, 1);
-  VectorNegate(a);
-  lua_pushvector(L, &a);
+  Vector v = -*(Vector *)luaL_checkvector(L, 1);
+  lua_pushvector(L, &v);
   return 1;
 }
 
@@ -264,6 +264,7 @@ static const luaL_Reg Vectormeta[] = {
   {"DistTo", Vector_DistTo},
   {"DistToSqr", Vector_DistToSqr},
   {"Dot", Vector_Dot},
+  {"Init", Vector_Init},
   {"Invalidate", Vector_Invalidate},
   {"IsLengthGreaterThan", Vector_IsLengthGreaterThan},
   {"IsLengthLessThan", Vector_IsLengthLessThan},

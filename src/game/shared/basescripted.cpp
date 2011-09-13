@@ -14,6 +14,8 @@
 #else
 #include "lbaseanimating.h"
 #endif
+#include "lbaseentity_shared.h"
+#include "lvphysics_interface.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -113,7 +115,13 @@ void CBaseScripted::InitScriptedEntity( void )
 		return;
 #endif
 
-	SetThink( &CBaseScripted::ScriptedThink );
+	//SetTouch( &CBaseScripted::Touch );
+
+	SetThink( &CBaseScripted::Think );
+#ifdef CLIENT_DLL
+	SetNextClientThink( gpGlobals->curtime );
+#endif
+	SetNextThink( gpGlobals->curtime );
 
 	char className[ 255 ];
 #if defined ( CLIENT_DLL )
@@ -195,26 +203,12 @@ void CBaseScripted::ClientThink()
 }
 #endif
 
-void CBaseScripted::ScriptedThink()
+void CBaseScripted::Think()
 {
 #ifdef LUA_SDK
 	BEGIN_LUA_CALL_ENTITY_METHOD( "Think" );
 	END_LUA_CALL_ENTITY_METHOD( 0, 0 );
 #endif
-}
-
-void CBaseScripted::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
-{
-#ifdef LUA_SDK
-	BEGIN_LUA_CALL_ENTITY_METHOD( "Use" );
-		lua_pushentity( L, pActivator );
-		lua_pushentity( L, pCaller );
-		lua_pushinteger( L, useType );
-		lua_pushinteger( L, value );
-	END_LUA_CALL_ENTITY_METHOD( 4, 0 );
-#endif
-
-	BaseClass::Use( pActivator, pCaller, useType, value );
 }
 
 void CBaseScripted::VPhysicsUpdate( IPhysicsObject *pPhysics )

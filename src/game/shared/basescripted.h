@@ -32,8 +32,7 @@ public:
 	
 	// CBaseEntity overrides.
 public:
-	// void	Think();	
-	void	ScriptedThink();	
+	void	Think();	
 
 	// void	Spawn( void );
 	void	Precache( void );
@@ -50,8 +49,6 @@ public:
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual const char *GetScriptedClassname( void );
 #endif
-
-	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 
 private:
 	CBaseScripted( const CBaseScripted & ); // not defined, not accessible
