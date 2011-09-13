@@ -203,3 +203,28 @@ void CBaseScripted::ScriptedThink()
 #endif
 }
 
+void CBaseScripted::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_ENTITY_METHOD( "Use" );
+		lua_pushentity( L, pActivator );
+		lua_pushentity( L, pCaller );
+		lua_pushinteger( L, useType );
+		lua_pushinteger( L, value );
+	END_LUA_CALL_ENTITY_METHOD( 4, 0 );
+#endif
+
+	BaseClass::Use( pActivator, pCaller, useType, value );
+}
+
+void CBaseScripted::VPhysicsUpdate( IPhysicsObject *pPhysics )
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_ENTITY_METHOD( "VPhysicsUpdate" );
+		lua_pushphysicsobject( L, pPhysics );
+	END_LUA_CALL_ENTITY_METHOD( 1, 0 );
+#endif
+
+	BaseClass::VPhysicsUpdate( pPhysics );
+}
+

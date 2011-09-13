@@ -39,6 +39,8 @@ public:
 	void	Precache( void );
 	void	InitScriptedEntity( void );
 
+	virtual void VPhysicsUpdate( IPhysicsObject *pPhysics );
+
 #ifdef CLIENT_DLL
 // IClientThinkable.
 public:
@@ -48,6 +50,8 @@ public:
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual const char *GetScriptedClassname( void );
 #endif
+
+	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 
 private:
 	CBaseScripted( const CBaseScripted & ); // not defined, not accessible
