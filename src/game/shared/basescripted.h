@@ -38,6 +38,11 @@ public:
 	void	Precache( void );
 	void	InitScriptedEntity( void );
 
+#ifdef CLIENT_DLL
+	// model specific
+	virtual int DrawModel( int flags );
+#endif
+
 	virtual void VPhysicsUpdate( IPhysicsObject *pPhysics );
 
 #ifdef CLIENT_DLL

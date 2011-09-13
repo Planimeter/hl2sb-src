@@ -164,6 +164,20 @@ void CBaseScripted::InitScriptedEntity( void )
 }
 
 #ifdef CLIENT_DLL
+int CBaseScripted::DrawModel( int flags )
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_ENTITY_METHOD( "DrawModel" );
+		lua_pushinteger( L, flags );
+	END_LUA_CALL_ENTITY_METHOD( 1, 1 );
+
+	RETURN_LUA_INTEGER();
+#endif
+
+	return BaseClass::DrawModel( flags );
+}
+#endif
+
 void CBaseScripted::OnDataChanged( DataUpdateType_t updateType )
 {
 	BaseClass::OnDataChanged( updateType );
