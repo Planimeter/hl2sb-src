@@ -101,6 +101,9 @@ public:
 	virtual int HandleSpectatorKeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding );
 
 protected:
+#ifdef LUA_SDK
+	vgui::EditablePanel		*m_pScriptedViewport;
+#endif
 	CBaseViewport			*m_pViewport;
 
 private:

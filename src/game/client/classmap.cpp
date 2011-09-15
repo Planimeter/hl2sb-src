@@ -71,6 +71,9 @@ public:
 	virtual void			Add( const char *mapname, const char *classname, int size, DISPATCHFUNCTION factory /*= 0*/ );
 #endif
 	virtual const char		*Lookup( const char *classname );
+#ifdef LUA_SDK
+	virtual DISPATCHFUNCTION FindFactory( const char *classname );
+#endif
 	virtual C_BaseEntity	*CreateEntity( const char *mapname );
 	virtual int				GetClassSize( const char *classname );
 
@@ -91,10 +94,7 @@ void CClassMap::Add( const char *mapname, const char *classname, int size, DISPA
 #endif
 {
 #if defined ( LUA_SDK )
-	int c = m_ClassDict.Count();
-	int i;
-
-	for ( i = 0; i < c; i++ )
+	for ( int i=m_ClassDict.First(); i != m_ClassDict.InvalidIndex(); i=m_ClassDict.Next( i ) )
 	{
 		classentry_t *lookup = &m_ClassDict[ i ];
 		if ( !lookup )
@@ -167,6 +167,23 @@ const char *CClassMap::Lookup( const char *classname )
 			continue;
 
 		return lookup->GetMapName();
+	}
+
+	return NULL;
+}
+
+DISPATCHFUNCTION CClassMap::FindFactory( const char *classname )
+{
+	for ( int i=m_ClassDict.First(); i != m_ClassDict.InvalidIndex(); i=m_ClassDict.Next( i ) )
+	{
+		classentry_t *lookup = &m_ClassDict[ i ];
+		if ( !lookup )
+			continue;
+
+		if ( Q_stricmp( lookup->GetMapName(), classname ) )
+			continue;
+
+		return lookup->factory;
 	}
 
 	return NULL;

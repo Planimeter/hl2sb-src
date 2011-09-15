@@ -2601,6 +2601,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\game_controls\scriptedhudviewport.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\game_controls\SpectatorGUI.cpp"
 					>
 				</File>
@@ -5543,6 +5547,10 @@
 			</File>
 			<File
 				RelativePath=".\game_controls\mouseoverpanelbutton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\game_controls\scriptedhudviewport.h"
 				>
 			</File>
 			<File

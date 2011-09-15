@@ -47,7 +47,7 @@ static CUtlDict< CEntityFactory<CBaseScripted>*, unsigned short > m_EntityFactor
 void RegisterScriptedBaseEntity( const char *className )
 {
 #ifdef CLIENT_DLL
-	if ( GetClassMap().Lookup( className ) )
+	if ( GetClassMap().FindFactory( className ) )
 	{
 		return;
 	}
@@ -176,7 +176,6 @@ int CBaseScripted::DrawModel( int flags )
 
 	return BaseClass::DrawModel( flags );
 }
-#endif
 
 void CBaseScripted::OnDataChanged( DataUpdateType_t updateType )
 {

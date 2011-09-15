@@ -61,7 +61,7 @@ static CUtlDict< CEntityFactory<CHL2MPScriptedWeapon>*, unsigned short > m_Weapo
 void RegisterScriptedWeapon( const char *className )
 {
 #ifdef CLIENT_DLL
-	if ( GetClassMap().Lookup( className ) )
+	if ( GetClassMap().FindFactory( className ) )
 	{
 		return;
 	}
