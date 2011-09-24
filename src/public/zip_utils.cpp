@@ -4,9 +4,10 @@
 //
 //=============================================================================//
 
+#include "cbase.h"
 #include <tier0/platform.h>
 #ifdef IS_WINDOWS_PC
-#include <windows.h>
+#include <winlite.h>
 #endif
 #include "utlbuffer.h"
 #include "utllinkedlist.h"
@@ -15,6 +16,7 @@
 #include "checksum_crc.h"
 #include "byteswap.h"
 #include "utlstring.h"
+#include "filesystem.h"
 
 // Data descriptions for byte swapping - only needed
 // for structures that are written to file for use by the game.
@@ -110,7 +112,7 @@ public:
 			char uniqueFilename[MAX_PATH];
 			SYSTEMTIME sysTime;                                                       \
 			GetLocalTime( &sysTime );   
-			sprintf( uniqueFilename, "%d_%d_%d_%d_%d.tmp", sysTime.wDay, sysTime.wHour, sysTime.wMinute, sysTime.wSecond, sysTime.wMilliseconds );                                                \
+			V_snprintf( uniqueFilename, sizeof( uniqueFilename ), "%d_%d_%d_%d_%d.tmp", sysTime.wDay, sysTime.wHour, sysTime.wMinute, sysTime.wSecond, sysTime.wMilliseconds );                                                \
 			V_ComposeFileName( WritePath.String(), uniqueFilename, tempFileName, sizeof( tempFileName ) );
 		}
 
@@ -1024,19 +1026,19 @@ bool CZipFile::FileExistsInZip( const char *pRelativeName )
 //-----------------------------------------------------------------------------
 void CZipFile::AddFileToZip( const char *relativename, const char *fullpath )
 {
-	FILE *temp = fopen( fullpath, "rb" );
+	FileHandle_t temp = filesystem->Open( fullpath, "rb" );
 	if ( !temp )
 		return;
 
 	// Determine length
-	fseek( temp, 0, SEEK_END );
-	int size = ftell( temp );
-	fseek( temp, 0, SEEK_SET );
+	filesystem->Seek( temp, 0, FILESYSTEM_SEEK_TAIL );
+	int size = filesystem->Tell( temp );
+	filesystem->Seek( temp, 0, FILESYSTEM_SEEK_HEAD );
 	byte *buf = (byte *)malloc( size + 1 );
 
 	// Read data
-	fread( buf, size, 1, temp );
-	fclose( temp );
+	filesystem->Read( buf, size, temp );
+	filesystem->Close( temp );
 
 	// Now add as a buffer
 	AddBufferToZip( relativename, buf, size, false );

@@ -18,6 +18,6 @@ IZip				*luasrc_GetLcfFile( void );
 void				luasrc_AddFileToLcf( const char *pRelativeName, const char *fullpath );
 void				luasrc_ExtractLcf( void );
 
-void  (luasrc_archivefolder) (lua_State *L, const char *path);
+void  (luasrc_parsefromdownloadables) (void);
 
 #endif // LUACACHEFILE_H
