@@ -11,10 +11,6 @@
 // based off this file, which should be considered a heavily cleaned up Physics
 // Gun, which adhears as much to the original Valve codebase as possible while
 // still including massive overhauls in physics handling, render code, etc.
-//
-// Lastly, the only present issue with this revision, in particular, is the
-// handling of EmitSound, in which a CSoundEnvelopeController should really be
-// used instead, for performance concerns.
 
 #include "cbase.h"
 #include "beam_shared.h"
@@ -33,6 +29,7 @@
 #include "physics.h"
 #include "in_buttons.h"
 #include "IEffects.h"
+#include "soundenvelope.h"
 #include "engine/IEngineSound.h"
 #ifndef CLIENT_DLL
 #include "ndebugoverlay.h"
@@ -367,6 +364,11 @@ private:
 	CNetworkVector	( m_targetPosition );
 	CNetworkVector	( m_worldPosition );
 
+	CSoundPatch					*m_sndMotor;		// Whirring sound for the gun
+	CSoundPatch					*m_sndLockedOn;
+	CSoundPatch					*m_sndLightObject;
+	CSoundPatch					*m_sndHeavyObject;
+
 	CGravControllerPoint		m_gravCallback;
 
 	DECLARE_ACTTABLE();
@@ -663,13 +665,18 @@ void CWeaponGravityGun::SoundStop( void )
 	switch( m_soundState )
 	{
 	case SS_SCANNING:
-		pOwner->StopSound( "Weapon_Physgun.Scanning" );
+		(CSoundEnvelopeController::GetController()).SoundDestroy( m_sndMotor );
+		m_sndMotor = NULL;
 		break;
 	case SS_LOCKEDON:
-		pOwner->StopSound( "Weapon_Physgun.Scanning" );
-		pOwner->StopSound( "Weapon_Physgun.LockedOn" );
-		pOwner->StopSound( "Weapon_Physgun.LightObject" );
-		pOwner->StopSound( "Weapon_Physgun.HeavyObject" );
+		(CSoundEnvelopeController::GetController()).SoundDestroy( m_sndMotor );
+		m_sndMotor = NULL;
+		(CSoundEnvelopeController::GetController()).SoundDestroy( m_sndLockedOn );
+		m_sndLockedOn = NULL;
+		(CSoundEnvelopeController::GetController()).SoundDestroy( m_sndLightObject );
+		m_sndLightObject = NULL;
+		(CSoundEnvelopeController::GetController()).SoundDestroy( m_sndHeavyObject );
+		m_sndHeavyObject = NULL;
 		break;
 	}
 }
@@ -702,24 +709,26 @@ static float UTIL_LineFraction( float value, float low, float high, float scale 
 
 void CWeaponGravityGun::SoundStart( void )
 {
-	CPASAttenuationFilter filter( GetOwner() );
-	filter.MakeReliable();
+	CPASAttenuationFilter filter( this );
 
 	switch( m_soundState )
 	{
 	case SS_SCANNING:
 		{
-			EmitSound( filter, GetOwner()->entindex(), "Weapon_Physgun.Scanning" );
+			m_sndMotor = (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "Weapon_Physgun.Scanning", ATTN_NORM );
+			(CSoundEnvelopeController::GetController()).Play( m_sndMotor, 1.0f, 100 );
 		}
 		break;
 	case SS_LOCKEDON:
 		{
-			// BUGBUG - If you start a sound with a pitch of 100, the pitch shift doesn't work!
-			
-			EmitSound( filter, GetOwner()->entindex(), "Weapon_Physgun.LockedOn" );
-			EmitSound( filter, GetOwner()->entindex(), "Weapon_Physgun.Scanning" );
-			EmitSound( filter, GetOwner()->entindex(), "Weapon_Physgun.LightObject" );
-			EmitSound( filter, GetOwner()->entindex(), "Weapon_Physgun.HeavyObject" );
+			m_sndLockedOn = (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "Weapon_Physgun.LockedOn", ATTN_NORM );
+			(CSoundEnvelopeController::GetController()).Play( m_sndLockedOn, 1.0f, 100 );
+			m_sndMotor = (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "Weapon_Physgun.Scanning", ATTN_NORM );
+			(CSoundEnvelopeController::GetController()).Play( m_sndMotor, 1.0f, 100 );
+			m_sndLightObject = (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "Weapon_Physgun.LightObject", ATTN_NORM );
+			(CSoundEnvelopeController::GetController()).Play( m_sndLightObject, 1.0f, 100 );
+			m_sndHeavyObject = (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "Weapon_Physgun.HeavyObject", ATTN_NORM );
+			(CSoundEnvelopeController::GetController()).Play( m_sndHeavyObject, 1.0f, 100 );
 		}
 		break;
 	}
@@ -748,23 +757,14 @@ void CWeaponGravityGun::SoundUpdate( void )
 		break;
 	case SS_LOCKEDON:
 		{
-			CPASAttenuationFilter filter( GetOwner() );
-			filter.MakeReliable();
+			CPASAttenuationFilter filter( this );
 
 			float height = m_hObject->GetAbsOrigin().z - m_originalObjectPosition.z;
 
 			// go from pitch 90 to 150 over a height of 500
 			int pitch = 90 + (int)UTIL_LineFraction( height, 0, 500, 60 );
 
-			CSoundParameters params;
-			if ( GetParametersForSound( "Weapon_Physgun.LockedOn", params, NULL ) )
-			{
-				EmitSound_t ep( params );
-				ep.m_nFlags = SND_CHANGE_VOL | SND_CHANGE_PITCH;
-				ep.m_nPitch = pitch;
-
-				EmitSound( filter, GetOwner()->entindex(), ep );
-			}
+			(CSoundEnvelopeController::GetController()).SoundChangePitch( m_sndLockedOn, pitch, 0.0f );
 
 			// attenutate the movement sounds over 200 units of movement
 			float distance = UTIL_LineFraction( m_movementLength, 0, 200, 1.0 );
@@ -779,23 +779,9 @@ void CWeaponGravityGun::SoundUpdate( void )
 			
 			float fade = UTIL_LineFraction( pPhys->GetMass(), 50, 500, 1.0 );
 
-			if ( GetParametersForSound( "Weapon_Physgun.LightObject", params, NULL ) )
-			{
-				EmitSound_t ep( params );
-				ep.m_nFlags = SND_CHANGE_VOL;
-				ep.m_flVolume = fade * distance;
+			(CSoundEnvelopeController::GetController()).SoundChangeVolume( m_sndLightObject, fade * distance, 0.0f );
 
-				EmitSound( filter, GetOwner()->entindex(), ep );
-			}
-
-			if ( GetParametersForSound( "Weapon_Physgun.HeavyObject", params, NULL ) )
-			{
-				EmitSound_t ep( params );
-				ep.m_nFlags = SND_CHANGE_VOL;
-				ep.m_flVolume = (1.0 - fade) * distance;
-
-				EmitSound( filter, GetOwner()->entindex(), ep );
-			}
+			(CSoundEnvelopeController::GetController()).SoundChangeVolume( m_sndHeavyObject, (1.0 - fade) * distance, 0.0f );
 		}
 		break;
 	}
