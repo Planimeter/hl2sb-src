@@ -296,6 +296,182 @@ static int CBasePlayer_IsIlluminatedByFlashlight (lua_State *L) {
   return 2;
 }
 
+static int CBasePlayer_UpdatePlayerSound (lua_State *L) {
+  luaL_checkplayer(L, 1)->UpdatePlayerSound();
+  return 0;
+}
+
+static int CBasePlayer_DeathSound (lua_State *L) {
+  luaL_checkplayer(L, 1)->DeathSound(*(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_Classify (lua_State *L) {
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->Classify());
+  return 1;
+}
+
+static int CBasePlayer_SetWeaponAnimType (lua_State *L) {
+  // Huh?
+  // luaL_checkplayer(L, 1)->SetWeaponAnimType(luaL_checkstring(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_ImpulseCommands (lua_State *L) {
+  luaL_checkplayer(L, 1)->ImpulseCommands();
+  return 0;
+}
+
+static int CBasePlayer_CheatImpulseCommands (lua_State *L) {
+  luaL_checkplayer(L, 1)->CheatImpulseCommands(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_NotifySinglePlayerGameEnding (lua_State *L) {
+  luaL_checkplayer(L, 1)->NotifySinglePlayerGameEnding();
+  return 0;
+}
+
+static int CBasePlayer_IsSinglePlayerGameEnding (lua_State *L) {
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->IsSinglePlayerGameEnding());
+  return 1;
+}
+
+static int CBasePlayer_StartObserverMode (lua_State *L) {
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->StartObserverMode(luaL_checkinteger(L, 2)));
+  return 1;
+}
+
+static int CBasePlayer_StopObserverMode (lua_State *L) {
+  luaL_checkplayer(L, 1)->StopObserverMode();
+  return 0;
+}
+
+static int CBasePlayer_ModeWantsSpectatorGUI (lua_State *L) {
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->ModeWantsSpectatorGUI(luaL_checkinteger(L, 2)));
+  return 1;
+}
+
+static int CBasePlayer_FindNextObserverTarget (lua_State *L) {
+  lua_pushentity(L, luaL_checkplayer(L, 1)->FindNextObserverTarget(luaL_checkboolean(L, 2)));
+  return 1;
+}
+
+static int CBasePlayer_GetNextObserverSearchStartPoint (lua_State *L) {
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->GetNextObserverSearchStartPoint(luaL_checkboolean(L, 2)));
+  return 1;
+}
+
+static int CBasePlayer_IsValidObserverTarget (lua_State *L) {
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->IsValidObserverTarget(luaL_checkentity(L, 2)));
+  return 1;
+}
+
+static int CBasePlayer_CheckObserverSettings (lua_State *L) {
+  luaL_checkplayer(L, 1)->CheckObserverSettings();
+  return 0;
+}
+
+static int CBasePlayer_JumptoPosition (lua_State *L) {
+  luaL_checkplayer(L, 1)->JumptoPosition(*(Vector *)luaL_checkvector(L, 2), *(QAngle *)luaL_checkangle(L, 3));
+  return 0;
+}
+
+static int CBasePlayer_ForceObserverMode (lua_State *L) {
+  luaL_checkplayer(L, 1)->ForceObserverMode(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_ValidateCurrentObserverTarget (lua_State *L) {
+  luaL_checkplayer(L, 1)->ValidateCurrentObserverTarget();
+  return 0;
+}
+
+static int CBasePlayer_StartReplayMode (lua_State *L) {
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->StartReplayMode(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checkinteger(L, 4)));
+  return 1;
+}
+
+static int CBasePlayer_StopReplayMode (lua_State *L) {
+  luaL_checkplayer(L, 1)->StopReplayMode();
+  return 0;
+}
+
+static int CBasePlayer_GetDelayTicks (lua_State *L) {
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->GetDelayTicks());
+  return 1;
+}
+
+static int CBasePlayer_GetReplayEntity (lua_State *L) {
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->GetReplayEntity());
+  return 1;
+}
+
+static int CBasePlayer_CreateCorpse (lua_State *L) {
+  luaL_checkplayer(L, 1)->CreateCorpse();
+  return 0;
+}
+
+static int CBasePlayer_EntSelectSpawnPoint (lua_State *L) {
+  lua_pushentity(L, luaL_checkplayer(L, 1)->EntSelectSpawnPoint());
+  return 1;
+}
+
+static int CBasePlayer_GetVehicleAnalogControlBias (lua_State *L) {
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->GetVehicleAnalogControlBias());
+  return 1;
+}
+
+static int CBasePlayer_SetVehicleAnalogControlBias (lua_State *L) {
+  luaL_checkplayer(L, 1)->SetVehicleAnalogControlBias(luaL_checkinteger(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_OnVehicleStart (lua_State *L) {
+  luaL_checkplayer(L, 1)->OnVehicleStart();
+  return 0;
+}
+
+static int CBasePlayer_GetVehicleEntity (lua_State *L) {
+  lua_pushentity(L, luaL_checkplayer(L, 1)->GetVehicleEntity());
+  return 1;
+}
+
+static int CBasePlayer_BumpWeapon (lua_State *L) {
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->BumpWeapon(luaL_checkweapon(L, 2)));
+  return 1;
+}
+
+static int CBasePlayer_RemovePlayerItem (lua_State *L) {
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->RemovePlayerItem(luaL_checkweapon(L, 2)));
+  return 1;
+}
+
+static int CBasePlayer_HasNamedPlayerItem (lua_State *L) {
+  lua_pushentity(L, luaL_checkplayer(L, 1)->HasNamedPlayerItem(luaL_checkstring(L, 2)));
+  return 1;
+}
+
+static int CBasePlayer_HasWeapons (lua_State *L) {
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->HasWeapons());
+  return 1;
+}
+
+static int CBasePlayer_GiveNamedItem (lua_State *L) {
+  lua_pushentity(L, luaL_checkplayer(L, 1)->GiveNamedItem(luaL_checkstring(L, 2), luaL_optinteger(L, 3, 0)));
+  return 1;
+}
+
+static int CBasePlayer_EnableControl (lua_State *L) {
+  luaL_checkplayer(L, 1)->EnableControl(luaL_checkboolean(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_CheckTrainUpdate (lua_State *L) {
+  luaL_checkplayer(L, 1)->CheckTrainUpdate();
+  return 0;
+}
+
 
 static const luaL_Reg CBasePlayermeta[] = {
   {"SetBodyPitch", CBasePlayer_SetBodyPitch},
@@ -353,6 +529,41 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"FlashlightTurnOn", CBasePlayer_FlashlightTurnOn},
   {"FlashlightTurnOff", CBasePlayer_FlashlightTurnOff},
   {"IsIlluminatedByFlashlight", CBasePlayer_IsIlluminatedByFlashlight},
+  {"UpdatePlayerSound", CBasePlayer_UpdatePlayerSound},
+  {"DeathSound", CBasePlayer_DeathSound},
+  {"Classify", CBasePlayer_Classify},
+  {"SetWeaponAnimType", CBasePlayer_SetWeaponAnimType},
+  {"ImpulseCommands", CBasePlayer_ImpulseCommands},
+  {"CheatImpulseCommands", CBasePlayer_CheatImpulseCommands},
+  {"NotifySinglePlayerGameEnding", CBasePlayer_NotifySinglePlayerGameEnding},
+  {"IsSinglePlayerGameEnding", CBasePlayer_IsSinglePlayerGameEnding},
+  {"StartObserverMode", CBasePlayer_StartObserverMode},
+  {"StopObserverMode", CBasePlayer_StopObserverMode},
+  {"ModeWantsSpectatorGUI", CBasePlayer_ModeWantsSpectatorGUI},
+  {"FindNextObserverTarget", CBasePlayer_FindNextObserverTarget},
+  {"GetNextObserverSearchStartPoint", CBasePlayer_GetNextObserverSearchStartPoint},
+  {"IsValidObserverTarget", CBasePlayer_IsValidObserverTarget},
+  {"CheckObserverSettings", CBasePlayer_CheckObserverSettings},
+  {"JumptoPosition", CBasePlayer_JumptoPosition},
+  {"ForceObserverMode", CBasePlayer_ForceObserverMode},
+  {"ValidateCurrentObserverTarget", CBasePlayer_ValidateCurrentObserverTarget},
+  {"StartReplayMode", CBasePlayer_StartReplayMode},
+  {"StopReplayMode", CBasePlayer_StopReplayMode},
+  {"GetDelayTicks", CBasePlayer_GetDelayTicks},
+  {"GetReplayEntity", CBasePlayer_GetReplayEntity},
+  {"CreateCorpse", CBasePlayer_CreateCorpse},
+  {"EntSelectSpawnPoint", CBasePlayer_EntSelectSpawnPoint},
+  {"GetVehicleAnalogControlBias", CBasePlayer_GetVehicleAnalogControlBias},
+  {"SetVehicleAnalogControlBias", CBasePlayer_SetVehicleAnalogControlBias},
+  {"OnVehicleStart", CBasePlayer_OnVehicleStart},
+  {"GetVehicleEntity", CBasePlayer_GetVehicleEntity},
+  {"BumpWeapon", CBasePlayer_BumpWeapon},
+  {"RemovePlayerItem", CBasePlayer_RemovePlayerItem},
+  {"HasNamedPlayerItem", CBasePlayer_HasNamedPlayerItem},
+  {"HasWeapons", CBasePlayer_HasWeapons},
+  {"GiveNamedItem", CBasePlayer_GiveNamedItem},
+  {"EnableControl", CBasePlayer_EnableControl},
+  {"CheckTrainUpdate", CBasePlayer_CheckTrainUpdate},
   {NULL, NULL}
 };
 
