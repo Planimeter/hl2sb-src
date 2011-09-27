@@ -1258,6 +1258,20 @@ static int CBaseEntity_VPhysicsGetObject (lua_State *L) {
   return 1;
 }
 
+static int CBaseEntity_VPhysicsGetObjectList (lua_State *L) {
+  IPhysicsObject *pList[VPHYSICS_MAX_OBJECT_LIST_COUNT];
+  int count = luaL_checkentity(L, 1)->VPhysicsGetObjectList( pList, ARRAYSIZE(pList) );
+  lua_pushinteger(L, count);
+  lua_newtable(L);
+  for( int i = 0 ; i < count ; i++ )
+  {
+	  lua_pushinteger(L, i);
+	  lua_pushphysicsobject(L, pList[i]);
+	  lua_settable(L, -3);
+  }
+  return 2;
+}
+
 static int CBaseEntity_VPhysicsInitNormal (lua_State *L) {
   // TODO: Implement a Lua solid_t object.
   lua_pushphysicsobject(L, luaL_checkentity(L, 1)->VPhysicsInitNormal((SolidType_t)luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkboolean(L, 4)));
@@ -1632,6 +1646,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"UpdateOnRemove", CBaseEntity_UpdateOnRemove},
   {"VPhysicsDestroyObject", CBaseEntity_VPhysicsDestroyObject},
   {"VPhysicsGetObject", CBaseEntity_VPhysicsGetObject},
+  {"VPhysicsGetObjectList", CBaseEntity_VPhysicsGetObjectList},
   {"VPhysicsInitNormal", CBaseEntity_VPhysicsInitNormal},
   {"VPhysicsInitStatic", CBaseEntity_VPhysicsInitStatic},
   {"VPhysicsIsFlesh", CBaseEntity_VPhysicsIsFlesh},
