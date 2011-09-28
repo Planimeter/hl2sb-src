@@ -226,12 +226,12 @@ void CBaseScripted::Think()
 
 void CBaseScripted::VPhysicsUpdate( IPhysicsObject *pPhysics )
 {
+	BaseClass::VPhysicsUpdate( pPhysics );
+
 #ifdef LUA_SDK
 	BEGIN_LUA_CALL_ENTITY_METHOD( "VPhysicsUpdate" );
 		lua_pushphysicsobject( L, pPhysics );
 	END_LUA_CALL_ENTITY_METHOD( 1, 0 );
 #endif
-
-	BaseClass::VPhysicsUpdate( pPhysics );
 }
 
