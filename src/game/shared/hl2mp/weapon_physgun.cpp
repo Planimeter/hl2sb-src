@@ -413,6 +413,13 @@ private:
 	CNetworkVector	( m_targetPosition );
 	CNetworkVector	( m_worldPosition );
 
+#ifdef ARGG
+	// adnan
+	// this is how we tell if we're rotating what we're holding
+	CNetworkVar( bool, m_bIsCurrentlyRotating );
+	// end adnan
+#endif
+
 	CSoundPatch					*m_sndMotor;		// Whirring sound for the gun
 	CSoundPatch					*m_sndLockedOn;
 	CSoundPatch					*m_sndLightObject;
@@ -431,11 +438,23 @@ BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 	RecvPropVector( RECVINFO( m_targetPosition ) ),
 	RecvPropVector( RECVINFO( m_worldPosition ) ),
 	RecvPropInt( RECVINFO(m_active) ),
+#ifdef ARGG
+	// adnan
+	// also receive if we're rotating what we're holding (by pressing use)
+	RecvPropBool( RECVINFO( m_bIsCurrentlyRotating ) ),
+	// end adnan
+#endif
 #else
 	SendPropEHandle( SENDINFO( m_hObject ) ),
 	SendPropVector(SENDINFO( m_targetPosition ), -1, SPROP_COORD),
 	SendPropVector(SENDINFO( m_worldPosition ), -1, SPROP_COORD),
 	SendPropInt( SENDINFO(m_active), 1, SPROP_UNSIGNED ),
+#ifdef ARGG
+	// adnan
+	// need to seind if we're rotating what we're holding
+	SendPropBool( SENDINFO( m_bIsCurrentlyRotating ) ),
+	// end adnan
+#endif
 #endif
 END_NETWORK_TABLE()
 
@@ -562,10 +581,8 @@ bool CWeaponGravityGun::OverrideViewAngles( void )
 	if(!pPlayer)
 		return false;
 
-	if (pPlayer->m_nButtons & IN_ATTACK) {
-		if (pPlayer->m_nButtons & IN_USE) {
-			return true;
-		}
+	if (m_bIsCurrentlyRotating) {
+		return true;
 	}
 
 	return false;
@@ -1182,7 +1199,7 @@ void CWeaponGravityGun::ItemPostFrame( void )
 	CBaseEntity *pObject = m_hObject;
 	if( pObject ) {
 
-		if((pOwner->m_nButtons & IN_USE) ) {
+		if((pOwner->m_nButtons & IN_ATTACK) && (pOwner->m_nButtons & IN_USE) ) {
 			m_gravCallback.m_bHasRotatedCarryAngles = true;
 			
 			// did we JUST hit use?
@@ -1190,10 +1207,16 @@ void CWeaponGravityGun::ItemPostFrame( void )
 			if( !(pOwner->m_afButtonLast & IN_USE) ) {
 				m_gravCallback.m_vecRotatedCarryAngles = pObject->GetAbsAngles();
 			}
+
+			m_bIsCurrentlyRotating = true;
 		} else {
 			m_gravCallback.m_bHasRotatedCarryAngles = false;
+
+			m_bIsCurrentlyRotating = false;
 		}
 	} else {
+		m_bIsCurrentlyRotating = false;
+
 		m_gravCallback.m_bHasRotatedCarryAngles = false;
 	}
 	// end adnan

@@ -1463,11 +1463,14 @@ void C_HL2MP_Player::AvoidPlayers( CUserCmd *pCmd )
 bool C_HL2MP_Player::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
 {	
 #ifdef ARGG
-	C_BaseCombatWeapon *pWeapon = GetActiveWeapon();
-	if ( pWeapon )
+	if ( gpGlobals->maxClients != 1 )
 	{
-		if(pWeapon->OverrideViewAngles()) {
-			pCmd->viewangles = m_vecUseAngles;
+		C_BaseCombatWeapon *pWeapon = GetActiveWeapon();
+		if ( pWeapon )
+		{
+			if(pWeapon->OverrideViewAngles()) {
+				pCmd->viewangles = m_vecUseAngles;
+			}
 		}
 	}
 #endif
