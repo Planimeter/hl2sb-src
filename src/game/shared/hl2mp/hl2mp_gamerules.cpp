@@ -816,6 +816,22 @@ float CHL2MPRules::FlItemRespawnTime( CItem *pItem )
 }
 
 
+#if defined ( LUA_SDK )
+//=========================================================
+//=========================================================
+int CHL2MPRules::ItemShouldRespawn( CItem *pItem )
+{
+	BEGIN_LUA_CALL_HOOK( "ItemShouldRespawn" );
+		lua_pushentity( L, pItem );
+	END_LUA_CALL_HOOK( 1, 1 );
+
+	RETURN_LUA_INTEGER();
+
+	return BaseClass::ItemShouldRespawn( pItem );
+}
+#endif
+
+
 //=========================================================
 // CanHaveWeapon - returns false if the player is not allowed
 // to pick up this weapon
