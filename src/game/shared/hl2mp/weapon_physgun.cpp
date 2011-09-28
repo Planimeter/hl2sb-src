@@ -498,6 +498,15 @@ BEGIN_DATADESC( CWeaponGravityGun )
 	DEFINE_FIELD( m_movementLength,		FIELD_FLOAT ),
 	DEFINE_FIELD( m_soundState,			FIELD_INTEGER ),
 	DEFINE_FIELD( m_originalObjectPosition,	FIELD_POSITION_VECTOR ),
+#ifdef ARGG
+	// adnan
+	DEFINE_FIELD( m_bIsCurrentlyRotating, FIELD_BOOLEAN ),
+	// end adnan
+#endif
+	DEFINE_SOUNDPATCH( m_sndMotor ),
+	DEFINE_SOUNDPATCH( m_sndLockedOn ),
+	DEFINE_SOUNDPATCH( m_sndLightObject ),
+	DEFINE_SOUNDPATCH( m_sndHeavyObject ),
 	DEFINE_EMBEDDED( m_gravCallback ),
 	// Physptrs can't be saved in embedded classes..
 	DEFINE_PHYSPTR( m_gravCallback.m_controller ),

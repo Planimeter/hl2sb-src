@@ -431,6 +431,10 @@ BEGIN_DATADESC( CWeaponGravityGun )
 	DEFINE_FIELD( m_lastYaw,				FIELD_FLOAT ),
 	DEFINE_FIELD( m_soundState,			FIELD_INTEGER ),
 	DEFINE_FIELD( m_originalObjectPosition,	FIELD_POSITION_VECTOR ),
+	DEFINE_SOUNDPATCH( m_sndMotor ),
+	DEFINE_SOUNDPATCH( m_sndLockedOn ),
+	DEFINE_SOUNDPATCH( m_sndLightObject ),
+	DEFINE_SOUNDPATCH( m_sndHeavyObject ),
 	DEFINE_EMBEDDED( m_gravCallback ),
 	// Physptrs can't be saved in embedded classes..
 	DEFINE_PHYSPTR( m_gravCallback.m_controller ),
