@@ -351,12 +351,12 @@ public:
 			lua_pushinteger( L, color[2] );
 		END_LUA_CALL_HOOK( 4, 3 );
 
-		if ( lua_isnumber( L, 3 ) )
-			color[2] = luaL_checkinteger( L, 3 );
-		if ( lua_isnumber( L, 2 ) )
-			color[1] = luaL_checkinteger( L, 2 );
-		if ( lua_isnumber( L, 1 ) )
-			color[0] = luaL_checkinteger( L, 1 );
+		if ( lua_isnumber( L, -3 ) )
+			color[2] = luaL_checkinteger( L, -3 );
+		if ( lua_isnumber( L, -2 ) )
+			color[1] = luaL_checkinteger( L, -2 );
+		if ( lua_isnumber( L, -1 ) )
+			color[0] = luaL_checkinteger( L, -1 );
 
 		lua_pop( L, 3 );
 #endif
