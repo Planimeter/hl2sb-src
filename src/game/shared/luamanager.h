@@ -242,6 +242,8 @@ LUA_API int   (luasrc_dofile) (lua_State *L, const char *filename);
 LUA_API void  (luasrc_dofolder) (lua_State *L, const char *path);
 
 LUA_API int   (luasrc_pcall) (lua_State *L, int nargs, int nresults, int errfunc);
+LUA_API void  (luasrc_print) (lua_State *L, int narg);
+LUA_API void  (luasrc_dumpstack) (lua_State *L);
 
 // void    luasrc_LoadEffects (void);
 void       luasrc_LoadEntities (void);
