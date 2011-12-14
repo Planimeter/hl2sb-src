@@ -215,6 +215,8 @@ void luasrc_init (void) {
   // Andrew; Someone set us up the path for great justice
   luasrc_setmodulepaths(L);
 
+  // TODO: Move this all to a sort of Source linit.c(pp) file, and do
+  // luasrc_openlibs(L) instead
   luaopen_CBaseAnimating(L);
   luaopen_engine(L);
   luaopen_CBaseCombatWeapon(L);
@@ -362,7 +364,7 @@ LUA_API void luasrc_print(lua_State *L, int narg) {
   lua_getglobal(L, "tostring");
   const char *s;
   lua_pushvalue(L, -1);  /* function to be called */
-  lua_pushvalue(L, narg-1);   /* value to print */
+  lua_pushvalue(L, narg);   /* value to print */
   lua_call(L, 1, 1);
   s = lua_tostring(L, -1);  /* get result */
   Msg( " %d:\t%s\n", narg, s );
