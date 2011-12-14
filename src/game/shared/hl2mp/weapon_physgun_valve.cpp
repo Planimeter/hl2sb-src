@@ -1020,24 +1020,8 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	Vector color;
 	color.Init(1,1,1);
 
-	float flWidthRatio = engine->GetScreenAspectRatio() / ( 4.0f / 3.0f );
-
 	// Now draw it.
-	CViewSetup beamView;
-	beamView.x = 0;
-	beamView.y = 0;
-	beamView.width = ScreenWidth();
-	beamView.height = ScreenHeight();
-
-	beamView.m_bOrtho = false;
-
-	// scale the FOV for aspect ratios other than 4/3
-	beamView.fov = ScaleFOVByWidthRatio( pOwner->GetFOV(), flWidthRatio );
-
-	beamView.origin = pOwner->EyePosition();
-	beamView.angles = pOwner->EyeAngles();
-	beamView.zNear = view->GetZNear();
-	beamView.zFar = view->GetZFar();
+	CViewSetup beamView = *view->GetPlayerViewSetup();
 
 	Frustum dummyFrustum;
 	render->Push3DView( beamView, 0, NULL, dummyFrustum );
