@@ -41,6 +41,7 @@
 #include "lfilesystem.h"
 #include "lgametrace.h"
 #include "lglobalvars_base.h"
+#include "lhl2mp_player_shared.h"
 #include "licvar.h"
 #include "materialsystem/limaterial.h"
 #include "steam/listeamfriends.h"
@@ -234,6 +235,7 @@ void luasrc_init (void) {
   luaopen_filesystem(L);
   luaopen_CGameTrace(L);
   luaopen_gpGlobals(L);
+  luaopen_CHL2MP_Player_shared(L);
   luaopen_cvar(L);
   luaopen_IMaterial(L);
   luaopen_ISteamFriends(L);

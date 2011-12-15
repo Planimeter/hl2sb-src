@@ -4544,6 +4544,14 @@
 					RelativePath="..\shared\hl2mp\hl2mp_weapon_parse.h"
 					>
 				</File>
+				<File
+					RelativePath="..\shared\hl2mp\lhl2mp_player_shared.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shared\hl2mp\lhl2mp_player_shared.h"
+					>
+				</File>
 				<Filter
 					Name="Weapons"
 					>

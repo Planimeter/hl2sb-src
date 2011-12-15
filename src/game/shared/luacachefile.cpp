@@ -44,5 +44,5 @@ LUA_API void luasrc_AddFileToLcf( const char *relativename, const char *fullpath
 
 LUA_API void luasrc_parsefromdownloadables ()
 {
-	INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
+	// INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
 }
