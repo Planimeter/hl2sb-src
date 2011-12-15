@@ -115,13 +115,13 @@ void CBaseScripted::InitScriptedEntity( void )
 		return;
 #endif
 
-	//SetTouch( &CBaseScripted::Touch );
-
 	SetThink( &CBaseScripted::Think );
 #ifdef CLIENT_DLL
 	SetNextClientThink( gpGlobals->curtime );
 #endif
 	SetNextThink( gpGlobals->curtime );
+
+	SetTouch( &CBaseScripted::Touch );
 
 	char className[ 255 ];
 #if defined ( CLIENT_DLL )
@@ -221,6 +221,33 @@ void CBaseScripted::Think()
 #ifdef LUA_SDK
 	BEGIN_LUA_CALL_ENTITY_METHOD( "Think" );
 	END_LUA_CALL_ENTITY_METHOD( 0, 0 );
+#endif
+}
+
+void CBaseScripted::StartTouch( CBaseEntity *pOther )
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_ENTITY_METHOD( "StartTouch" );
+		lua_pushentity( L, pOther );
+	END_LUA_CALL_ENTITY_METHOD( 1, 0 );
+#endif
+}
+
+void CBaseScripted::Touch( CBaseEntity *pOther )
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_ENTITY_METHOD( "Touch" );
+		lua_pushentity( L, pOther );
+	END_LUA_CALL_ENTITY_METHOD( 1, 0 );
+#endif
+}
+
+void CBaseScripted::EndTouch( CBaseEntity *pOther )
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_ENTITY_METHOD( "EndTouch" );
+		lua_pushentity( L, pOther );
+	END_LUA_CALL_ENTITY_METHOD( 1, 0 );
 #endif
 }
 

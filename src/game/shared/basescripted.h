@@ -38,6 +38,10 @@ public:
 	void	Precache( void );
 	void	InitScriptedEntity( void );
 
+	void	StartTouch( CBaseEntity *pOther );
+	void	Touch( CBaseEntity *pOther ); 
+	void	EndTouch( CBaseEntity *pOther );
+
 #ifdef CLIENT_DLL
 	// model specific
 	virtual int DrawModel( int flags );
