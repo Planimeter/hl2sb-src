@@ -430,7 +430,7 @@ void luasrc_LoadEntities (void)
 							lua_getglobal( L, "entity" );
 							if ( lua_istable( L, -1 ) )
 							{
-								lua_getfield( L, -1, "Register" );
+								lua_getfield( L, -1, "register" );
 								if ( lua_isfunction( L, -1 ) )
 								{
 									lua_remove( L, -2 );
@@ -504,7 +504,7 @@ void luasrc_LoadWeapons (void)
 							lua_getglobal( L, "weapon" );
 							if ( lua_istable( L, -1 ) )
 							{
-								lua_getfield( L, -1, "Register" );
+								lua_getfield( L, -1, "register" );
 								if ( lua_isfunction( L, -1 ) )
 								{
 									lua_remove( L, -2 );
@@ -539,7 +539,7 @@ void luasrc_LoadWeapons (void)
 
 bool luasrc_LoadGamemode (const char *gamemode) {
   lua_newtable(L);
-  lua_pushstring(L, "Folder");
+  lua_pushstring(L, "__folder");
   char gamemodepath[MAX_PATH];
   Q_snprintf( gamemodepath, sizeof( gamemodepath ), "gamemodes\\%s", gamemode );
   lua_pushstring(L, gamemodepath);
@@ -557,7 +557,7 @@ bool luasrc_LoadGamemode (const char *gamemode) {
     filesystem->RelativePathToFullPath( filename, "MOD", fullpath, sizeof( fullpath ) );
 	if (luasrc_dofile(L, fullpath) == 0) {
 	  lua_getglobal(L, "gamemode");
-	  lua_getfield(L, -1, "Register");
+	  lua_getfield(L, -1, "register");
 	  lua_remove(L, -2);
 	  lua_getglobal(L, "GM");
 	  lua_pushstring(L, gamemode);
@@ -591,12 +591,12 @@ bool luasrc_LoadGamemode (const char *gamemode) {
 bool luasrc_SetGamemode (const char *gamemode) {
   lua_getglobal(L, "gamemode");
   if (lua_istable(L, -1)) {
-    lua_getfield(L, -1, "Get");
+    lua_getfield(L, -1, "get");
 	if (lua_isfunction(L, -1)) {
 	  lua_remove(L, -2);
 	  lua_pushstring(L, gamemode);
 	  luasrc_pcall(L, 1, 1, 0);
-	  lua_setglobal(L, "GAMEMODE");
+	  lua_setglobal(L, "_GAMEMODE");
 	  BEGIN_LUA_CALL_HOOK("Initialize");
 	  END_LUA_CALL_HOOK(0,0);
 	  return true;

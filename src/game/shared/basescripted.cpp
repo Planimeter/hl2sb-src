@@ -139,7 +139,7 @@ void CBaseScripted::InitScriptedEntity( void )
 	lua_getglobal( L, "entity" );
 	if ( lua_istable( L, -1 ) )
 	{
-		lua_getfield( L, -1, "Get" );
+		lua_getfield( L, -1, "get" );
 		if ( lua_isfunction( L, -1 ) )
 		{
 			lua_remove( L, -2 );

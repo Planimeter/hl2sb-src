@@ -294,7 +294,7 @@ void CHL2MPClientScoreBoardDialog::UpdateTeamInfo()
 #if defined ( LUA_SDK )
 			wchar_t wgamemode[64];
 			const char *gamemode = NULL;
-			lua_getglobal( L, "GAMEMODE" );
+			lua_getglobal( L, "_GAMEMODE" );
 			if ( lua_istable( L, -1 ) )
 			{
 				lua_getfield( L, -1, "Name" );

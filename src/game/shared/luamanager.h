@@ -47,12 +47,12 @@
 #define BEGIN_LUA_CALL_HOOK(functionName) \
   lua_getglobal(L, "hook"); \
   if (lua_istable(L, -1)) { \
-    lua_getfield(L, -1, "Call"); \
+    lua_getfield(L, -1, "call"); \
 	if (lua_isfunction(L, -1)) { \
 	  lua_remove(L, -2); \
 	  int args = 0; \
 	  lua_pushstring(L, functionName); \
-	  lua_getglobal(L, "GAMEMODE"); \
+	  lua_getglobal(L, "_GAMEMODE"); \
 	  args = 2;
 
 #define END_LUA_CALL_HOOK(nArgs, nresults) \
