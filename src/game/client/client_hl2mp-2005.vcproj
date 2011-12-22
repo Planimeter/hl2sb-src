@@ -2605,10 +2605,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\game_controls\scriptedhudviewport.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\game_controls\SpectatorGUI.cpp"
 					>
 				</File>
@@ -3174,6 +3170,14 @@
 				</File>
 				<File
 					RelativePath="..\shared\Multiplayer\multiplayer_animstate.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="scripted_controls"
+				>
+				<File
+					RelativePath=".\scripted_controls\scriptedhudviewport.cpp"
 					>
 				</File>
 			</Filter>
@@ -5562,10 +5566,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\game_controls\scriptedhudviewport.h"
-				>
-			</File>
-			<File
 				RelativePath=".\game_controls\spectatorgui.h"
 				>
 			</File>
@@ -5575,6 +5575,14 @@
 			</File>
 			<File
 				RelativePath=".\game_controls\vguitextwindow.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="scripted_controls Header Files"
+			>
+			<File
+				RelativePath=".\scripted_controls\scriptedhudviewport.h"
 				>
 			</File>
 		</Filter>
