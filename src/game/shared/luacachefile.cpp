@@ -44,5 +44,25 @@ LUA_API void luasrc_AddFileToLcf( const char *relativename, const char *fullpath
 
 LUA_API void luasrc_parsefromdownloadables ()
 {
+	// Andrew; Do we even need this anymore? We're not going to be listing .lua
+	// files in downloadables anyway.
 	// INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
+}
+
+LUA_API void luasrc_ExtractLcf ()
+{
+	INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
+	const char *pFilename = NULL;
+	for ( int i=0; i<downloadables->GetNumStrings(); i++ )
+	{
+		pFilename = downloadables->GetString( i );
+		char ext[ 10 ];
+		Q_ExtractFileExtension( pFilename, ext, sizeof( ext ) );
+
+		if ( !Q_stricmp( ext, "lcf" ) )
+		{
+			// Andrew; extract the .lcf here.
+			break;
+		}
+	}
 }

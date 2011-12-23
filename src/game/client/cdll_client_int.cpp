@@ -96,6 +96,7 @@
 
 #ifdef LUA_SDK
 #include "luamanager.h"
+#include "luacachefile.h"
 #endif
 
 #ifdef HL2SB
@@ -1283,7 +1284,7 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 	// Andrew; unarchive the Lua Cache File
 	if ( gpGlobals->maxClients > 1 )
 	{
-		// luasrc_ExtractLcf();
+		luasrc_ExtractLcf();
 	}
 
 	luasrc_init();
