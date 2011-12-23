@@ -97,6 +97,7 @@
 #ifdef LUA_SDK
 #include "luamanager.h"
 #include "luacachefile.h"
+#include "mountaddons.h"
 #endif
 
 #ifdef HL2SB
@@ -812,6 +813,9 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 #if defined ( HL2SB )
 	//Andrew; then mount everything the user wants to use.
 	MountUserContent();
+
+	// Finally, load all of the player's addons.
+	MountAddons();
 #endif
 
 	if ( CommandLine()->FindParm( "-textmode" ) )

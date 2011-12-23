@@ -87,6 +87,7 @@
 
 #ifdef LUA_SDK
 #include "luamanager.h"
+#include "mountaddons.h"
 #endif
 
 #ifdef HL2SB
@@ -629,6 +630,9 @@ bool CServerGameDLL::DLLInit( CreateInterfaceFn appSystemFactory,
 #if defined ( HL2SB )
 	//Andrew; then mount everything the user wants to use.
 	MountUserContent();
+
+	// Finally, load all of the player's addons.
+	MountAddons();
 #endif
 
 	// cache the globals

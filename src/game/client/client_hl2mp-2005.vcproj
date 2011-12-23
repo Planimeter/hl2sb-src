@@ -1534,6 +1534,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\mountaddons.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\mountaddons.h"
+				>
+			</File>
+			<File
 				RelativePath="..\shared\mountsteamcontent.cpp"
 				>
 			</File>
