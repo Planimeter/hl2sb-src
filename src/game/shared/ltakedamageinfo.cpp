@@ -34,10 +34,14 @@ LUA_API lua_CTakeDamageInfo *lua_todamageinfo (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushdamageinfo (lua_State *L, lua_CTakeDamageInfo *info) {
-  lua_CTakeDamageInfo *pInfo = (lua_CTakeDamageInfo *)lua_newuserdata(L, sizeof(lua_CTakeDamageInfo));
-  *pInfo = *info;
-  luaL_getmetatable(L, "CTakeDamageInfo");
-  lua_setmetatable(L, -2);
+  if (&info == NULL)
+    lua_pushnil(L);
+  else {
+    lua_CTakeDamageInfo *pInfo = (lua_CTakeDamageInfo *)lua_newuserdata(L, sizeof(lua_CTakeDamageInfo));
+    *pInfo = *info;
+    luaL_getmetatable(L, "CTakeDamageInfo");
+    lua_setmetatable(L, -2);
+  }
 }
 
 
