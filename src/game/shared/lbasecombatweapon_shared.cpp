@@ -22,10 +22,10 @@
 
 
 LUA_API lua_CBaseCombatWeapon *lua_toweapon (lua_State *L, int idx) {
-  CBaseHandle *hWeapon = (CBaseHandle *)lua_touserdata(L, idx);
+  CBaseHandle *hWeapon = dynamic_cast<CBaseHandle *>((CBaseHandle *)lua_touserdata(L, idx));
   if (hWeapon == NULL)
     return NULL;
-  return (lua_CBaseCombatWeapon *)hWeapon->Get();
+  return dynamic_cast<lua_CBaseCombatWeapon *>(hWeapon->Get());
 }
 
 

@@ -25,14 +25,14 @@
 
 
 LUA_API lua_ConCommand *lua_toconcommand (lua_State *L, int idx) {
-  lua_ConCommand **ppConCommand = (lua_ConCommand **)luaL_checkudata(L, idx, "ConCommand");
-  return *ppConCommand;
+  lua_ConCommand *pConCommand = (lua_ConCommand *)lua_touserdata(L, idx);
+  return pConCommand;
 }
 
 
 LUA_API lua_ConVar *lua_toconvar (lua_State *L, int idx) {
-  lua_ConVar **ppConVar = (lua_ConVar **)luaL_checkudata(L, idx, "ConVar");
-  return *ppConVar;
+  lua_ConVar *pConVar = (lua_ConVar *)lua_touserdata(L, idx);
+  return pConVar;
 }
 
 
@@ -46,8 +46,7 @@ LUA_API void lua_pushconcommand (lua_State *L, lua_ConCommand *pConCommand) {
   if (pConCommand == NULL)
     lua_pushnil(L);
   else {
-    lua_ConCommand **ppConCommand = (lua_ConCommand **)lua_newuserdata(L, sizeof(lua_ConCommand));
-    *ppConCommand = pConCommand;
+    lua_pushlightuserdata(L, pConCommand);
     luaL_getmetatable(L, "ConCommand");
     lua_setmetatable(L, -2);
   }
@@ -58,8 +57,7 @@ LUA_API void lua_pushconvar (lua_State *L, lua_ConVar *pConVar) {
   if (pConVar == NULL)
     lua_pushnil(L);
   else {
-    lua_ConVar **ppConVar = (lua_ConVar **)lua_newuserdata(L, sizeof(lua_ConVar));
-    *ppConVar = pConVar;
+    lua_pushlightuserdata(L, pConVar);
     luaL_getmetatable(L, "ConVar");
     lua_setmetatable(L, -2);
   }
@@ -67,29 +65,25 @@ LUA_API void lua_pushconvar (lua_State *L, lua_ConVar *pConVar) {
 
 
 LUALIB_API lua_ConCommand *luaL_checkconcommand (lua_State *L, int narg) {
-  lua_ConCommand *d = lua_toconcommand(L, narg);
-  if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_typerror(L, narg, "ConCommand");
+  lua_ConCommand *d = (lua_ConCommand *)luaL_checkudata(L, narg, "ConCommand");
   return d;
 }
 
 
 LUALIB_API lua_ConVar *luaL_checkconvar (lua_State *L, int narg) {
-  lua_ConVar *d = lua_toconvar(L, narg);
-  if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_typerror(L, narg, "ConVar");
+  lua_ConVar *d = (lua_ConVar *)luaL_checkudata(L, narg, "ConVar");
   return d;
 }
 
 
 static int ConCommand_CanAutoComplete (lua_State *L) {
   lua_pushboolean(L, luaL_checkconcommand(L, 1)->CanAutoComplete());
-  return 0;
+  return 1;
 }
 
 static int ConCommand_IsCommand (lua_State *L) {
   lua_pushboolean(L, luaL_checkconcommand(L, 1)->IsCommand());
-  return 0;
+  return 1;
 }
 
 static int ConCommand___tostring (lua_State *L) {

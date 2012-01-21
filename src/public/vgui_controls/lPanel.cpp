@@ -28,7 +28,9 @@ using namespace vgui;
 
 
 LUA_API lua_Panel *lua_topanel (lua_State *L, int idx) {
-  PHandle *hPanel = (PHandle *)luaL_checkudata(L, idx, "Panel");
+  PHandle *hPanel = dynamic_cast<PHandle *>((PHandle *)lua_touserdata(L, idx));
+  if (hPanel == NULL)
+    return NULL;
   return (lua_Panel *)hPanel->Get();
 }
 
@@ -40,7 +42,7 @@ LUA_API lua_Panel *lua_topanel (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushpanel (lua_State *L, Panel *pPanel) {
-  PHandle *hPanel = (PHandle *)lua_newuserdata(L, sizeof(CBaseHandle));
+  PHandle *hPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
   hPanel->Set(pPanel);
   luaL_getmetatable(L, "Panel");
   lua_setmetatable(L, -2);
@@ -48,7 +50,7 @@ LUA_API void lua_pushpanel (lua_State *L, Panel *pPanel) {
 
 
 LUA_API void lua_pushpanel (lua_State *L, VPANEL panel) {
-  PHandle *hPanel = (PHandle *)lua_newuserdata(L, sizeof(CBaseHandle));
+  PHandle *hPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
   hPanel->Set(ivgui()->PanelToHandle(panel));
   luaL_getmetatable(L, "Panel");
   lua_setmetatable(L, -2);

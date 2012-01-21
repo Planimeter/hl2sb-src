@@ -66,13 +66,10 @@ LUA_API lua_FireBulletsInfo_t lua_tofirebulletsinfo (lua_State *L, int idx) {
   if (!lua_isnil(L, -1))
     info.m_pAdditionalIgnoreEnt = lua_toentity(L, -1);
   lua_pop(L, 1);
-  // Andrew; No idea why this is crashing.
-  /*
   lua_getfield(L, idx, "m_pAttacker");
   if (!lua_isnil(L, -1))
     info.m_pAttacker = lua_toentity(L, -1);
   lua_pop(L, 1);
-  */
   lua_getfield(L, idx, "m_vecDirShooting");
   if (!lua_isnil(L, -1))
     info.m_vecDirShooting = *(Vector *)luaL_checkvector(L, -1);

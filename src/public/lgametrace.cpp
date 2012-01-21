@@ -22,7 +22,7 @@
 
 
 LUA_API lua_CGameTrace *lua_totrace (lua_State *L, int idx) {
-  lua_CGameTrace *tr = (lua_CGameTrace *)luaL_checkudata(L, idx, "CGameTrace");
+  lua_CGameTrace *tr = (lua_CGameTrace *)lua_touserdata(L, idx);
   return tr;
 }
 
@@ -34,21 +34,15 @@ LUA_API lua_CGameTrace *lua_totrace (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushtrace (lua_State *L, lua_CGameTrace *tr) {
-  if (&tr == NULL)
-    lua_pushnil(L);
-  else {
-    lua_CGameTrace *ptr = (lua_CGameTrace *)lua_newuserdata(L, sizeof(lua_CGameTrace));
-    *ptr = *tr;
-    luaL_getmetatable(L, "CGameTrace");
-    lua_setmetatable(L, -2);
-  }
+  lua_CGameTrace *ptr = (lua_CGameTrace *)lua_newuserdata(L, sizeof(lua_CGameTrace));
+  *ptr = *tr;
+  luaL_getmetatable(L, "CGameTrace");
+  lua_setmetatable(L, -2);
 }
 
 
 LUALIB_API lua_CGameTrace *luaL_checktrace (lua_State *L, int narg) {
-  lua_CGameTrace *d = lua_totrace(L, narg);
-  if (&d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_typerror(L, narg, "CGameTrace");
+  lua_CGameTrace *d = (lua_CGameTrace *)luaL_checkudata(L, narg, "CGameTrace");
   return d;
 }
 

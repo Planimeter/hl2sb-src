@@ -32,10 +32,10 @@
 
 
 LUA_API lua_CBaseEntity *lua_toentity (lua_State *L, int idx) {
-  CBaseHandle *hEntity = (CBaseHandle *)lua_touserdata(L, idx);
+  CBaseHandle *hEntity = dynamic_cast<CBaseHandle *>((CBaseHandle *)lua_touserdata(L, idx));
   if (hEntity == NULL)
     return NULL;
-  return (lua_CBaseEntity *)hEntity->Get();
+  return dynamic_cast<lua_CBaseEntity *>(hEntity->Get());
 }
 
 

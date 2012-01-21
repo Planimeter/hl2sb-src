@@ -28,7 +28,7 @@
 
 
 LUA_API lua_CEffectData *lua_toeffect (lua_State *L, int idx) {
-  lua_CEffectData *data = (lua_CEffectData *)luaL_checkudata(L, idx, "CEffectData");
+  lua_CEffectData *data = (lua_CEffectData *)lua_touserdata(L, idx);
   return data;
 }
 
@@ -40,21 +40,15 @@ LUA_API lua_CEffectData *lua_toeffect (lua_State *L, int idx) {
 
 
 LUA_API void lua_pusheffect (lua_State *L, lua_CEffectData *data) {
-  if (&data == NULL)
-    lua_pushnil(L);
-  else {
-    lua_CEffectData *pData = (lua_CEffectData *)lua_newuserdata(L, sizeof(lua_CEffectData));
-    *pData = *data;
-    luaL_getmetatable(L, "CEffectData");
-    lua_setmetatable(L, -2);
-  }
+  lua_CEffectData *pData = (lua_CEffectData *)lua_newuserdata(L, sizeof(lua_CEffectData));
+  *pData = *data;
+  luaL_getmetatable(L, "CEffectData");
+  lua_setmetatable(L, -2);
 }
 
 
 LUALIB_API lua_CEffectData *luaL_checkeffect (lua_State *L, int narg) {
-  lua_CEffectData *d = lua_toeffect(L, narg);
-  if (&d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_typerror(L, narg, "CEffectData");
+  lua_CEffectData *d = (lua_CEffectData *)luaL_checkudata(L, narg, "CEffectData");
   return d;
 }
 

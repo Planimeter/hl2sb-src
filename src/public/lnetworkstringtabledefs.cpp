@@ -22,18 +22,8 @@
 
 
 LUA_API lua_INetworkStringTable *lua_tostringtable (lua_State *L, int idx) {
-  if (!lua_isuserdata(L, idx))
-    luaL_typerror(L, idx, "INetworkStringTable");
-  if (lua_getmetatable(L, idx)) {
-    lua_pushstring(L, "__type");
-	lua_rawget(L, -2);
-	if (!lua_isstring(L, -1))
-	  lua_pop(L, 2);
-	else if (Q_strcmp(luaL_checkstring(L, -1), "networkstringtable") != 0)
-	  luaL_typerror(L, idx, "INetworkStringTable");
-  }
-  lua_INetworkStringTable **ppNetworkStringTable = (lua_INetworkStringTable **)luaL_checkudata(L, idx, "INetworkStringTable");
-  return *ppNetworkStringTable;
+  lua_INetworkStringTable *pNetworkStringTable = (lua_INetworkStringTable *)lua_touserdata(L, idx);
+  return pNetworkStringTable;
 }
 
 
@@ -44,21 +34,14 @@ LUA_API lua_INetworkStringTable *lua_tostringtable (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushstringtable (lua_State *L, lua_INetworkStringTable *pNetworkStringTable) {
-  if (pNetworkStringTable == NULL)
-    lua_pushnil(L);
-  else {
-    lua_INetworkStringTable **ppNetworkStringTable = (lua_INetworkStringTable **)lua_newuserdata(L, sizeof(lua_INetworkStringTable));
-    *ppNetworkStringTable = pNetworkStringTable;
-    luaL_getmetatable(L, "INetworkStringTable");
-    lua_setmetatable(L, -2);
-  }
+  lua_pushlightuserdata(L, pNetworkStringTable);
+  luaL_getmetatable(L, "INetworkStringTable");
+  lua_setmetatable(L, -2);
 }
 
 
 LUALIB_API lua_INetworkStringTable *luaL_checkstringtable (lua_State *L, int narg) {
-  lua_INetworkStringTable *d = lua_tostringtable(L, narg);
-  if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_typerror(L, narg, "INetworkStringTable");
+  lua_INetworkStringTable *d = (lua_INetworkStringTable *)luaL_checkudata(L, narg, "INetworkStringTable");
   return d;
 }
 

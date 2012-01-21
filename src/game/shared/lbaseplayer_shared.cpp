@@ -23,10 +23,10 @@
 
 
 LUA_API lua_CBasePlayer *lua_toplayer (lua_State *L, int idx) {
-  CBaseHandle *hPlayer = (CBaseHandle *)lua_touserdata(L, idx);
+  CBaseHandle *hPlayer = dynamic_cast<CBaseHandle *>((CBaseHandle *)lua_touserdata(L, idx));
   if (hPlayer == NULL)
     return NULL;
-  return (lua_CBasePlayer *)hPlayer->Get();
+  return dynamic_cast<lua_CBasePlayer *>(hPlayer->Get());
 }
 
 

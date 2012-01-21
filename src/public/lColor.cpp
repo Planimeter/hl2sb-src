@@ -46,9 +46,7 @@ LUA_API void lua_pushcolor (lua_State *L, lua_Color *clr) {
 
 
 LUALIB_API lua_Color *luaL_checkcolor (lua_State *L, int narg) {
-  lua_Color *d = lua_tocolor(L, narg);
-  if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_typerror(L, narg, "Color");
+  lua_Color *d = (lua_Color *)luaL_checkudata(L, narg, "Color");
   return d;
 }
 
