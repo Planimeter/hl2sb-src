@@ -23,17 +23,9 @@
 
 
 LUA_API lua_CBaseAnimating *lua_toanimating (lua_State *L, int idx) {
-  if (!lua_isuserdata(L, idx))
-    luaL_typerror(L, idx, "CBaseAnimating");
-  if (lua_getmetatable(L, idx)) {
-    lua_pushstring(L, "__type");
-	lua_rawget(L, -2);
-	if (!lua_isstring(L, -1))
-	  lua_pop(L, 2);
-	else if (Q_strcmp(luaL_checkstring(L, -1), "entity") != 0)
-	  luaL_typerror(L, idx, "CBaseAnimating");
-  }
   CBaseHandle *hEntity = (CBaseHandle *)lua_touserdata(L, idx);
+  if (hEntity == NULL)
+    return NULL;
   return (lua_CBaseAnimating *)hEntity->Get();
 }
 

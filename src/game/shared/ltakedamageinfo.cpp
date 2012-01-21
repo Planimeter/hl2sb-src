@@ -22,7 +22,7 @@
 
 
 LUA_API lua_CTakeDamageInfo *lua_todamageinfo (lua_State *L, int idx) {
-  lua_CTakeDamageInfo *info = (lua_CTakeDamageInfo *)luaL_checkudata(L, idx, "CTakeDamageInfo");
+  lua_CTakeDamageInfo *info = (lua_CTakeDamageInfo *)lua_touserdata(L, idx);
   return info;
 }
 
@@ -34,7 +34,7 @@ LUA_API lua_CTakeDamageInfo *lua_todamageinfo (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushdamageinfo (lua_State *L, lua_CTakeDamageInfo *info) {
-  if (&info == NULL)
+  if (info == NULL)
     lua_pushnil(L);
   else {
     lua_CTakeDamageInfo *pInfo = (lua_CTakeDamageInfo *)lua_newuserdata(L, sizeof(lua_CTakeDamageInfo));
@@ -47,7 +47,7 @@ LUA_API void lua_pushdamageinfo (lua_State *L, lua_CTakeDamageInfo *info) {
 
 LUALIB_API lua_CTakeDamageInfo *luaL_checkdamageinfo (lua_State *L, int narg) {
   lua_CTakeDamageInfo *d = lua_todamageinfo(L, narg);
-  if (&d == NULL)  /* avoid extra test when d is not 0 */
+  if (d == NULL)  /* avoid extra test when d is not 0 */
     luaL_typerror(L, narg, "CTakeDamageInfo");
   return d;
 }

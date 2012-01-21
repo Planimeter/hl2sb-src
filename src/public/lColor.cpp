@@ -22,7 +22,7 @@
 
 
 LUA_API lua_Color *lua_tocolor (lua_State *L, int idx) {
-  lua_Color *clr = (lua_Color *)luaL_checkudata(L, idx, "Color");
+  lua_Color *clr = (lua_Color *)lua_touserdata(L, idx);
   return clr;
 }
 

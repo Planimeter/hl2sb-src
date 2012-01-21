@@ -23,13 +23,13 @@
 
 
 LUA_API lua_Vector *lua_tovector (lua_State *L, int idx) {
-  lua_Vector *v = (lua_Vector *)luaL_checkudata(L, idx, "Vector");
+  lua_Vector *v = (lua_Vector *)lua_touserdata(L, idx);
   return v;
 }
 
 
 LUA_API lua_QAngle *lua_toangle (lua_State *L, int idx) {
-  lua_QAngle *v = (lua_QAngle *)luaL_checkudata(L, idx, "QAngle");
+  lua_QAngle *v = (lua_QAngle *)lua_touserdata(L, idx);
   return v;
 }
 
@@ -81,23 +81,23 @@ LUALIB_API lua_QAngle *luaL_checkangle (lua_State *L, int narg) {
 
 
 static int Vector_Cross (lua_State *L) {
-  Vector v = luaL_checkvector(L, 1)->Cross(*(Vector *)luaL_checkvector(L, 2));
+  Vector v = luaL_checkvector(L, 1)->Cross(*luaL_checkvector(L, 2));
   lua_pushvector(L, &v);
   return 1;
 }
 
 static int Vector_DistTo (lua_State *L) {
-  lua_pushnumber(L, luaL_checkvector(L, 1)->DistTo(*(Vector *)luaL_checkvector(L, 2)));
+  lua_pushnumber(L, luaL_checkvector(L, 1)->DistTo(*luaL_checkvector(L, 2)));
   return 1;
 }
 
 static int Vector_DistToSqr (lua_State *L) {
-  lua_pushnumber(L, luaL_checkvector(L, 1)->DistToSqr(*(Vector *)luaL_checkvector(L, 2)));
+  lua_pushnumber(L, luaL_checkvector(L, 1)->DistToSqr(*luaL_checkvector(L, 2)));
   return 1;
 }
 
 static int Vector_Dot (lua_State *L) {
-  lua_pushnumber(L, luaL_checkvector(L, 1)->Dot(*(Vector *)luaL_checkvector(L, 2)));
+  lua_pushnumber(L, luaL_checkvector(L, 1)->Dot(*luaL_checkvector(L, 2)));
   return 1;
 }
 
@@ -147,19 +147,19 @@ static int Vector_LengthSqr (lua_State *L) {
 }
 
 static int Vector_Max (lua_State *L) {
-  Vector v = luaL_checkvector(L, 1)->Max(*(Vector *)luaL_checkvector(L, 2));
+  Vector v = luaL_checkvector(L, 1)->Max(*luaL_checkvector(L, 2));
   lua_pushvector(L, &v);
   return 1;
 }
 
 static int Vector_Min (lua_State *L) {
-  Vector v = luaL_checkvector(L, 1)->Min(*(Vector *)luaL_checkvector(L, 2));
+  Vector v = luaL_checkvector(L, 1)->Min(*luaL_checkvector(L, 2));
   lua_pushvector(L, &v);
   return 1;
 }
 
 static int Vector_MulAdd (lua_State *L) {
-  luaL_checkvector(L, 1)->MulAdd(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), luaL_checknumber(L, 4));
+  luaL_checkvector(L, 1)->MulAdd(*luaL_checkvector(L, 2), *luaL_checkvector(L, 3), luaL_checknumber(L, 4));
   return 0;
 }
 
@@ -179,7 +179,7 @@ static int Vector_Random (lua_State *L) {
 }
 
 static int Vector_WithinAABox (lua_State *L) {
-  lua_pushboolean(L, luaL_checkvector(L, 1)->WithinAABox(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3)));
+  lua_pushboolean(L, luaL_checkvector(L, 1)->WithinAABox(*luaL_checkvector(L, 2), *luaL_checkvector(L, 3)));
   return 1;
 }
 
@@ -224,36 +224,36 @@ static int Vector___tostring (lua_State *L) {
 }
 
 static int Vector___eq (lua_State *L) {
-  lua_pushboolean(L, *(Vector *)luaL_checkvector(L, 1) == *(Vector *)luaL_checkvector(L, 2));
+  lua_pushboolean(L, *luaL_checkvector(L, 1) == *luaL_checkvector(L, 2));
   return 1;
 }
 
 static int Vector___add (lua_State *L) {
-  Vector res = *(Vector *)luaL_checkvector(L, 1) + *(Vector *)luaL_checkvector(L, 2);
+  Vector res = *luaL_checkvector(L, 1) + *luaL_checkvector(L, 2);
   lua_pushvector(L, &res);
   return 1;
 }
 
 static int Vector___sub (lua_State *L) {
-  Vector res = *(Vector *)luaL_checkvector(L, 1) - *(Vector *)luaL_checkvector(L, 2);
+  Vector res = *luaL_checkvector(L, 1) - *luaL_checkvector(L, 2);
   lua_pushvector(L, &res);
   return 1;
 }
 
 static int Vector___mul (lua_State *L) {
-  Vector res = *(Vector *)luaL_checkvector(L, 1) * luaL_checknumber(L, 2);
+  Vector res = *luaL_checkvector(L, 1) * luaL_checknumber(L, 2);
   lua_pushvector(L, &res);
   return 1;
 }
 
 static int Vector___div (lua_State *L) {
-  Vector res = *(Vector *)luaL_checkvector(L, 1) / luaL_checknumber(L, 2);
+  Vector res = *luaL_checkvector(L, 1) / luaL_checknumber(L, 2);
   lua_pushvector(L, &res);
   return 1;
 }
 
 static int Vector___unm (lua_State *L) {
-  Vector v = -*(Vector *)luaL_checkvector(L, 1);
+  Vector v = -*luaL_checkvector(L, 1);
   lua_pushvector(L, &v);
   return 1;
 }
@@ -394,14 +394,14 @@ static int QAngle___eq (lua_State *L) {
 
 static int QAngle___add (lua_State *L) {
   QAngle result;
-  VectorAdd(*(QAngle *)luaL_checkangle(L, 1), *(QAngle *)luaL_checkangle(L, 2), result);
+  VectorAdd(*luaL_checkangle(L, 1), *luaL_checkangle(L, 2), result);
   lua_pushangle(L, &result);
   return 1;
 }
 
 static int QAngle___sub (lua_State *L) {
-  QAngle a = *(QAngle *)luaL_checkangle(L, 1);
-  QAngle b = *(QAngle *)luaL_checkangle(L, 2);
+  QAngle a = *luaL_checkangle(L, 1);
+  QAngle b = *luaL_checkangle(L, 2);
   QAngle c;
   c.x = a.x - b.x;
   c.y = a.y - b.y;
@@ -411,7 +411,7 @@ static int QAngle___sub (lua_State *L) {
 }
 
 static int QAngle___mul (lua_State *L) {
-  QAngle in = *(QAngle *)luaL_checkangle(L, 1);
+  QAngle in = *luaL_checkangle(L, 1);
   float scale = luaL_checknumber(L, 2);
   QAngle out;
   out[0] = in[0]*scale;
@@ -422,7 +422,7 @@ static int QAngle___mul (lua_State *L) {
 }
 
 static int QAngle___div (lua_State *L) {
-  QAngle a = *(QAngle *)luaL_checkangle(L, 1);
+  QAngle a = *luaL_checkangle(L, 1);
   float b = luaL_checknumber(L, 2);
   QAngle c;
   CHECK_VALID(a);
@@ -436,7 +436,7 @@ static int QAngle___div (lua_State *L) {
 }
 
 static int QAngle___unm (lua_State *L) {
-  QAngle a = *(QAngle *)luaL_checkangle(L, 1);
+  QAngle a = *luaL_checkangle(L, 1);
   a.x = -a.x;
   a.y = -a.y;
   a.z = -a.z;

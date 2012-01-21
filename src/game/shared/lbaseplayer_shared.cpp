@@ -23,7 +23,9 @@
 
 
 LUA_API lua_CBasePlayer *lua_toplayer (lua_State *L, int idx) {
-  CBaseHandle *hPlayer = (CBaseHandle *)luaL_checkudata(L, idx, "CBasePlayer");
+  CBaseHandle *hPlayer = (CBaseHandle *)lua_touserdata(L, idx);
+  if (hPlayer == NULL)
+    return NULL;
   return (lua_CBasePlayer *)hPlayer->Get();
 }
 

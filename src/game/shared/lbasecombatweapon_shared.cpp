@@ -22,7 +22,9 @@
 
 
 LUA_API lua_CBaseCombatWeapon *lua_toweapon (lua_State *L, int idx) {
-  CBaseHandle *hWeapon = (CBaseHandle *)luaL_checkudata(L, idx, "CBaseCombatWeapon");
+  CBaseHandle *hWeapon = (CBaseHandle *)lua_touserdata(L, idx);
+  if (hWeapon == NULL)
+    return NULL;
   return (lua_CBaseCombatWeapon *)hWeapon->Get();
 }
 

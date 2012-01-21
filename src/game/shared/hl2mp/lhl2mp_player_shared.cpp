@@ -35,7 +35,9 @@
 
 
 LUA_API lua_CHL2MP_Player *lua_tohl2mpplayer (lua_State *L, int idx) {
-  CBaseHandle *hPlayer = (CBaseHandle *)luaL_checkudata(L, idx, "CHL2MP_Player");
+  CBaseHandle *hPlayer = (CBaseHandle *)lua_touserdata(L, idx);
+  if (hPlayer == NULL)
+    return NULL;
   return (lua_CHL2MP_Player *)hPlayer->Get();
 }
 
