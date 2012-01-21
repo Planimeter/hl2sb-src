@@ -40,10 +40,14 @@ LUA_API lua_CEffectData *lua_toeffect (lua_State *L, int idx) {
 
 
 LUA_API void lua_pusheffect (lua_State *L, lua_CEffectData *data) {
-  lua_CEffectData *pData = (lua_CEffectData *)lua_newuserdata(L, sizeof(lua_CEffectData));
-  *pData = *data;
-  luaL_getmetatable(L, "CEffectData");
-  lua_setmetatable(L, -2);
+  if (&data == NULL)
+    lua_pushnil(L);
+  else {
+    lua_CEffectData *pData = (lua_CEffectData *)lua_newuserdata(L, sizeof(lua_CEffectData));
+    *pData = *data;
+    luaL_getmetatable(L, "CEffectData");
+    lua_setmetatable(L, -2);
+  }
 }
 
 

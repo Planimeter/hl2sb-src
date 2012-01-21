@@ -24,8 +24,8 @@
 
 
 LUA_API lua_IMaterial *lua_tomaterial (lua_State *L, int idx) {
-  lua_IMaterial *pMaterial = (lua_IMaterial *)lua_touserdata(L, idx);
-  return pMaterial;
+  lua_IMaterial **ppMaterial = (lua_IMaterial **)lua_touserdata(L, idx);
+  return *ppMaterial;
 }
 
 
@@ -36,9 +36,14 @@ LUA_API lua_IMaterial *lua_tomaterial (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushmaterial (lua_State *L, lua_IMaterial *pMaterial) {
-  lua_pushlightuserdata(L, pMaterial);
-  luaL_getmetatable(L, "IMaterial");
-  lua_setmetatable(L, -2);
+  if (pMaterial == NULL)
+    lua_pushnil(L);
+  else {
+    lua_IMaterial **ppMaterial = (lua_IMaterial **)lua_newuserdata(L, sizeof(lua_IMaterial));
+    *ppMaterial = pMaterial;
+    luaL_getmetatable(L, "IMaterial");
+    lua_setmetatable(L, -2);
+  }
 }
 
 

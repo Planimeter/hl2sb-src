@@ -22,8 +22,8 @@
 
 
 LUA_API lua_ISteamFriends *lua_tosteamfriends (lua_State *L, int idx) {
-  lua_ISteamFriends *pSteamFriends = (lua_ISteamFriends *)lua_touserdata(L, idx);
-  return pSteamFriends;
+  lua_ISteamFriends **ppSteamFriends = (lua_ISteamFriends **)lua_touserdata(L, idx);
+  return *ppSteamFriends;
 }
 
 
@@ -34,9 +34,14 @@ LUA_API lua_ISteamFriends *lua_tosteamfriends (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushsteamfriends (lua_State *L, ISteamFriends *pSteamFriends) {
-  lua_pushlightuserdata(L, pSteamFriends);
-  luaL_getmetatable(L, "ISteamFriends");
-  lua_setmetatable(L, -2);
+  if (pSteamFriends == NULL)
+    lua_pushnil(L);
+  else {
+    lua_ISteamFriends **ppSteamFriends = (lua_ISteamFriends **)lua_newuserdata(L, sizeof(lua_ISteamFriends));
+    *ppSteamFriends = pSteamFriends;
+    luaL_getmetatable(L, "ISteamFriends");
+    lua_setmetatable(L, -2);
+  }
 }
 
 
