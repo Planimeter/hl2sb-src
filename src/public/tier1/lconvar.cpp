@@ -25,14 +25,14 @@
 
 
 LUA_API lua_ConCommand *lua_toconcommand (lua_State *L, int idx) {
-  lua_ConCommand *pConCommand = (lua_ConCommand *)lua_touserdata(L, idx);
-  return pConCommand;
+  lua_ConCommand **ppConCommand = (lua_ConCommand **)lua_touserdata(L, idx);
+  return *ppConCommand;
 }
 
 
 LUA_API lua_ConVar *lua_toconvar (lua_State *L, int idx) {
-  lua_ConVar *pConVar = (lua_ConVar *)lua_touserdata(L, idx);
-  return pConVar;
+  lua_ConVar **ppConVar = (lua_ConVar **)lua_touserdata(L, idx);
+  return *ppConVar;
 }
 
 
@@ -46,7 +46,8 @@ LUA_API void lua_pushconcommand (lua_State *L, lua_ConCommand *pConCommand) {
   if (pConCommand == NULL)
     lua_pushnil(L);
   else {
-    lua_pushlightuserdata(L, pConCommand);
+    lua_ConCommand **ppConCommand = (lua_ConCommand **)lua_newuserdata(L, sizeof(pConCommand));
+    *ppConCommand = pConCommand;
     luaL_getmetatable(L, "ConCommand");
     lua_setmetatable(L, -2);
   }
@@ -57,7 +58,8 @@ LUA_API void lua_pushconvar (lua_State *L, lua_ConVar *pConVar) {
   if (pConVar == NULL)
     lua_pushnil(L);
   else {
-    lua_pushlightuserdata(L, pConVar);
+    lua_ConVar **ppConVar = (lua_ConVar **)lua_newuserdata(L, sizeof(pConVar));
+    *ppConVar = pConVar;
     luaL_getmetatable(L, "ConVar");
     lua_setmetatable(L, -2);
   }
@@ -65,14 +67,14 @@ LUA_API void lua_pushconvar (lua_State *L, lua_ConVar *pConVar) {
 
 
 LUALIB_API lua_ConCommand *luaL_checkconcommand (lua_State *L, int narg) {
-  lua_ConCommand *d = (lua_ConCommand *)luaL_checkudata(L, narg, "ConCommand");
-  return d;
+  lua_ConCommand **d = (lua_ConCommand **)luaL_checkudata(L, narg, "ConCommand");
+  return *d;
 }
 
 
 LUALIB_API lua_ConVar *luaL_checkconvar (lua_State *L, int narg) {
-  lua_ConVar *d = (lua_ConVar *)luaL_checkudata(L, narg, "ConVar");
-  return d;
+  lua_ConVar **d = (lua_ConVar **)luaL_checkudata(L, narg, "ConVar");
+  return *d;
 }
 
 
