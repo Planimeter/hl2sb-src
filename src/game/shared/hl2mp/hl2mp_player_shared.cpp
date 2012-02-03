@@ -87,7 +87,7 @@ void CHL2MP_Player::PlayStepSound( Vector &vecOrigin, surfacedata_t *psurface, f
 		lua_pushsurfacedata( L, psurface );
 		lua_pushnumber( L, fvol );
 		lua_pushboolean( L, force );
-	END_LUA_CALL_HOOK( 4, 1 );
+	END_LUA_CALL_HOOK( 5, 1 );
 
 	RETURN_LUA_NONE();
 #endif
