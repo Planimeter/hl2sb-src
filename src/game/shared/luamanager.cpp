@@ -45,6 +45,7 @@
 #include "lhl2mp_player_shared.h"
 #include "licvar.h"
 #include "materialsystem/limaterial.h"
+#include "limovehelper.h"
 #include "steam/listeamfriends.h"
 #include "engine/livdebugoverlay.h"
 #include "lnetworkstringtabledefs.h"
@@ -239,6 +240,7 @@ void luasrc_init (void) {
   luaopen_CHL2MP_Player_shared(L);
   luaopen_cvar(L);
   luaopen_IMaterial(L);
+  luaopen_IMoveHelper(L);
   luaopen_ISteamFriends(L);
 #ifdef GAME_DLL
   luaopen_INetChannelInfo(L);
