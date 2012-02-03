@@ -2098,7 +2098,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\limovehelper.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\linetchannelinfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\public\SoundEmitterSystem\lisoundemittersystembase.cpp"
 				>
 			</File>
 			<File
@@ -5246,7 +5254,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\limovehelper.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\linetchannelinfo.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\public\SoundEmitterSystem\lisoundemittersystembase.h"
 				>
 			</File>
 			<File

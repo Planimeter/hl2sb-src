@@ -247,6 +247,12 @@ LUA_API lua_surfacedata_t lua_tosurfacedata (lua_State *L, int idx) {
 }
 
 
+LUA_API lua_IPhysicsSurfaceProps *lua_tophysicssurfaceprops (lua_State *L, int idx) {
+  lua_IPhysicsSurfaceProps **ppProps = (lua_IPhysicsSurfaceProps **)lua_touserdata(L, idx);
+  return *ppProps;
+}
+
+
 
 /*
 ** push functions (C -> stack)
@@ -404,11 +410,25 @@ LUA_API void lua_pushsurfacedata (lua_State *L, lua_surfacedata_t *psurface) {
 }
 
 
+LUA_API void lua_pushphysicssurfaceprops (lua_State *L, lua_IPhysicsSurfaceProps *pProps) {
+  lua_IPhysicsSurfaceProps **ppProps = (lua_IPhysicsSurfaceProps **)lua_newuserdata(L, sizeof(lua_IPhysicsSurfaceProps));
+  *ppProps = pProps;
+  luaL_getmetatable(L, "IPhysicsSurfaceProps");
+  lua_setmetatable(L, -2);
+}
+
+
 LUALIB_API lua_IPhysicsObject *luaL_checkphysicsobject (lua_State *L, int narg) {
   lua_IPhysicsObject *d = lua_tophysicsobject(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
     luaL_argerror(L, narg, "attempt to index a NULL physicsobject");
   return d;
+}
+
+
+LUALIB_API lua_IPhysicsSurfaceProps *luaL_checkphysicssurfaceprops (lua_State *L, int narg) {
+  lua_IPhysicsSurfaceProps **d = (lua_IPhysicsSurfaceProps **)luaL_checkudata(L, narg, "IPhysicsSurfaceProps");
+  return *d;
 }
 
 
@@ -1009,6 +1029,88 @@ int luaopen_IPhysicsObject (lua_State *L) {
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
   lua_pushstring(L, "physicsobject");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "physicsobject" */
+  lua_pop(L, 1);
+  return 1;
+}
+
+
+static int IPhysicsSurfaceProps_GetPhysicsParameters (lua_State *L) {
+  surfacephysicsparams_t pParamsOut;
+  luaL_checkphysicssurfaceprops(L, 1)->GetPhysicsParameters(luaL_checkint(L, 2), &pParamsOut);
+  lua_pushsurfacephysicsparams(L, &pParamsOut);
+  return 1;
+}
+
+static int IPhysicsSurfaceProps_GetPhysicsProperties (lua_State *L) {
+  float density, thickness, friction, elasticity;
+  luaL_checkphysicssurfaceprops(L, 1)->GetPhysicsProperties(luaL_checkint(L, 2), &density, &thickness, &friction, &elasticity);
+  lua_pushnumber(L, density);
+  lua_pushnumber(L, thickness);
+  lua_pushnumber(L, friction);
+  lua_pushnumber(L, elasticity);
+  return 4;
+}
+
+static int IPhysicsSurfaceProps_GetPropName (lua_State *L) {
+  lua_pushstring(L, luaL_checkphysicssurfaceprops(L, 1)->GetPropName(luaL_checkint(L, 2)));
+  return 1;
+}
+
+static int IPhysicsSurfaceProps_GetString (lua_State *L) {
+  lua_pushstring(L, luaL_checkphysicssurfaceprops(L, 1)->GetString((unsigned short)luaL_checkinteger(L, 2)));
+  return 1;
+}
+
+static int IPhysicsSurfaceProps_GetSurfaceData (lua_State *L) {
+  lua_pushsurfacedata(L, luaL_checkphysicssurfaceprops(L, 1)->GetSurfaceData(luaL_checkint(L, 2)));
+  return 1;
+}
+
+static int IPhysicsSurfaceProps_GetSurfaceIndex (lua_State *L) {
+  lua_pushinteger(L, luaL_checkphysicssurfaceprops(L, 1)->GetSurfaceIndex(luaL_checkstring(L, 2)));
+  return 1;
+}
+
+static int IPhysicsSurfaceProps_ParseSurfaceData (lua_State *L) {
+  lua_pushinteger(L, luaL_checkphysicssurfaceprops(L, 1)->ParseSurfaceData(luaL_checkstring(L, 2), luaL_checkstring(L, 3)));
+  return 1;
+}
+
+static int IPhysicsSurfaceProps_SurfacePropCount (lua_State *L) {
+  lua_pushinteger(L, luaL_checkphysicssurfaceprops(L, 1)->SurfacePropCount());
+  return 1;
+}
+
+static int IPhysicsSurfaceProps___tostring (lua_State *L) {
+  lua_pushfstring(L, "IPhysicsSurfaceProps: %p", luaL_checkudata(L, 1, "IPhysicsSurfaceProps"));
+  return 1;
+}
+
+
+static const luaL_Reg IPhysicsSurfacePropsmeta[] = {
+  {"GetPhysicsParameters", IPhysicsSurfaceProps_GetPhysicsParameters},
+  {"GetPhysicsProperties", IPhysicsSurfaceProps_GetPhysicsProperties},
+  {"GetPropName", IPhysicsSurfaceProps_GetPropName},
+  {"GetString", IPhysicsSurfaceProps_GetString},
+  {"GetSurfaceData", IPhysicsSurfaceProps_GetSurfaceData},
+  {"GetSurfaceIndex", IPhysicsSurfaceProps_GetSurfaceIndex},
+  {"ParseSurfaceData", IPhysicsSurfaceProps_ParseSurfaceData},
+  {"SurfacePropCount", IPhysicsSurfaceProps_SurfacePropCount},
+  {"__tostring", IPhysicsSurfaceProps___tostring},
+  {NULL, NULL}
+};
+
+
+/*
+** Open IPhysicsSurfaceProps object
+*/
+int luaopen_IPhysicsSurfaceProps (lua_State *L) {
+  luaL_newmetatable(L, "IPhysicsSurfaceProps");
+  luaL_register(L, NULL, IPhysicsSurfacePropsmeta);
+  lua_pushvalue(L, -1);  /* push metatable */
+  lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
+  lua_pushstring(L, "physicssurfaceprops");
+  lua_setfield(L, -2, "__type");  /* metatable.__type = "physicssurfaceprops" */
   lua_pop(L, 1);
   return 1;
 }

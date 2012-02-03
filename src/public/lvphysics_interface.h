@@ -22,6 +22,7 @@ typedef surfacesoundnames_t lua_surfacesoundnames_t;
 typedef surfacesoundhandles_t lua_surfacesoundhandles_t;
 typedef surfacegameprops_t lua_surfacegameprops_t;
 typedef surfacedata_t lua_surfacedata_t;
+typedef IPhysicsSurfaceProps lua_IPhysicsSurfaceProps;
 
 
 
@@ -36,6 +37,7 @@ LUA_API lua_surfacesoundnames_t        (lua_tosurfacesoundnames) (lua_State *L, 
 LUA_API lua_surfacesoundhandles_t      (lua_tosurfacesoundhandles) (lua_State *L, int idx);
 LUA_API lua_surfacegameprops_t         (lua_tosurfacegameprops) (lua_State *L, int idx);
 LUA_API lua_surfacedata_t              (lua_tosurfacedata) (lua_State *L, int idx);
+LUA_API lua_IPhysicsSurfaceProps       *(lua_tophysicssurfaceprops) (lua_State *L, int idx);
 
 
 /*
@@ -48,13 +50,16 @@ LUA_API void  (lua_pushsurfacesoundnames) (lua_State *L, lua_surfacesoundnames_t
 LUA_API void  (lua_pushsurfacesoundhandles) (lua_State *L, lua_surfacesoundhandles_t *psoundhandles);
 LUA_API void  (lua_pushsurfacegameprops) (lua_State *L, lua_surfacegameprops_t *pgame);
 LUA_API void  (lua_pushsurfacedata) (lua_State *L, lua_surfacedata_t *psurface);
+LUA_API void  (lua_pushphysicssurfaceprops) (lua_State *L, lua_IPhysicsSurfaceProps *pProps);
 
 
 
 LUALIB_API lua_IPhysicsObject *(luaL_checkphysicsobject) (lua_State *L, int narg);
+LUALIB_API lua_IPhysicsSurfaceProps *(luaL_checkphysicssurfaceprops) (lua_State *L, int narg);
 
 
 int luaopen_physenv(lua_State *L);
 int luaopen_IPhysicsObject(lua_State *L);
+int luaopen_IPhysicsSurfaceProps(lua_State *L);
 
 #endif // LVPHYSICS_INTERFACE_H

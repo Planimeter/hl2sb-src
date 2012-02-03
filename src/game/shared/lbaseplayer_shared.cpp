@@ -12,6 +12,7 @@
 #include "lbaseplayer_shared.h"
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
+#include "SoundEmitterSystem/lisoundemittersystembase.h"
 #include "mathlib/lvector.h"
 #include "lvphysics_interface.h"
 
@@ -228,6 +229,61 @@ static int CBasePlayer_GetOffset_m_Local (lua_State *L) {
   return 1;
 }
 
+static int CBasePlayer_GetPlayerLocalData (lua_State *L) {
+  CBasePlayer *pPlayer = luaL_checkplayer(L, 1);
+  lua_newtable(L);
+  lua_pushinteger(L, pPlayer->m_Local.m_iHideHUD);
+  lua_setfield(L, -2, "m_iHideHUD");
+
+  lua_pushnumber(L, pPlayer->m_Local.m_flFOVRate);
+  lua_setfield(L, -2, "m_flFOVRate");
+
+  lua_pushboolean(L, pPlayer->m_Local.m_bDucked);
+  lua_setfield(L, -2, "m_bDucked");
+  lua_pushboolean(L, pPlayer->m_Local.m_bDucking);
+  lua_setfield(L, -2, "m_bDucking");
+  lua_pushboolean(L, pPlayer->m_Local.m_bInDuckJump);
+  lua_setfield(L, -2, "m_bInDuckJump");
+  lua_pushnumber(L, pPlayer->m_Local.m_flDucktime);
+  lua_setfield(L, -2, "m_flDucktime");
+  lua_pushnumber(L, pPlayer->m_Local.m_flDuckJumpTime);
+  lua_setfield(L, -2, "m_flDuckJumpTime");
+  lua_pushnumber(L, pPlayer->m_Local.m_flJumpTime);
+  lua_setfield(L, -2, "m_flJumpTime");
+  lua_pushinteger(L, pPlayer->m_Local.m_nStepside);
+  lua_setfield(L, -2, "m_nStepside");
+  lua_pushnumber(L, pPlayer->m_Local.m_flFallVelocity);
+  lua_setfield(L, -2, "m_flFallVelocity");
+  lua_pushinteger(L, pPlayer->m_Local.m_nOldButtons);
+  lua_setfield(L, -2, "m_nOldButtons");
+
+#ifdef CLIENT_DLL
+  lua_pushvector(L, &pPlayer->m_Local.m_vecClientBaseVelocity);
+  lua_setfield(L, -2, "m_vecClientBaseVelocity");
+#endif
+  QAngle v = pPlayer->m_Local.m_vecPunchAngle;
+  lua_pushangle(L, &v);
+  lua_setfield(L, -2, "m_vecPunchAngle");
+
+  v = pPlayer->m_Local.m_vecPunchAngleVel;
+  lua_pushangle(L, &v);
+  lua_setfield(L, -2, "m_vecPunchAngleVel");
+  lua_pushboolean(L, pPlayer->m_Local.m_bDrawViewmodel);
+  lua_setfield(L, -2, "m_bDrawViewmodel");
+  lua_pushboolean(L, pPlayer->m_Local.m_bWearingSuit);
+  lua_setfield(L, -2, "m_bWearingSuit");
+  lua_pushboolean(L, pPlayer->m_Local.m_bPoisoned);
+  lua_setfield(L, -2, "m_bPoisoned");
+  lua_pushnumber(L, pPlayer->m_Local.m_flStepSize);
+  lua_setfield(L, -2, "m_flStepSize");
+  lua_pushboolean(L, pPlayer->m_Local.m_bAllowAutoMovement);
+  lua_setfield(L, -2, "m_bAllowAutoMovement");
+
+  lua_pushboolean(L, pPlayer->m_Local.m_bSlowMovement);
+  lua_setfield(L, -2, "m_bSlowMovement");
+  return 1;
+}
+
 static int CBasePlayer_GetPlayerMaxs (lua_State *L) {
   Vector v = luaL_checkplayer(L, 1)->GetPlayerMaxs();
   lua_pushvector(L, &v);
@@ -243,6 +299,26 @@ static int CBasePlayer_GetPlayerMins (lua_State *L) {
 static int CBasePlayer_GetPreviouslyPredictedOrigin (lua_State *L) {
   Vector v = luaL_checkplayer(L, 1)->GetPreviouslyPredictedOrigin();
   lua_pushvector(L, &v);
+  return 1;
+}
+
+static int CBasePlayer_GetStepSoundCache (lua_State *L) {
+  CBasePlayer *pPlayer = luaL_checkplayer(L, 1);
+  lua_newtable(L);
+  lua_pushinteger(L, 0);
+  lua_newtable(L);
+  lua_pushsoundparameters(L, pPlayer->m_StepSoundCache[ 0 ].m_SoundParameters);
+  lua_setfield(L, -2, "m_SoundParameters");
+  lua_pushinteger(L, pPlayer->m_StepSoundCache[ 0 ].m_usSoundNameIndex);
+  lua_setfield(L, -2, "m_usSoundNameIndex");
+  lua_settable(L, -3);
+  lua_pushinteger(L, 1);
+  lua_newtable(L);
+  lua_pushsoundparameters(L, pPlayer->m_StepSoundCache[ 1 ].m_SoundParameters);
+  lua_setfield(L, -2, "m_SoundParameters");
+  lua_pushinteger(L, pPlayer->m_StepSoundCache[ 1 ].m_usSoundNameIndex);
+  lua_setfield(L, -2, "m_usSoundNameIndex");
+  lua_settable(L, -3);
   return 1;
 }
 
@@ -485,6 +561,59 @@ static int CBasePlayer_SetNextAttack (lua_State *L) {
   return 0;
 }
 
+static int CBasePlayer_SetPlayerLocalData (lua_State *L) {
+  CBasePlayer *pPlayer = luaL_checkplayer(L, 1);
+  const char *field = luaL_checkstring(L, 2);
+  if (Q_strcmp(field, "m_iHideHUD") == 0)
+    pPlayer->m_Local.m_iHideHUD = luaL_checkint(L, 3);
+
+  else if (Q_strcmp(field, "m_flFOVRate") == 0)
+    pPlayer->m_Local.m_flFOVRate = luaL_checknumber(L, 3);
+
+  else if (Q_strcmp(field, "m_bDucked") == 0)
+    pPlayer->m_Local.m_bDucked = (bool)luaL_checkboolean(L, 3);
+  else if (Q_strcmp(field, "m_bDucking") == 0)
+    pPlayer->m_Local.m_bDucking = (bool)luaL_checkboolean(L, 3);
+  else if (Q_strcmp(field, "m_bInDuckJump") == 0)
+    pPlayer->m_Local.m_bInDuckJump = (bool)luaL_checkboolean(L, 3);
+  else if (Q_strcmp(field, "m_flDucktime") == 0)
+    pPlayer->m_Local.m_flDucktime = luaL_checknumber(L, 3);
+  else if (Q_strcmp(field, "m_flDuckJumpTime") == 0)
+    pPlayer->m_Local.m_flDuckJumpTime = luaL_checknumber(L, 3);
+  else if (Q_strcmp(field, "m_flJumpTime") == 0)
+    pPlayer->m_Local.m_flJumpTime = luaL_checknumber(L, 3);
+  else if (Q_strcmp(field, "m_nStepside") == 0)
+    pPlayer->m_Local.m_nStepside = luaL_checkint(L, 3);
+  else if (Q_strcmp(field, "m_flFallVelocity") == 0)
+    pPlayer->m_Local.m_flFallVelocity = luaL_checknumber(L, 3);
+  else if (Q_strcmp(field, "m_nOldButtons") == 0)
+    pPlayer->m_Local.m_nOldButtons = luaL_checkint(L, 3);
+
+#ifdef CLIENT_DLL
+  else if (Q_strcmp(field, "m_vecClientBaseVelocity") == 0)
+    pPlayer->m_Local.m_vecClientBaseVelocity = *luaL_checkvector(L, 3);
+#endif
+  else if (Q_strcmp(field, "m_vecPunchAngle") == 0)
+    pPlayer->m_Local.m_vecPunchAngle = *luaL_checkangle(L, 3);
+
+  else if (Q_strcmp(field, "m_vecPunchAngleVel") == 0)
+    pPlayer->m_Local.m_vecPunchAngleVel = *luaL_checkangle(L, 3);
+  else if (Q_strcmp(field, "m_bDrawViewmodel") == 0)
+    pPlayer->m_Local.m_bDrawViewmodel = (bool)luaL_checkboolean(L, 3);
+  else if (Q_strcmp(field, "m_bWearingSuit") == 0)
+    pPlayer->m_Local.m_bWearingSuit = (bool)luaL_checkboolean(L, 3);
+  else if (Q_strcmp(field, "m_bPoisoned") == 0)
+    pPlayer->m_Local.m_bPoisoned = (bool)luaL_checkboolean(L, 3);
+  else if (Q_strcmp(field, "m_flStepSize") == 0)
+    pPlayer->m_Local.m_flStepSize = luaL_checknumber(L, 3);
+  else if (Q_strcmp(field, "m_bAllowAutoMovement") == 0)
+    pPlayer->m_Local.m_bAllowAutoMovement = (bool)luaL_checkboolean(L, 3);
+
+  else if (Q_strcmp(field, "m_bSlowMovement") == 0)
+    pPlayer->m_Local.m_bSlowMovement = (bool)luaL_checkboolean(L, 3);
+  return 0;
+}
+
 static int CBasePlayer_SetPlayerUnderwater (lua_State *L) {
   luaL_checkplayer(L, 1)->SetPlayerUnderwater(luaL_checkboolean(L, 2));
   return 0;
@@ -493,6 +622,24 @@ static int CBasePlayer_SetPlayerUnderwater (lua_State *L) {
 static int CBasePlayer_SetPreviouslyPredictedOrigin (lua_State *L) {
   luaL_checkplayer(L, 1)->SetPreviouslyPredictedOrigin(*luaL_checkvector(L, 2));
   return 0;
+}
+
+static int CBasePlayer_SetStepSoundCache (lua_State *L) {
+  CBasePlayer *pPlayer = luaL_checkplayer(L, 1);
+  int index = luaL_checkint(L, 2);
+  const char *field = luaL_checkstring(L, 3);
+  if (index == 0) {
+    if (Q_strcmp(field, "m_SoundParameters") == 0)
+      pPlayer->m_StepSoundCache[ 0 ].m_SoundParameters = lua_tosoundparameters(L, 4);
+    else if (Q_strcmp(field, "m_usSoundNameIndex") == 0)
+	  pPlayer->m_StepSoundCache[ 0 ].m_usSoundNameIndex = (unsigned short)luaL_checkinteger(L, 4);
+  } else if (index == 1) {
+    if (Q_strcmp(field, "m_SoundParameters") == 0)
+      pPlayer->m_StepSoundCache[ 1 ].m_SoundParameters = lua_tosoundparameters(L, 4);
+    else if (Q_strcmp(field, "m_usSoundNameIndex") == 0)
+	  pPlayer->m_StepSoundCache[ 1 ].m_usSoundNameIndex = (unsigned short)luaL_checkinteger(L, 4);
+  }
+  return 1;
 }
 
 static int CBasePlayer_SetSwimSoundTime (lua_State *L) {
@@ -730,9 +877,11 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"GetObserverMode", CBasePlayer_GetObserverMode},
   {"GetObserverTarget", CBasePlayer_GetObserverTarget},
   {"GetOffset_m_Local", CBasePlayer_GetOffset_m_Local},
+  {"GetPlayerLocalData", CBasePlayer_GetPlayerLocalData},
   {"GetPlayerMaxs", CBasePlayer_GetPlayerMaxs},
   {"GetPlayerMins", CBasePlayer_GetPlayerMins},
   {"GetPreviouslyPredictedOrigin", CBasePlayer_GetPreviouslyPredictedOrigin},
+  {"GetStepSoundCache", CBasePlayer_GetStepSoundCache},
   {"GetStepSoundVelocities", CBasePlayer_GetStepSoundVelocities},
   {"GetSwimSoundTime", CBasePlayer_GetSwimSoundTime},
   {"GetTimeBase", CBasePlayer_GetTimeBase},
@@ -780,8 +929,10 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"SetLadderNormal", CBasePlayer_SetLadderNormal},
   {"SetMaxSpeed", CBasePlayer_SetMaxSpeed},
   {"SetNextAttack", CBasePlayer_SetNextAttack},
+  {"SetPlayerLocalData", CBasePlayer_SetPlayerLocalData},
   {"SetPlayerUnderwater", CBasePlayer_SetPlayerUnderwater},
   {"SetPreviouslyPredictedOrigin", CBasePlayer_SetPreviouslyPredictedOrigin},
+  {"SetStepSoundCache", CBasePlayer_SetStepSoundCache},
   {"SetSwimSoundTime", CBasePlayer_SetSwimSoundTime},
   {"SetWaterJumpTime", CBasePlayer_SetWaterJumpTime},
   {"SharedSpawn", CBasePlayer_SharedSpawn},

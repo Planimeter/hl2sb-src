@@ -1418,6 +1418,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\limovehelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\public\SoundEmitterSystem\lisoundemittersystembase.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\steam\listeamfriends.cpp"
 				>
 			</File>
@@ -4662,6 +4670,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\SoundEmitterSystem\lisoundemittersystembase.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\vgui_controls\ListPanel.h"
 				>
 			</File>
@@ -5283,6 +5295,10 @@
 			</File>
 			<File
 				RelativePath="..\shared\leffect_dispatch_data.h"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\limovehelper.h"
 				>
 			</File>
 			<File

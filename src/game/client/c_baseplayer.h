@@ -570,7 +570,11 @@ protected:
 	byte			m_ubEFNoInterpParity;
 	byte			m_ubOldEFNoInterpParity;
 
+#if !defined( LUA_SDK )
 private:
+#else
+public:
+#endif
 
 	struct StepSoundCache_t
 	{
