@@ -1446,6 +1446,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lprediction.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\vstdlib\lrandom.cpp"
 				>
 			</File>
@@ -3847,6 +3851,10 @@
 			</File>
 			<File
 				RelativePath="..\..\public\lglobalvars_base.h"
+				>
+			</File>
+			<File
+				RelativePath=".\lprediction.h"
 				>
 			</File>
 			<File

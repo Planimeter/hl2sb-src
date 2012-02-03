@@ -21,6 +21,7 @@
 #include "lcdll_util.h"
 #include "liclientshadowmgr.h"
 #include "lienginevgui.h"
+#include "lprediction.h"
 #include "vgui/LISurface.h"
 #include "vgui_controls/lPanel.h"
 #else
@@ -251,6 +252,7 @@ void luasrc_init (void) {
 #ifdef CLIENT_DLL
   luaopen_g_pClientShadowMgr(L);
   luaopen_enginevgui(L);
+  luaopen_prediction(L);
   luaopen_surface(L);
   luaopen_Panel(L);
 #endif
