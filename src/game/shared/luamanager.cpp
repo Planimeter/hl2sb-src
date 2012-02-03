@@ -264,6 +264,7 @@ void luasrc_init (void) {
   luaopen_QAngle(L);
   luaopen_physenv(L);
   luaopen_IPhysicsObject(L);
+  luaopen_IPhysicsSurfaceProps(L);
 
   Msg( "Lua initialized (" LUA_VERSION ")\n" );
   // Andrew; We currently support different Lua binaries, but as Henry has
