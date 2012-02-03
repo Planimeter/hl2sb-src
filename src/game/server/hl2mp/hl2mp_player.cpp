@@ -25,7 +25,7 @@
 #include "bone_setup.h"
 #ifdef LUA_SDK
 #include "luamanager.h"
-#include "lbaseplayer_shared.h"
+#include "lhl2mp_player_shared.h"
 #include "ltakedamageinfo.h"
 #endif
 
@@ -256,7 +256,7 @@ void CHL2MP_Player::GiveDefaultItems( void )
 {
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_HOOK( "GiveDefaultItems" );
-		lua_pushplayer( L, this );
+		lua_pushhl2mpplayer( L, this );
 	END_LUA_CALL_HOOK( 1, 0 );
 #endif
 
@@ -636,7 +636,7 @@ void CHL2MP_Player::PlayerDeathThink()
 {
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_HOOK( "PlayerDeathThink" );
-		lua_pushplayer( L, this );
+		lua_pushhl2mpplayer( L, this );
 	END_LUA_CALL_HOOK( 1, 0 );
 #endif
 
@@ -892,7 +892,7 @@ void CHL2MP_Player::CheatImpulseCommands( int iImpulse )
 {
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_HOOK( "CheatImpulseCommands" );
-		lua_pushplayer( L, this );
+		lua_pushhl2mpplayer( L, this );
 		lua_pushinteger( L, iImpulse );
 	END_LUA_CALL_HOOK( 2, 1 );
 
@@ -1162,8 +1162,9 @@ void CHL2MP_Player::DeathSound( const CTakeDamageInfo &info )
 	CTakeDamageInfo lInfo = info;
 
 	BEGIN_LUA_CALL_HOOK( "PlayerDeathSound" );
+		lua_pushhl2mpplayer( L, this );
 		lua_pushdamageinfo( L, &lInfo );
-	END_LUA_CALL_HOOK( 1, 1 );
+	END_LUA_CALL_HOOK( 2, 1 );
 
 	RETURN_LUA_NONE();
 #endif

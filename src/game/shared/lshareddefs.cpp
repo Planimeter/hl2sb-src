@@ -40,27 +40,27 @@ LUA_API lua_FireBulletsInfo_t lua_tofirebulletsinfo (lua_State *L, int idx) {
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_iAmmoType");
   if (!lua_isnil(L, -1))
-    info.m_iAmmoType = luaL_checkinteger(L, -1);
+    info.m_iAmmoType = luaL_checkint(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_iDamage");
   if (!lua_isnil(L, -1))
-    info.m_iDamage = luaL_checkinteger(L, -1);
+    info.m_iDamage = luaL_checkint(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_iPlayerDamage");
   if (!lua_isnil(L, -1))
-    info.m_iPlayerDamage = luaL_checkinteger(L, -1);
+    info.m_iPlayerDamage = luaL_checkint(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_iShots");
   if (!lua_isnil(L, -1))
-    info.m_iShots = luaL_checkinteger(L, -1);
+    info.m_iShots = luaL_checkint(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_iTracerFreq");
   if (!lua_isnil(L, -1))
-    info.m_iTracerFreq = luaL_checkinteger(L, -1);
+    info.m_iTracerFreq = luaL_checkint(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_nFlags");
   if (!lua_isnil(L, -1))
-    info.m_nFlags = luaL_checkinteger(L, -1);
+    info.m_nFlags = luaL_checkint(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_pAdditionalIgnoreEnt");
   if (!lua_isnil(L, -1))
@@ -72,15 +72,15 @@ LUA_API lua_FireBulletsInfo_t lua_tofirebulletsinfo (lua_State *L, int idx) {
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_vecDirShooting");
   if (!lua_isnil(L, -1))
-    info.m_vecDirShooting = *(Vector *)luaL_checkvector(L, -1);
+    info.m_vecDirShooting = *luaL_checkvector(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_vecSpread");
   if (!lua_isnil(L, -1))
-    info.m_vecSpread = *(Vector *)luaL_checkvector(L, -1);
+    info.m_vecSpread = *luaL_checkvector(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_vecSrc");
   if (!lua_isnil(L, -1))
-    info.m_vecSrc = *(Vector *)luaL_checkvector(L, -1);
+    info.m_vecSrc = *luaL_checkvector(L, -1);
   lua_pop(L, 1);
   return info;
 }

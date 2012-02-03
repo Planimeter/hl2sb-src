@@ -149,7 +149,7 @@
 #define RETURN_LUA_INTEGER() \
   if (lua_gettop(L) == 1) { \
     if (lua_isnumber(L, -1)) { \
-	  int res = luaL_checkinteger(L, -1); \
+	  int res = luaL_checkint(L, -1); \
 	  lua_pop(L, 1); \
 	  return res; \
 	} \
@@ -204,7 +204,7 @@
 #define RETURN_LUA_VECTOR() \
   if (lua_gettop(L) == 1) { \
     if (lua_isuserdata(L, -1) && luaL_checkudata(L, -1, "Vector")) { \
-	  Vector res = *(Vector *)luaL_checkvector(L, -1); \
+	  Vector res = *luaL_checkvector(L, -1); \
 	  lua_pop(L, 1); \
 	  return res; \
 	} \
@@ -215,7 +215,7 @@
 #define RETURN_LUA_ANGLE() \
   if (lua_gettop(L) == 1) { \
     if (lua_isuserdata(L, -1) && luaL_checkudata(L, -1, "QAngle")) { \
-	  QAngle res = *(QAngle *)luaL_checkangle(L, -1); \
+	  QAngle res = *luaL_checkangle(L, -1); \
 	  lua_pop(L, 1); \
 	  return res; \
 	} \

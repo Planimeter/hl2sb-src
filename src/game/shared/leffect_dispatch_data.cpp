@@ -124,7 +124,7 @@ static int CEffectData___newindex (lua_State *L) {
   CEffectData *data = luaL_checkeffect(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (Q_strcmp(field, "m_fFlags") == 0)
-    data->m_fFlags = luaL_checkinteger(L, 3);
+    data->m_fFlags = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_flMagnitude") == 0)
     data->m_flMagnitude = luaL_checknumber(L, 3);
   else if (Q_strcmp(field, "m_flRadius") == 0)
@@ -136,26 +136,26 @@ static int CEffectData___newindex (lua_State *L) {
     data->m_hEntity = lua_toentity(L, 3)->GetRefEHandle();
 #else
   else if (Q_strcmp(field, "m_nEntIndex") == 0)
-    data->m_nEntIndex = luaL_checkinteger(L, 3);
+    data->m_nEntIndex = luaL_checkint(L, 3);
 #endif
   else if (Q_strcmp(field, "m_nAttachmentIndex") == 0)
-    data->m_nAttachmentIndex = luaL_checkinteger(L, 3);
+    data->m_nAttachmentIndex = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nDamageType") == 0)
-    data->m_nDamageType = luaL_checkinteger(L, 3);
+    data->m_nDamageType = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nHitBox") == 0)
-    data->m_nHitBox = luaL_checkinteger(L, 3);
+    data->m_nHitBox = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nMaterial") == 0)
-    data->m_nMaterial = luaL_checkinteger(L, 3);
+    data->m_nMaterial = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nSurfaceProp") == 0)
-    data->m_nSurfaceProp = luaL_checkinteger(L, 3);
+    data->m_nSurfaceProp = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_vAngles") == 0)
-    data->m_vAngles = *(QAngle *)luaL_checkangle(L, 3);
+    data->m_vAngles = *luaL_checkangle(L, 3);
   else if (Q_strcmp(field, "m_vNormal") == 0)
-    data->m_vNormal = *(Vector *)luaL_checkvector(L, 3);
+    data->m_vNormal = *luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "m_vOrigin") == 0)
-    data->m_vOrigin = *(Vector *)luaL_checkvector(L, 3);
+    data->m_vOrigin = *luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "m_vStart") == 0)
-    data->m_vStart = *(Vector *)luaL_checkvector(L, 3);
+    data->m_vStart = *luaL_checkvector(L, 3);
   return 0;
 }
 

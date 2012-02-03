@@ -1546,9 +1546,9 @@ void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& f
 	END_LUA_CALL_HOOK( 4, 3 );
 
 	if ( lua_isuserdata( L, -3 ) && luaL_checkudata( L, -3, "Vector" ) )
-		VectorCopy( *(Vector *)luaL_checkvector( L, -3 ), eyeOrigin );
+		VectorCopy( *luaL_checkvector( L, -3 ), eyeOrigin );
 	if ( lua_isuserdata( L, -2 ) && luaL_checkudata( L, -2, "QAngle" ) )
-		VectorCopy( *(QAngle *)luaL_checkangle( L, -2 ), eyeAngles );
+		VectorCopy( *luaL_checkangle( L, -2 ), eyeAngles );
 	if ( lua_isnumber( L, -1 ) )
 		fov = luaL_checknumber( L, -1 );
 

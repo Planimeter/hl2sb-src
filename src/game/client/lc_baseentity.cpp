@@ -26,7 +26,7 @@ static int CBaseEntity_Interp_HierarchyUpdateInterpolationAmounts (lua_State *L)
 }
 
 static int CBaseEntity_Init (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->Init(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3)));
+  lua_pushboolean(L, luaL_checkentity(L, 1)->Init(luaL_checkint(L, 2), luaL_checkint(L, 3)));
   return 1;
 }
 
@@ -114,7 +114,7 @@ static int CBaseEntity_UsesFullFrameBufferTexture (lua_State *L) {
 }
 
 static int CBaseEntity_DrawModel (lua_State *L) {
-  lua_pushinteger(L, luaL_checkentity(L, 1)->DrawModel(luaL_checkinteger(L, 2)));
+  lua_pushinteger(L, luaL_checkentity(L, 1)->DrawModel(luaL_checkint(L, 2)));
   return 1;
 }
 

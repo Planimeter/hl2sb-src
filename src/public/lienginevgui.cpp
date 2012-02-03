@@ -24,7 +24,7 @@ namespace vgui
 
 
 static int enginevgui_GetPanel (lua_State *L) {
-  lua_pushpanel(L, enginevgui->GetPanel((VGuiPanel_t)luaL_checkinteger(L, 1)));
+  lua_pushpanel(L, enginevgui->GetPanel((VGuiPanel_t)luaL_checkint(L, 1)));
   return 1;
 }
 

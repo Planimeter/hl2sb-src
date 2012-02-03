@@ -73,32 +73,32 @@ static int CBaseEntity_Activate (lua_State *L) {
 }
 
 static int CBaseEntity_AddDataObjectType (lua_State *L) {
-  luaL_checkentity(L, 1)->AddDataObjectType(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->AddDataObjectType(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_AddEffects (lua_State *L) {
-  luaL_checkentity(L, 1)->AddEffects(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->AddEffects(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_AddEFlags (lua_State *L) {
-  luaL_checkentity(L, 1)->AddEFlags(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->AddEFlags(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_AddFlag (lua_State *L) {
-  luaL_checkentity(L, 1)->AddFlag(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->AddFlag(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_AddSolidFlags (lua_State *L) {
-  luaL_checkentity(L, 1)->AddSolidFlags(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->AddSolidFlags(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_ApplyAbsVelocityImpulse (lua_State *L) {
-  luaL_checkentity(L, 1)->ApplyAbsVelocityImpulse(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkentity(L, 1)->ApplyAbsVelocityImpulse(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -123,7 +123,7 @@ static int CBaseEntity_BoundingRadius (lua_State *L) {
 }
 
 static int CBaseEntity_ChangeTeam (lua_State *L) {
-  luaL_checkentity(L, 1)->ChangeTeam(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->ChangeTeam(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -144,14 +144,14 @@ static int CBaseEntity_CollisionRulesChanged (lua_State *L) {
 
 static int CBaseEntity_ComputeAbsDirection (lua_State *L) {
   Vector pAbsDirection;
-  luaL_checkentity(L, 1)->ComputeAbsDirection(*(Vector *)luaL_checkvector(L, 2), &pAbsDirection);
+  luaL_checkentity(L, 1)->ComputeAbsDirection(*luaL_checkvector(L, 2), &pAbsDirection);
   lua_pushvector(L, &pAbsDirection);
   return 1;
 }
 
 static int CBaseEntity_ComputeAbsPosition (lua_State *L) {
   Vector pAbsDirection;
-  luaL_checkentity(L, 1)->ComputeAbsPosition(*(Vector *)luaL_checkvector(L, 2), &pAbsDirection);
+  luaL_checkentity(L, 1)->ComputeAbsPosition(*luaL_checkvector(L, 2), &pAbsDirection);
   lua_pushvector(L, &pAbsDirection);
   return 1;
 }
@@ -165,12 +165,12 @@ static int CBaseEntity_ComputeWorldSpaceSurroundingBox (lua_State *L) {
 }
 
 static int CBaseEntity_CreateDataObject (lua_State *L) {
-  luaL_checkentity(L, 1)->CreateDataObject(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->CreateDataObject(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_CreatePredictedEntityByName (lua_State *L) {
-  lua_pushentity(L, CBaseEntity::CreatePredictedEntityByName(luaL_checkstring(L, 2), luaL_checkstring(L, 3), luaL_checkinteger(L, 4), luaL_optboolean(L, 5, 0)));
+  lua_pushentity(L, CBaseEntity::CreatePredictedEntityByName(luaL_checkstring(L, 2), luaL_checkstring(L, 3), luaL_checkint(L, 4), luaL_optboolean(L, 5, 0)));
   return 1;
 }
 
@@ -180,7 +180,7 @@ static int CBaseEntity_CreateVPhysics (lua_State *L) {
 }
 
 static int CBaseEntity_DamageDecal (lua_State *L) {
-  lua_pushstring(L, luaL_checkentity(L, 1)->DamageDecal(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3)));
+  lua_pushstring(L, luaL_checkentity(L, 1)->DamageDecal(luaL_checkint(L, 2), luaL_checkint(L, 3)));
   return 1;
 }
 
@@ -195,19 +195,19 @@ static int CBaseEntity_DestroyAllDataObjects (lua_State *L) {
 }
 
 static int CBaseEntity_DestroyDataObject (lua_State *L) {
-  luaL_checkentity(L, 1)->DestroyDataObject(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->DestroyDataObject(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_DispatchTraceAttack (lua_State *L) {
   const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
-  luaL_checkentity(L, 1)->DispatchTraceAttack(info, *(Vector *)luaL_checkvector(L, 3), luaL_checktrace(L, 4));
+  luaL_checkentity(L, 1)->DispatchTraceAttack(info, *luaL_checkvector(L, 3), luaL_checktrace(L, 4));
   return 0;
 }
 
 static int CBaseEntity_DoImpactEffect (lua_State *L) {
   trace_t tr;
-  luaL_checkentity(L, 1)->DoImpactEffect(tr, luaL_checkinteger(L, 3));
+  luaL_checkentity(L, 1)->DoImpactEffect(tr, luaL_checkint(L, 3));
   lua_pushtrace(L, &tr);
   return 1;
 }
@@ -220,7 +220,7 @@ static int CBaseEntity_EarPosition (lua_State *L) {
 
 static int CBaseEntity_EmitAmbientSound (lua_State *L) {
   float duration;
-  CBaseEntity::EmitAmbientSound(luaL_checkinteger(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checkstring(L, 3), luaL_optint(L, 4, 0), luaL_optnumber(L, 5, 0.0f), &duration);
+  CBaseEntity::EmitAmbientSound(luaL_checkint(L, 1), *luaL_checkvector(L, 2), luaL_checkstring(L, 3), luaL_optint(L, 4, 0), luaL_optnumber(L, 5, 0.0f), &duration);
   lua_pushnumber(L, duration);
   return 1;
 }
@@ -249,7 +249,7 @@ static int CBaseEntity_entindex (lua_State *L) {
 
 static int CBaseEntity_EntityToWorldSpace (lua_State *L) {
   Vector pOut;
-  luaL_checkentity(L, 1)->EntityToWorldSpace(*(Vector *)luaL_checkvector(L, 2), &pOut);
+  luaL_checkentity(L, 1)->EntityToWorldSpace(*luaL_checkvector(L, 2), &pOut);
   lua_pushvector(L, &pOut);
   return 1;
 }
@@ -343,7 +343,7 @@ static int CBaseEntity_GetCollisionGroup (lua_State *L) {
 }
 
 static int CBaseEntity_GetDataObject (lua_State *L) {
-  luaL_checkentity(L, 1)->GetDataObject(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->GetDataObject(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -572,7 +572,7 @@ static int CBaseEntity_GetWaterType (lua_State *L) {
 }
 
 static int CBaseEntity_HasDataObjectType (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->HasDataObjectType(luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, luaL_checkentity(L, 1)->HasDataObjectType(luaL_checkint(L, 2)));
   return 1;
 }
 
@@ -582,7 +582,7 @@ static int CBaseEntity_HasNPCsOnIt (lua_State *L) {
 }
 
 static int CBaseEntity_ImpactTrace (lua_State *L) {
-  luaL_checkentity(L, 1)->ImpactTrace(luaL_checktrace(L, 2), luaL_checkinteger(L, 3), (char *)luaL_optstring(L, 4, 0));
+  luaL_checkentity(L, 1)->ImpactTrace(luaL_checktrace(L, 2), luaL_checkint(L, 3), (char *)luaL_optstring(L, 4, 0));
   return 0;
 }
 
@@ -642,12 +642,12 @@ static int CBaseEntity_IsDormant (lua_State *L) {
 }
 
 static int CBaseEntity_IsEffectActive (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->IsEffectActive(luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsEffectActive(luaL_checkint(L, 2)));
   return 1;
 }
 
 static int CBaseEntity_IsEFlagSet (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->IsEFlagSet(luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsEFlagSet(luaL_checkint(L, 2)));
   return 1;
 }
 
@@ -717,7 +717,7 @@ static int CBaseEntity_IsSolid (lua_State *L) {
 }
 
 static int CBaseEntity_IsSolidFlagSet (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->IsSolidFlagSet(luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, luaL_checkentity(L, 1)->IsSolidFlagSet(luaL_checkint(L, 2)));
   return 1;
 }
 
@@ -746,7 +746,7 @@ static int CBaseEntity_KeyValue (lua_State *L) {
 	  break;
 	case LUA_TUSERDATA:
       if (luaL_checkudata(L, 3, "Vector"))
-	    lua_pushboolean(L, luaL_checkentity(L, 1)->KeyValue(luaL_checkstring(L, 2), *(Vector *)luaL_checkvector(L, 3)));
+	    lua_pushboolean(L, luaL_checkentity(L, 1)->KeyValue(luaL_checkstring(L, 2), *luaL_checkvector(L, 3)));
 	  else
 	    luaL_typerror(L, 3, "Vector");
 	  break;
@@ -888,37 +888,37 @@ static int CBaseEntity_RemoveAllDecals (lua_State *L) {
 }
 
 static int CBaseEntity_RemoveDataObjectType (lua_State *L) {
-  luaL_checkentity(L, 1)->RemoveDataObjectType(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->RemoveDataObjectType(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_RemoveEffects (lua_State *L) {
-  luaL_checkentity(L, 1)->RemoveEffects(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->RemoveEffects(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_RemoveEFlags (lua_State *L) {
-  luaL_checkentity(L, 1)->RemoveEFlags(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->RemoveEFlags(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_RemoveFlag (lua_State *L) {
-  luaL_checkentity(L, 1)->RemoveFlag(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->RemoveFlag(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_RemoveSolidFlags (lua_State *L) {
-  luaL_checkentity(L, 1)->RemoveSolidFlags(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->RemoveSolidFlags(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetAbsAngles (lua_State *L) {
-  luaL_checkentity(L, 1)->SetAbsAngles(*(QAngle *)luaL_checkangle(L, 2));
+  luaL_checkentity(L, 1)->SetAbsAngles(*luaL_checkangle(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetAbsOrigin (lua_State *L) {
-  luaL_checkentity(L, 1)->SetAbsOrigin(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkentity(L, 1)->SetAbsOrigin(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -928,7 +928,7 @@ static int CBaseEntity_SetAbsQueriesValid (lua_State *L) {
 }
 
 static int CBaseEntity_SetAbsVelocity (lua_State *L) {
-  luaL_checkentity(L, 1)->SetAbsVelocity(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkentity(L, 1)->SetAbsVelocity(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -953,7 +953,7 @@ static int CBaseEntity_SetAnimTime (lua_State *L) {
 }
 
 static int CBaseEntity_SetBaseVelocity (lua_State *L) {
-  luaL_checkentity(L, 1)->SetBaseVelocity(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkentity(L, 1)->SetBaseVelocity(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -973,12 +973,12 @@ static int CBaseEntity_SetClassname (lua_State *L) {
 }
 
 static int CBaseEntity_SetCollisionBounds (lua_State *L) {
-  luaL_checkentity(L, 1)->SetCollisionBounds(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3));
+  luaL_checkentity(L, 1)->SetCollisionBounds(*luaL_checkvector(L, 2), *luaL_checkvector(L, 3));
   return 0;
 }
 
 static int CBaseEntity_SetCollisionGroup (lua_State *L) {
-  luaL_checkentity(L, 1)->SetCollisionGroup(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetCollisionGroup(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -988,12 +988,12 @@ static int CBaseEntity_SetEffectEntity (lua_State *L) {
 }
 
 static int CBaseEntity_SetEffects (lua_State *L) {
-  luaL_checkentity(L, 1)->SetEffects(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetEffects(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetEFlags (lua_State *L) {
-  luaL_checkentity(L, 1)->SetEFlags(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetEFlags(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -1018,27 +1018,27 @@ static int CBaseEntity_SetGroundEntity (lua_State *L) {
 }
 
 static int CBaseEntity_SetHealth (lua_State *L) {
-  luaL_checkentity(L, 1)->SetHealth(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetHealth(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetLocalAngles (lua_State *L) {
-  luaL_checkentity(L, 1)->SetLocalAngles(*(QAngle *)luaL_checkangle(L, 2));
+  luaL_checkentity(L, 1)->SetLocalAngles(*luaL_checkangle(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetLocalAngularVelocity (lua_State *L) {
-  luaL_checkentity(L, 1)->SetLocalAngularVelocity(*(QAngle *)luaL_checkangle(L, 2));
+  luaL_checkentity(L, 1)->SetLocalAngularVelocity(*luaL_checkangle(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetLocalOrigin (lua_State *L) {
-  luaL_checkentity(L, 1)->SetLocalOrigin(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkentity(L, 1)->SetLocalOrigin(*luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetLocalVelocity (lua_State *L) {
-  luaL_checkentity(L, 1)->SetLocalVelocity(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkentity(L, 1)->SetLocalVelocity(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -1053,7 +1053,7 @@ static int CBaseEntity_SetModel (lua_State *L) {
 }
 
 static int CBaseEntity_SetModelIndex (lua_State *L) {
-  luaL_checkentity(L, 1)->SetModelIndex(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetModelIndex(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -1064,12 +1064,12 @@ static int CBaseEntity_SetModelName (lua_State *L) {
 }
 
 static int CBaseEntity_SetMoveCollide (lua_State *L) {
-  luaL_checkentity(L, 1)->SetMoveCollide((MoveCollide_t)luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetMoveCollide((MoveCollide_t)luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetMoveType (lua_State *L) {
-  luaL_checkentity(L, 1)->SetMoveType((MoveType_t)luaL_checkinteger(L, 2), (MoveCollide_t)luaL_optint(L, 3, MOVECOLLIDE_DEFAULT));
+  luaL_checkentity(L, 1)->SetMoveType((MoveType_t)luaL_checkint(L, 2), (MoveCollide_t)luaL_optint(L, 3, MOVECOLLIDE_DEFAULT));
   return 0;
 }
 
@@ -1139,42 +1139,42 @@ static int CBaseEntity_SetSimulationTime (lua_State *L) {
 }
 
 static int CBaseEntity_SetSize (lua_State *L) {
-  luaL_checkentity(L, 1)->SetSize(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3));
+  luaL_checkentity(L, 1)->SetSize(*luaL_checkvector(L, 2), *luaL_checkvector(L, 3));
   return 0;
 }
 
 static int CBaseEntity_SetSolid (lua_State *L) {
-  luaL_checkentity(L, 1)->SetSolid((SolidType_t)luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetSolid((SolidType_t)luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetSolidFlags (lua_State *L) {
-  luaL_checkentity(L, 1)->SetSolidFlags(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetSolidFlags(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetTextureFrameIndex (lua_State *L) {
-  luaL_checkentity(L, 1)->SetTextureFrameIndex(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetTextureFrameIndex(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetViewOffset (lua_State *L) {
-  luaL_checkentity(L, 1)->SetViewOffset(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkentity(L, 1)->SetViewOffset(*luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetWaterLevel (lua_State *L) {
-  luaL_checkentity(L, 1)->SetWaterLevel(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetWaterLevel(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_SetWaterType (lua_State *L) {
-  luaL_checkentity(L, 1)->SetWaterType(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->SetWaterType(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseEntity_ShouldCollide (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->ShouldCollide(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3)));
+  lua_pushboolean(L, luaL_checkentity(L, 1)->ShouldCollide(luaL_checkint(L, 2), luaL_checkint(L, 3)));
   return 1;
 }
 
@@ -1214,7 +1214,7 @@ static int CBaseEntity_Think (lua_State *L) {
 }
 
 static int CBaseEntity_ToggleFlag (lua_State *L) {
-  luaL_checkentity(L, 1)->ToggleFlag(luaL_checkinteger(L, 2));
+  luaL_checkentity(L, 1)->ToggleFlag(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -1224,7 +1224,7 @@ static int CBaseEntity_Touch (lua_State *L) {
 }
 
 static int CBaseEntity_TraceBleed (lua_State *L) {
-  luaL_checkentity(L, 1)->TraceBleed(luaL_checknumber(L, 2), *(Vector *)luaL_checkvector(L, 3), luaL_checktrace(L, 4), luaL_checkinteger(L, 5));
+  luaL_checkentity(L, 1)->TraceBleed(luaL_checknumber(L, 2), *luaL_checkvector(L, 3), luaL_checktrace(L, 4), luaL_checkint(L, 5));
   return 0;
 }
 
@@ -1264,7 +1264,7 @@ static int CBaseEntity_VPhysicsGetObjectList (lua_State *L) {
 
 static int CBaseEntity_VPhysicsInitNormal (lua_State *L) {
   // TODO: Implement a Lua solid_t object.
-  lua_pushphysicsobject(L, luaL_checkentity(L, 1)->VPhysicsInitNormal((SolidType_t)luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkboolean(L, 4)));
+  lua_pushphysicsobject(L, luaL_checkentity(L, 1)->VPhysicsInitNormal((SolidType_t)luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_checkboolean(L, 4)));
   return 1;
 }
 
@@ -1319,7 +1319,7 @@ static int CBaseEntity_WorldSpaceCenter (lua_State *L) {
 
 static int CBaseEntity_WorldToEntitySpace (lua_State *L) {
   Vector pOut;
-  luaL_checkentity(L, 1)->WorldToEntitySpace(*(Vector *)luaL_checkvector(L, 2), &pOut);
+  luaL_checkentity(L, 1)->WorldToEntitySpace(*luaL_checkvector(L, 2), &pOut);
   lua_pushvector(L, &pOut);
   return 1;
 }
@@ -1385,13 +1385,13 @@ static int CBaseEntity___newindex (lua_State *L) {
   else if (Q_strcmp(field, "m_iClassname") == 0)
     pEntity->m_iClassname = MAKE_STRING( luaL_checkstring(L, 3) );
   else if (Q_strcmp(field, "m_iHealth") == 0)
-    pEntity->m_iHealth = luaL_checkinteger(L, 3);
+    pEntity->m_iHealth = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nLastThinkTick") == 0)
-    pEntity->m_nLastThinkTick = luaL_checkinteger(L, 3);
+    pEntity->m_nLastThinkTick = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nModelIndex") == 0)
-    pEntity->m_nModelIndex = luaL_checkinteger(L, 3);
+    pEntity->m_nModelIndex = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "touchStamp") == 0)
-    pEntity->touchStamp = luaL_checkinteger(L, 3);
+    pEntity->touchStamp = luaL_checkint(L, 3);
   return 0;
 }
 

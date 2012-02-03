@@ -24,8 +24,8 @@
 
 #if defined( LUA_SDK )
 #include "luamanager.h"
-#include "lbaseplayer_shared.h"
 #include "lgametrace.h"
+#include "lhl2mp_player_shared.h"
 #include "ltakedamageinfo.h"
 #include "mathlib/lvector.h"
 #endif
@@ -153,7 +153,7 @@ void C_HL2MP_Player::TraceAttack( const CTakeDamageInfo &info, const Vector &vec
 	Vector lvecDir = vecDir;
 
 	BEGIN_LUA_CALL_HOOK( "PlayerTraceAttack" );
-		lua_pushplayer( L, this );
+		lua_pushhl2mpplayer( L, this );
 		lua_pushdamageinfo( L, &lInfo );
 		lua_pushvector( L, &lvecDir );
 		lua_pushtrace( L, ptr );

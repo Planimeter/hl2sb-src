@@ -215,7 +215,7 @@ int luaopen_ConCommand (lua_State *L) {
 
 
 static int ConVar_AddFlags (lua_State *L) {
-  luaL_checkconvar(L, 1)->AddFlags(luaL_checkinteger(L, 2));
+  luaL_checkconvar(L, 1)->AddFlags(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -274,7 +274,7 @@ static int ConVar_IsCommand (lua_State *L) {
 }
 
 static int ConVar_IsFlagSet (lua_State *L) {
-  lua_pushboolean(L, luaL_checkconvar(L, 1)->IsFlagSet(luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, luaL_checkconvar(L, 1)->IsFlagSet(luaL_checkint(L, 2)));
   return 1;
 }
 

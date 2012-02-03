@@ -342,7 +342,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove( L, -2 );
 	if ( lua_isnumber( L, -1 ) )
 	{
-		m_pLuaWeaponInfo->m_iPlayerDamage = luaL_checkinteger( L, -1 );
+		m_pLuaWeaponInfo->m_iPlayerDamage = luaL_checkint( L, -1 );
 	}
 	lua_pop( L, 1 );
 
@@ -558,7 +558,7 @@ bool CHL2MPScriptedWeapon::IsMeleeWeapon() const
 	{
 		if ( lua_isnumber( L, -1 ) )
 		{
-			int res = ( luaL_checkinteger( L, -1 ) != 0 ) ? true : false;
+			int res = ( luaL_checkint( L, -1 ) != 0 ) ? true : false;
 			lua_pop(L, 1);
 			return res;
 		}
@@ -594,7 +594,7 @@ bool CHL2MPScriptedWeapon::AllowsAutoSwitchTo( void ) const
 	{
 		if ( lua_isnumber( L, -1 ) )
 		{
-			int res = ( luaL_checkinteger( L, -1 ) != 0 ) ? true : false;
+			int res = ( luaL_checkint( L, -1 ) != 0 ) ? true : false;
 			lua_pop(L, 1);
 			return res;
 		}
@@ -617,7 +617,7 @@ bool CHL2MPScriptedWeapon::AllowsAutoSwitchFrom( void ) const
 	{
 		if ( lua_isnumber( L, -1 ) )
 		{
-			int res = ( luaL_checkinteger( L, -1 ) != 0 ) ? true : false;
+			int res = ( luaL_checkint( L, -1 ) != 0 ) ? true : false;
 			lua_pop(L, 1);
 			return res;
 		}

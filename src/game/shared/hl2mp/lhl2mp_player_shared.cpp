@@ -74,7 +74,7 @@ static int CHL2MP_Player_BecomeRagdollOnClient (lua_State *L) {
 #ifdef CLIENT_DLL
   lua_pushanimating(L, luaL_checkhl2mpplayer(L, 1)->BecomeRagdollOnClient());
 #else
-  lua_pushboolean(L, luaL_checkhl2mpplayer(L, 1)->BecomeRagdollOnClient(*(Vector *)luaL_checkvector(L, 2)));
+  lua_pushboolean(L, luaL_checkhl2mpplayer(L, 1)->BecomeRagdollOnClient(*luaL_checkvector(L, 2)));
 #endif
   return 1;
 }
@@ -103,7 +103,7 @@ static int CHL2MP_Player_CanSprint (lua_State *L) {
 }
 
 static int CHL2MP_Player_DoAnimationEvent (lua_State *L) {
-  luaL_checkhl2mpplayer(L, 1)->DoAnimationEvent((PlayerAnimEvent_t)luaL_checkinteger(L, 2), luaL_optinteger(L, 3, 0));
+  luaL_checkhl2mpplayer(L, 1)->DoAnimationEvent((PlayerAnimEvent_t)luaL_checkint(L, 2), luaL_optinteger(L, 3, 0));
   return 0;
 }
 

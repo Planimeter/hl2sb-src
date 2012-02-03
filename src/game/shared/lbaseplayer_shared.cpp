@@ -289,7 +289,7 @@ static int CBasePlayer_GetWaterJumpTime (lua_State *L) {
 }
 
 static int CBasePlayer_GetWeapon (lua_State *L) {
-  lua_pushweapon(L, luaL_checkplayer(L, 1)->GetWeapon(luaL_checkinteger(L, 2)));
+  lua_pushweapon(L, luaL_checkplayer(L, 1)->GetWeapon(luaL_checkint(L, 2)));
   return 1;
 }
 
@@ -339,7 +339,7 @@ static int CBasePlayer_IsSuitEquipped (lua_State *L) {
 }
 
 static int CBasePlayer_IsUseableEntity (lua_State *L) {
-  lua_pushboolean(L, luaL_checkplayer(L, 1)->IsUseableEntity(luaL_checkentity(L, 2), luaL_checkinteger(L, 3)));
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->IsUseableEntity(luaL_checkentity(L, 2), luaL_checkint(L, 3)));
   return 1;
 }
 
@@ -410,7 +410,7 @@ static int CBasePlayer_RemoveAllAmmo (lua_State *L) {
 }
 
 static int CBasePlayer_RemoveAmmo (lua_State *L) {
-  luaL_checkplayer(L, 1)->RemoveAmmo(luaL_checkinteger(L, 2), luaL_checkstring(L, 3));
+  luaL_checkplayer(L, 1)->RemoveAmmo(luaL_checkint(L, 2), luaL_checkstring(L, 3));
   return 0;
 }
 
@@ -440,12 +440,12 @@ static int CBasePlayer_SelectLastItem (lua_State *L) {
 }
 
 static int CBasePlayer_SetAmmoCount (lua_State *L) {
-  luaL_checkplayer(L, 1)->SetAmmoCount(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
+  luaL_checkplayer(L, 1)->SetAmmoCount(luaL_checkint(L, 2), luaL_checkint(L, 3));
   return 0;
 }
 
 static int CBasePlayer_SetAnimation (lua_State *L) {
-  luaL_checkplayer(L, 1)->SetAnimation((PLAYER_ANIM)luaL_checkinteger(L, 2));
+  luaL_checkplayer(L, 1)->SetAnimation((PLAYER_ANIM)luaL_checkint(L, 2));
   return 0;
 }
 
@@ -455,17 +455,17 @@ static int CBasePlayer_SetAnimationExtension (lua_State *L) {
 }
 
 static int CBasePlayer_SetBloodColor (lua_State *L) {
-  luaL_checkplayer(L, 1)->SetBloodColor(luaL_checkinteger(L, 2));
+  luaL_checkplayer(L, 1)->SetBloodColor(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBasePlayer_SetFOV (lua_State *L) {
-  lua_pushboolean(L, luaL_checkplayer(L, 1)->SetFOV(luaL_checkentity(L, 2), luaL_checkinteger(L, 3), luaL_checknumber(L, 4), luaL_optint(L, 5, 0)));
+  lua_pushboolean(L, luaL_checkplayer(L, 1)->SetFOV(luaL_checkentity(L, 2), luaL_checkint(L, 3), luaL_checknumber(L, 4), luaL_optint(L, 5, 0)));
   return 1;
 }
 
 static int CBasePlayer_SetLadderNormal (lua_State *L) {
-  luaL_checkplayer(L, 1)->SetLadderNormal(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkplayer(L, 1)->SetLadderNormal(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -485,7 +485,7 @@ static int CBasePlayer_SetPlayerUnderwater (lua_State *L) {
 }
 
 static int CBasePlayer_SetPreviouslyPredictedOrigin (lua_State *L) {
-  luaL_checkplayer(L, 1)->SetPreviouslyPredictedOrigin(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkplayer(L, 1)->SetPreviouslyPredictedOrigin(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -515,7 +515,7 @@ static int CBasePlayer_SimulatePlayerSimulatedEntities (lua_State *L) {
 }
 
 static int CBasePlayer_SmoothViewOnStairs (lua_State *L) {
-  luaL_checkplayer(L, 1)->SmoothViewOnStairs(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkplayer(L, 1)->SmoothViewOnStairs(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -545,7 +545,7 @@ static int CBasePlayer_UsingStandardWeaponsInVehicle (lua_State *L) {
 }
 
 static int CBasePlayer_ViewPunch (lua_State *L) {
-  luaL_checkplayer(L, 1)->ViewPunch(*(QAngle *)luaL_checkangle(L, 2));
+  luaL_checkplayer(L, 1)->ViewPunch(*luaL_checkangle(L, 2));
   return 0;
 }
 
@@ -656,11 +656,11 @@ static int CBasePlayer___newindex (lua_State *L) {
   }
   const char *field = luaL_checkstring(L, 2);
   if (Q_strcmp(field, "m_afButtonLast") == 0)
-    pPlayer->m_afButtonLast = luaL_checkinteger(L, 3);
+    pPlayer->m_afButtonLast = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_afButtonPressed") == 0)
-    pPlayer->m_afButtonPressed = luaL_checkinteger(L, 3);
+    pPlayer->m_afButtonPressed = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_afButtonReleased") == 0)
-    pPlayer->m_afButtonReleased = luaL_checkinteger(L, 3);
+    pPlayer->m_afButtonReleased = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_flNextAttack") == 0)
     pPlayer->m_flNextAttack = luaL_checknumber(L, 3);
 #ifdef CLIENT_DLL
@@ -671,9 +671,9 @@ static int CBasePlayer___newindex (lua_State *L) {
     pPlayer->m_fOnTarget.GetForModify() = (bool)luaL_checkboolean(L, 3);
 #endif
   else if (Q_strcmp(field, "m_nButtons") == 0)
-    pPlayer->m_nButtons = luaL_checkinteger(L, 3);
+    pPlayer->m_nButtons = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_StuckLast") == 0)
-    pPlayer->m_StuckLast = luaL_checkinteger(L, 3);
+    pPlayer->m_StuckLast = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_szAnimExtension") == 0)
     Q_strcpy(pPlayer->m_szAnimExtension, luaL_checkstring(L, 3));
   return 0;

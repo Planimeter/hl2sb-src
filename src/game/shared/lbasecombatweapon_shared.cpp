@@ -68,7 +68,7 @@ static int CBaseCombatWeapon_ActivityListCount (lua_State *L) {
 
 static int CBaseCombatWeapon_ActivityOverride (lua_State *L) {
   bool *pRequired = (bool *)luaL_checkboolean(L, 3);
-  lua_pushinteger(L, luaL_checkweapon(L, 1)->ActivityOverride((Activity)luaL_checkinteger(L, 2), pRequired));
+  lua_pushinteger(L, luaL_checkweapon(L, 1)->ActivityOverride((Activity)luaL_checkint(L, 2), pRequired));
   return 1;
 }
 
@@ -133,7 +133,7 @@ static int CBaseCombatWeapon_Clip2 (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_DefaultReload (lua_State *L) {
-  lua_pushboolean(L, luaL_checkweapon(L, 1)->DefaultReload(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4)));
+  lua_pushboolean(L, luaL_checkweapon(L, 1)->DefaultReload(luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_checkint(L, 4)));
   return 1;
 }
 
@@ -158,7 +158,7 @@ static int CBaseCombatWeapon_DisplayReloadHudHint (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_Drop (lua_State *L) {
-  luaL_checkweapon(L, 1)->Drop(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkweapon(L, 1)->Drop(*luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -183,7 +183,7 @@ static int CBaseCombatWeapon_GetBulletType (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_GetDamage (lua_State *L) {
-  lua_pushnumber(L, luaL_checkweapon(L, 1)->GetDamage(luaL_checknumber(L, 2), luaL_checkinteger(L, 3)));
+  lua_pushnumber(L, luaL_checkweapon(L, 1)->GetDamage(luaL_checknumber(L, 2), luaL_checkint(L, 3)));
   return 1;
 }
 
@@ -323,7 +323,7 @@ static int CBaseCombatWeapon_GetSecondaryAttackActivity (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_GetShootSound (lua_State *L) {
-  lua_pushstring(L, luaL_checkweapon(L, 1)->GetShootSound(luaL_checkinteger(L, 2)));
+  lua_pushstring(L, luaL_checkweapon(L, 1)->GetShootSound(luaL_checkint(L, 2)));
   return 1;
 }
 
@@ -592,7 +592,7 @@ static int CBaseCombatWeapon_MaintainIdealActivity (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_OnActiveStateChanged (lua_State *L) {
-  luaL_checkweapon(L, 1)->OnActiveStateChanged(luaL_checkinteger(L, 2));
+  luaL_checkweapon(L, 1)->OnActiveStateChanged(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -642,22 +642,22 @@ static int CBaseCombatWeapon_SecondaryAttack (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_SendViewModelAnim (lua_State *L) {
-  luaL_checkweapon(L, 1)->SendViewModelAnim(luaL_checkinteger(L, 2));
+  luaL_checkweapon(L, 1)->SendViewModelAnim(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseCombatWeapon_SendWeaponAnim (lua_State *L) {
-  lua_pushboolean(L, luaL_checkweapon(L, 1)->SendWeaponAnim(luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, luaL_checkweapon(L, 1)->SendWeaponAnim(luaL_checkint(L, 2)));
   return 1;
 }
 
 static int CBaseCombatWeapon_SetActivity (lua_State *L) {
-  luaL_checkweapon(L, 1)->SetActivity((Activity)luaL_checkinteger(L, 2));
+  luaL_checkweapon(L, 1)->SetActivity((Activity)luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseCombatWeapon_SetIdealActivity (lua_State *L) {
-  lua_pushboolean(L, luaL_checkweapon(L, 1)->SetIdealActivity((Activity)luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, luaL_checkweapon(L, 1)->SetIdealActivity((Activity)luaL_checkint(L, 2)));
   return 1;
 }
 
@@ -667,17 +667,17 @@ static int CBaseCombatWeapon_SetPickupTouch (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_SetPrimaryAmmoCount (lua_State *L) {
-  luaL_checkweapon(L, 1)->SetPrimaryAmmoCount(luaL_checkinteger(L, 2));
+  luaL_checkweapon(L, 1)->SetPrimaryAmmoCount(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseCombatWeapon_SetSecondaryAmmoCount (lua_State *L) {
-  luaL_checkweapon(L, 1)->SetSecondaryAmmoCount(luaL_checkinteger(L, 2));
+  luaL_checkweapon(L, 1)->SetSecondaryAmmoCount(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CBaseCombatWeapon_SetSubType (lua_State *L) {
-  luaL_checkweapon(L, 1)->SetSubType(luaL_checkinteger(L, 2));
+  luaL_checkweapon(L, 1)->SetSubType(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -732,7 +732,7 @@ static int CBaseCombatWeapon_StopSprinting (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_StopWeaponSound (lua_State *L) {
-  luaL_checkweapon(L, 1)->StopWeaponSound((WeaponSound_t)luaL_checkinteger(L, 2));
+  luaL_checkweapon(L, 1)->StopWeaponSound((WeaponSound_t)luaL_checkint(L, 2));
   return 0;
 }
 
@@ -772,7 +772,7 @@ static int CBaseCombatWeapon_WeaponIdle (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_WeaponSound (lua_State *L) {
-  luaL_checkweapon(L, 1)->WeaponSound((WeaponSound_t)luaL_checkinteger(L, 2), luaL_optnumber(L, 2, 0.0f));
+  luaL_checkweapon(L, 1)->WeaponSound((WeaponSound_t)luaL_checkint(L, 2), luaL_optnumber(L, 2, 0.0f));
   return 0;
 }
 
@@ -904,23 +904,23 @@ static int CBaseCombatWeapon___newindex (lua_State *L) {
   else if (Q_strcmp(field, "m_fMinRange2") == 0)
     pWeapon->m_fMinRange2 = luaL_checknumber(L, 3);
   else if (Q_strcmp(field, "m_iClip1") == 0)
-    pWeapon->m_iClip1.GetForModify() = luaL_checkinteger(L, 3);
+    pWeapon->m_iClip1.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_iClip2") == 0)
-    pWeapon->m_iClip2.GetForModify() = luaL_checkinteger(L, 3);
+    pWeapon->m_iClip2.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_iPrimaryAmmoType") == 0)
-    pWeapon->m_iPrimaryAmmoType.GetForModify() = luaL_checkinteger(L, 3);
+    pWeapon->m_iPrimaryAmmoType.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_iSecondaryAmmoType") == 0)
-    pWeapon->m_iSecondaryAmmoType.GetForModify() = luaL_checkinteger(L, 3);
+    pWeapon->m_iSecondaryAmmoType.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_iState") == 0)
-    pWeapon->m_iState.GetForModify() = luaL_checkinteger(L, 3);
+    pWeapon->m_iState.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_iSubType") == 0)
-    pWeapon->m_iSubType = luaL_checkinteger(L, 3);
+    pWeapon->m_iSubType = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_iViewModelIndex") == 0)
-    pWeapon->m_iViewModelIndex.GetForModify() = luaL_checkinteger(L, 3);
+    pWeapon->m_iViewModelIndex.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_iWorldModelIndex") == 0)
-    pWeapon->m_iWorldModelIndex.GetForModify() = luaL_checkinteger(L, 3);
+    pWeapon->m_iWorldModelIndex.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nViewModelIndex") == 0)
-    pWeapon->m_nViewModelIndex.GetForModify() = luaL_checkinteger(L, 3);
+    pWeapon->m_nViewModelIndex.GetForModify() = luaL_checkint(L, 3);
   return 0;
 }
 

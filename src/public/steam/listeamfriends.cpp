@@ -62,7 +62,7 @@ static int ISteamFriends_GetClanCount (lua_State *L) {
 }
 
 static int ISteamFriends_GetFriendCount (lua_State *L) {
-  lua_pushinteger(L, luaL_checksteamfriends(L, 1)->GetFriendCount(luaL_checkinteger(L, 2)));
+  lua_pushinteger(L, luaL_checksteamfriends(L, 1)->GetFriendCount(luaL_checkint(L, 2)));
   return 1;
 }
 

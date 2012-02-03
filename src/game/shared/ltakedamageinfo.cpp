@@ -57,7 +57,7 @@ static int CTakeDamageInfo_AddDamage (lua_State *L) {
 }
 
 static int CTakeDamageInfo_AddDamageType (lua_State *L) {
-  luaL_checkdamageinfo(L, 1)->AddDamageType(luaL_checkinteger(L, 2));
+  luaL_checkdamageinfo(L, 1)->AddDamageType(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -83,7 +83,7 @@ static int CTakeDamageInfo_CopyDamageToBaseDamage (lua_State *L) {
 
 static int CTakeDamageInfo_DebugGetDamageTypeString (lua_State *L) {
   char * outbuf = 0;
-  luaL_checkdamageinfo(L, 1)->DebugGetDamageTypeString(luaL_checkinteger(L, 2), outbuf, luaL_checkinteger(L, 3));
+  luaL_checkdamageinfo(L, 1)->DebugGetDamageTypeString(luaL_checkint(L, 2), outbuf, luaL_checkint(L, 3));
   lua_pushstring(L, outbuf);
   return 1;
 }
@@ -172,7 +172,7 @@ static int CTakeDamageInfo_ScaleDamageForce (lua_State *L) {
 }
 
 static int CTakeDamageInfo_SetAmmoType (lua_State *L) {
-  luaL_checkdamageinfo(L, 1)->SetAmmoType(luaL_checkinteger(L, 2));
+  luaL_checkdamageinfo(L, 1)->SetAmmoType(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -187,27 +187,27 @@ static int CTakeDamageInfo_SetDamage (lua_State *L) {
 }
 
 static int CTakeDamageInfo_SetDamageCustom (lua_State *L) {
-  luaL_checkdamageinfo(L, 1)->SetDamageCustom(luaL_checkinteger(L, 2));
+  luaL_checkdamageinfo(L, 1)->SetDamageCustom(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CTakeDamageInfo_SetDamageForce (lua_State *L) {
-  luaL_checkdamageinfo(L, 1)->SetDamageForce(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkdamageinfo(L, 1)->SetDamageForce(*luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CTakeDamageInfo_SetDamagePosition (lua_State *L) {
-  luaL_checkdamageinfo(L, 1)->SetDamagePosition(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkdamageinfo(L, 1)->SetDamagePosition(*luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CTakeDamageInfo_SetDamageStats (lua_State *L) {
-  luaL_checkdamageinfo(L, 1)->SetDamageStats(luaL_checkinteger(L, 2));
+  luaL_checkdamageinfo(L, 1)->SetDamageStats(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CTakeDamageInfo_SetDamageType (lua_State *L) {
-  luaL_checkdamageinfo(L, 1)->SetDamageType(luaL_checkinteger(L, 2));
+  luaL_checkdamageinfo(L, 1)->SetDamageType(luaL_checkint(L, 2));
   return 0;
 }
 
@@ -222,7 +222,7 @@ static int CTakeDamageInfo_SetMaxDamage (lua_State *L) {
 }
 
 static int CTakeDamageInfo_SetReportedPosition (lua_State *L) {
-  luaL_checkdamageinfo(L, 1)->SetReportedPosition(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkdamageinfo(L, 1)->SetReportedPosition(*luaL_checkvector(L, 2));
   return 0;
 }
 

@@ -113,7 +113,7 @@ static int IMaterial_GetMaterialPage (lua_State *L) {
 }
 
 static int IMaterial_GetMaterialVarFlag (lua_State *L) {
-  lua_pushboolean(L, luaL_checkmaterial(L, 1)->GetMaterialVarFlag((MaterialVarFlags_t)luaL_checkinteger(L, 1)));
+  lua_pushboolean(L, luaL_checkmaterial(L, 1)->GetMaterialVarFlag((MaterialVarFlags_t)luaL_checkint(L, 1)));
   return 1;
 }
 
@@ -138,7 +138,7 @@ static int IMaterial_GetNumPasses (lua_State *L) {
 }
 
 static int IMaterial_GetPropertyFlag (lua_State *L) {
-  lua_pushboolean(L, luaL_checkmaterial(L, 1)->GetPropertyFlag((MaterialPropertyTypes_t)luaL_checkinteger(L, 1)));
+  lua_pushboolean(L, luaL_checkmaterial(L, 1)->GetPropertyFlag((MaterialPropertyTypes_t)luaL_checkint(L, 1)));
   return 1;
 }
 
@@ -260,7 +260,7 @@ static int IMaterial_Release (lua_State *L) {
 }
 
 static int IMaterial_SetMaterialVarFlag (lua_State *L) {
-  luaL_checkmaterial(L, 1)->SetMaterialVarFlag((MaterialVarFlags_t)luaL_checkinteger(L, 1), luaL_checkboolean(L, 2));
+  luaL_checkmaterial(L, 1)->SetMaterialVarFlag((MaterialVarFlags_t)luaL_checkint(L, 1), luaL_checkboolean(L, 2));
   return 0;
 }
 

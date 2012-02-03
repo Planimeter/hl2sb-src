@@ -137,25 +137,25 @@ static int CGameTrace___newindex (lua_State *L) {
   if (Q_strcmp(field, "allsolid") == 0)
     tr->allsolid = luaL_checkboolean(L, 3);
   else if (Q_strcmp(field, "contents") == 0)
-    tr->contents = luaL_checkinteger(L, 3);
+    tr->contents = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "dispFlags") == 0)
-    tr->dispFlags = luaL_checkinteger(L, 3);
+    tr->dispFlags = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "endpos") == 0)
-    tr->endpos = *(Vector *)luaL_checkvector(L, 3);
+    tr->endpos = *luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "fraction") == 0)
     tr->fraction = luaL_checknumber(L, 3);
   else if (Q_strcmp(field, "fractionleftsolid") == 0)
     tr->fractionleftsolid = luaL_checknumber(L, 3);
   else if (Q_strcmp(field, "hitbox") == 0)
-    tr->hitbox = luaL_checkinteger(L, 3);
+    tr->hitbox = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "hitgroup") == 0)
-    tr->hitgroup = luaL_checkinteger(L, 3);
+    tr->hitgroup = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_pEnt") == 0)
     tr->m_pEnt = lua_toentity(L, 3);
   else if (Q_strcmp(field, "physicsbone") == 0)
-    tr->physicsbone = luaL_checkinteger(L, 3);
+    tr->physicsbone = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "startpos") == 0)
-    tr->startpos = *(Vector *)luaL_checkvector(L, 3);
+    tr->startpos = *luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "startsolid") == 0)
     tr->startsolid = luaL_checkboolean(L, 3);
   return 0;

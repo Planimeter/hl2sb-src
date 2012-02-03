@@ -29,7 +29,7 @@ static int g_pClientShadowMgr_GetShadowDirection (lua_State *L) {
 }
 
 static int g_pClientShadowMgr_RenderShadowTexture (lua_State *L) {
-  g_pClientShadowMgr->RenderShadowTexture(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2));
+  g_pClientShadowMgr->RenderShadowTexture(luaL_checkint(L, 1), luaL_checkint(L, 2));
   return 0;
 }
 
@@ -39,12 +39,12 @@ static int g_pClientShadowMgr_SetShadowBlobbyCutoffArea (lua_State *L) {
 }
 
 static int g_pClientShadowMgr_SetShadowColor (lua_State *L) {
-  g_pClientShadowMgr->SetShadowColor(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
+  g_pClientShadowMgr->SetShadowColor(luaL_checkint(L, 1), luaL_checkint(L, 2), luaL_checkint(L, 3));
   return 0;
 }
 
 static int g_pClientShadowMgr_SetShadowDirection (lua_State *L) {
-  g_pClientShadowMgr->SetShadowDirection(*(Vector *)luaL_checkvector(L, 1));
+  g_pClientShadowMgr->SetShadowDirection(*luaL_checkvector(L, 1));
   return 0;
 }
 

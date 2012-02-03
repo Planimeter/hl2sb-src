@@ -46,7 +46,7 @@ static int filesystem_BeginMapAccess (lua_State *L) {
 }
 
 static int filesystem_CancelWaitForResources (lua_State *L) {
-  filesystem->CancelWaitForResources(luaL_checkinteger(L, 1));
+  filesystem->CancelWaitForResources(luaL_checkint(L, 1));
   return 0;
 }
 
@@ -96,7 +96,7 @@ static int filesystem_GetWhitelistSpewFlags (lua_State *L) {
 }
 
 static int filesystem_HintResourceNeed (lua_State *L) {
-  lua_pushinteger(L, filesystem->HintResourceNeed(luaL_checkstring(L, 1), luaL_checkinteger(L, 2)));
+  lua_pushinteger(L, filesystem->HintResourceNeed(luaL_checkstring(L, 1), luaL_checkint(L, 2)));
   return 1;
 }
 
@@ -126,7 +126,7 @@ static int filesystem_IsSteam (lua_State *L) {
 }
 
 static int filesystem_LoadCompiledKeyValues (lua_State *L) {
-  filesystem->LoadCompiledKeyValues((IFileSystem::KeyValuesPreloadType_t)luaL_checkinteger(L, 1), luaL_checkstring(L, 2));
+  filesystem->LoadCompiledKeyValues((IFileSystem::KeyValuesPreloadType_t)luaL_checkint(L, 1), luaL_checkstring(L, 2));
   return 0;
 }
 
@@ -196,12 +196,12 @@ static int filesystem_SetupPreloadData (lua_State *L) {
 }
 
 static int filesystem_SetWarningLevel (lua_State *L) {
-  filesystem->SetWarningLevel((FileWarningLevel_t)luaL_checkinteger(L, 1));
+  filesystem->SetWarningLevel((FileWarningLevel_t)luaL_checkint(L, 1));
   return 0;
 }
 
 static int filesystem_SetWhitelistSpewFlags (lua_State *L) {
-  filesystem->SetWhitelistSpewFlags(luaL_checkinteger(L, 1));
+  filesystem->SetWhitelistSpewFlags(luaL_checkint(L, 1));
   return 0;
 }
 

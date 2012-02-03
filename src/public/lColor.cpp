@@ -87,12 +87,12 @@ static int Color_r (lua_State *L) {
 }
 
 static int Color_SetColor (lua_State *L) {
-  luaL_checkcolor(L, 1)->SetColor(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_optint(L, 4, 255));
+  luaL_checkcolor(L, 1)->SetColor(luaL_checkint(L, 1), luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_optint(L, 4, 255));
   return 0;
 }
 
 static int Color_SetRawColor (lua_State *L) {
-  luaL_checkcolor(L, 1)->SetRawColor(luaL_checkinteger(L, 1));
+  luaL_checkcolor(L, 1)->SetRawColor(luaL_checkint(L, 1));
   return 0;
 }
 
@@ -124,7 +124,7 @@ static const luaL_Reg Colormeta[] = {
 
 
 static int luasrc_Color (lua_State *L) {
-  Color clr = Color(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_optint(L, 4, 255));
+  Color clr = Color(luaL_checkint(L, 1), luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_optint(L, 4, 255));
   lua_pushcolor(L, &clr);
   return 1;
 }
