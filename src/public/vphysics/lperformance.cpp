@@ -62,35 +62,27 @@ LUA_API lua_Physics_performanceparams_t lua_toperformanceparams (lua_State *L, i
 
 
 /*
-** set functions (stack -> Lua)
+** push functions (C -> stack)
 */
 
 
-LUA_API void lua_setperformanceparams (lua_State *L, int idx, lua_Physics_performanceparams_t *pOutput) {
-  idx = idx - 2;
-  lua_pushstring(L, "maxCollisionsPerObjectPerTimestep");
+LUA_API void lua_pushperformanceparams (lua_State *L, lua_Physics_performanceparams_t *pOutput) {
+  lua_newtable(L);
   lua_pushinteger(L, pOutput->maxCollisionChecksPerTimestep);
-  lua_settable(L, idx);
-  lua_pushstring(L, "maxCollisionChecksPerTimestep");
+  lua_setfield(L, -2, "maxCollisionsPerObjectPerTimestep");
   lua_pushinteger(L, pOutput->maxCollisionChecksPerTimestep);
-  lua_settable(L, idx);
-  lua_pushstring(L, "maxVelocity");
+  lua_setfield(L, -2, "maxCollisionChecksPerTimestep");
   lua_pushnumber(L, pOutput->maxVelocity);
-  lua_settable(L, idx);
-  lua_pushstring(L, "maxAngularVelocity");
+  lua_setfield(L, -2, "maxVelocity");
   lua_pushnumber(L, pOutput->maxAngularVelocity);
-  lua_settable(L, idx);
-  lua_pushstring(L, "lookAheadTimeObjectsVsWorld");
+  lua_setfield(L, -2, "maxAngularVelocity");
   lua_pushnumber(L, pOutput->lookAheadTimeObjectsVsWorld);
-  lua_settable(L, idx);
-  lua_pushstring(L, "lookAheadTimeObjectsVsObject");
+  lua_setfield(L, -2, "lookAheadTimeObjectsVsWorld");
   lua_pushnumber(L, pOutput->lookAheadTimeObjectsVsObject);
-  lua_settable(L, idx);
-  lua_pushstring(L, "minFrictionMass");
+  lua_setfield(L, -2, "lookAheadTimeObjectsVsObject");
   lua_pushnumber(L, pOutput->minFrictionMass);
-  lua_settable(L, idx);
-  lua_pushstring(L, "maxFrictionMass");
+  lua_setfield(L, -2, "minFrictionMass");
   lua_pushnumber(L, pOutput->maxFrictionMass);
-  lua_settable(L, idx);
+  lua_setfield(L, -2, "maxFrictionMass");
 }
 

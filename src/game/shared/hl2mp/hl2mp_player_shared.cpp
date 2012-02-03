@@ -23,6 +23,7 @@
 #include "luamanager.h"
 #include "lhl2mp_player_shared.h"
 #include "mathlib/lvector.h"
+#include "lvphysics_interface.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -83,6 +84,7 @@ void CHL2MP_Player::PlayStepSound( Vector &vecOrigin, surfacedata_t *psurface, f
 	BEGIN_LUA_CALL_HOOK( "PlayerPlayStepSound" );
 		lua_pushhl2mpplayer( L, this );
 		lua_pushvector( L, &vecOrigin );
+		lua_pushsurfacedata( L, psurface );
 		lua_pushnumber( L, fvol );
 		lua_pushboolean( L, force );
 	END_LUA_CALL_HOOK( 4, 1 );

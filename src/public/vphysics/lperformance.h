@@ -26,9 +26,9 @@ LUA_API lua_Physics_performanceparams_t      (lua_toperformanceparams) (lua_Stat
 
 
 /*
-** set functions (stack -> Lua)
+** push functions (C -> stack)
 */
-LUA_API void  (lua_setperformanceparams) (lua_State *L, int idx, lua_Physics_performanceparams_t *pOutput);
+LUA_API void  (lua_pushperformanceparams) (lua_State *L, lua_Physics_performanceparams_t *pOutput);
 
 
 #endif // LPERFORMANCE_H

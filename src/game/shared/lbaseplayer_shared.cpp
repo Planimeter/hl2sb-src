@@ -13,6 +13,7 @@
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
 #include "mathlib/lvector.h"
+#include "lvphysics_interface.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -387,6 +388,11 @@ static int CBasePlayer_PhysicsSimulate (lua_State *L) {
 static int CBasePlayer_PhysicsSolidMaskForEntity (lua_State *L) {
   lua_pushinteger(L, luaL_checkplayer(L, 1)->PhysicsSolidMaskForEntity());
   return 1;
+}
+
+static int CBasePlayer_PlayStepSound (lua_State *L) {
+  luaL_checkplayer(L, 1)->PlayStepSound(*luaL_checkvector(L, 2), &lua_tosurfacedata(L, 3), luaL_checknumber(L, 4), luaL_checkboolean(L, 5));
+  return 0;
 }
 
 static int CBasePlayer_PlayerUse (lua_State *L) {
