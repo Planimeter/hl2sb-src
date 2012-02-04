@@ -314,7 +314,7 @@ void CHL2MPClientScoreBoardDialog::UpdateTeamInfo()
 				gamemode = "Half-Life 2: Sandbox";
 			}
 			lua_pop( L, 1 );
-			Q_strtowcs( gamemode, Q_strlen( gamemode ) + 1, wgamemode, 64 );
+			g_pVGuiLocalize->ConvertANSIToUnicode( gamemode, wgamemode, sizeof( wgamemode ) );
 #endif
 			switch ( teamIndex ) 
 			{

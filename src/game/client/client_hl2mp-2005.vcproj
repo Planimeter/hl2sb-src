@@ -1502,6 +1502,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\vgui\LVGUI.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lvphysics_interface.cpp"
 				>
 			</File>
@@ -4707,6 +4711,10 @@
 			</File>
 			<File
 				RelativePath="..\..\public\mathlib\lvector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\public\vgui\LVGUI.h"
 				>
 			</File>
 			<File

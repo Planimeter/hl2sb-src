@@ -28,10 +28,10 @@ using namespace vgui;
 
 
 LUA_API lua_Panel *lua_topanel (lua_State *L, int idx) {
-  PHandle *hPanel = dynamic_cast<PHandle *>((PHandle *)lua_touserdata(L, idx));
-  if (hPanel == NULL)
+  PHandle *phPanel = dynamic_cast<PHandle *>((PHandle *)lua_touserdata(L, idx));
+  if (phPanel == NULL)
     return NULL;
-  return (lua_Panel *)hPanel->Get();
+  return (lua_Panel *)phPanel->Get();
 }
 
 
@@ -42,16 +42,16 @@ LUA_API lua_Panel *lua_topanel (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushpanel (lua_State *L, Panel *pPanel) {
-  PHandle *hPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
-  hPanel->Set(pPanel);
+  PHandle *phPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
+  phPanel->Set(pPanel);
   luaL_getmetatable(L, "Panel");
   lua_setmetatable(L, -2);
 }
 
 
 LUA_API void lua_pushpanel (lua_State *L, VPANEL panel) {
-  PHandle *hPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
-  hPanel->Set(ivgui()->PanelToHandle(panel));
+  PHandle *phPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
+  phPanel->Set(ivgui()->PanelToHandle(panel));
   luaL_getmetatable(L, "Panel");
   lua_setmetatable(L, -2);
 }
@@ -62,6 +62,16 @@ LUALIB_API lua_Panel *luaL_checkpanel (lua_State *L, int narg) {
   if (d == NULL)  /* avoid extra test when d is not 0 */
     luaL_argerror(L, narg, "attempt to index a NULL panel");
   return d;
+}
+
+
+LUALIB_API VPANEL luaL_checkvpanel (lua_State *L, int narg) {
+  lua_Panel *d = lua_topanel(L, narg);
+  if (d == NULL)  /* avoid extra test when d is not 0 */
+    luaL_argerror(L, narg, "attempt to index a NULL panel");
+  PHandle hPanel;
+  hPanel.Set(d);
+  return ivgui()->HandleToPanel(hPanel.m_iPanelID);
 }
 
 
