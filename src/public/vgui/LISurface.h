@@ -12,6 +12,6 @@
 #pragma once
 #endif
 
-int luaopen_surface(lua_State *L);
+LUALIB_API int luaopen_surface(lua_State *L);
 
 #endif // LISURFACE_H

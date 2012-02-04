@@ -1680,7 +1680,7 @@ static const luaL_Reg CBaseEntity_funcs[] = {
 /*
 ** Open CBaseEntity object
 */
-int luaopen_CBaseEntity_shared (lua_State *L) {
+LUALIB_API int luaopen_CBaseEntity_shared (lua_State *L) {
   luaL_getmetatable(L, "CBaseEntity");
   if (lua_isnoneornil(L, -1)) {
     lua_pop(L, 1);

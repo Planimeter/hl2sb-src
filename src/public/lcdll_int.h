@@ -10,6 +10,6 @@
 #pragma once
 #endif
 
-int luaopen_engine(lua_State *L);
+LUALIB_API int luaopen_engine(lua_State *L);
 
 #endif // LCDLL_INT_H

@@ -42,8 +42,8 @@ LUALIB_API lua_Vector *(luaL_checkvector) (lua_State *L, int narg);
 LUALIB_API lua_QAngle *(luaL_checkangle) (lua_State *L, int narg);
 
 
-int luaopen_Vector(lua_State *L);
-int luaopen_QAngle(lua_State *L);
+LUALIB_API int luaopen_Vector(lua_State *L);
+LUALIB_API int luaopen_QAngle(lua_State *L);
 
 #endif
 

@@ -22,9 +22,9 @@
 */
 
 
-LUA_API lua_CRecipientFilter *lua_torecipientfilter (lua_State *L, int idx) {
+LUA_API lua_CRecipientFilter &lua_torecipientfilter (lua_State *L, int idx) {
   lua_CRecipientFilter *filter = (lua_CRecipientFilter *)lua_touserdata(L, idx);
-  return filter;
+  return *filter;
 }
 
 
@@ -34,117 +34,117 @@ LUA_API lua_CRecipientFilter *lua_torecipientfilter (lua_State *L, int idx) {
 */
 
 
-LUA_API void lua_pushrecipientfilter (lua_State *L, lua_CRecipientFilter *filter) {
+LUA_API void lua_pushrecipientfilter (lua_State *L, lua_CRecipientFilter &filter) {
   lua_CRecipientFilter *pFilter = (lua_CRecipientFilter *)lua_newuserdata(L, sizeof(lua_CRecipientFilter));
-  *pFilter = *filter;
+  *pFilter = filter;
   luaL_getmetatable(L, "CRecipientFilter");
   lua_setmetatable(L, -2);
 }
 
 
-LUALIB_API lua_CRecipientFilter *luaL_checkrecipientfilter (lua_State *L, int narg) {
+LUALIB_API lua_CRecipientFilter &luaL_checkrecipientfilter (lua_State *L, int narg) {
   lua_CRecipientFilter *d = (lua_CRecipientFilter *)luaL_checkudata(L, narg, "CRecipientFilter");
-  return d;
+  return *d;
 }
 
 
 static int CRecipientFilter_AddAllPlayers (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->AddAllPlayers();
+  luaL_checkrecipientfilter(L, 1).AddAllPlayers();
   return 0;
 }
 
 static int CRecipientFilter_AddRecipient (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->AddRecipient(luaL_checkplayer(L, 2));
+  luaL_checkrecipientfilter(L, 1).AddRecipient(luaL_checkplayer(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_AddRecipientsByPAS (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->AddRecipientsByPAS(*luaL_checkvector(L, 2));
+  luaL_checkrecipientfilter(L, 1).AddRecipientsByPAS(*luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_AddRecipientsByPVS (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->AddRecipientsByPVS(*luaL_checkvector(L, 2));
+  luaL_checkrecipientfilter(L, 1).AddRecipientsByPVS(*luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_CopyFrom (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->CopyFrom(*luaL_checkrecipientfilter(L, 2));
+  luaL_checkrecipientfilter(L, 1).CopyFrom(luaL_checkrecipientfilter(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_GetRecipientCount (lua_State *L) {
-  lua_pushinteger(L, luaL_checkrecipientfilter(L, 1)->GetRecipientCount());
+  lua_pushinteger(L, luaL_checkrecipientfilter(L, 1).GetRecipientCount());
   return 1;
 }
 
 static int CRecipientFilter_GetRecipientIndex (lua_State *L) {
-  lua_pushinteger(L, luaL_checkrecipientfilter(L, 1)->GetRecipientIndex(luaL_checkint(L, 2)));
+  lua_pushinteger(L, luaL_checkrecipientfilter(L, 1).GetRecipientIndex(luaL_checkint(L, 2)));
   return 1;
 }
 
 static int CRecipientFilter_IgnorePredictionCull (lua_State *L) {
-  lua_pushboolean(L, luaL_checkrecipientfilter(L, 1)->IgnorePredictionCull());
+  lua_pushboolean(L, luaL_checkrecipientfilter(L, 1).IgnorePredictionCull());
   return 1;
 }
 
 static int CRecipientFilter_IsInitMessage (lua_State *L) {
-  lua_pushboolean(L, luaL_checkrecipientfilter(L, 1)->IsInitMessage());
+  lua_pushboolean(L, luaL_checkrecipientfilter(L, 1).IsInitMessage());
   return 1;
 }
 
 static int CRecipientFilter_IsReliable (lua_State *L) {
-  lua_pushboolean(L, luaL_checkrecipientfilter(L, 1)->IsReliable());
+  lua_pushboolean(L, luaL_checkrecipientfilter(L, 1).IsReliable());
   return 1;
 }
 
 static int CRecipientFilter_IsUsingPredictionRules (lua_State *L) {
-  lua_pushboolean(L, luaL_checkrecipientfilter(L, 1)->IsUsingPredictionRules());
+  lua_pushboolean(L, luaL_checkrecipientfilter(L, 1).IsUsingPredictionRules());
   return 1;
 }
 
 static int CRecipientFilter_MakeInitMessage (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->MakeInitMessage();
+  luaL_checkrecipientfilter(L, 1).MakeInitMessage();
   return 0;
 }
 
 static int CRecipientFilter_MakeReliable (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->MakeReliable();
+  luaL_checkrecipientfilter(L, 1).MakeReliable();
   return 0;
 }
 
 static int CRecipientFilter_RemoveAllRecipients (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->RemoveAllRecipients();
+  luaL_checkrecipientfilter(L, 1).RemoveAllRecipients();
   return 0;
 }
 
 static int CRecipientFilter_RemoveRecipient (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->RemoveRecipient(luaL_checkplayer(L, 2));
+  luaL_checkrecipientfilter(L, 1).RemoveRecipient(luaL_checkplayer(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_RemoveRecipientByPlayerIndex (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->RemoveRecipientByPlayerIndex(luaL_checkint(L, 2));
+  luaL_checkrecipientfilter(L, 1).RemoveRecipientByPlayerIndex(luaL_checkint(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_RemoveRecipientsByPVS (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->RemoveRecipientsByPVS(*luaL_checkvector(L, 2));
+  luaL_checkrecipientfilter(L, 1).RemoveRecipientsByPVS(*luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_Reset (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->Reset();
+  luaL_checkrecipientfilter(L, 1).Reset();
   return 0;
 }
 
 static int CRecipientFilter_SetIgnorePredictionCull (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->SetIgnorePredictionCull(luaL_checkboolean(L, 2));
+  luaL_checkrecipientfilter(L, 1).SetIgnorePredictionCull(luaL_checkboolean(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_UsePredictionRules (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1)->UsePredictionRules();
+  luaL_checkrecipientfilter(L, 1).UsePredictionRules();
   return 0;
 }
 
@@ -181,8 +181,8 @@ static const luaL_Reg CRecipientFiltermeta[] = {
 
 
 static int luasrc_CRecipientFilter (lua_State *L) {
-  CRecipientFilter filter = CRecipientFilter();
-  lua_pushrecipientfilter(L, &filter);
+  CRecipientFilter filter;
+  lua_pushrecipientfilter(L, filter);
   return 1;
 }
 
@@ -196,9 +196,11 @@ static const luaL_Reg CRecipientFilter_funcs[] = {
 /*
 ** Open CRecipientFilter object
 */
-int luaopen_CRecipientFilter (lua_State *L) {
+LUALIB_API int luaopen_CRecipientFilter (lua_State *L) {
   luaL_newmetatable(L, "CRecipientFilter");
   luaL_register(L, NULL, CRecipientFiltermeta);
+  lua_pushvalue(L, -1);  /* push metatable */
+  lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
   lua_pushstring(L, "recipientfilter");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "recipientfilter" */
   luaL_register(L, "_G", CRecipientFilter_funcs);

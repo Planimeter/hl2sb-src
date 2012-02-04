@@ -103,7 +103,7 @@ static const luaL_Reg ISteamFriendsmeta[] = {
 /*
 ** Open ISteamFriends object
 */
-int luaopen_ISteamFriends (lua_State *L) {
+LUALIB_API int luaopen_ISteamFriends (lua_State *L) {
   luaL_newmetatable(L, "ISteamFriends");
   luaL_register(L, NULL, ISteamFriendsmeta);
   lua_pushvalue(L, -1);  /* push metatable */

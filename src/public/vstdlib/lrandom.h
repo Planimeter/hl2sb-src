@@ -9,7 +9,7 @@
 #ifndef LVSTDLIB_RANDOM_H
 #define LVSTDLIB_RANDOM_H
 
-int luaopen_random(lua_State *L);
+LUALIB_API int luaopen_random(lua_State *L);
 
 #endif // LVSTDLIB_RANDOM_H
 

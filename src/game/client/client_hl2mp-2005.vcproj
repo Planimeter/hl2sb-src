@@ -2561,6 +2561,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\lc_recipientfilter.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\particlesphererenderer.cpp"
 					>
 				</File>
@@ -3843,6 +3847,10 @@
 			</File>
 			<File
 				RelativePath=".\kbutton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\lc_recipientfilter.h"
 				>
 			</File>
 			<File

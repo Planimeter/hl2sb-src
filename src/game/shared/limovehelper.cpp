@@ -119,7 +119,7 @@ static const luaL_Reg IMoveHelper_funcs[] = {
 /*
 ** Open IMoveHelper object
 */
-int luaopen_IMoveHelper (lua_State *L) {
+LUALIB_API int luaopen_IMoveHelper (lua_State *L) {
   luaL_newmetatable(L, "IMoveHelper");
   luaL_register(L, NULL, IMoveHelpermeta);
   lua_pushvalue(L, -1);  /* push metatable */

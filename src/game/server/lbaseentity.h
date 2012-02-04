@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-int luaopen_CBaseEntity(lua_State *L);
+LUALIB_API int luaopen_CBaseEntity(lua_State *L);
 
 
 #endif // LBASEENTITY_H

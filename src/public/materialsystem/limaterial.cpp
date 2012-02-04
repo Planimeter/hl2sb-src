@@ -349,7 +349,7 @@ static const luaL_Reg IMaterialmeta[] = {
 /*
 ** Open IMaterial object
 */
-int luaopen_IMaterial (lua_State *L) {
+LUALIB_API int luaopen_IMaterial (lua_State *L) {
   luaL_newmetatable(L, "IMaterial");
   luaL_register(L, NULL, IMaterialmeta);
   lua_pushvalue(L, -1);  /* push metatable */

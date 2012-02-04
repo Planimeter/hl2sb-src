@@ -11,6 +11,6 @@
 #pragma once
 #endif
 
-int luaopen_gpGlobals(lua_State *L);
+LUALIB_API int luaopen_gpGlobals(lua_State *L);
 
 #endif // LGLOBALVARS_BASE_H

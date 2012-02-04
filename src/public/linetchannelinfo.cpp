@@ -238,7 +238,7 @@ static const luaL_Reg INetChannelInfometa[] = {
 /*
 ** Open INetChannelInfo object
 */
-int luaopen_INetChannelInfo (lua_State *L) {
+LUALIB_API int luaopen_INetChannelInfo (lua_State *L) {
   luaL_newmetatable(L, "INetChannelInfo");
   luaL_register(L, NULL, INetChannelInfometa);
   lua_pushvalue(L, -1);  /* push metatable */

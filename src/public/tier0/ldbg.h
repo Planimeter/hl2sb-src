@@ -12,7 +12,7 @@
 #pragma once
 #endif
 
-int luaopen_dbg(lua_State *L);
+LUALIB_API int luaopen_dbg(lua_State *L);
 
 //-----------------------------------------------------------------------------
 

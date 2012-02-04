@@ -17,6 +17,7 @@
 #ifdef CLIENT_DLL
 #include "lc_baseanimating.h"
 #include "lc_baseentity.h"
+#include "lc_recipientfilter.h"
 #include "lcdll_int.h"
 #include "lcdll_util.h"
 #include "liclientshadowmgr.h"
@@ -226,6 +227,7 @@ void luasrc_init (void) {
   luaopen_CBaseCombatWeapon(L);
   luaopen_CBaseEntity(L);
   luaopen_CBaseEntity_shared(L);
+  luaopen_CRecipientFilter(L);
 #ifdef GAME_DLL
   luaopen_CBasePlayer(L);
 #endif
@@ -245,7 +247,6 @@ void luasrc_init (void) {
   luaopen_ISteamFriends(L);
 #ifdef GAME_DLL
   luaopen_INetChannelInfo(L);
-  luaopen_CRecipientFilter(L);
 #endif
   luaopen_debugoverlay(L);
   luaopen_INetworkStringTable(L);

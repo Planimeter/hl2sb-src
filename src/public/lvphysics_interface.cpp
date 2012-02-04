@@ -559,7 +559,7 @@ static const luaL_Reg physenvlib[] = {
 /*
 ** Open physenv library
 */
-int luaopen_physenv (lua_State *L) {
+LUALIB_API int luaopen_physenv (lua_State *L) {
   luaL_register(L, "physenv", physenvlib);
   lua_pop(L, 1);
   return 1;
@@ -1022,7 +1022,7 @@ static const luaL_Reg IPhysicsObjectmeta[] = {
 /*
 ** Open IPhysicsObject object
 */
-int luaopen_IPhysicsObject (lua_State *L) {
+LUALIB_API int luaopen_IPhysicsObject (lua_State *L) {
   luaL_newmetatable(L, "IPhysicsObject");
   luaL_register(L, NULL, IPhysicsObjectmeta);
   lua_pushvalue(L, -1);  /* push metatable */
@@ -1104,7 +1104,7 @@ static const luaL_Reg IPhysicsSurfacePropsmeta[] = {
 /*
 ** Open IPhysicsSurfaceProps object
 */
-int luaopen_IPhysicsSurfaceProps (lua_State *L) {
+LUALIB_API int luaopen_IPhysicsSurfaceProps (lua_State *L) {
   luaL_newmetatable(L, "IPhysicsSurfaceProps");
   luaL_register(L, NULL, IPhysicsSurfacePropsmeta);
   lua_pushvalue(L, -1);  /* push metatable */

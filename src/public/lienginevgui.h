@@ -13,6 +13,6 @@
 #pragma once
 #endif
 
-int luaopen_enginevgui(lua_State *L);
+LUALIB_API int luaopen_enginevgui(lua_State *L);
 
 #endif // LIENGINEVGUI_H

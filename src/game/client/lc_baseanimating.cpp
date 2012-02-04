@@ -969,7 +969,7 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
 /*
 ** Open CBaseAnimating object
 */
-int luaopen_CBaseAnimating (lua_State *L) {
+LUALIB_API int luaopen_CBaseAnimating (lua_State *L) {
   luaL_newmetatable(L, "CBaseAnimating");
   luaL_register(L, NULL, CBaseAnimatingmeta);
   lua_pushstring(L, "entity");

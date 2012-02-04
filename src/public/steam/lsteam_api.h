@@ -10,6 +10,6 @@
 #pragma once
 #endif
 
-int luaopen_steamapicontext(lua_State *L);
+LUALIB_API int luaopen_steamapicontext(lua_State *L);
 
 #endif // LSTEAM_API_H

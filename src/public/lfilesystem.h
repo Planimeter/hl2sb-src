@@ -12,6 +12,6 @@
 #pragma once
 #endif
 
-int luaopen_filesystem(lua_State *L);
+LUALIB_API int luaopen_filesystem(lua_State *L);
 
 #endif // LFILESYSTEM_H

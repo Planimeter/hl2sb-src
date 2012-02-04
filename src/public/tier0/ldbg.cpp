@@ -77,7 +77,7 @@ static int luasrc_DevLog (lua_State *L) {
 }
 
 static int luasrc_ConColorMsg (lua_State *L) {
-  ConColorMsg(*(Color *)luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
+  ConColorMsg(luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
   return 0;
 }
 
@@ -97,7 +97,7 @@ static int luasrc_ConLog (lua_State *L) {
 }
 
 static int luasrc_ConDColorMsg (lua_State *L) {
-  ConDColorMsg(*(Color *)luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
+  ConDColorMsg(luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
   return 0;
 }
 
@@ -160,7 +160,7 @@ static const luaL_Reg dbg_funcs[] = {
 };
 
 
-int luaopen_dbg (lua_State *L) {
+LUALIB_API int luaopen_dbg (lua_State *L) {
   luaL_register(L, "dbg", dbg_funcs);
   lua_pop(L, 1);
   return 1;

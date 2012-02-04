@@ -35,6 +35,6 @@ LUALIB_API lua_CBaseEntity *(luaL_optentity) (lua_State *L, int narg,
                                                             lua_CBaseEntity *def);
 
 
-int luaopen_CBaseEntity_shared(lua_State *L);
+LUALIB_API int luaopen_CBaseEntity_shared(lua_State *L);
 
 #endif // LBASEENTITY_SHARED_H

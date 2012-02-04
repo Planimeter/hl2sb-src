@@ -10,6 +10,6 @@
 #pragma once
 #endif
 
-int luaopen_CBasePlayer(lua_State *L);
+LUALIB_API int luaopen_CBasePlayer(lua_State *L);
 
 #endif // LPLAYER_H

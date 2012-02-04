@@ -12,6 +12,6 @@
 #pragma once
 #endif
 
-int luaopen_prediction(lua_State *L);
+LUALIB_API int luaopen_prediction(lua_State *L);
 
 #endif // LPREDICTION_H

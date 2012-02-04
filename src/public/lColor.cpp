@@ -21,9 +21,9 @@
 */
 
 
-LUA_API lua_Color *lua_tocolor (lua_State *L, int idx) {
+LUA_API lua_Color &lua_tocolor (lua_State *L, int idx) {
   lua_Color *clr = (lua_Color *)luaL_checkudata(L, idx, "Color");
-  return clr;
+  return *clr;
 }
 
 
@@ -33,42 +33,38 @@ LUA_API lua_Color *lua_tocolor (lua_State *L, int idx) {
 */
 
 
-LUA_API void lua_pushcolor (lua_State *L, lua_Color *clr) {
-  if (clr == NULL)
-    lua_pushnil(L);
-  else {
-    lua_Color *pColor = (lua_Color *)lua_newuserdata(L, sizeof(lua_Color));
-    *pColor = *clr;
-    luaL_getmetatable(L, "Color");
-    lua_setmetatable(L, -2);
-  }
+LUA_API void lua_pushcolor (lua_State *L, lua_Color &clr) {
+  lua_Color *pColor = (lua_Color *)lua_newuserdata(L, sizeof(lua_Color));
+  *pColor = clr;
+  luaL_getmetatable(L, "Color");
+  lua_setmetatable(L, -2);
 }
 
 
-LUALIB_API lua_Color *luaL_checkcolor (lua_State *L, int narg) {
+LUALIB_API lua_Color &luaL_checkcolor (lua_State *L, int narg) {
   lua_Color *d = (lua_Color *)luaL_checkudata(L, narg, "Color");
-  return d;
+  return *d;
 }
 
 
 static int Color_a (lua_State *L) {
-  lua_pushinteger(L, luaL_checkcolor(L, 1)->a());
+  lua_pushinteger(L, luaL_checkcolor(L, 1).a());
   return 1;
 }
 
 static int Color_b (lua_State *L) {
-  lua_pushinteger(L, luaL_checkcolor(L, 1)->b());
+  lua_pushinteger(L, luaL_checkcolor(L, 1).b());
   return 1;
 }
 
 static int Color_g (lua_State *L) {
-  lua_pushinteger(L, luaL_checkcolor(L, 1)->g());
+  lua_pushinteger(L, luaL_checkcolor(L, 1).g());
   return 1;
 }
 
 static int Color_GetColor (lua_State *L) {
   int r, g, b, a;
-  luaL_checkcolor(L, 1)->GetColor(r, g, b, a);
+  luaL_checkcolor(L, 1).GetColor(r, g, b, a);
   lua_pushinteger(L, r);
   lua_pushinteger(L, g);
   lua_pushinteger(L, b);
@@ -77,28 +73,28 @@ static int Color_GetColor (lua_State *L) {
 }
 
 static int Color_GetRawColor (lua_State *L) {
-  lua_pushinteger(L, luaL_checkcolor(L, 1)->GetRawColor());
+  lua_pushinteger(L, luaL_checkcolor(L, 1).GetRawColor());
   return 1;
 }
 
 static int Color_r (lua_State *L) {
-  lua_pushinteger(L, luaL_checkcolor(L, 1)->r());
+  lua_pushinteger(L, luaL_checkcolor(L, 1).r());
   return 1;
 }
 
 static int Color_SetColor (lua_State *L) {
-  luaL_checkcolor(L, 1)->SetColor(luaL_checkint(L, 1), luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_optint(L, 4, 255));
+  luaL_checkcolor(L, 1).SetColor(luaL_checkint(L, 1), luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_optint(L, 4, 255));
   return 0;
 }
 
 static int Color_SetRawColor (lua_State *L) {
-  luaL_checkcolor(L, 1)->SetRawColor(luaL_checkint(L, 1));
+  luaL_checkcolor(L, 1).SetRawColor(luaL_checkint(L, 1));
   return 0;
 }
 
 static int Color___tostring (lua_State *L) {
-  Color *color = luaL_checkcolor(L, 1);
-  lua_pushfstring(L, "Color: %s", static_cast<const char *>(CFmtStr("(%i, %i, %i, %i)", color->r(), color->g(), color->b(), color->a())));
+  Color color = luaL_checkcolor(L, 1);
+  lua_pushfstring(L, "Color: %s", static_cast<const char *>(CFmtStr("(%i, %i, %i, %i)", color.r(), color.g(), color.b(), color.a())));
   return 1;
 }
 
@@ -125,7 +121,7 @@ static const luaL_Reg Colormeta[] = {
 
 static int luasrc_Color (lua_State *L) {
   Color clr = Color(luaL_checkint(L, 1), luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_optint(L, 4, 255));
-  lua_pushcolor(L, &clr);
+  lua_pushcolor(L, clr);
   return 1;
 }
 
@@ -139,7 +135,7 @@ static const luaL_Reg Color_funcs[] = {
 /*
 ** Open Color object
 */
-int luaopen_Color (lua_State *L) {
+LUALIB_API int luaopen_Color (lua_State *L) {
   luaL_newmetatable(L, "Color");
   luaL_register(L, NULL, Colormeta);
   lua_pushvalue(L, -1);  /* push metatable */

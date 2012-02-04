@@ -48,8 +48,8 @@ LUALIB_API lua_ConVar *(luaL_checkconvar) (lua_State *L, int narg);
 void ResetConCommandDatabase( void );
 void ResetConVarDatabase( void );
 
-int luaopen_ConCommand(lua_State *L);
-int luaopen_ConVar(lua_State *L);
+LUALIB_API int luaopen_ConCommand(lua_State *L);
+LUALIB_API int luaopen_ConVar(lua_State *L);
 
 
 #endif // LCONVAR_H

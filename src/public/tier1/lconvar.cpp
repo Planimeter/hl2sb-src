@@ -201,7 +201,7 @@ static const luaL_Reg ConCommand_funcs[] = {
 /*
 ** Open ConCommand object
 */
-int luaopen_ConCommand (lua_State *L) {
+LUALIB_API int luaopen_ConCommand (lua_State *L) {
   luaL_newmetatable(L, "ConCommand");
   luaL_register(L, NULL, ConCommandmeta);
   lua_pushvalue(L, -1);  /* push metatable */
@@ -370,7 +370,7 @@ static const luaL_Reg ConVar_funcs[] = {
 /*
 ** Open ConVar object
 */
-int luaopen_ConVar (lua_State *L) {
+LUALIB_API int luaopen_ConVar (lua_State *L) {
   luaL_newmetatable(L, "ConVar");
   luaL_register(L, NULL, ConVarmeta);
   lua_pushvalue(L, -1);  /* push metatable */

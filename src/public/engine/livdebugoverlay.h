@@ -19,7 +19,7 @@
 #pragma once
 #endif
 
-int luaopen_debugoverlay(lua_State *L);
+LUALIB_API int luaopen_debugoverlay(lua_State *L);
 
 
 #endif // LIVDEBUGOVERLAY_H

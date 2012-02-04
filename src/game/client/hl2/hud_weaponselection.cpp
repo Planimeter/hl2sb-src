@@ -890,7 +890,7 @@ void CHudWeaponSelection::DrawLargeWeaponBox( C_BaseCombatWeapon *pWeapon, bool 
 		lua_pushinteger( L, ypos );
 		lua_pushinteger( L, boxWide );
 		lua_pushinteger( L, boxTall );
-		lua_pushcolor( L, &selectedColor );
+		lua_pushcolor( L, selectedColor );
 		lua_pushnumber( L, alpha );
 		lua_pushinteger( L, number );
 	END_LUA_CALL_WEAPON_HOOK( 8, 0 );

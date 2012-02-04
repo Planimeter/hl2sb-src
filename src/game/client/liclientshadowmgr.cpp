@@ -80,7 +80,7 @@ static const luaL_Reg g_pClientShadowMgrlib[] = {
 /*
 ** Open g_pClientShadowMgr library
 */
-int luaopen_g_pClientShadowMgr (lua_State *L) {
+LUALIB_API int luaopen_g_pClientShadowMgr (lua_State *L) {
   luaL_register(L, "g_pClientShadowMgr", g_pClientShadowMgrlib);
   lua_pop(L, 1);
   return 1;

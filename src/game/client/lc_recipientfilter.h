@@ -5,14 +5,14 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef LRECIPIENTFILTER_H
-#define LRECIPIENTFILTER_H
+#ifndef LC_RECIPIENTFILTER_H
+#define LC_RECIPIENTFILTER_H
 #ifdef _WIN32
 #pragma once
 #endif
 
 /* type for CRecipientFilter functions */
-typedef CRecipientFilter lua_CRecipientFilter;
+typedef C_RecipientFilter lua_CRecipientFilter;
 
 
 
@@ -35,4 +35,4 @@ LUALIB_API lua_CRecipientFilter &(luaL_checkrecipientfilter) (lua_State *L, int 
 
 LUALIB_API int luaopen_CRecipientFilter(lua_State *L);
 
-#endif // LRECIPIENTFILTER_H
+#endif // LC_RECIPIENTFILTER_H

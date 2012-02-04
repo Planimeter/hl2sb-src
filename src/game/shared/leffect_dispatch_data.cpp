@@ -202,7 +202,7 @@ static const luaL_Reg CEffectData_funcs[] = {
 /*
 ** Open CEffectData object
 */
-int luaopen_CEffectData (lua_State *L) {
+LUALIB_API int luaopen_CEffectData (lua_State *L) {
   luaL_newmetatable(L, "CEffectData");
   luaL_register(L, NULL, CEffectDatameta);
   lua_pushstring(L, "effect");

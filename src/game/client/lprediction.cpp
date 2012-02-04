@@ -132,7 +132,7 @@ static const luaL_Reg predictionlib[] = {
 /*
 ** Open prediction library
 */
-int luaopen_prediction (lua_State *L) {
+LUALIB_API int luaopen_prediction (lua_State *L) {
   luaL_register(L, "prediction", predictionlib);
   lua_pop(L, 1);
   return 1;

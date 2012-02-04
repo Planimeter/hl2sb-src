@@ -214,7 +214,7 @@ static const luaL_Reg CHL2MP_Player_funcs[] = {
 /*
 ** Open CHL2MP_Player object
 */
-int luaopen_CHL2MP_Player_shared (lua_State *L) {
+LUALIB_API int luaopen_CHL2MP_Player_shared (lua_State *L) {
   luaL_newmetatable(L, "CHL2MP_Player");
   luaL_register(L, NULL, CHL2MP_Playermeta);
   lua_pushstring(L, "entity");

@@ -10,6 +10,6 @@
 #pragma once
 #endif
 
-int luaopen_UTIL_shared(lua_State *L);
+LUALIB_API int luaopen_UTIL_shared(lua_State *L);
 
 #endif // LUTIL_SHARED_H

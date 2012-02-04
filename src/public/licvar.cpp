@@ -21,7 +21,7 @@ static int cvar_AllocateDLLIdentifier (lua_State *L) {
 }
 
 static int cvar_ConsoleColorPrintf (lua_State *L) {
-  cvar->ConsoleColorPrintf(*(Color *)luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
+  cvar->ConsoleColorPrintf(luaL_checkcolor(L, 1), luaL_checkstring(L, 2));
   return 0;
 }
 
@@ -98,7 +98,7 @@ void RemoveGlobalChangeCallbacks( void )
 /*
 ** Open cvar library
 */
-int luaopen_cvar (lua_State *L) {
+LUALIB_API int luaopen_cvar (lua_State *L) {
   luaL_register(L, "cvar", cvarlib);
   lua_pop(L, 1);
   InstallGlobalChangeCallbacks();

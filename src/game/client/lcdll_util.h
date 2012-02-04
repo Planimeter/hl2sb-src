@@ -13,6 +13,6 @@
 #pragma once
 #endif
 
-int luaopen_UTIL(lua_State *L);
+LUALIB_API int luaopen_UTIL(lua_State *L);
 
 #endif // !LUTIL_H

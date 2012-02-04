@@ -33,7 +33,7 @@ LUA_API void  (lua_pushtrace) (lua_State *L, lua_CGameTrace *tr);
 LUALIB_API lua_CGameTrace *(luaL_checktrace) (lua_State *L, int narg);
 
 
-int luaopen_CGameTrace(lua_State *L);
+LUALIB_API int luaopen_CGameTrace(lua_State *L);
 
 #endif // LGAMETRACE_H
 

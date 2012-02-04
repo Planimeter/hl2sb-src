@@ -89,7 +89,7 @@ static const luaL_Reg gpGlobalslib[] = {
 /*
 ** Open gpGlobals library
 */
-int luaopen_gpGlobals (lua_State *L) {
+LUALIB_API int luaopen_gpGlobals (lua_State *L) {
   luaL_register(L, "gpGlobals", gpGlobalslib);
   lua_pop(L, 1);
   return 1;

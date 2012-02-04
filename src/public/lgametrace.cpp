@@ -187,7 +187,7 @@ static const luaL_Reg CGameTracemeta[] = {
 /*
 ** Open CGameTrace object
 */
-int luaopen_CGameTrace (lua_State *L) {
+LUALIB_API int luaopen_CGameTrace (lua_State *L) {
   luaL_newmetatable(L, "CGameTrace");
   luaL_register(L, NULL, CGameTracemeta);
   lua_pushstring(L, "trace");

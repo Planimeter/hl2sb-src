@@ -1078,7 +1078,7 @@ static const luaL_Reg CBaseCombatWeaponmeta[] = {
 /*
 ** Open CBaseCombatWeapon object
 */
-int luaopen_CBaseCombatWeapon (lua_State *L) {
+LUALIB_API int luaopen_CBaseCombatWeapon (lua_State *L) {
   luaL_newmetatable(L, "CBaseCombatWeapon");
   luaL_register(L, NULL, CBaseCombatWeaponmeta);
   lua_pushstring(L, "entity");

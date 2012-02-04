@@ -300,7 +300,7 @@ static const luaL_Reg CTakeDamageInfo_funcs[] = {
 /*
 ** Open CTakeDamageInfo object
 */
-int luaopen_CTakeDamageInfo (lua_State *L) {
+LUALIB_API int luaopen_CTakeDamageInfo (lua_State *L) {
   luaL_newmetatable(L, "CTakeDamageInfo");
   luaL_register(L, NULL, CTakeDamageInfometa);
   lua_pushvalue(L, -1);  /* push metatable */

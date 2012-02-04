@@ -32,6 +32,6 @@ LUA_API void  (lua_pushweapon) (lua_State *L, lua_CBaseCombatWeapon *pWeapon);
 LUALIB_API lua_CBaseCombatWeapon *(luaL_checkweapon) (lua_State *L, int narg);
 
 
-int luaopen_CBaseCombatWeapon(lua_State *L);
+LUALIB_API int luaopen_CBaseCombatWeapon(lua_State *L);
 
 #endif // LCOMBATWEAPON_SHARED_H

@@ -571,7 +571,7 @@ static const luaL_Reg CBasePlayermeta[] = {
 /*
 ** Open CBasePlayer object
 */
-int luaopen_CBasePlayer (lua_State *L) {
+LUALIB_API int luaopen_CBasePlayer (lua_State *L) {
   luaL_getmetatable(L, "CBasePlayer");
   if (lua_isnoneornil(L, -1)) {
     lua_pop(L, 1);

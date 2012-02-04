@@ -133,7 +133,7 @@ static const luaL_Reg INetworkStringTablemeta[] = {
 /*
 ** Open INetworkStringTable object
 */
-int luaopen_INetworkStringTable (lua_State *L) {
+LUALIB_API int luaopen_INetworkStringTable (lua_State *L) {
   luaL_newmetatable(L, "INetworkStringTable");
   luaL_register(L, NULL, INetworkStringTablemeta);
   lua_pushvalue(L, -1);  /* push metatable */
@@ -199,7 +199,7 @@ static const luaL_Reg networkstringtablelib[] = {
 /*
 ** Open networkstringtable library
 */
-int luaopen_networkstringtable (lua_State *L) {
+LUALIB_API int luaopen_networkstringtable (lua_State *L) {
   luaL_register(L, "networkstringtable", networkstringtablelib);
   lua_pop(L, 1);
   return 1;
