@@ -411,10 +411,14 @@ LUA_API void lua_pushsurfacedata (lua_State *L, lua_surfacedata_t *psurface) {
 
 
 LUA_API void lua_pushphysicssurfaceprops (lua_State *L, lua_IPhysicsSurfaceProps *pProps) {
-  lua_IPhysicsSurfaceProps **ppProps = (lua_IPhysicsSurfaceProps **)lua_newuserdata(L, sizeof(lua_IPhysicsSurfaceProps));
-  *ppProps = pProps;
-  luaL_getmetatable(L, "IPhysicsSurfaceProps");
-  lua_setmetatable(L, -2);
+  if (pProps == NULL)
+    lua_pushnil(L);
+  else {
+    lua_IPhysicsSurfaceProps **ppProps = (lua_IPhysicsSurfaceProps **)lua_newuserdata(L, sizeof(pProps));
+    *ppProps = pProps;
+    luaL_getmetatable(L, "IPhysicsSurfaceProps");
+    lua_setmetatable(L, -2);
+  }
 }
 
 

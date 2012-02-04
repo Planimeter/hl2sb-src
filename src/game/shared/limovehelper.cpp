@@ -38,10 +38,14 @@ LUA_API lua_IMoveHelper *lua_tomovehelper (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushmovehelper (lua_State *L, lua_IMoveHelper *pHelper) {
-  lua_IMoveHelper **ppHelper = (lua_IMoveHelper **)lua_newuserdata(L, sizeof(lua_IMoveHelper));
-  *ppHelper = pHelper;
-  luaL_getmetatable(L, "IMoveHelper");
-  lua_setmetatable(L, -2);
+  if (pHelper == NULL)
+    lua_pushnil(L);
+  else {
+    lua_IMoveHelper **ppHelper = (lua_IMoveHelper **)lua_newuserdata(L, sizeof(lua_IMoveHelper));
+    *ppHelper = pHelper;
+    luaL_getmetatable(L, "IMoveHelper");
+    lua_setmetatable(L, -2);
+  }
 }
 
 
