@@ -39,7 +39,7 @@ LUA_API void lua_pushmaterial (lua_State *L, lua_IMaterial *pMaterial) {
   if (pMaterial == NULL)
     lua_pushnil(L);
   else {
-    lua_IMaterial **ppMaterial = (lua_IMaterial **)lua_newuserdata(L, sizeof(lua_IMaterial));
+    lua_IMaterial **ppMaterial = (lua_IMaterial **)lua_newuserdata(L, sizeof(pMaterial));
     *ppMaterial = pMaterial;
     luaL_getmetatable(L, "IMaterial");
     lua_setmetatable(L, -2);

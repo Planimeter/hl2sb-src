@@ -278,7 +278,7 @@ LUA_API void lua_pushphysicsobject (lua_State *L, lua_IPhysicsObject *pPhysicsOb
   if (pPhysicsObject == NULL)
     lua_pushnil(L);
   else {
-    lua_IPhysicsObject **ppPhysicsObject = (lua_IPhysicsObject **)lua_newuserdata(L, sizeof(lua_IPhysicsObject));
+    lua_IPhysicsObject **ppPhysicsObject = (lua_IPhysicsObject **)lua_newuserdata(L, sizeof(pPhysicsObject));
     *ppPhysicsObject = pPhysicsObject;
     luaL_getmetatable(L, "IPhysicsObject");
     lua_setmetatable(L, -2);

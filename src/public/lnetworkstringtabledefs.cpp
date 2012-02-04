@@ -37,7 +37,7 @@ LUA_API void lua_pushstringtable (lua_State *L, lua_INetworkStringTable *pNetwor
   if (pNetworkStringTable == NULL)
     lua_pushnil(L);
   else {
-    lua_INetworkStringTable **ppNetworkStringTable = (lua_INetworkStringTable **)lua_newuserdata(L, sizeof(lua_INetworkStringTable));
+    lua_INetworkStringTable **ppNetworkStringTable = (lua_INetworkStringTable **)lua_newuserdata(L, sizeof(pNetworkStringTable));
     *ppNetworkStringTable = pNetworkStringTable;
     luaL_getmetatable(L, "INetworkStringTable");
     lua_setmetatable(L, -2);

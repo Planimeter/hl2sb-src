@@ -42,7 +42,7 @@ LUA_API void lua_pushnetchannel (lua_State *L, INetChannelInfo *netchannel) {
   if (netchannel == NULL)
     lua_pushnil(L);
   else {
-    lua_INetChannelInfo **ppNetChannel = (lua_INetChannelInfo **)lua_newuserdata(L, sizeof(lua_INetChannelInfo));
+    lua_INetChannelInfo **ppNetChannel = (lua_INetChannelInfo **)lua_newuserdata(L, sizeof(netchannel));
     *ppNetChannel = netchannel;
     luaL_getmetatable(L, "INetChannelInfo");
     lua_setmetatable(L, -2);
