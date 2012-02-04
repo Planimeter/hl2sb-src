@@ -17,6 +17,7 @@
 #endif
 #include "lbaseplayer_shared.h"
 #include "lgametrace.h"
+#include "SoundEmitterSystem/lisoundemittersystembase.h"
 #include "lshareddefs.h"
 #include "ltakedamageinfo.h"
 #include "mathlib/lvector.h"
@@ -483,6 +484,13 @@ static int CBaseEntity_GetMoveType (lua_State *L) {
 static int CBaseEntity_GetOwnerEntity (lua_State *L) {
   lua_pushentity(L, luaL_checkentity(L, 1)->GetOwnerEntity());
   return 1;
+}
+
+static int CBaseEntity_GetParametersForSound (lua_State *L) {
+  CSoundParameters params;
+  lua_pushboolean(L, CBaseEntity::GetParametersForSound(luaL_checkstring(L, 1), params, luaL_optstring(L, 2, NULL)));
+  lua_pushsoundparameters(L, params);
+  return 2;
 }
 
 static int CBaseEntity_GetPredictionPlayer (lua_State *L) {
@@ -1488,6 +1496,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"GetMoveParent", CBaseEntity_GetMoveParent},
   {"GetMoveType", CBaseEntity_GetMoveType},
   {"GetOwnerEntity", CBaseEntity_GetOwnerEntity},
+  {"GetParametersForSound", CBaseEntity_GetParametersForSound},
   {"GetPredictionPlayer", CBaseEntity_GetPredictionPlayer},
   {"GetPredictionRandomSeed", CBaseEntity_GetPredictionRandomSeed},
   {"GetSimulatingPlayer", CBaseEntity_GetSimulatingPlayer},

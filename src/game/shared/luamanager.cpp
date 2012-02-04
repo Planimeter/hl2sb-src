@@ -30,6 +30,7 @@
 #include "leiface.h"
 #include "linetchannelinfo.h"
 #include "lplayer.h"
+#include "lrecipientfilter.h"
 #include "lutil.h"
 #endif
 #include "lbasecombatweapon_shared.h"
@@ -244,6 +245,7 @@ void luasrc_init (void) {
   luaopen_ISteamFriends(L);
 #ifdef GAME_DLL
   luaopen_INetChannelInfo(L);
+  luaopen_CRecipientFilter(L);
 #endif
   luaopen_debugoverlay(L);
   luaopen_INetworkStringTable(L);

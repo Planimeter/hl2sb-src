@@ -2174,6 +2174,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lrecipientfilter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\lrecipientfilter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\shared\lshareddefs.cpp"
 				>
 			</File>

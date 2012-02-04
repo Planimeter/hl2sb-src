@@ -187,7 +187,7 @@ static int luasrc_CEffectData (lua_State *L) {
 }
 
 static int luasrc_DispatchEffect (lua_State *L) {
-  DispatchEffect( luaL_checkstring(L, 1), *(CEffectData *)luaL_checkeffect(L, 2) );
+  DispatchEffect( luaL_checkstring(L, 1), *luaL_checkeffect(L, 2) );
   return 0;
 }
 
