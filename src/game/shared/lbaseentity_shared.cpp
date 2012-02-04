@@ -7,13 +7,21 @@
 #define lbaseentity_shared_cpp
 
 #include "cbase.h"
+#ifdef CLIENT_DLL
+#include "c_recipientfilter.h"
+#define CRecipientFilter C_RecipientFilter
+#else
+#include "recipientfilter.h"
+#endif
 #include "takedamageinfo.h"
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
 #ifdef CLIENT_DLL
 #include "lc_baseanimating.h"
+#include "lc_recipientfilter.h"
 #else
 #include "lbaseanimating.h"
+#include "lrecipientfilter.h"
 #endif
 #include "lbaseplayer_shared.h"
 #include "lgametrace.h"
@@ -213,23 +221,47 @@ static int CBaseEntity_DoImpactEffect (lua_State *L) {
 }
 
 static int CBaseEntity_EarPosition (lua_State *L) {
-  Vector v = luaL_checkentity(L, 1)->EarPosition();
-  lua_pushvector(L, v);
+  lua_pushvector(L, luaL_checkentity(L, 1)->EarPosition());
   return 1;
 }
 
 static int CBaseEntity_EmitAmbientSound (lua_State *L) {
-  float duration;
+  float duration = luaL_optnumber(L, 6, 0);
   CBaseEntity::EmitAmbientSound(luaL_checkint(L, 1), luaL_checkvector(L, 2), luaL_checkstring(L, 3), luaL_optint(L, 4, 0), luaL_optnumber(L, 5, 0.0f), &duration);
-  lua_pushnumber(L, duration);
-  return 1;
+  return 0;
 }
 
 static int CBaseEntity_EmitSound (lua_State *L) {
-  float duration;
-  luaL_checkentity(L, 1)->EmitSound(luaL_checkstring(L, 2), luaL_optnumber(L, 3, 0.0f), &duration);
-  lua_pushnumber(L, duration);
-  return 1;
+  if (lua_isuserdata(L, 1) && lua_toentity(L, 1)) {
+    float duration = luaL_optnumber(L, 4, 0);
+	luaL_checkentity(L, 1)->EmitSound(luaL_checkstring(L, 2), luaL_optnumber(L, 3, 0.0f), &duration);
+  } else if (lua_isuserdata(L, 1) && dynamic_cast<CRecipientFilter *>((CRecipientFilter *)lua_touserdata(L, 1))) {
+    switch(lua_type(L, 3)) {
+      case LUA_TSTRING:
+        {
+          if (lua_gettop(L) < 3)
+            CBaseEntity::EmitSound(luaL_checkrecipientfilter(L, 1), luaL_checkint(L, 2), luaL_checkstring(L, 3));
+          else {
+            float duration = luaL_optnumber(L, 6, 0);
+            CBaseEntity::EmitSound(luaL_checkrecipientfilter(L, 1), luaL_checkint(L, 2), luaL_checkstring(L, 3), &luaL_checkvector(L, 4), luaL_optnumber(L, 5, 0.0f), &duration);
+          }
+          break;
+        }
+      case LUA_TTABLE:
+        {
+          EmitSound_t ep;
+		  lua_toemitsound(L, 3, ep);
+
+          CBaseEntity::EmitSound(luaL_checkrecipientfilter(L, 1), luaL_checkint(L, 2), ep);
+          break;
+        }
+      default:
+        luaL_typerror(L, 3, "string or CRecipientFilter");
+        break;
+    }
+  } else
+    luaL_typerror(L, 1, "CBaseEntity or CRecipientFilter");
+  return 0;
 }
 
 static int CBaseEntity_EndGroundContact (lua_State *L) {

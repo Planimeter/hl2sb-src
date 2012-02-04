@@ -17,14 +17,16 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+static lua_CRecipientFilter *s_pFilter = new C_RecipientFilter();
+
 /*
 ** access functions (stack -> C)
 */
 
 
 LUA_API lua_CRecipientFilter &lua_torecipientfilter (lua_State *L, int idx) {
-  lua_CRecipientFilter *filter = (lua_CRecipientFilter *)lua_touserdata(L, idx);
-  return *filter;
+  lua_CRecipientFilter **ppFilter = (lua_CRecipientFilter **)lua_touserdata(L, idx);
+  return **ppFilter;
 }
 
 
@@ -35,16 +37,18 @@ LUA_API lua_CRecipientFilter &lua_torecipientfilter (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushrecipientfilter (lua_State *L, lua_CRecipientFilter &filter) {
-  lua_CRecipientFilter *pFilter = (lua_CRecipientFilter *)lua_newuserdata(L, sizeof(lua_CRecipientFilter));
-  *pFilter = filter;
+  lua_CRecipientFilter **ppFilter = (lua_CRecipientFilter **)lua_newuserdata(L, sizeof(lua_CRecipientFilter));
+  s_pFilter->Reset();
+  s_pFilter->CopyFrom(filter);
+  *ppFilter = s_pFilter;
   luaL_getmetatable(L, "CRecipientFilter");
   lua_setmetatable(L, -2);
 }
 
 
 LUALIB_API lua_CRecipientFilter &luaL_checkrecipientfilter (lua_State *L, int narg) {
-  lua_CRecipientFilter *d = (lua_CRecipientFilter *)luaL_checkudata(L, narg, "CRecipientFilter");
-  return *d;
+  lua_CRecipientFilter **d = (lua_CRecipientFilter **)luaL_checkudata(L, narg, "CRecipientFilter");
+  return **d;
 }
 
 

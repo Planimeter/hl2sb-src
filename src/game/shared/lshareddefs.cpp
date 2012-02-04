@@ -85,3 +85,45 @@ LUA_API lua_FireBulletsInfo_t lua_tofirebulletsinfo (lua_State *L, int idx) {
   return info;
 }
 
+LUA_API void lua_toemitsound (lua_State *L, int idx, EmitSound_t &ep) {
+  luaL_checktype(L, idx, LUA_TTABLE);
+  lua_getfield(L, idx, "m_nChannel");
+  if (!lua_isnil(L, -1))
+    ep.m_nChannel = luaL_checkint(L, -1);
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "m_pSoundName");
+  if (!lua_isnil(L, -1))
+    ep.m_pSoundName = luaL_checkstring(L, -1);
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "m_flVolume");
+  if (!lua_isnil(L, -1))
+    ep.m_flVolume = luaL_checknumber(L, -1);
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "m_SoundLevel");
+  if (!lua_isnil(L, -1))
+    ep.m_SoundLevel = (soundlevel_t)luaL_checkinteger(L, -1);
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "m_nFlags");
+  if (!lua_isnil(L, -1))
+    ep.m_nFlags = luaL_checkint(L, -1);
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "m_nPitch");
+  if (!lua_isnil(L, -1))
+    ep.m_nPitch = luaL_checkint(L, -1);
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "m_pOrigin");
+  if (!lua_isnil(L, -1))
+    ep.m_pOrigin = &luaL_checkvector(L, -1);
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "m_flSoundTime");
+  if (!lua_isnil(L, -1))
+    ep.m_flSoundTime = luaL_checknumber(L, -1);
+  lua_pop(L, 1);
+  lua_getfield(L, idx, "m_pflSoundDuration");
+  if (!lua_isnil(L, -1)) {
+    float duration = luaL_checknumber(L, -1);
+    ep.m_pflSoundDuration = &duration;
+  }
+  lua_pop(L, 1);
+}
+
