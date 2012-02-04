@@ -44,15 +44,13 @@ static int luasrc_FStrEq (lua_State *L) {
 }
 
 static int luasrc_UTIL_SetSize (lua_State *L) {
-  UTIL_SetSize(luaL_checkentity(L, 1), *(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3));
+  UTIL_SetSize(luaL_checkentity(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3));
   return 0;
 }
 
 static int luasrc_UTIL_ClearTrace (lua_State *L) {
-  trace_t *trace = luaL_checktrace(L, 1);
-  UTIL_ClearTrace(*trace);
-  lua_pushtrace(L, trace);
-  return 1;
+  UTIL_ClearTrace(luaL_checktrace(L, 1));
+  return 0;
 }
 
 static int luasrc_UTIL_PrecacheDecal (lua_State *L) {
@@ -114,7 +112,7 @@ static int luasrc_UTIL_ClientPVSIsExpanded (lua_State *L) {
 }
 
 static int luasrc_UTIL_FindClientInPVS (lua_State *L) {
-  lua_pushentity(L, UTIL_FindClientInPVS(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2)));
+  lua_pushentity(L, UTIL_FindClientInPVS(luaL_checkvector(L, 1), luaL_checkvector(L, 2)));
   return 1;
 }
 
@@ -123,7 +121,7 @@ static int luasrc_UTIL_FindClientInPVS (lua_State *L) {
 static int luasrc_UTIL_EntitiesInBox (lua_State *L) {
   CBaseEntity *pList[MAX_ENTITYARRAY];
 
-  int count = UTIL_EntitiesInBox(pList, luaL_checkinteger(L, 1), *(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), luaL_checkinteger(L, 4));
+  int count = UTIL_EntitiesInBox(pList, luaL_checkinteger(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checkinteger(L, 4));
   lua_pushinteger(L, count);
   lua_newtable(L);
   for( int i = 0 ; i < count ; i++ )
@@ -138,7 +136,7 @@ static int luasrc_UTIL_EntitiesInBox (lua_State *L) {
 static int luasrc_UTIL_EntitiesInSphere (lua_State *L) {
   CBaseEntity *pList[MAX_ENTITYARRAY];
 
-  int count = UTIL_EntitiesInSphere(pList, luaL_checkinteger(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_checkinteger(L, 4));
+  int count = UTIL_EntitiesInSphere(pList, luaL_checkinteger(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_checkinteger(L, 4));
   lua_pushinteger(L, count);
   lua_newtable(L);
   for( int i = 0 ; i < count ; i++ )
@@ -176,29 +174,29 @@ static int luasrc_UTIL_DropToFloor (lua_State *L) {
 }
 
 static int luasrc_UTIL_SetOrigin (lua_State *L) {
-  UTIL_SetOrigin(luaL_checkentity(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_optboolean(L, 3, 0));
+  UTIL_SetOrigin(luaL_checkentity(L, 1), luaL_checkvector(L, 2), luaL_optboolean(L, 3, 0));
   return 0;
 }
 
 static int luasrc_UTIL_EmitAmbientSound (lua_State *L) {
   float duration;
-  UTIL_EmitAmbientSound(luaL_checkinteger(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checkstring(L, 3), luaL_checknumber(L, 4), (soundlevel_t)luaL_checkinteger(L, 5), luaL_checkinteger(L, 6), luaL_checkinteger(L, 7), luaL_optnumber(L, 8, 0.0f), &duration);
+  UTIL_EmitAmbientSound(luaL_checkinteger(L, 1), luaL_checkvector(L, 2), luaL_checkstring(L, 3), luaL_checknumber(L, 4), (soundlevel_t)luaL_checkinteger(L, 5), luaL_checkinteger(L, 6), luaL_checkinteger(L, 7), luaL_optnumber(L, 8, 0.0f), &duration);
   lua_pushnumber(L, duration);
   return 1;
 }
 
 static int luasrc_UTIL_ScreenShake (lua_State *L) {
-  UTIL_ScreenShake(*(Vector *)luaL_checkvector(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5), (ShakeCommand_t)luaL_checkinteger(L, 6), luaL_optboolean(L, 7, 0));
+  UTIL_ScreenShake(luaL_checkvector(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5), (ShakeCommand_t)luaL_checkinteger(L, 6), luaL_optboolean(L, 7, 0));
   return 0;
 }
 
 static int luasrc_UTIL_ScreenShakeObject (lua_State *L) {
-  UTIL_ScreenShakeObject(luaL_checkentity(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5), luaL_checknumber(L, 6), (ShakeCommand_t)luaL_checkinteger(L, 7), luaL_optboolean(L, 8, 0));
+  UTIL_ScreenShakeObject(luaL_checkentity(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5), luaL_checknumber(L, 6), (ShakeCommand_t)luaL_checkinteger(L, 7), luaL_optboolean(L, 8, 0));
   return 0;
 }
 
 static int luasrc_UTIL_ViewPunch (lua_State *L) {
-  UTIL_ViewPunch(*(Vector *)luaL_checkvector(L, 1), *(QAngle *)luaL_checkangle(L, 2), luaL_checknumber(L, 3), luaL_checkboolean(L, 4));
+  UTIL_ViewPunch(luaL_checkvector(L, 1), luaL_checkangle(L, 2), luaL_checknumber(L, 3), luaL_checkboolean(L, 4));
   return 0;
 }
 
@@ -213,13 +211,12 @@ static int luasrc_UTIL_ShowMessageAll (lua_State *L) {
 }
 
 static int luasrc_UTIL_MuzzleFlash (lua_State *L) {
-  UTIL_MuzzleFlash(*(Vector *)luaL_checkvector(L, 1), *(QAngle *)luaL_checkangle(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4));
+  UTIL_MuzzleFlash(luaL_checkvector(L, 1), luaL_checkangle(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4));
   return 0;
 }
 
 static int luasrc_UTIL_PointOnLineNearestPoint (lua_State *L) {
-  Vector v = UTIL_PointOnLineNearestPoint(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), luaL_optboolean(L, 4, 0));
-  lua_pushvector(L, &v);
+  lua_pushvector(L, UTIL_PointOnLineNearestPoint(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_optboolean(L, 4, 0)));
   return 1;
 }
 
@@ -229,75 +226,72 @@ static int luasrc_UTIL_EntityInSolid (lua_State *L) {
 }
 
 static int luasrc_UTIL_BloodStream (lua_State *L) {
-  UTIL_BloodStream(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4));
+  UTIL_BloodStream(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4));
   return 0;
 }
 
 static int luasrc_UTIL_BloodSpray (lua_State *L) {
-  UTIL_BloodSpray(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 4));
+  UTIL_BloodSpray(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 4));
   return 0;
 }
 
 static int luasrc_UTIL_RandomBloodVector (lua_State *L) {
-  Vector v = UTIL_RandomBloodVector();
-  lua_pushvector(L, &v);
+  lua_pushvector(L, UTIL_RandomBloodVector());
   return 1;
 }
 
 static int luasrc_UTIL_ImpactTrace (lua_State *L) {
-  UTIL_ImpactTrace(luaL_checktrace(L, 1), luaL_checkinteger(L, 2), const_cast<char *>(luaL_optstring(L, 3, 0)));
+  UTIL_ImpactTrace(&luaL_checktrace(L, 1), luaL_checkinteger(L, 2), const_cast<char *>(luaL_optstring(L, 3, 0)));
   return 0;
 }
 
 static int luasrc_UTIL_PlayerDecalTrace (lua_State *L) {
-  UTIL_PlayerDecalTrace(luaL_checktrace(L, 1), luaL_checkinteger(L, 2));
+  UTIL_PlayerDecalTrace(&luaL_checktrace(L, 1), luaL_checkinteger(L, 2));
   return 0;
 }
 
 static int luasrc_UTIL_Smoke (lua_State *L) {
-  UTIL_Smoke(*(Vector *)luaL_checkvector(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3));
+  UTIL_Smoke(luaL_checkvector(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3));
   return 0;
 }
 
 static int luasrc_UTIL_AxisStringToPointDir (lua_State *L) {
   Vector start, dir;
   UTIL_AxisStringToPointDir(start, dir, luaL_checkstring(L, 1));
-  lua_pushvector(L, &start);
-  lua_pushvector(L, &dir);
+  lua_pushvector(L, start);
+  lua_pushvector(L, dir);
   return 2;
 }
 
 static int luasrc_UTIL_AxisStringToPointPoint (lua_State *L) {
   Vector start, end;
   UTIL_AxisStringToPointPoint(start, end, luaL_checkstring(L, 1));
-  lua_pushvector(L, &start);
-  lua_pushvector(L, &end);
+  lua_pushvector(L, start);
+  lua_pushvector(L, end);
   return 2;
 }
 
 static int luasrc_UTIL_AxisStringToUnitDir (lua_State *L) {
   Vector dir;
   UTIL_AxisStringToUnitDir(dir, luaL_checkstring(L, 1));
-  lua_pushvector(L, &dir);
+  lua_pushvector(L, dir);
   return 1;
 }
 
 static int luasrc_UTIL_ClipPunchAngleOffset (lua_State *L) {
-  QAngle in = *(QAngle *)luaL_checkangle(L, 1);
-  UTIL_ClipPunchAngleOffset(in, luaL_checkplayer(L, 2)->m_Local.m_vecPunchAngle, *(QAngle *)luaL_checkangle(L, 3));
-  lua_pushangle(L, &in);
-  return 1;
+  UTIL_ClipPunchAngleOffset(luaL_checkangle(L, 1), luaL_checkplayer(L, 2)->m_Local.m_vecPunchAngle, luaL_checkangle(L, 3));
+  return 0;
 }
 
 static int luasrc_UTIL_PredictedPosition (lua_State *L) {
   Vector vecPredictedPosition;
   UTIL_PredictedPosition(luaL_checkentity(L, 1), luaL_checknumber(L, 2), &vecPredictedPosition);
-  lua_pushvector(L, &vecPredictedPosition);
+  lua_pushvector(L, vecPredictedPosition);
   return 1;
 }
 
 static int luasrc_UTIL_Beam (lua_State *L) {
-  UTIL_Beam(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkinteger(L, 6), luaL_checknumber(L, 7), luaL_checknumber(L, 8), luaL_checknumber(L, 9), luaL_checkinteger(L, 10), luaL_checknumber(L, 11), luaL_checkinteger(L, 12), luaL_checkinteger(L, 13), luaL_checkinteger(L, 14), luaL_checkinteger(L, 14), luaL_checknumber(L, 15));
+  UTIL_Beam(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkinteger(L, 6), luaL_checknumber(L, 7), luaL_checknumber(L, 8), luaL_checknumber(L, 9), luaL_checkinteger(L, 10), luaL_checknumber(L, 11), luaL_checkinteger(L, 12), luaL_checkinteger(L, 13), luaL_checkinteger(L, 14), luaL_checkinteger(L, 14), luaL_checknumber(L, 15));
   return 0;
 }
 
@@ -312,10 +306,8 @@ static int luasrc_UTIL_TeamsMatch (lua_State *L) {
 }
 
 static int luasrc_UTIL_SnapDirectionToAxis (lua_State *L) {
-  Vector direction = *(Vector *)luaL_checkvector(L, 1);
-  UTIL_SnapDirectionToAxis(direction, luaL_optnumber(L, 2, 0.002f));
-  lua_pushvector(L, &direction);
-  return 1;
+  UTIL_SnapDirectionToAxis(luaL_checkvector(L, 1), luaL_optnumber(L, 2, 0.002f));
+  return 0;
 }
 
 static int luasrc_UTIL_PointAtEntity (lua_State *L) {
@@ -329,22 +321,22 @@ static int luasrc_UTIL_TransferPoseParameters (lua_State *L) {
 }
 
 static int luasrc_UTIL_WaterLevel (lua_State *L) {
-  lua_pushnumber(L, UTIL_WaterLevel(*(Vector *)luaL_checkvector(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3)));
+  lua_pushnumber(L, UTIL_WaterLevel(luaL_checkvector(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3)));
   return 1;
 }
 
 static int luasrc_UTIL_FindWaterSurface (lua_State *L) {
-  lua_pushnumber(L, UTIL_FindWaterSurface(*(Vector *)luaL_checkvector(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3)));
+  lua_pushnumber(L, UTIL_FindWaterSurface(luaL_checkvector(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3)));
   return 1;
 }
 
 static int luasrc_UTIL_Bubbles (lua_State *L) {
-  UTIL_Bubbles(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checkinteger(L, 3));
+  UTIL_Bubbles(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkinteger(L, 3));
   return 0;
 }
 
 static int luasrc_UTIL_BubbleTrail (lua_State *L) {
-  UTIL_BubbleTrail(*(Vector *)luaL_checkvector(L, 1), *(Vector *)luaL_checkvector(L, 2), luaL_checkinteger(L, 3));
+  UTIL_BubbleTrail(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkinteger(L, 3));
   return 0;
 }
 

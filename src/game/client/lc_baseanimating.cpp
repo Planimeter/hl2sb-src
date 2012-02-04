@@ -100,16 +100,16 @@ static int CBaseAnimating_ComputeClientSideAnimationFlags (lua_State *L) {
 static int CBaseAnimating_ComputeEntitySpaceHitboxSurroundingBox (lua_State *L) {
   Vector pVecWorldMins, pVecWorldMaxs;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->ComputeEntitySpaceHitboxSurroundingBox(&pVecWorldMins, &pVecWorldMaxs));
-  lua_pushvector(L, &pVecWorldMins);
-  lua_pushvector(L, &pVecWorldMaxs);
+  lua_pushvector(L, pVecWorldMins);
+  lua_pushvector(L, pVecWorldMaxs);
   return 3;
 }
 
 static int CBaseAnimating_ComputeHitboxSurroundingBox (lua_State *L) {
   Vector pVecWorldMins, pVecWorldMaxs;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->ComputeHitboxSurroundingBox(&pVecWorldMins, &pVecWorldMaxs));
-  lua_pushvector(L, &pVecWorldMins);
-  lua_pushvector(L, &pVecWorldMaxs);
+  lua_pushvector(L, pVecWorldMins);
+  lua_pushvector(L, pVecWorldMaxs);
   return 3;
 }
 
@@ -166,12 +166,12 @@ static int CBaseAnimating_FindTransitionSequence (lua_State *L) {
 }
 
 static int CBaseAnimating_FireEvent (lua_State *L) {
-  luaL_checkanimating(L, 1)->FireEvent(*luaL_checkvector(L, 2), *luaL_checkangle(L, 3), luaL_checkint(L, 4), luaL_checkstring(L, 5));
+  luaL_checkanimating(L, 1)->FireEvent(luaL_checkvector(L, 2), luaL_checkangle(L, 3), luaL_checkint(L, 4), luaL_checkstring(L, 5));
   return 0;
 }
 
 static int CBaseAnimating_FireObsoleteEvent (lua_State *L) {
-  luaL_checkanimating(L, 1)->FireObsoleteEvent(*luaL_checkvector(L, 2), *luaL_checkangle(L, 3), luaL_checkint(L, 4), luaL_checkstring(L, 5));
+  luaL_checkanimating(L, 1)->FireObsoleteEvent(luaL_checkvector(L, 2), luaL_checkangle(L, 3), luaL_checkint(L, 4), luaL_checkstring(L, 5));
   return 0;
 }
 
@@ -186,7 +186,7 @@ static int CBaseAnimating_FrameAdvance (lua_State *L) {
 }
 
 static int CBaseAnimating_GetAimEntOrigin (lua_State *L) {
-  luaL_checkanimating(L, 1)->GetAimEntOrigin(luaL_checkentity(L, 2), luaL_checkvector(L, 3), luaL_checkangle(L, 4));
+  luaL_checkanimating(L, 1)->GetAimEntOrigin(luaL_checkentity(L, 2), &luaL_checkvector(L, 3), &luaL_checkangle(L, 4));
   return 0;
 }
 
@@ -199,8 +199,8 @@ static int CBaseAnimating_GetAttachmentLocal (lua_State *L) {
   Vector origin;
   QAngle angles;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachmentLocal(luaL_checkint(L, 2), origin, angles));
-  lua_pushvector(L, &origin);
-  lua_pushangle(L, &angles);
+  lua_pushvector(L, origin);
+  lua_pushangle(L, angles);
   return 3;
 }
 
@@ -208,7 +208,7 @@ static int CBaseAnimating_GetAttachmentVelocity (lua_State *L) {
   Vector originVel;
   Quaternion angleVel;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachmentVelocity(luaL_checkint(L, 2), originVel, angleVel));
-  lua_pushvector(L, &originVel);
+  lua_pushvector(L, originVel);
   // Todo: implement Quaternion class!!
   // lua_pushquaternion(L, &angleVel);
   return 2;
@@ -222,7 +222,7 @@ static int CBaseAnimating_GetBaseAnimating (lua_State *L) {
 static int CBaseAnimating_GetBlendedLinearVelocity (lua_State *L) {
   Vector pVec;
   luaL_checkanimating(L, 1)->GetBlendedLinearVelocity(&pVec);
-  lua_pushvector(L, &pVec);
+  lua_pushvector(L, pVec);
   return 1;
 }
 
@@ -261,8 +261,8 @@ static int CBaseAnimating_GetBonePosition (lua_State *L) {
   Vector origin;
   QAngle angles;
   luaL_checkanimating(L, 1)->GetBonePosition(luaL_checkint(L, 2), origin, angles);
-  lua_pushvector(L, &origin);
-  lua_pushangle(L, &angles);
+  lua_pushvector(L, origin);
+  lua_pushangle(L, angles);
   return 2;
 }
 
@@ -346,21 +346,21 @@ static int CBaseAnimating_GetPoseParameterRange (lua_State *L) {
 
 static int CBaseAnimating_GetRenderAngles (lua_State *L) {
   QAngle v = luaL_checkanimating(L, 1)->GetRenderAngles();
-  lua_pushangle(L, &v);
+  lua_pushangle(L, v);
   return 1;
 }
 
 static int CBaseAnimating_GetRenderBounds (lua_State *L) {
   Vector theMins, theMaxs;
   luaL_checkanimating(L, 1)->GetRenderBounds(theMins, theMaxs);
-  lua_pushvector(L, &theMins);
-  lua_pushvector(L, &theMaxs);
+  lua_pushvector(L, theMins);
+  lua_pushvector(L, theMaxs);
   return 2;
 }
 
 static int CBaseAnimating_GetRenderOrigin (lua_State *L) {
   Vector v = luaL_checkanimating(L, 1)->GetRenderOrigin();
-  lua_pushvector(L, &v);
+  lua_pushvector(L, v);
   return 1;
 }
 
@@ -387,7 +387,7 @@ static int CBaseAnimating_GetSequenceGroundSpeed (lua_State *L) {
 static int CBaseAnimating_GetSequenceLinearMotion (lua_State *L) {
   Vector pVec;
   luaL_checkanimating(L, 1)->GetSequenceLinearMotion(luaL_checkint(L, 2), &pVec);
-  lua_pushvector(L, &pVec);
+  lua_pushvector(L, pVec);
   return 1;
 }
 
@@ -595,7 +595,7 @@ static int CBaseAnimating_RetrieveRagdollInfo (lua_State *L) {
   Vector pos;
   Quaternion q;
   lua_pushboolean(L, luaL_checkanimating(L, 1)->RetrieveRagdollInfo(&pos, &q));
-  lua_pushvector(L, &pos);
+  lua_pushvector(L, pos);
   // Todo: implement Quaternion class!!
   // lua_pushquaternion(L, &q);
   return 2;
@@ -738,7 +738,7 @@ static int CBaseAnimating_TransferDissolveFrom (lua_State *L) {
 }
 
 static int CBaseAnimating_UncorrectViewModelAttachment (lua_State *L) {
-  luaL_checkanimating(L, 1)->UncorrectViewModelAttachment(*luaL_checkvector(L, 2));
+  luaL_checkanimating(L, 1)->UncorrectViewModelAttachment(luaL_checkvector(L, 2));
   return 0;
 }
 

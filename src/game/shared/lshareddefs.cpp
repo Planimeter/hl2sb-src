@@ -72,15 +72,15 @@ LUA_API lua_FireBulletsInfo_t lua_tofirebulletsinfo (lua_State *L, int idx) {
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_vecDirShooting");
   if (!lua_isnil(L, -1))
-    info.m_vecDirShooting = *luaL_checkvector(L, -1);
+    info.m_vecDirShooting = luaL_checkvector(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_vecSpread");
   if (!lua_isnil(L, -1))
-    info.m_vecSpread = *luaL_checkvector(L, -1);
+    info.m_vecSpread = luaL_checkvector(L, -1);
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_vecSrc");
   if (!lua_isnil(L, -1))
-    info.m_vecSrc = *luaL_checkvector(L, -1);
+    info.m_vecSrc = luaL_checkvector(L, -1);
   lua_pop(L, 1);
   return info;
 }

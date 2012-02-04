@@ -59,12 +59,12 @@ static int CRecipientFilter_AddRecipient (lua_State *L) {
 }
 
 static int CRecipientFilter_AddRecipientsByPAS (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1).AddRecipientsByPAS(*luaL_checkvector(L, 2));
+  luaL_checkrecipientfilter(L, 1).AddRecipientsByPAS(luaL_checkvector(L, 2));
   return 0;
 }
 
 static int CRecipientFilter_AddRecipientsByPVS (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1).AddRecipientsByPVS(*luaL_checkvector(L, 2));
+  luaL_checkrecipientfilter(L, 1).AddRecipientsByPVS(luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -129,7 +129,7 @@ static int CRecipientFilter_RemoveRecipientByPlayerIndex (lua_State *L) {
 }
 
 static int CRecipientFilter_RemoveRecipientsByPVS (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1).RemoveRecipientsByPVS(*luaL_checkvector(L, 2));
+  luaL_checkrecipientfilter(L, 1).RemoveRecipientsByPVS(luaL_checkvector(L, 2));
   return 0;
 }
 

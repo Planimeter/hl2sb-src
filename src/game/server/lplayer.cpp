@@ -133,19 +133,17 @@ static int CBasePlayer_GetBonusChallenge (lua_State *L) {
 }
 
 static int CBasePlayer_SnapEyeAngles (lua_State *L) {
-  luaL_checkplayer(L, 1)->SnapEyeAngles(*(QAngle *)luaL_checkangle(L, 2));
+  luaL_checkplayer(L, 1)->SnapEyeAngles(luaL_checkangle(L, 2));
   return 0;
 }
 
 static int CBasePlayer_BodyAngles (lua_State *L) {
-  QAngle v = luaL_checkplayer(L, 1)->BodyAngles();
-  lua_pushangle(L, &v);
+  lua_pushangle(L, luaL_checkplayer(L, 1)->BodyAngles());
   return 1;
 }
 
 static int CBasePlayer_BodyTarget (lua_State *L) {
-  Vector v = luaL_checkplayer(L, 1)->BodyTarget(*(Vector *)luaL_checkvector(L, 2), luaL_checkboolean(L, 3));
-  lua_pushvector(L, &v);
+  lua_pushvector(L, luaL_checkplayer(L, 1)->BodyTarget(luaL_checkvector(L, 2), luaL_checkboolean(L, 3)));
   return 1;
 }
 
@@ -155,17 +153,17 @@ static int CBasePlayer_ShouldFadeOnDeath (lua_State *L) {
 }
 
 static int CBasePlayer_OnTakeDamage_Alive (lua_State *L) {
-  lua_pushinteger(L, luaL_checkplayer(L, 1)->OnTakeDamage_Alive(*(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2)));
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->OnTakeDamage_Alive(luaL_checkdamageinfo(L, 2)));
   return 1;
 }
 
 static int CBasePlayer_Event_Killed (lua_State *L) {
-  luaL_checkplayer(L, 1)->Event_Killed(*(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2));
+  luaL_checkplayer(L, 1)->Event_Killed(luaL_checkdamageinfo(L, 2));
   return 0;
 }
 
 static int CBasePlayer_Event_KilledOther (lua_State *L) {
-  luaL_checkplayer(L, 1)->Event_KilledOther(luaL_checkentity(L, 2), *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 3));
+  luaL_checkplayer(L, 1)->Event_KilledOther(luaL_checkentity(L, 2), luaL_checkdamageinfo(L, 3));
   return 0;
 }
 
@@ -240,7 +238,7 @@ static int CBasePlayer_Weapon_Equip (lua_State *L) {
 }
 
 static int CBasePlayer_Weapon_Drop (lua_State *L) {
-  luaL_checkplayer(L, 1)->Weapon_Drop(luaL_checkweapon(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4));
+  luaL_checkplayer(L, 1)->Weapon_Drop(luaL_checkweapon(L, 2), &luaL_checkvector(L, 3), &luaL_checkvector(L, 4));
   return 0;
 }
 
@@ -302,7 +300,7 @@ static int CBasePlayer_UpdatePlayerSound (lua_State *L) {
 }
 
 static int CBasePlayer_DeathSound (lua_State *L) {
-  luaL_checkplayer(L, 1)->DeathSound(*(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2));
+  luaL_checkplayer(L, 1)->DeathSound(luaL_checkdamageinfo(L, 2));
   return 0;
 }
 
@@ -373,7 +371,7 @@ static int CBasePlayer_CheckObserverSettings (lua_State *L) {
 }
 
 static int CBasePlayer_JumptoPosition (lua_State *L) {
-  luaL_checkplayer(L, 1)->JumptoPosition(*(Vector *)luaL_checkvector(L, 2), *(QAngle *)luaL_checkangle(L, 3));
+  luaL_checkplayer(L, 1)->JumptoPosition(luaL_checkvector(L, 2), luaL_checkangle(L, 3));
   return 0;
 }
 

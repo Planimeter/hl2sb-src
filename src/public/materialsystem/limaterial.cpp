@@ -145,7 +145,7 @@ static int IMaterial_GetPropertyFlag (lua_State *L) {
 static int IMaterial_GetReflectivity (lua_State *L) {
   Vector reflect;
   luaL_checkmaterial(L, 1)->GetReflectivity(reflect);
-  lua_pushvector(L, &reflect);
+  lua_pushvector(L, reflect);
   return 1;
 }
 

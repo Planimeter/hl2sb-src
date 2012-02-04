@@ -28,21 +28,21 @@ static int prediction_GetIncomingPacketNumber (lua_State *L) {
 static int prediction_GetLocalViewAngles (lua_State *L) {
   QAngle ang;
   prediction->GetLocalViewAngles(ang);
-  lua_pushangle(L, &ang);
+  lua_pushangle(L, ang);
   return 1;
 }
 
 static int prediction_GetViewAngles (lua_State *L) {
   QAngle ang;
   prediction->GetViewAngles(ang);
-  lua_pushangle(L, &ang);
+  lua_pushangle(L, ang);
   return 1;
 }
 
 static int prediction_GetViewOrigin (lua_State *L) {
   Vector org;
   prediction->GetViewOrigin(org);
-  lua_pushvector(L, &org);
+  lua_pushvector(L, org);
   return 1;
 }
 
@@ -82,17 +82,17 @@ static int prediction_PreEntityPacketReceived (lua_State *L) {
 }
 
 static int prediction_SetLocalViewAngles (lua_State *L) {
-  prediction->SetLocalViewAngles(*luaL_checkangle(L, 1));
+  prediction->SetLocalViewAngles(luaL_checkangle(L, 1));
   return 0;
 }
 
 static int prediction_SetViewAngles (lua_State *L) {
-  prediction->SetViewAngles(*luaL_checkangle(L, 1));
+  prediction->SetViewAngles(luaL_checkangle(L, 1));
   return 0;
 }
 
 static int prediction_SetViewOrigin (lua_State *L) {
-  prediction->SetViewOrigin(*luaL_checkvector(L, 1));
+  prediction->SetViewOrigin(luaL_checkvector(L, 1));
   return 0;
 }
 

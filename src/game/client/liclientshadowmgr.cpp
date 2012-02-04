@@ -24,7 +24,7 @@ static int g_pClientShadowMgr_AdvanceFrame (lua_State *L) {
 
 static int g_pClientShadowMgr_GetShadowDirection (lua_State *L) {
   Vector v = g_pClientShadowMgr->GetShadowDirection();
-  lua_pushvector(L, &v);
+  lua_pushvector(L, v);
   return 1;
 }
 
@@ -44,7 +44,7 @@ static int g_pClientShadowMgr_SetShadowColor (lua_State *L) {
 }
 
 static int g_pClientShadowMgr_SetShadowDirection (lua_State *L) {
-  g_pClientShadowMgr->SetShadowDirection(*luaL_checkvector(L, 1));
+  g_pClientShadowMgr->SetShadowDirection(luaL_checkvector(L, 1));
   return 0;
 }
 

@@ -154,8 +154,8 @@ static int CBaseEntity_GetInputDispatchEffectPosition (lua_State *L) {
   Vector pVector;
   QAngle pAngle;
   luaL_checkentity(L, 1)->GetInputDispatchEffectPosition(luaL_checkstring(L, 2), pVector, pAngle);
-  lua_pushvector(L, &pVector);
-  lua_pushangle(L, &pAngle);
+  lua_pushvector(L, pVector);
+  lua_pushangle(L, pAngle);
   return 2;
 }
 
@@ -250,14 +250,12 @@ static int CBaseEntity_GetAutoAimRadius (lua_State *L) {
 }
 
 static int CBaseEntity_GetAutoAimCenter (lua_State *L) {
-  Vector v = luaL_checkentity(L, 1)->GetAutoAimCenter();
-  lua_pushvector(L, &v);
+  lua_pushvector(L, luaL_checkentity(L, 1)->GetAutoAimCenter());
   return 1;
 }
 
 static int CBaseEntity_PassesDamageFilter (lua_State *L) {
-  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
-  lua_pushboolean(L, luaL_checkentity(L, 1)->PassesDamageFilter(info));
+  lua_pushboolean(L, luaL_checkentity(L, 1)->PassesDamageFilter(luaL_checkdamageinfo(L, 2)));
   return 1;
 }
 
@@ -267,14 +265,12 @@ static int CBaseEntity_CanBeHitByMeleeAttack (lua_State *L) {
 }
 
 static int CBaseEntity_OnTakeDamage (lua_State *L) {
-  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
-  lua_pushinteger(L, luaL_checkentity(L, 1)->OnTakeDamage(info));
+  lua_pushinteger(L, luaL_checkentity(L, 1)->OnTakeDamage(luaL_checkdamageinfo(L, 2)));
   return 1;
 }
 
 static int CBaseEntity_TakeDamage (lua_State *L) {
-  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
-  luaL_checkentity(L, 1)->TakeDamage(info);
+  luaL_checkentity(L, 1)->TakeDamage(luaL_checkdamageinfo(L, 2));
   return 0;
 }
 
@@ -284,14 +280,12 @@ static int CBaseEntity_TakeHealth (lua_State *L) {
 }
 
 static int CBaseEntity_Event_Killed (lua_State *L) {
-  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2);
-  luaL_checkentity(L, 1)->Event_Killed(info);
+  luaL_checkentity(L, 1)->Event_Killed(luaL_checkdamageinfo(L, 2));
   return 0;
 }
 
 static int CBaseEntity_Event_KilledOther (lua_State *L) {
-  const CTakeDamageInfo info = *(CTakeDamageInfo *)luaL_checkdamageinfo(L, 3);
-  luaL_checkentity(L, 1)->Event_KilledOther(luaL_checkentity(L, 2), info);
+  luaL_checkentity(L, 1)->Event_KilledOther(luaL_checkentity(L, 2), luaL_checkdamageinfo(L, 3));
   return 0;
 }
 
@@ -371,7 +365,7 @@ static int CBaseEntity_GetEnemy (lua_State *L) {
 }
 
 static int CBaseEntity_VelocityPunch (lua_State *L) {
-  luaL_checkentity(L, 1)->VelocityPunch(*(Vector *)luaL_checkvector(L, 2));
+  luaL_checkentity(L, 1)->VelocityPunch(luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -461,7 +455,7 @@ static int CBaseEntity_SUB_AllowedToFade (lua_State *L) {
 }
 
 static int CBaseEntity_Teleport (lua_State *L) {
-  luaL_checkentity(L, 1)->Teleport(luaL_checkvector(L, 2), luaL_checkangle(L, 3), luaL_checkvector(L, 4));
+  luaL_checkentity(L, 1)->Teleport(&luaL_checkvector(L, 2), &luaL_checkangle(L, 3), &luaL_checkvector(L, 4));
   return 0;
 }
 
@@ -476,7 +470,7 @@ static int CBaseEntity_Respawn (lua_State *L) {
 }
 
 static int CBaseEntity_TraceAttackToTriggers (lua_State *L) {
-  luaL_checkentity(L, 1)->TraceAttackToTriggers(*(CTakeDamageInfo *)luaL_checkdamageinfo(L, 2), *(Vector *)luaL_checkvector(L, 3), *(Vector *)luaL_checkvector(L, 4), *(Vector *)luaL_checkvector(L, 5));
+  luaL_checkentity(L, 1)->TraceAttackToTriggers(luaL_checkdamageinfo(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4), luaL_checkvector(L, 5));
   return 0;
 }
 
@@ -501,12 +495,12 @@ static int CBaseEntity_DumpResponseCriteria (lua_State *L) {
 }
 
 static int CBaseEntity_Create (lua_State *L) {
-  lua_pushentity(L, CBaseEntity::Create(luaL_checkstring(L, 1), *(Vector *)luaL_checkvector(L, 2), *(QAngle *)luaL_checkangle(L, 3), luaL_optentity(L, 4, NULL)));
+  lua_pushentity(L, CBaseEntity::Create(luaL_checkstring(L, 1), luaL_checkvector(L, 2), luaL_checkangle(L, 3), luaL_optentity(L, 4, NULL)));
   return 1;
 }
 
 static int CBaseEntity_CreateNoSpawn (lua_State *L) {
-  lua_pushentity(L, CBaseEntity::CreateNoSpawn(luaL_checkstring(L, 1), *(Vector *)luaL_checkvector(L, 2), *(QAngle *)luaL_checkangle(L, 3), luaL_optentity(L, 4, NULL)));
+  lua_pushentity(L, CBaseEntity::CreateNoSpawn(luaL_checkstring(L, 1), luaL_checkvector(L, 2), luaL_checkangle(L, 3), luaL_optentity(L, 4, NULL)));
   return 1;
 }
 
@@ -526,20 +520,17 @@ static int CBaseEntity_SetDamage (lua_State *L) {
 }
 
 static int CBaseEntity_BodyTarget (lua_State *L) {
-  Vector v = luaL_checkentity(L, 1)->BodyTarget(*(Vector *)luaL_checkvector(L, 2), luaL_optboolean(L, 3, true));
-  lua_pushvector(L, &v);
+  lua_pushvector(L, luaL_checkentity(L, 1)->BodyTarget(luaL_checkvector(L, 2), luaL_optboolean(L, 3, true)));
   return 1;
 }
 
 static int CBaseEntity_HeadTarget (lua_State *L) {
-  Vector v = luaL_checkentity(L, 1)->HeadTarget(*(Vector *)luaL_checkvector(L, 2));
-  lua_pushvector(L, &v);
+  lua_pushvector(L, luaL_checkentity(L, 1)->HeadTarget(luaL_checkvector(L, 2)));
   return 1;
 }
 
 static int CBaseEntity_GetSmoothedVelocity (lua_State *L) {
-  Vector v = luaL_checkentity(L, 1)->GetSmoothedVelocity();
-  lua_pushvector(L, &v);
+  lua_pushvector(L, luaL_checkentity(L, 1)->GetSmoothedVelocity());
   return 1;
 }
 
@@ -547,9 +538,8 @@ static int CBaseEntity_GetVelocity (lua_State *L) {
   Vector vVelocity;
   AngularImpulse vAngVelocity;
   luaL_checkentity(L, 1)->GetVelocity(&vVelocity, &vAngVelocity);
-  lua_pushvector(L, &vVelocity);
-  Vector v = (Vector)vAngVelocity;
-  lua_pushvector(L, &v);
+  lua_pushvector(L, vVelocity);
+  lua_pushvector(L, (Vector &)vAngVelocity);
   return 2;
 }
 
@@ -560,7 +550,7 @@ static int CBaseEntity_GetFriction (lua_State *L) {
 
 static int CBaseEntity_FVisible (lua_State *L) {
   if (lua_isuserdata(L, 2) && luaL_checkudata(L, 2, "Vector"))
-	lua_pushboolean(L, luaL_checkentity(L, 1)->FVisible(*(Vector *)luaL_checkvector(L, 2), luaL_optinteger(L, 3, MASK_BLOCKLOS)));
+	lua_pushboolean(L, luaL_checkentity(L, 1)->FVisible(luaL_checkvector(L, 2), luaL_optinteger(L, 3, MASK_BLOCKLOS)));
   else
 	lua_pushboolean(L, luaL_checkentity(L, 1)->FVisible(luaL_checkentity(L, 2), luaL_optinteger(L, 3, MASK_BLOCKLOS)));
   return 1;
@@ -574,12 +564,12 @@ static int CBaseEntity_GetReceivedDamageScale (lua_State *L) {
 static int CBaseEntity_GetGroundVelocityToApply (lua_State *L) {
   Vector vecGroundVel;
   luaL_checkentity(L, 1)->GetGroundVelocityToApply(vecGroundVel);
-  lua_pushvector(L, &vecGroundVel);
+  lua_pushvector(L, vecGroundVel);
   return 1;
 }
 
 static int CBaseEntity_PhysicsSplash (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->PhysicsSplash(*(Vector *)luaL_checkvector(L, 2), *(Vector *)luaL_checkvector(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5)));
+  lua_pushboolean(L, luaL_checkentity(L, 1)->PhysicsSplash(luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5)));
   return 1;
 }
 
@@ -627,8 +617,7 @@ static int CBaseEntity_SetMoveDoneTime (lua_State *L) {
 }
 
 static int CBaseEntity_GetSoundEmissionOrigin (lua_State *L) {
-  Vector v = luaL_checkentity(L, 1)->GetSoundEmissionOrigin();
-  lua_pushvector(L, &v);
+  lua_pushvector(L, luaL_checkentity(L, 1)->GetSoundEmissionOrigin());
   return 1;
 }
 

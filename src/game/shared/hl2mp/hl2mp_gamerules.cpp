@@ -360,7 +360,7 @@ void CHL2MPRules::PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &inf
 
 	BEGIN_LUA_CALL_HOOK( "PlayerKilled" );
 		lua_pushplayer( L, pVictim );
-		lua_pushdamageinfo( L, &linfo );
+		lua_pushdamageinfo( L, linfo );
 	END_LUA_CALL_HOOK( 2, 0 );
 #endif
 
@@ -392,7 +392,7 @@ bool CHL2MPRules::AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info
 
 	BEGIN_LUA_CALL_HOOK( "AllowDamage" );
 		lua_pushentity( L, pVictim );
-		lua_pushdamageinfo( L, &lInfo );
+		lua_pushdamageinfo( L, lInfo );
 	END_LUA_CALL_HOOK( 2, 1 );
 
 	RETURN_LUA_BOOLEAN();
@@ -937,7 +937,7 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 
 	BEGIN_LUA_CALL_HOOK( "DeathNotice" );
 		lua_pushplayer( L, pVictim );
-		lua_pushdamageinfo( L, &lInfo );
+		lua_pushdamageinfo( L, lInfo );
 	END_LUA_CALL_HOOK( 2, 0 );
 #endif
 

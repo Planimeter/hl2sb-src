@@ -877,9 +877,9 @@ void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &v
 
 	BEGIN_LUA_CALL_HOOK( "PlayerTraceAttack" );
 		lua_pushplayer( L, this );
-		lua_pushdamageinfo( L, &linputInfo );
-		lua_pushvector( L, &lvecDir );
-		lua_pushtrace( L, ptr );
+		lua_pushdamageinfo( L, linputInfo );
+		lua_pushvector( L, lvecDir );
+		lua_pushtrace( L, *ptr );
 	END_LUA_CALL_HOOK( 4, 1 );
 
 	RETURN_LUA_NONE();

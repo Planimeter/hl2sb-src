@@ -57,7 +57,7 @@ static int IMoveHelper_ResetTouchList (lua_State *L) {
 }
 
 static int IMoveHelper_AddToTouched (lua_State *L) {
-  lua_pushboolean(L, luaL_checkmovehelper(L, 1)->AddToTouched(*luaL_checktrace(L, 2), *luaL_checkvector(L, 3)));
+  lua_pushboolean(L, luaL_checkmovehelper(L, 1)->AddToTouched(luaL_checktrace(L, 2), luaL_checkvector(L, 3)));
   return 1;
 }
 

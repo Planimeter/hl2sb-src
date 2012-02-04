@@ -74,7 +74,7 @@ static int CHL2MP_Player_BecomeRagdollOnClient (lua_State *L) {
 #ifdef CLIENT_DLL
   lua_pushanimating(L, luaL_checkhl2mpplayer(L, 1)->BecomeRagdollOnClient());
 #else
-  lua_pushboolean(L, luaL_checkhl2mpplayer(L, 1)->BecomeRagdollOnClient(*luaL_checkvector(L, 2)));
+  lua_pushboolean(L, luaL_checkhl2mpplayer(L, 1)->BecomeRagdollOnClient(luaL_checkvector(L, 2)));
 #endif
   return 1;
 }
@@ -89,8 +89,8 @@ static int CHL2MP_Player_CalcView (lua_State *L) {
   QAngle eyeAngles;
   float zNear, zFar, fov;
   luaL_checkhl2mpplayer(L, 1)->CalcView(eyeOrigin, eyeAngles, zNear, zFar, fov);
-  lua_pushvector(L, &eyeOrigin);
-  lua_pushangle(L, &eyeAngles);
+  lua_pushvector(L, eyeOrigin);
+  lua_pushangle(L, eyeAngles);
   lua_pushnumber(L, zNear);
   lua_pushnumber(L, zFar);
   lua_pushnumber(L, fov);

@@ -82,19 +82,19 @@ static int CBaseEntity_Release (lua_State *L) {
 
 static int CBaseEntity_GetRenderOrigin (lua_State *L) {
   Vector v = luaL_checkentity(L, 1)->GetRenderOrigin();
-  lua_pushvector(L, &v);
+  lua_pushvector(L, v);
   return 1;
 }
 
 static int CBaseEntity_GetRenderAngles (lua_State *L) {
   QAngle v = luaL_checkentity(L, 1)->GetRenderAngles();
-  lua_pushangle(L, &v);
+  lua_pushangle(L, v);
   return 1;
 }
 
 static int CBaseEntity_GetObserverCamOrigin (lua_State *L) {
   Vector v = luaL_checkentity(L, 1)->GetObserverCamOrigin();
-  lua_pushvector(L, &v);
+  lua_pushvector(L, v);
   return 1;
 }
 

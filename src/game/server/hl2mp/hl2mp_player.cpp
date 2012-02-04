@@ -1163,7 +1163,7 @@ void CHL2MP_Player::DeathSound( const CTakeDamageInfo &info )
 
 	BEGIN_LUA_CALL_HOOK( "PlayerDeathSound" );
 		lua_pushhl2mpplayer( L, this );
-		lua_pushdamageinfo( L, &lInfo );
+		lua_pushdamageinfo( L, lInfo );
 	END_LUA_CALL_HOOK( 2, 1 );
 
 	RETURN_LUA_NONE();

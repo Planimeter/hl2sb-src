@@ -59,12 +59,12 @@ static int C_RecipientFilter_AddRecipient (lua_State *L) {
 }
 
 static int C_RecipientFilter_AddRecipientsByPAS (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1).AddRecipientsByPAS(*luaL_checkvector(L, 2));
+  luaL_checkrecipientfilter(L, 1).AddRecipientsByPAS(luaL_checkvector(L, 2));
   return 0;
 }
 
 static int C_RecipientFilter_AddRecipientsByPVS (lua_State *L) {
-  luaL_checkrecipientfilter(L, 1).AddRecipientsByPVS(*luaL_checkvector(L, 2));
+  luaL_checkrecipientfilter(L, 1).AddRecipientsByPVS(luaL_checkvector(L, 2));
   return 0;
 }
 
