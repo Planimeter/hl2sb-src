@@ -162,6 +162,9 @@ ClientModeShared::ClientModeShared()
 	m_pScriptedViewport = NULL;
 #endif
 	m_pViewport = NULL;
+#ifdef LUA_SDK
+	m_pClientLuaPanel = NULL;
+#endif
 	m_pChatElement = NULL;
 	m_pWeaponSelection = NULL;
 	m_nRootSize[ 0 ] = m_nRootSize[ 1 ] = -1;
@@ -176,6 +179,9 @@ ClientModeShared::~ClientModeShared()
 	delete m_pScriptedViewport; 
 #endif
 	delete m_pViewport; 
+#ifdef LUA_SDK
+	delete m_pClientLuaPanel; 
+#endif
 }
 
 void ClientModeShared::ReloadScheme( void )
@@ -230,6 +236,10 @@ void ClientModeShared::VGui_Shutdown()
 #endif
 	delete m_pViewport;
 	m_pViewport = NULL;
+#ifdef LUA_SDK
+	delete m_pClientLuaPanel;
+	m_pClientLuaPanel = NULL;
+#endif
 }
 
 
@@ -645,6 +655,9 @@ void ClientModeShared::Enable()
 		m_pScriptedViewport->SetParent( pRoot );
 #endif
 		m_pViewport->SetParent( pRoot );
+#ifdef LUA_SDK
+		m_pClientLuaPanel->SetParent( pRoot );
+#endif
 	}
 
 	// All hud elements should be proportional
@@ -653,17 +666,26 @@ void ClientModeShared::Enable()
 	m_pScriptedViewport->SetProportional( true );
 #endif
 	m_pViewport->SetProportional( true );
+#ifdef LUA_SDK
+	m_pClientLuaPanel->SetProportional( true );
+#endif
 
 #ifdef LUA_SDK
 	m_pScriptedViewport->SetCursor( m_CursorNone );
 #endif
 	m_pViewport->SetCursor( m_CursorNone );
+#ifdef LUA_SDK
+	m_pClientLuaPanel->SetCursor( m_CursorNone );
+#endif
 	vgui::surface()->SetCursor( m_CursorNone );
 
 #ifdef LUA_SDK
 	m_pScriptedViewport->SetVisible( true );
 #endif
 	m_pViewport->SetVisible( true );
+#ifdef LUA_SDK
+	m_pClientLuaPanel->SetVisible( true );
+#endif
 #ifdef LUA_SDK
 	if ( m_pScriptedViewport->IsKeyBoardInputEnabled() )
 	{
@@ -674,6 +696,12 @@ void ClientModeShared::Enable()
 	{
 		m_pViewport->RequestFocus();
 	}
+#ifdef LUA_SDK
+	if ( m_pClientLuaPanel->IsKeyBoardInputEnabled() )
+	{
+		m_pClientLuaPanel->RequestFocus();
+	}
+#endif
 
 	Layout();
 }
@@ -690,12 +718,18 @@ void ClientModeShared::Disable()
 		m_pScriptedViewport->SetParent( (vgui::VPANEL)NULL );
 #endif
 		m_pViewport->SetParent( (vgui::VPANEL)NULL );
+#ifdef LUA_SDK
+		m_pClientLuaPanel->SetParent( (vgui::VPANEL)NULL );
+#endif
 	}
 
 #ifdef LUA_SDK
 	m_pScriptedViewport->SetVisible( false );
 #endif
 	m_pViewport->SetVisible( false );
+#ifdef LUA_SDK
+	m_pClientLuaPanel->SetVisible( false );
+#endif
 }
 
 
@@ -717,6 +751,9 @@ void ClientModeShared::Layout()
 		m_pScriptedViewport->SetBounds(0, 0, wide, tall);
 #endif
 		m_pViewport->SetBounds(0, 0, wide, tall);
+#ifdef LUA_SDK
+		m_pClientLuaPanel->SetBounds(0, 0, wide, tall);
+#endif
 		if ( changed )
 		{
 			ReloadScheme();

@@ -20,6 +20,7 @@
 #include "ienginevgui.h"
 #ifdef LUA_SDK
 #include "scriptedhudviewport.h"
+#include "scriptedclientluapanel.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -104,6 +105,9 @@ ClientModeHL2MPNormal::ClientModeHL2MPNormal()
 #endif
 	m_pViewport = new CHudViewport();
 	m_pViewport->Start( gameuifuncs, gameeventmanager );
+#ifdef LUA_SDK
+	m_pClientLuaPanel = new CScriptedClientLuaPanel();
+#endif
 }
 
 

@@ -162,6 +162,11 @@ static int surface_DrawSetTextColor (lua_State *L) {
   return 0;
 }
 
+static int surface_DrawSetTextFont (lua_State *L) {
+  surface()->DrawSetTextFont(luaL_checkhfont(L, 1));
+  return 0;
+}
+
 static int surface_DrawSetTextPos (lua_State *L) {
   surface()->DrawSetTextPos(luaL_checkint(L, 1), luaL_checkint(L, 2));
   return 0;
@@ -502,6 +507,7 @@ static const luaL_Reg surfacelib[] = {
   {"DrawSetAlphaMultiplier",   surface_DrawSetAlphaMultiplier},
   {"DrawSetColor",   surface_DrawSetColor},
   {"DrawSetTextColor",   surface_DrawSetTextColor},
+  {"DrawSetTextFont",   surface_DrawSetTextFont},
   {"DrawSetTextPos",   surface_DrawSetTextPos},
   {"DrawSetTextScale",   surface_DrawSetTextScale},
   {"DrawSetTexture",   surface_DrawSetTexture},
