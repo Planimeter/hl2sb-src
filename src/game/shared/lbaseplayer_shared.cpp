@@ -25,10 +25,10 @@
 
 
 LUA_API lua_CBasePlayer *lua_toplayer (lua_State *L, int idx) {
-  CBaseHandle *hPlayer = dynamic_cast<CBaseHandle *>((CBaseHandle *)lua_touserdata(L, idx));
-  if (hPlayer == NULL)
+  CBaseHandle *phPlayer = dynamic_cast<CBaseHandle *>((CBaseHandle *)lua_touserdata(L, idx));
+  if (phPlayer == NULL)
     return NULL;
-  return dynamic_cast<lua_CBasePlayer *>(hPlayer->Get());
+  return dynamic_cast<lua_CBasePlayer *>(phPlayer->Get());
 }
 
 
@@ -39,8 +39,8 @@ LUA_API lua_CBasePlayer *lua_toplayer (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushplayer (lua_State *L, CBasePlayer *pPlayer) {
-  CBaseHandle *hPlayer = (CBaseHandle *)lua_newuserdata(L, sizeof(CBaseHandle));
-  hPlayer->Set(pPlayer);
+  CBaseHandle *phPlayer = (CBaseHandle *)lua_newuserdata(L, sizeof(CBaseHandle));
+  phPlayer->Set(pPlayer);
   luaL_getmetatable(L, "CBasePlayer");
   lua_setmetatable(L, -2);
 }

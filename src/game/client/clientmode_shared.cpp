@@ -667,7 +667,7 @@ void ClientModeShared::Enable()
 #endif
 	m_pViewport->SetProportional( true );
 #ifdef LUA_SDK
-	m_pClientLuaPanel->SetProportional( true );
+	m_pClientLuaPanel->SetProportional( false );
 #endif
 
 #ifdef LUA_SDK

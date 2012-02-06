@@ -1506,6 +1506,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\vgui_controls\lvgui_controls.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lvphysics_interface.cpp"
 				>
 			</File>
@@ -3205,6 +3209,10 @@
 				Name="scripted_controls"
 				>
 				<File
+					RelativePath=".\scripted_controls\lFrame.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\scripted_controls\scriptedclientluapanel.cpp"
 					>
 				</File>
@@ -4658,6 +4666,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\vgui_controls\lControls.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\tier1\lconvar.h"
 				>
 			</File>
@@ -5633,6 +5645,10 @@
 		<Filter
 			Name="scripted_controls Header Files"
 			>
+			<File
+				RelativePath=".\scripted_controls\lFrame.h"
+				>
+			</File>
 			<File
 				RelativePath=".\scripted_controls\scriptedclientluapanel.h"
 				>

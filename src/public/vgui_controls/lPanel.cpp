@@ -60,7 +60,7 @@ LUA_API void lua_pushpanel (lua_State *L, VPANEL panel) {
 LUALIB_API lua_Panel *luaL_checkpanel (lua_State *L, int narg) {
   lua_Panel *d = lua_topanel(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index a NULL panel");
+    luaL_argerror(L, narg, "attempt to index an INVALID_PANEL");
   return d;
 }
 
@@ -68,7 +68,7 @@ LUALIB_API lua_Panel *luaL_checkpanel (lua_State *L, int narg) {
 LUALIB_API VPANEL luaL_checkvpanel (lua_State *L, int narg) {
   lua_Panel *d = lua_topanel(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index a NULL panel");
+    luaL_argerror(L, narg, "attempt to index an INVALID_PANEL");
   PHandle hPanel;
   hPanel.Set(d);
   return ivgui()->HandleToPanel(hPanel.m_iPanelID);
@@ -911,6 +911,11 @@ static int Panel_SetProportional (lua_State *L) {
   return 0;
 }
 
+static int Panel_SetScheme (lua_State *L) {
+  luaL_checkpanel(L, 1)->SetScheme(luaL_checkstring(L, 2));
+  return 0;
+}
+
 static int Panel_SetSilentMode (lua_State *L) {
   luaL_checkpanel(L, 1)->SetSilentMode(luaL_checkboolean(L, 2));
   return 0;
@@ -979,7 +984,7 @@ static int Panel___index (lua_State *L) {
     lua_getinfo(L, "fl", &ar1);
     lua_Debug ar2;
     lua_getinfo(L, ">S", &ar2);
-	lua_pushfstring(L, "%s:%d: attempt to index a NULL panel", ar2.short_src, ar1.currentline);
+	lua_pushfstring(L, "%s:%d: attempt to index an INVALID_PANEL", ar2.short_src, ar1.currentline);
 	return lua_error(L);
   }
   lua_getmetatable(L, 1);
@@ -997,8 +1002,12 @@ static int Panel___tostring (lua_State *L) {
   Panel *pPanel = lua_topanel(L, 1);
   if (pPanel == NULL)
     lua_pushstring(L, "INVALID_PANEL");
-  else
-    lua_pushfstring(L, "Panel: \"%s\" (%s)", pPanel->GetName(), pPanel->GetClassName());
+  else {
+    const char *pName = pPanel->GetName();
+    if (Q_strcmp(pName, "") == 0)
+      pName = "(no name)";
+    lua_pushfstring(L, "Panel: \"%s\"", pName);
+  }
   return 1;
 }
 
@@ -1161,6 +1170,7 @@ static const luaL_Reg Panelmeta[] = {
   {"SetPos", Panel_SetPos},
   {"SetPostChildPaintEnabled", Panel_SetPostChildPaintEnabled},
   {"SetProportional", Panel_SetProportional},
+  {"SetScheme", Panel_SetScheme},
   {"SetSilentMode", Panel_SetSilentMode},
   {"SetSize", Panel_SetSize},
   {"SetSkipChildDuringPainting", Panel_SetSkipChildDuringPainting},

@@ -110,6 +110,7 @@ protected:
 #endif
 	CBaseViewport			*m_pViewport;
 #ifdef LUA_SDK
+public:
 	CScriptedClientLuaPanel	*m_pClientLuaPanel;
 #endif
 

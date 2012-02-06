@@ -20,6 +20,9 @@
 class CScriptedHudViewport;
 #endif
 class CHudViewport;
+#ifdef LUA_SDK
+class CScriptedClientLuaPanel;
+#endif
 
 namespace vgui
 {

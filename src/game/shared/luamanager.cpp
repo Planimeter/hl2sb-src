@@ -25,6 +25,7 @@
 #include "lprediction.h"
 #include "vgui/LISurface.h"
 #include "vgui_controls/lPanel.h"
+#include "vgui_controls/lvgui_controls.h"
 #else
 #include "lbaseanimating.h"
 #include "lbaseentity.h"
@@ -260,6 +261,7 @@ void luasrc_init (void) {
   luaopen_prediction(L);
   luaopen_surface(L);
   luaopen_Panel(L);
+  luaopen_vgui(L);
 #endif
   luaopen_UTIL(L);
   luaopen_UTIL_shared(L);
