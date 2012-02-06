@@ -25,7 +25,7 @@ using namespace vgui;
 LFrame::LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon) : Frame(parent, panelName, showTaskbarIcon)
 {
 #if defined( LUA_SDK )
-	m_nRefCount = LUA_REFNIL;
+	m_nRefCount = LUA_NOREF;
 #endif
 }
 
@@ -284,6 +284,11 @@ static int Frame_SetSmallCaption (lua_State *L) {
   return 0;
 }
 
+static int Frame_SetTitle (lua_State *L) {
+  luaL_checkframe(L, 1)->SetTitle(luaL_checkstring(L, 2), luaL_checkboolean(L, 3));
+  return 0;
+}
+
 static int Frame_SetTitleBarVisible (lua_State *L) {
   luaL_checkframe(L, 1)->SetTitleBarVisible(luaL_checkboolean(L, 2));
   return 0;
@@ -300,16 +305,75 @@ static int Frame___index (lua_State *L) {
 	lua_pushfstring(L, "%s:%d: attempt to index an INVALID_PANEL", ar2.short_src, ar1.currentline);
 	return lua_error(L);
   }
-  lua_getmetatable(L, 1);
-  lua_pushvalue(L, 2);
-  lua_gettable(L, -2);
-  if (lua_isnil(L, -1)) {
-    lua_pop(L, 1);
-    luaL_getmetatable(L, "Panel");
+  LFrame *plFrame = dynamic_cast<LFrame *>(pFrame);
+  if (plFrame && plFrame->m_nRefCount != LUA_NOREF) {
+    lua_getref(L, plFrame->m_nRefCount);
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
+      lua_getmetatable(L, 1);
+      lua_pushvalue(L, 2);
+      lua_gettable(L, -2);
+      if (lua_isnil(L, -1)) {
+        lua_pop(L, 1);
+        luaL_getmetatable(L, "Panel");
+        lua_pushvalue(L, 2);
+        lua_gettable(L, -2);
+      }
+    }
+  } else {
+    lua_getmetatable(L, 1);
+    lua_pushvalue(L, 2);
+    lua_gettable(L, -2);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
+      luaL_getmetatable(L, "Panel");
+      lua_pushvalue(L, 2);
+      lua_gettable(L, -2);
+    }
   }
   return 1;
+}
+
+static int Frame___newindex (lua_State *L) {
+  Frame *pFrame = lua_toframe(L, 1);
+  if (pFrame == NULL) {  /* avoid extra test when d is not 0 */
+    lua_Debug ar1;
+    lua_getstack(L, 1, &ar1);
+    lua_getinfo(L, "fl", &ar1);
+    lua_Debug ar2;
+    lua_getinfo(L, ">S", &ar2);
+    lua_pushfstring(L, "%s:%d: attempt to index an INVALID_PANEL", ar2.short_src, ar1.currentline);
+    return lua_error(L);
+  }
+  LFrame *plFrame = dynamic_cast<LFrame *>(pFrame);
+  if (plFrame) {
+    if (plFrame->m_nRefCount == LUA_NOREF) {
+      lua_newtable(L);
+      plFrame->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, plFrame->m_nRefCount);
+    lua_pushvalue(L, 3);
+    lua_setfield(L, -2, luaL_checkstring(L, 2));
+    return 0;
+  } else {
+    lua_Debug ar1;
+    lua_getstack(L, 1, &ar1);
+    lua_getinfo(L, "fl", &ar1);
+    lua_Debug ar2;
+    lua_getinfo(L, ">S", &ar2);
+    lua_pushfstring(L, "%s:%d: attempt to index a non-scripted panel", ar2.short_src, ar1.currentline);
+    return lua_error(L);
+  }
+}
+
+static int Frame___gc (lua_State *L) {
+  LFrame *plFrame = dynamic_cast<LFrame *>(lua_toframe(L, 1));
+  if (plFrame) {
+    delete plFrame;
+  }
+  return 0;
 }
 
 static int Frame___eq (lua_State *L) {
@@ -374,8 +438,11 @@ static const luaL_Reg Framemeta[] = {
   {"SetMoveable", Frame_SetMoveable},
   {"SetSizeable", Frame_SetSizeable},
   {"SetSmallCaption", Frame_SetSmallCaption},
+  {"SetTitle", Frame_SetTitle},
   {"SetTitleBarVisible", Frame_SetTitleBarVisible},
   {"__index", Frame___index},
+  {"__newindex", Frame___newindex},
+  {"__gc", Frame___gc},
   {"__eq", Frame___eq},
   {"__tostring", Frame___tostring},
   {NULL, NULL}

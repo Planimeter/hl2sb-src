@@ -346,7 +346,7 @@ CBaseEntity::CBaseEntity( bool bServerOnly )
 #endif
 
 #if defined( LUA_SDK )
-	m_nRefCount = LUA_REFNIL;
+	m_nRefCount = LUA_NOREF;
 #endif
 }
 

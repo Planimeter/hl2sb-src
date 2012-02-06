@@ -200,7 +200,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 #if defined ( LUA_SDK )
 #ifndef CLIENT_DLL
 	// Let the instance reinitialize itself for the client.
-	if ( m_nRefCount != LUA_REFNIL )
+	if ( m_nRefCount != LUA_NOREF )
 		return;
 #endif
 

@@ -93,7 +93,7 @@ CBaseScripted::CBaseScripted( void )
 {
 #ifdef LUA_SDK
 	// We're done in CBaseEntity
-	// m_nRefCount = LUA_REFNIL;
+	// m_nRefCount = LUA_NOREF;
 #endif
 }
 
@@ -111,7 +111,7 @@ void CBaseScripted::InitScriptedEntity( void )
 #if defined ( LUA_SDK )
 #ifndef CLIENT_DLL
 	// Let the instance reinitialize itself for the client.
-	if ( m_nRefCount != LUA_REFNIL )
+	if ( m_nRefCount != LUA_NOREF )
 		return;
 #endif
 

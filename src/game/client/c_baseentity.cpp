@@ -944,7 +944,7 @@ C_BaseEntity::C_BaseEntity() :
 	ParticleProp()->Init( this );
 
 #if defined( LUA_SDK )
-	m_nRefCount = LUA_REFNIL;
+	m_nRefCount = LUA_NOREF;
 #endif
 }
 
