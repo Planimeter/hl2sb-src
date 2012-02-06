@@ -28,7 +28,7 @@ public:
 	LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon = true);
 	virtual ~LFrame();
 
-private:
+public:
 #if defined( LUA_SDK )
 	int m_nRefCount;
 #endif

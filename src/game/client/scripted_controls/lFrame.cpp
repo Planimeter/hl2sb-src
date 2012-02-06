@@ -383,7 +383,7 @@ static const luaL_Reg Framemeta[] = {
 
 
 static int luasrc_Frame (lua_State *L) {
-  LFrame *pFrame = new LFrame(luaL_optpanel(L, 1, VGui_GetClientLuaRootPanel()), luaL_optstring(L, 2, NULL), luaL_optboolean(L, 3, true));
+  Frame *pFrame = new LFrame(luaL_optpanel(L, 1, VGui_GetClientLuaRootPanel()), luaL_optstring(L, 2, NULL), luaL_optboolean(L, 3, true));
   lua_pushframe(L, pFrame);
   return 1;
 }
