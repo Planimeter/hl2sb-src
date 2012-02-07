@@ -3209,6 +3209,10 @@
 				Name="scripted_controls"
 				>
 				<File
+					RelativePath=".\scripted_controls\lButton.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\scripted_controls\lFrame.cpp"
 					>
 				</File>
@@ -5645,6 +5649,10 @@
 		<Filter
 			Name="scripted_controls Header Files"
 			>
+			<File
+				RelativePath=".\scripted_controls\lButton.h"
+				>
+			</File>
 			<File
 				RelativePath=".\scripted_controls\lFrame.h"
 				>
