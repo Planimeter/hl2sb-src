@@ -369,7 +369,10 @@ public:
 	{
 		EffectDestroy();
 		SoundDestroy();
-		BaseClass::Drop(vecVelocity);
+
+#ifndef CLIENT_DLL
+		UTIL_Remove( this );
+#endif
 	}
 
 	bool HasAnyAmmo( void );
