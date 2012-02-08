@@ -807,6 +807,11 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 	}
 
+#if defined ( LUA_SDK )
+	// Initialize the GameUI state
+	luasrc_init_gameui();
+#endif
+
 	//Tony; mount an extra appId if it exists.
 	MountAdditionalContent();
 
@@ -943,6 +948,10 @@ bool CHLClient::GameInit( void )
 //-----------------------------------------------------------------------------
 void CHLClient::Shutdown( void )
 {
+#if defined ( LUA_SDK )
+	luasrc_shutdown_gameui();
+#endif
+
 	C_BaseAnimating::ShutdownBoneSetupThreadPool();
 	ClientWorldFactoryShutdown();
 

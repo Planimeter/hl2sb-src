@@ -59,7 +59,7 @@
 #include "lauxlib.h"
 
 
-static const luaL_Reg lualibs[] = {
+static const luaL_Reg luasrclibs[] = {
   {"CBaseAnimating", luaopen_CBaseAnimating},
   {"engine", luaopen_engine},
   {"CBaseCombatWeapon", luaopen_CBaseCombatWeapon},
@@ -112,7 +112,7 @@ static const luaL_Reg lualibs[] = {
 
 
 LUALIB_API void luasrc_openlibs (lua_State *L) {
-  const luaL_Reg *lib = lualibs;
+  const luaL_Reg *lib = luasrclibs;
   for (; lib->func; lib++) {
     lua_pushcfunction(L, lib->func);
     lua_pushstring(L, lib->name);

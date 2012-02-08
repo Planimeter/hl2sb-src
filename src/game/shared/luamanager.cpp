@@ -43,7 +43,7 @@ LUALIB_API int luaL_optboolean (lua_State *L, int narg,
 
 
 #ifdef CLIENT_DLL
-lua_State *LM;
+lua_State *LGameUI;
 #endif
 
 lua_State *L;
@@ -170,6 +170,21 @@ void luasrc_setmodulepaths(lua_State *L) {
 
   lua_pop(L, 1);  /* pop result */
 }
+
+#ifdef CLIENT_DLL
+void luasrc_init_gameui (void) {
+  LGameUI = luaL_newstate();
+
+  luaL_openlibs(LGameUI);
+  base_open(LGameUI);
+
+  luaopen_vgui(LGameUI);
+}
+
+void luasrc_shutdown_gameui (void) {
+  lua_close(LGameUI);
+}
+#endif
 
 void luasrc_init (void) {
   if (g_bLuaInitialized)

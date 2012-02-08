@@ -230,7 +230,7 @@ LUALIB_API int luaL_optboolean (lua_State *L, int narg,
                                               int def);
 
 #ifdef CLIENT_DLL
-extern lua_State *LM; // menu state
+extern lua_State *LGameUI; // gameui state
 #endif
 
 extern lua_State *L;
@@ -238,6 +238,11 @@ extern lua_State *L;
 
 // Set to true between LevelInit and LevelShutdown.
 extern bool	g_bLuaInitialized;
+
+#ifdef CLIENT_DLL
+void       luasrc_init_gameui (void);
+void       luasrc_shutdown_gameui (void);
+#endif
 
 void       luasrc_init (void);
 void       luasrc_shutdown (void);
