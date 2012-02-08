@@ -229,6 +229,10 @@ LUALIB_API int luaL_checkboolean (lua_State *L, int narg);
 LUALIB_API int luaL_optboolean (lua_State *L, int narg,
                                               int def);
 
+#ifdef CLIENT_DLL
+extern lua_State *LM; // menu state
+#endif
+
 extern lua_State *L;
 
 

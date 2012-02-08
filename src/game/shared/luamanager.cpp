@@ -83,6 +83,10 @@ LUALIB_API int luaL_optboolean (lua_State *L, int narg,
 }
 
 
+#ifdef CLIENT_DLL
+lua_State *LM;
+#endif
+
 lua_State *L;
 
 // Lua system
