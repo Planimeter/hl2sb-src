@@ -209,7 +209,7 @@ LUALIB_API int luaopen_ConCommand (lua_State *L) {
   lua_pushstring(L, "concommand");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "concommand" */
   luaL_register(L, "_G", ConCommand_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
   return 1;
 }
 
@@ -378,7 +378,7 @@ LUALIB_API int luaopen_ConVar (lua_State *L) {
   lua_pushstring(L, "convar");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "convar" */
   luaL_register(L, "_G", ConVar_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
   return 1;
 }
 

@@ -301,7 +301,7 @@ LUALIB_API int luaopen_Vector (lua_State *L) {
   lua_pushstring(L, "vector");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "vector" */
   luaL_register(L, "_G", Vector_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
   Vector origin = vec3_origin;
   lua_pushvector(L, origin);
   lua_setglobal(L, "vec3_origin");  /* set global vec3_origin */
@@ -471,7 +471,7 @@ LUALIB_API int luaopen_QAngle (lua_State *L) {
   lua_pushstring(L, "angle");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "angle" */
   luaL_register(L, "_G", QAngle_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
   QAngle v = vec3_angle;
   lua_pushangle(L, v);
   lua_setglobal(L, "vec3_angle");  /* set global vec3_angle */

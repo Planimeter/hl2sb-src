@@ -275,7 +275,6 @@ static const luaL_Reg filesystemlib[] = {
 */
 LUALIB_API int luaopen_filesystem (lua_State *L) {
   luaL_register(L, "filesystem", filesystemlib);
-  lua_pop(L, 1);
   return 1;
 }
 

@@ -11,6 +11,8 @@
 #pragma once
 #endif
 
+#include "isteamfriends.h"
+
 /* type for ISteamFriends functions */
 typedef ISteamFriends lua_ISteamFriends;
 

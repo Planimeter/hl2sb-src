@@ -131,6 +131,6 @@ LUALIB_API int luaopen_IMoveHelper (lua_State *L) {
   lua_pushstring(L, "movehelper");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "IMoveHelper" */
   luaL_register(L, "_G", IMoveHelper_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
   return 1;
 }

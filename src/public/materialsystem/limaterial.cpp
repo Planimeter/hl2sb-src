@@ -356,7 +356,6 @@ LUALIB_API int luaopen_IMaterial (lua_State *L) {
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
   lua_pushstring(L, "material");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "material" */
-  lua_pop(L, 1);
   return 1;
 }
 

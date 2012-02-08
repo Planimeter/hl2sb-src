@@ -140,7 +140,6 @@ LUALIB_API int luaopen_INetworkStringTable (lua_State *L) {
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
   lua_pushstring(L, "networkstringtable");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "effect" */
-  lua_pop(L, 1);
   return 1;
 }
 
@@ -201,7 +200,6 @@ static const luaL_Reg networkstringtablelib[] = {
 */
 LUALIB_API int luaopen_networkstringtable (lua_State *L) {
   luaL_register(L, "networkstringtable", networkstringtablelib);
-  lua_pop(L, 1);
   return 1;
 }
 

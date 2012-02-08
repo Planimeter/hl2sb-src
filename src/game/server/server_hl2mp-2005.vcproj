@@ -2186,6 +2186,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\lsrcinit.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\steam\lsteam_api.cpp"
 				>
 			</File>
@@ -5291,6 +5295,10 @@
 			</File>
 			<File
 				RelativePath="..\shared\ltakedamageinfo.h"
+				>
+			</File>
+			<File
+				RelativePath="..\shared\luasrclib.h"
 				>
 			</File>
 			<File

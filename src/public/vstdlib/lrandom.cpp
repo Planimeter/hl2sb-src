@@ -89,10 +89,8 @@ static const luaL_Reg random_funcs[] = {
 */
 LUALIB_API int luaopen_random (lua_State *L) {
   luaL_register(L, "random", randomlib);
-  // Andrew; this has always been redundant.
+  // UNDONE: this has always been redundant.
   // luaL_register(L, "_G", random_funcs);
-  // lua_pop(L, 2);
-  lua_pop(L, 1);
   return 1;
 }
 

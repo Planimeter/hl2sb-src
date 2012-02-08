@@ -576,7 +576,6 @@ LUALIB_API int luaopen_CBasePlayer (lua_State *L) {
     luaL_newmetatable(L, "CBasePlayer");
   }
   luaL_register(L, NULL, CBasePlayermeta);
-  lua_pop(L, 1);
   return 1;
 }
 

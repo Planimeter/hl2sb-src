@@ -11,6 +11,7 @@
 #pragma once
 #endif
 
+#include "networkstringtabledefs.h"
 
 /* type for INetworkStringTable functions */
 typedef INetworkStringTable lua_INetworkStringTable;

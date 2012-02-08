@@ -572,7 +572,6 @@ static const luaL_Reg surfacelib[] = {
 */
 LUALIB_API int luaopen_surface (lua_State *L) {
   luaL_register(L, "surface", surfacelib);
-  lua_pop(L, 1);
   return 1;
 }
 

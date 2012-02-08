@@ -188,7 +188,6 @@ LUALIB_API int luaopen_CGameTrace (lua_State *L) {
   luaL_register(L, NULL, CGameTracemeta);
   lua_pushstring(L, "trace");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "trace" */
-  lua_pop(L, 1);
   return 1;
 }
 

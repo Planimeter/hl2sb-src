@@ -9,6 +9,12 @@
 #define LHL2MP_PLAYER_SHARED_H
 #pragma once
 
+#ifdef CLIENT_DLL
+	#include "c_hl2mp_player.h"
+#else
+	#include "hl2mp_player.h"
+#endif
+
 /* type for CHL2MP_Player functions */
 typedef CHL2MP_Player lua_CHL2MP_Player;
 

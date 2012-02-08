@@ -974,7 +974,6 @@ LUALIB_API int luaopen_CBasePlayer_shared (lua_State *L) {
   luaL_register(L, NULL, CBasePlayermeta);
   lua_pushstring(L, "entity");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
-  lua_pop(L, 1);
   return 1;
 }
 

@@ -46,7 +46,6 @@ static const luaL_Reg enginevguilib[] = {
 */
 LUALIB_API int luaopen_enginevgui (lua_State *L) {
   luaL_register(L, "enginevgui", enginevguilib);
-  lua_pop(L, 1);
   return 1;
 }
 

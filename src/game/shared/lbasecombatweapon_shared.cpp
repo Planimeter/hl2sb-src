@@ -1083,7 +1083,6 @@ LUALIB_API int luaopen_CBaseCombatWeapon (lua_State *L) {
   luaL_register(L, NULL, CBaseCombatWeaponmeta);
   lua_pushstring(L, "entity");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
-  lua_pop(L, 1);
   return 1;
 }
 

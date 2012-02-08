@@ -204,7 +204,7 @@ LUALIB_API int luaopen_CEffectData (lua_State *L) {
   lua_pushstring(L, "effect");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "effect" */
   luaL_register(L, "_G", CEffectData_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
   return 1;
 }
 

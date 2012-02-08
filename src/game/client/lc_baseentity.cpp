@@ -178,7 +178,6 @@ LUALIB_API int luaopen_CBaseEntity (lua_State *L) {
     luaL_newmetatable(L, "CBaseEntity");
   }
   luaL_register(L, NULL, CBaseEntitymeta);
-  lua_pop(L, 1);
   return 1;
 }
 

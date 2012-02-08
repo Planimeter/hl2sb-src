@@ -301,7 +301,7 @@ LUALIB_API int luaopen_CTakeDamageInfo (lua_State *L) {
   lua_pushstring(L, "damageinfo");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "damageinfo" */
   luaL_register(L, "_G", CTakeDamageInfo_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
   return 1;
 }
 

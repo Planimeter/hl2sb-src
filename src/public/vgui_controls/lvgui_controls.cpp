@@ -19,6 +19,6 @@
 LUALIB_API int luaopen_vgui (lua_State *L) {
   luaopen_vgui_Button(L);
   luaopen_vgui_Frame(L);
-  return 1;
+  return 0;
 }
 

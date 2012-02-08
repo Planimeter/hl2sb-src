@@ -9,11 +9,6 @@
 
 #include "cbase.h"
 
-#ifdef CLIENT_DLL
-#include "c_hl2mp_player.h"
-#else
-#include "hl2mp_player.h"
-#endif
 #include "hl2mp_player_shared.h"
 
 #include "luamanager.h"
@@ -220,7 +215,7 @@ LUALIB_API int luaopen_CHL2MP_Player_shared (lua_State *L) {
   lua_pushstring(L, "entity");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
   luaL_register(L, "_G", CHL2MP_Player_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
   return 1;
 }
 

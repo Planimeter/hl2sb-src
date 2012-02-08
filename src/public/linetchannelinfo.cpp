@@ -245,7 +245,6 @@ LUALIB_API int luaopen_INetChannelInfo (lua_State *L) {
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
   lua_pushstring(L, "netchannelinfo");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "netchannelinfo" */
-  lua_pop(L, 1);
   return 1;
 }
 

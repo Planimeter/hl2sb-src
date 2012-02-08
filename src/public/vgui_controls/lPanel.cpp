@@ -1198,7 +1198,6 @@ LUALIB_API int luaopen_Panel (lua_State *L) {
   luaL_register(L, NULL, Panelmeta);
   lua_pushstring(L, "panel");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "panel" */
-  lua_pop(L, 1);
   // Andrew; Don't be mislead, INVALID_PANEL is not NULL internally, but we
   // need a name other than NULL, because NULL has already been assigned as an
   // entity.

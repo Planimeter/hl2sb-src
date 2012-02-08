@@ -8,7 +8,6 @@
 #define listeamfriends_cpp
 
 #include "cbase.h"
-#include "isteamfriends.h"
 #include "lua.hpp"
 #include "listeamfriends.h"
 
@@ -110,7 +109,6 @@ LUALIB_API int luaopen_ISteamFriends (lua_State *L) {
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
   lua_pushstring(L, "steamfriends");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "steamfriends" */
-  lua_pop(L, 1);
   return 1;
 }
 

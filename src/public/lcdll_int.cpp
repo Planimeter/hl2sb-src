@@ -535,7 +535,6 @@ static const luaL_Reg enginelib[] = {
 */
 LUALIB_API int luaopen_engine (lua_State *L) {
   luaL_register(L, "engine", enginelib);
-  lua_pop(L, 1);
   return 1;
 }
 

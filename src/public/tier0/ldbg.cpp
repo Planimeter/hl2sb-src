@@ -162,7 +162,6 @@ static const luaL_Reg dbg_funcs[] = {
 
 LUALIB_API int luaopen_dbg (lua_State *L) {
   luaL_register(L, "dbg", dbg_funcs);
-  lua_pop(L, 1);
   return 1;
 }
 

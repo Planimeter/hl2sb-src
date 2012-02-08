@@ -43,7 +43,6 @@ static const luaL_Reg steamapicontextlib[] = {
 */
 LUALIB_API int luaopen_steamapicontext (lua_State *L) {
   luaL_register(L, "steamapicontext", steamapicontextlib);
-  lua_pop(L, 1);
   return 1;
 }
 

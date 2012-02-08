@@ -196,7 +196,6 @@ static const luaL_Reg util_funcs[] = {
 LUALIB_API int luaopen_UTIL (lua_State *L) {
   // luaL_register(L, "_G", util_funcs);
   luaL_register(L, "UTIL", util_funcs);
-  lua_pop(L, 1);
   return 1;
 }
 

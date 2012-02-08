@@ -974,7 +974,6 @@ LUALIB_API int luaopen_CBaseAnimating (lua_State *L) {
   luaL_register(L, NULL, CBaseAnimatingmeta);
   lua_pushstring(L, "entity");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
-  lua_pop(L, 1);
   return 1;
 }
 

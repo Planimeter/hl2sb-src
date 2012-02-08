@@ -14,50 +14,9 @@
 #include "basescripted.h"
 #include "weapon_hl2mpbase_scriptedweapon.h"
 #include "luamanager.h"
-#ifdef CLIENT_DLL
-#include "lc_baseanimating.h"
-#include "lc_baseentity.h"
-#include "lc_recipientfilter.h"
-#include "lcdll_int.h"
-#include "lcdll_util.h"
-#include "liclientshadowmgr.h"
-#include "lienginevgui.h"
-#include "lprediction.h"
-#include "vgui/LISurface.h"
-#include "vgui_controls/lPanel.h"
-#include "vgui_controls/lvgui_controls.h"
-#else
-#include "lbaseanimating.h"
-#include "lbaseentity.h"
-#include "leiface.h"
-#include "linetchannelinfo.h"
-#include "lplayer.h"
-#include "lrecipientfilter.h"
-#include "lutil.h"
-#endif
-#include "lbasecombatweapon_shared.h"
-#include "lbaseentity_shared.h"
-#include "lbaseplayer_shared.h"
-#include "lColor.h"
+#include "luasrclib.h"
 #include "lconvar.h"
-#include "ldbg.h"
-#include "leffect_dispatch_data.h"
-#include "lfilesystem.h"
-#include "lgametrace.h"
-#include "lglobalvars_base.h"
-#include "lhl2mp_player_shared.h"
 #include "licvar.h"
-#include "materialsystem/limaterial.h"
-#include "limovehelper.h"
-#include "steam/listeamfriends.h"
-#include "engine/livdebugoverlay.h"
-#include "lnetworkstringtabledefs.h"
-#include "vstdlib/lrandom.h"
-#include "steam/lsteam_api.h"
-#include "ltakedamageinfo.h"
-#include "lutil_shared.h"
-#include "mathlib/lvector.h"
-#include "lvphysics_interface.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -225,55 +184,7 @@ void luasrc_init (void) {
   // Andrew; Someone set us up the path for great justice
   luasrc_setmodulepaths(L);
 
-  // TODO: Move this all to a sort of Source linit.c(pp) file, and do
-  // luasrc_openlibs(L) instead
-  luaopen_CBaseAnimating(L);
-  luaopen_engine(L);
-  luaopen_CBaseCombatWeapon(L);
-  luaopen_CBaseEntity(L);
-  luaopen_CBaseEntity_shared(L);
-  luaopen_CRecipientFilter(L);
-#ifdef GAME_DLL
-  luaopen_CBasePlayer(L);
-#endif
-  luaopen_CBasePlayer_shared(L);
-  luaopen_Color(L);
-  luaopen_ConCommand(L);
-  luaopen_ConVar(L);
-  luaopen_dbg(L);
-  luaopen_CEffectData(L);
-  luaopen_filesystem(L);
-  luaopen_CGameTrace(L);
-  luaopen_gpGlobals(L);
-  luaopen_CHL2MP_Player_shared(L);
-  luaopen_cvar(L);
-  luaopen_IMaterial(L);
-  luaopen_IMoveHelper(L);
-  luaopen_ISteamFriends(L);
-#ifdef GAME_DLL
-  luaopen_INetChannelInfo(L);
-#endif
-  luaopen_debugoverlay(L);
-  luaopen_INetworkStringTable(L);
-  luaopen_networkstringtable(L);
-  luaopen_random(L);
-  luaopen_steamapicontext(L);
-  luaopen_CTakeDamageInfo(L);
-#ifdef CLIENT_DLL
-  luaopen_g_pClientShadowMgr(L);
-  luaopen_enginevgui(L);
-  luaopen_prediction(L);
-  luaopen_surface(L);
-  luaopen_Panel(L);
-  luaopen_vgui(L);
-#endif
-  luaopen_UTIL(L);
-  luaopen_UTIL_shared(L);
-  luaopen_Vector(L);
-  luaopen_QAngle(L);
-  luaopen_physenv(L);
-  luaopen_IPhysicsObject(L);
-  luaopen_IPhysicsSurfaceProps(L);
+  luasrc_openlibs(L);
 
   Msg( "Lua initialized (" LUA_VERSION ")\n" );
   // Andrew; We currently support different Lua binaries, but as Henry has

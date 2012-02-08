@@ -100,7 +100,6 @@ void RemoveGlobalChangeCallbacks( void )
 */
 LUALIB_API int luaopen_cvar (lua_State *L) {
   luaL_register(L, "cvar", cvarlib);
-  lua_pop(L, 1);
   InstallGlobalChangeCallbacks();
   return 1;
 }

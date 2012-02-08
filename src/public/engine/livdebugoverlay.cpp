@@ -102,7 +102,6 @@ static const luaL_Reg debugoverlaylib[] = {
 */
 LUALIB_API int luaopen_debugoverlay (lua_State *L) {
   luaL_register(L, "debugoverlay", debugoverlaylib);
-  lua_pop(L, 1);
   return 1;
 }
 
