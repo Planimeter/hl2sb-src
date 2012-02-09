@@ -9,6 +9,7 @@
 
 #include "cbase.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 #include "lColor.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -161,7 +162,7 @@ static const luaL_Reg dbg_funcs[] = {
 
 
 LUALIB_API int luaopen_dbg (lua_State *L) {
-  luaL_register(L, "dbg", dbg_funcs);
+  luaL_register(L, LUA_DBGLIBNAME, dbg_funcs);
   return 1;
 }
 

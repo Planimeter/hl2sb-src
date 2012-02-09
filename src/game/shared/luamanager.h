@@ -25,6 +25,7 @@
 #define LUA_PATH_AUTORUN_SERVER		LUA_ROOT "\\autorun\\server"
 #define LUA_PATH_EFFECTS			LUA_ROOT "\\effects"
 #define LUA_PATH_ENTITIES			LUA_ROOT "\\entities"
+#define LUA_PATH_GAMEUI				LUA_ROOT "\\gameui"
 #define LUA_PATH_WEAPONS			LUA_ROOT "\\weapons"
 
 

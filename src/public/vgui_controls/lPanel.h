@@ -42,7 +42,4 @@ LUALIB_API lua_Panel *(luaL_optpanel) (lua_State *L, int narg,
                                                      lua_Panel *def);
 
 
-LUALIB_API int luaopen_Panel(lua_State *L);
-
-
 #endif // LPANEL_H

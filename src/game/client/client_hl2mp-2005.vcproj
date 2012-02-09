@@ -4698,10 +4698,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\public\lienginevgui.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\public\materialsystem\limaterial.h"
 				>
 			</File>

@@ -16,6 +16,7 @@
 #include "panelmetaclassmgr.h"
 #include <vgui_controls/PHandle.h>
 #include "luamanager.h"
+#include "vgui_int.h"
 #include "lPanel.h"
 #include "lColor.h"
 
@@ -1190,6 +1191,24 @@ static const luaL_Reg Panelmeta[] = {
 };
 
 
+static int luasrc_VGui_GetGameUIPanel (lua_State *L) {
+  lua_pushpanel(L, VGui_GetGameUIPanel());
+  return 1;
+}
+
+static int luasrc_VGui_GetClientLuaRootPanel (lua_State *L) {
+  lua_pushpanel(L, VGui_GetClientLuaRootPanel());
+  return 1;
+}
+
+
+static const luaL_Reg Panel_funcs[] = {
+  {"VGui_GetGameUIPanel", luasrc_VGui_GetGameUIPanel},
+  {"VGui_GetClientLuaRootPanel", luasrc_VGui_GetClientLuaRootPanel},
+  {NULL, NULL}
+};
+
+
 /*
 ** Open Panel object
 */
@@ -1198,6 +1217,8 @@ LUALIB_API int luaopen_Panel (lua_State *L) {
   luaL_register(L, NULL, Panelmeta);
   lua_pushstring(L, "panel");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "panel" */
+  luaL_register(L, "_G", Panel_funcs);
+  lua_pop(L, 1);
   // Andrew; Don't be mislead, INVALID_PANEL is not NULL internally, but we
   // need a name other than NULL, because NULL has already been assigned as an
   // entity.

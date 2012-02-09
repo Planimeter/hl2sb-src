@@ -102,13 +102,6 @@
 
 #ifdef HL2SB
 #include "mountsteamcontent.h"
-#ifdef _WIN32
-// HACKHACK: this is dumb, and unsafe. Things that should be uninitialized at the
-// engine-level can kiss their deconstructors goodbye. See Shutdown for an
-// explanation.
-DLL_IMPORT BOOL STDCALL TerminateProcess(HANDLE hProcess, unsigned int uExitCode);
-DLL_IMPORT HANDLE STDCALL GetCurrentProcess(void);
-#endif
 #endif
 
 #ifdef PORTAL
@@ -807,11 +800,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 	}
 
-#if defined ( LUA_SDK )
-	// Initialize the GameUI state
-	luasrc_init_gameui();
-#endif
-
 	//Tony; mount an extra appId if it exists.
 	MountAdditionalContent();
 
@@ -854,6 +842,13 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 
 	vgui::VGui_InitMatSysInterfacesList( "ClientDLL", &appSystemFactory, 1 );
+
+#if defined ( LUA_SDK )
+	// Initialize the GameUI state
+	luasrc_init_gameui();
+
+	luasrc_dofolder( LGameUI, LUA_PATH_GAMEUI );
+#endif
 
 	// Add the client systems.	
 	
@@ -984,13 +979,6 @@ void CHLClient::Shutdown( void )
 	DisconnectTier2Libraries( );
 	ConVar_Unregister();
 	DisconnectTier1Libraries( );
-
-	//Andrew; this is the fastest and dirtiest fucking thing I could come up
-	//with to avoid that damn "CNet Encrypt:0" issue. At least this closes the
-	//game now.
-#if defined( _WIN32 ) && defined( HL2SB )
-	TerminateProcess(GetCurrentProcess(), EXIT_SUCCESS);
-#endif
 }
 
 

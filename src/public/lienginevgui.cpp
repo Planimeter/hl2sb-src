@@ -11,6 +11,7 @@
 #include "cbase.h"
 #include "ienginevgui.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 #include "vgui_controls/lPanel.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -45,7 +46,7 @@ static const luaL_Reg enginevguilib[] = {
 ** Open enginevgui library
 */
 LUALIB_API int luaopen_enginevgui (lua_State *L) {
-  luaL_register(L, "enginevgui", enginevguilib);
+  luaL_register(L, LUA_ENGINEVGUILIBNAME, enginevguilib);
   return 1;
 }
 

@@ -12,6 +12,23 @@
 #pragma once
 #endif
 
+
+#define LUA_ENGINEVGUILIBNAME	"enginevgui"
+LUALIB_API int (luaopen_enginevgui) (lua_State *L);
+
+#define LUA_DBGLIBNAME			"dbg"
+LUALIB_API int (luaopen_dbg) (lua_State *L);
+
+#define LUA_PANELLIBNAME		"Panel"
+LUALIB_API int (luaopen_Panel) (lua_State *L);
+
+#define LUA_SURFACELIBNAME		"surface"
+LUALIB_API int (luaopen_surface) (lua_State *L);
+
+#define LUA_VGUILIBNAME			"vgui"
+LUALIB_API int (luaopen_vgui) (lua_State *L);
+
+
 /* open all Source Engine libraries */
 LUALIB_API void (luasrc_openlibs) (lua_State *L); 
 

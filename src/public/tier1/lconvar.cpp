@@ -102,7 +102,55 @@ static const luaL_Reg ConCommandmeta[] = {
 };
 
 
+#ifdef CLIENT_DLL
+static CUtlDict< ConCommand*, unsigned short > m_GameUIConCommandDatabase;
+#endif
 static CUtlDict< ConCommand*, unsigned short > m_ConCommandDatabase;
+
+#ifdef CLIENT_DLL
+// Andrew; ugh.
+void CC_GameUIConCommand( const CCommand& args )
+{
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+	const char *pCmd = args[0];
+
+	// Is the client spawned yet?
+	// if ( !pPlayer )
+	// 	return;
+
+	MDLCACHE_CRITICAL_SECTION();
+
+	lua_getglobal( LGameUI, "concommand" );
+	if ( lua_istable( LGameUI, -1 ) )
+	{
+		lua_getfield( LGameUI, -1, "Dispatch" );
+		if ( lua_isfunction( LGameUI, -1 ) )
+		{
+			lua_remove( LGameUI, -2 );
+			lua_pushplayer( LGameUI, pPlayer );
+			lua_pushstring( LGameUI, pCmd );
+			lua_pushstring( LGameUI, args.ArgS() );
+			luasrc_pcall( LGameUI, 3, 1, 0 );
+			if ( lua_isboolean( LGameUI, -1 ) )
+			{
+				bool res = (bool)luaL_checkboolean( LGameUI, -1 );
+				lua_pop( LGameUI, 1 );
+				if ( !res )
+				{
+				}
+			}
+			else
+			{
+				lua_pop( LGameUI, 1 );
+			}
+		}
+		else
+			lua_pop( LGameUI, 2 );
+	}
+	else
+		lua_pop( LGameUI, 1 );
+}
+#endif
 
 void CC_ConCommand( const CCommand& args )
 {
@@ -114,8 +162,8 @@ void CC_ConCommand( const CCommand& args )
 	const char *pCmd = args[0];
 
 	// Is the client spawned yet?
-	if ( !pPlayer )
-		return;
+	// if ( !pPlayer )
+	// 	return;
 
 	MDLCACHE_CRITICAL_SECTION();
 
@@ -163,21 +211,70 @@ void CC_ConCommand( const CCommand& args )
 
 static int luasrc_ConCommand (lua_State *L) {
   const char *pName = luaL_checkstring(L, 1);
-  // Complain about duplicately defined ConCommand names...
-  unsigned short lookup = m_ConCommandDatabase.Find( pName );
-  if ( lookup != m_ConCommandDatabase.InvalidIndex() || cvar->FindCommand(pName) )
-  {
-    lua_pushconcommand(L, cvar->FindCommand(pName));
-    return 1;
+#ifdef CLIENT_DLL
+  bool bIsGameUI = false;
+  unsigned short lookup;
+  lua_getglobal(L, "_GAMEUI");
+  if (!lua_isnoneornil(L, -1) && lua_toboolean(L, -1)) {
+    bIsGameUI = true;
+
+    // Complain about duplicately defined ConCommand names...
+    lookup = m_GameUIConCommandDatabase.Find( pName );
+    if ( lookup != m_GameUIConCommandDatabase.InvalidIndex() || cvar->FindCommand(pName) )
+    {
+      lua_pushconcommand(L, cvar->FindCommand(pName));
+      return 1;
+    }
+  } else {
+#endif
+    // Complain about duplicately defined ConCommand names...
+    unsigned short lookup = m_ConCommandDatabase.Find( pName );
+    if ( lookup != m_ConCommandDatabase.InvalidIndex() || cvar->FindCommand(pName) )
+    {
+      lua_pushconcommand(L, cvar->FindCommand(pName));
+      return 1;
+    }
+#ifdef CLIENT_DLL
   }
+#endif
+  lua_pop(L, 1);
 
-  ConCommand *pConCommand = new ConCommand(strdup(pName), CC_ConCommand, strdup(luaL_optstring(L, 2, 0)), luaL_optint(L, 3, 0), NULL);
+  ConCommand *pConCommand;
+#ifdef CLIENT_DLL
+  if (bIsGameUI)
+    pConCommand = new ConCommand(strdup(pName), CC_GameUIConCommand, strdup(luaL_optstring(L, 2, 0)), luaL_optint(L, 3, 0), NULL);
+  else
+#endif
+    pConCommand = new ConCommand(strdup(pName), CC_ConCommand, strdup(luaL_optstring(L, 2, 0)), luaL_optint(L, 3, 0), NULL);
 
-  lookup = m_ConCommandDatabase.Insert( pName, pConCommand );
-  Assert( lookup != m_ConCommandDatabase.InvalidIndex() );
+#ifdef CLIENT_DLL
+  if (bIsGameUI) {
+    lookup = m_GameUIConCommandDatabase.Insert( pName, pConCommand );
+    Assert( lookup != m_GameUIConCommandDatabase.InvalidIndex() );
+  } else {
+#endif
+    lookup = m_ConCommandDatabase.Insert( pName, pConCommand );
+    Assert( lookup != m_ConCommandDatabase.InvalidIndex() );
+#ifdef CLIENT_DLL
+  }
+#endif
   lua_pushconcommand(L, pConCommand);
   return 1;
 }
+
+#ifdef CLIENT_DLL
+void ResetGameUIConCommandDatabase( void )
+{
+	int c = m_GameUIConCommandDatabase.Count(); 
+	for ( int i = 0; i < c; ++i )
+	{
+		ConCommand *pConCommand = m_GameUIConCommandDatabase[ i ];
+		cvar->UnregisterConCommand(pConCommand);
+		delete pConCommand;
+	}
+	m_GameUIConCommandDatabase.RemoveAll();
+}
+#endif
 
 void ResetConCommandDatabase( void )
 {

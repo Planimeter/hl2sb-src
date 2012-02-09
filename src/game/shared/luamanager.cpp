@@ -177,11 +177,22 @@ void luasrc_init_gameui (void) {
 
   luaL_openlibs(LGameUI);
   base_open(LGameUI);
+  lua_pushboolean(LGameUI, 1);
+  lua_setglobal(LGameUI, "_GAMEUI");  /* set global _GAMEUI */
 
+  luasrc_setmodulepaths(LGameUI);
+
+  luaopen_ConCommand(LGameUI);
+  luaopen_dbg(LGameUI);
+  luaopen_enginevgui(LGameUI);
+  luaopen_Panel(LGameUI);
+  luaopen_surface(LGameUI);
   luaopen_vgui(LGameUI);
 }
 
 void luasrc_shutdown_gameui (void) {
+  ResetGameUIConCommandDatabase();
+
   lua_close(LGameUI);
 }
 #endif

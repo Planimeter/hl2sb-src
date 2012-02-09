@@ -45,6 +45,9 @@ LUALIB_API lua_ConCommand *(luaL_checkconcommand) (lua_State *L, int narg);
 LUALIB_API lua_ConVar *(luaL_checkconvar) (lua_State *L, int narg);
 
 
+#ifdef CLIENT_DLL
+void ResetGameUIConCommandDatabase( void );
+#endif
 void ResetConCommandDatabase( void );
 void ResetConVarDatabase( void );
 

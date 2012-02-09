@@ -70,7 +70,7 @@ void CV_GlobalChange_Lua( IConVar *var, const char *pOldString, float flOldValue
 	lua_getfield(L, -1, "CallGlobalChangeCallbacks");
 	if (lua_isfunction(L, -1)) {
 	  lua_remove(L, -2);
-	  lua_pushconvar(L, (ConVar *)var);
+	  lua_pushconvar(L, cvar->FindVar(var->GetName()));
 	  lua_pushstring(L, pOldString);
 	  lua_pushnumber(L, flOldValue);
 	  luasrc_pcall(L, 3, 0, 0);

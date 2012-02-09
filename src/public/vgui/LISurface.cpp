@@ -12,6 +12,7 @@
 #include "vgui/ILocalize.h"
 #include "vgui_controls/Controls.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "vgui/lvgui.h"
 #include "vgui_controls/lPanel.h"
 
@@ -571,7 +572,7 @@ static const luaL_Reg surfacelib[] = {
 ** Open surface library
 */
 LUALIB_API int luaopen_surface (lua_State *L) {
-  luaL_register(L, "surface", surfacelib);
+  luaL_register(L, LUA_SURFACELIBNAME, surfacelib);
   return 1;
 }
 
