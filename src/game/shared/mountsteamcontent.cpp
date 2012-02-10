@@ -104,7 +104,7 @@ gamePaths_t g_GamePaths[10] =
 	{ "hl",			280 },
 	{ "dod",		300 },
 	{ "lostcoast",	340 },
-	{ "hldm",		360 },
+	{ "hl1mp",		360 },
 	{ "episodic",	380 },
 	{ "portal",		400 },
 	{ "ep2",		420 },
