@@ -1095,7 +1095,11 @@ void CHL2MPRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 		}
 		else
 		{
+#ifdef HL2SB
+			if ( Q_stristr( szModelName, "models/player/human") )
+#else
 			if ( Q_stristr( szModelName, "models/human") )
+#endif
 			{
 				pHL2Player->ChangeTeam( TEAM_REBELS );
 			}

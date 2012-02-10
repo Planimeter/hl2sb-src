@@ -114,6 +114,26 @@ END_SEND_TABLE()
 BEGIN_DATADESC( CHL2MP_Player )
 END_DATADESC()
 
+#ifdef HL2SB
+const char *g_ppszRandomCitizenModels[] = 
+{
+	"models/player/humans/group03/male_01.mdl",
+	"models/player/humans/group03/male_02.mdl",
+	"models/player/humans/group03/female_01.mdl",
+	"models/player/humans/group03/male_03.mdl",
+	"models/player/humans/group03/female_02.mdl",
+	"models/player/humans/group03/male_04.mdl",
+	"models/player/humans/group03/female_03.mdl",
+	"models/player/humans/group03/male_05.mdl",
+	"models/player/humans/group03/female_04.mdl",
+	"models/player/humans/group03/male_06.mdl",
+	"models/player/humans/group03/female_06.mdl",
+	"models/player/humans/group03/male_07.mdl",
+	"models/player/humans/group03/female_07.mdl",
+	"models/player/humans/group03/male_08.mdl",
+	"models/player/humans/group03/male_09.mdl",
+};
+#else
 const char *g_ppszRandomCitizenModels[] = 
 {
 	"models/humans/group03/male_01.mdl",
@@ -132,7 +152,17 @@ const char *g_ppszRandomCitizenModels[] =
 	"models/humans/group03/male_08.mdl",
 	"models/humans/group03/male_09.mdl",
 };
+#endif
 
+#ifdef HL2SB
+const char *g_ppszRandomCombineModels[] =
+{
+	"models/player/combine_soldier.mdl",
+	"models/player/combine_soldier_prisonguard.mdl",
+	"models/player/combine_super_soldier.mdl",
+	"models/player/police.mdl",
+};
+#else
 const char *g_ppszRandomCombineModels[] =
 {
 	"models/combine_soldier.mdl",
@@ -140,6 +170,7 @@ const char *g_ppszRandomCombineModels[] =
 	"models/combine_super_soldier.mdl",
 	"models/police.mdl",
 };
+#endif
 
 
 #define MAX_COMBINE_MODELS 4
@@ -311,7 +342,11 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 				{
 					char szReturnString[512];
 
+#ifdef HL2SB
+					Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel models/player/combine_soldier.mdl\n" );
+#else
 					Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel models/combine_soldier.mdl\n" );
+#endif
 					engine->ClientCommand ( edict(), szReturnString );
 				}
 
@@ -448,7 +483,11 @@ void CHL2MP_Player::SetPlayerTeamModel( void )
 
 	if ( modelIndex == -1 || ValidatePlayerModel( szModelName ) == false )
 	{
+#ifdef HL2SB
+		szModelName = "models/player/Combine_Soldier.mdl";
+#else
 		szModelName = "models/Combine_Soldier.mdl";
+#endif
 		m_iModelType = TEAM_COMBINE;
 
 		char szReturnString[512];
@@ -459,7 +498,11 @@ void CHL2MP_Player::SetPlayerTeamModel( void )
 
 	if ( GetTeamNumber() == TEAM_COMBINE )
 	{
+#ifdef HL2SB
+		if ( Q_stristr( szModelName, "models/player/human") )
+#else
 		if ( Q_stristr( szModelName, "models/human") )
+#endif
 		{
 			int nHeads = ARRAYSIZE( g_ppszRandomCombineModels );
 		
@@ -471,7 +514,11 @@ void CHL2MP_Player::SetPlayerTeamModel( void )
 	}
 	else if ( GetTeamNumber() == TEAM_REBELS )
 	{
+#ifdef HL2SB
+		if ( !Q_stristr( szModelName, "models/player/human") )
+#else
 		if ( !Q_stristr( szModelName, "models/human") )
+#endif
 		{
 			int nHeads = ARRAYSIZE( g_ppszRandomCitizenModels );
 
@@ -501,7 +548,11 @@ void CHL2MP_Player::SetPlayerModel( void )
 
 		if ( ValidatePlayerModel( pszCurrentModelName ) == false )
 		{
+#ifdef HL2SB
+			pszCurrentModelName = "models/player/Combine_Soldier.mdl";
+#else
 			pszCurrentModelName = "models/Combine_Soldier.mdl";
+#endif
 		}
 
 		Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel %s\n", pszCurrentModelName );
@@ -535,7 +586,11 @@ void CHL2MP_Player::SetPlayerModel( void )
 			szModelName = g_ppszRandomCitizenModels[0];
 		}
 
+#ifdef HL2SB
+		if ( Q_stristr( szModelName, "models/player/human") )
+#else
 		if ( Q_stristr( szModelName, "models/human") )
+#endif
 		{
 			m_iModelType = TEAM_REBELS;
 		}
@@ -549,7 +604,11 @@ void CHL2MP_Player::SetPlayerModel( void )
 
 	if ( modelIndex == -1 )
 	{
+#ifdef HL2SB
+		szModelName = "models/player/Combine_Soldier.mdl";
+#else
 		szModelName = "models/Combine_Soldier.mdl";
+#endif
 		m_iModelType = TEAM_COMBINE;
 
 		char szReturnString[512];
@@ -566,7 +625,11 @@ void CHL2MP_Player::SetPlayerModel( void )
 
 void CHL2MP_Player::SetupPlayerSoundsByModel( const char *pModelName )
 {
+#ifdef HL2SB
+	if ( Q_stristr( pModelName, "models/player/human") )
+#else
 	if ( Q_stristr( pModelName, "models/human") )
+#endif
 	{
 		m_iPlayerSoundType = (int)PLAYER_SOUNDS_CITIZEN;
 	}
