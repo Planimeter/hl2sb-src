@@ -101,7 +101,7 @@ gamePaths_t g_GamePaths[10] =
 {
 	{ "hl2",		220 },
 	{ "cstrike",	240 },
-	{ "hl",			280 },
+	{ "hl1",		280 },
 	{ "dod",		300 },
 	{ "lostcoast",	340 },
 	{ "hl1mp",		360 },
@@ -116,6 +116,12 @@ void AddSearchPathByAppId( int nAppId )
 	for ( int i=0; i < ARRAYSIZE( g_GamePaths ); i++ )
 	{
 		int iVal = g_GamePaths[i].m_nAppId;
+		if ( iVal == 360 )
+		{
+			//Andrew; Half-Life Deathmatch: Source requires Half-Life: Source's path added!!
+			const char *pathName = g_GamePaths[2].m_pPathName;
+			filesystem->AddSearchPath( pathName, "GAME", PATH_ADD_TO_TAIL );
+		}
 		if ( iVal == nAppId )
 		{
 			const char *pathName = g_GamePaths[i].m_pPathName;
