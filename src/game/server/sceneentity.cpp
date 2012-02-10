@@ -3335,6 +3335,52 @@ bool CSceneEntity::ShouldNetwork() const
 	return false;
 }
 
+#ifdef HL2SB
+//Andrew; See https://developer.valvesoftware.com/wiki/Scenes.image
+CChoreoScene *CSceneEntity::LoadScene( const char *filename, IChoreoEventCallback *pCallback )
+{
+	char loadfile[MAX_PATH];
+	Q_strncpy( loadfile, filename, sizeof( loadfile ) );
+	Q_SetExtension( loadfile, ".vcd", sizeof( loadfile ) );
+	Q_FixSlashes( loadfile );
+ 
+	void *pBuffer = 0;
+	CChoreoScene *pScene;
+ 
+	int fileSize = filesystem->ReadFileEx( loadfile, "GAME", &pBuffer, true );
+	if (fileSize)
+	{
+		g_TokenProcessor.SetBuffer((char*)pBuffer);
+		pScene = ChoreoLoadScene( loadfile, NULL, &g_TokenProcessor, LocalScene_Printf );
+	}
+	else
+	{
+		// binary compiled vcd
+		pScene = new CChoreoScene( NULL );
+		if ( !CopySceneFileIntoMemory( loadfile, &pBuffer, &fileSize ) )
+		{
+			MissingSceneWarning( loadfile );
+			return NULL;
+		}
+		CUtlBuffer buf( pBuffer, fileSize, CUtlBuffer::READ_ONLY );
+		if ( !pScene->RestoreFromBinaryBuffer( buf, loadfile, &g_ChoreoStringPool ) )
+		{
+			Warning( "CSceneEntity::LoadScene: Unable to load scene '%s'\n", loadfile );
+			delete pScene;
+			pScene = NULL;
+		}
+	}
+ 
+	if(pScene)
+	{
+		pScene->SetPrintFunc( LocalScene_Printf );
+		pScene->SetEventCallbackInterface( pCallback );
+	}
+ 
+	FreeSceneFileMemory( pBuffer );
+	return pScene;
+}
+#else
 CChoreoScene *CSceneEntity::LoadScene( const char *filename, IChoreoEventCallback *pCallback )
 {
 	DevMsg( 2, "Blocking load of scene from '%s'\n", filename );
@@ -3370,6 +3416,7 @@ CChoreoScene *CSceneEntity::LoadScene( const char *filename, IChoreoEventCallbac
 	FreeSceneFileMemory( pBuffer );
 	return pScene;
 }
+#endif
 
 CChoreoScene *BlockingLoadScene( const char *filename )
 {
