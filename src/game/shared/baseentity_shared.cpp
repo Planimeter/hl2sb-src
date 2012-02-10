@@ -71,6 +71,10 @@ ConVar	ai_debug_shoot_positions( "ai_debug_shoot_positions", "0", FCVAR_REPLICAT
 //-----------------------------------------------------------------------------
 void SpawnBlood(Vector vecSpot, const Vector &vecDir, int bloodColor, float flDamage)
 {
+#ifdef HL2SB
+	//Andrew; see https://developer.valvesoftware.com/wiki/Fixing_AI_in_multiplayer#Blood
+	IPredictionSystem::SuppressHostEvents( NULL );
+#endif
 	UTIL_BloodDrips( vecSpot, vecDir, bloodColor, (int)flDamage );
 }
 
