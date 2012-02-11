@@ -51,6 +51,12 @@ public:
 	virtual float	GetRange( void )								{	return	32.0f;	}
 	virtual	float	GetDamageForActivity( Activity hitActivity )	{	return	1.0f;	}
 
+#ifdef HL2SB
+#ifndef CLIENT_DLL
+	virtual int		CapabilitiesGet( void );
+	virtual	int		WeaponMeleeAttack1Condition( float flDot, float flDist );
+#endif
+#endif
 	CBaseHL2MPBludgeonWeapon( const CBaseHL2MPBludgeonWeapon & );
 
 protected:

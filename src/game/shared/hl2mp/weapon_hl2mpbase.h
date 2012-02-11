@@ -13,6 +13,12 @@
 #include "hl2mp_player_shared.h"
 #include "basecombatweapon_shared.h"
 #include "hl2mp_weapon_parse.h"
+#if defined( HL2SB )
+//Andrew; see https://developer.valvesoftware.com/wiki/Fixing_AI_in_multiplayer#Weapons
+#ifndef CLIENT_DLL
+	#include "AI_BaseNPC.h"
+#endif
+#endif
 
 #if defined( CLIENT_DLL )
 	#define CWeaponHL2MPBase C_WeaponHL2MPBase

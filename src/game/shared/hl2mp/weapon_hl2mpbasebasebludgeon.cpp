@@ -21,6 +21,9 @@
 	#include "ndebugoverlay.h"
 	#include "te_effect_dispatch.h"
 	#include "ilagcompensationmanager.h"
+#if defined( HL2SB )
+	#include "basecombatcharacter.h"
+#endif
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -68,6 +71,31 @@ void CBaseHL2MPBludgeonWeapon::Precache( void )
 	//Call base class first
 	BaseClass::Precache();
 }
+
+#ifdef HL2SB
+//Andrew; see https://developer.valvesoftware.com/wiki/Talk:Fixing_AI_in_multiplayer#Metropolice_with_stunstick
+#ifndef CLIENT_DLL
+int CBaseHL2MPBludgeonWeapon::CapabilitiesGet()
+{ 
+	return bits_CAP_WEAPON_MELEE_ATTACK1; 
+}
+
+
+int CBaseHL2MPBludgeonWeapon::WeaponMeleeAttack1Condition( float flDot, float flDist )
+{
+	if (flDist > 64)
+	{
+		return COND_TOO_FAR_TO_ATTACK;
+	}
+	else if (flDot < 0.7)
+	{
+		return COND_NOT_FACING_ATTACK;
+	}
+
+	return COND_CAN_MELEE_ATTACK1;
+}
+#endif
+#endif
 
 //------------------------------------------------------------------------------
 // Purpose : Update weapon
