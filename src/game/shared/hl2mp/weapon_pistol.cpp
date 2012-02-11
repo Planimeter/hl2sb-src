@@ -38,7 +38,7 @@
 #define CWeaponPistol C_WeaponPistol
 #endif
 #ifdef HL2SB
-ConVar	pistol_use_new_accuracy( "pistol_use_new_accuracy", "1" );
+ConVar	pistol_use_new_accuracy( "pistol_use_new_accuracy", "1", FCVAR_REPLICATED );
 #endif
 
 //-----------------------------------------------------------------------------
