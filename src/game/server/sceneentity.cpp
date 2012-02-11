@@ -3787,7 +3787,11 @@ CBaseEntity *CSceneEntity::FindNamedEntity( const char *name, CBaseEntity *pActo
 
 	if ( !stricmp( name, "Player" ) || !stricmp( name, "!player" ))
 	{
+#ifndef HL2SB
 		entity = ( gpGlobals->maxClients == 1 ) ? ( CBaseEntity * )UTIL_GetLocalPlayer() : NULL;
+#else
+		entity = ( CBaseEntity * )UTIL_GetLocalPlayer();
+#endif
 	}
 	else if ( !stricmp( name, "!target1" ) )
 	{
