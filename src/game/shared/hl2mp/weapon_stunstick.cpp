@@ -222,7 +222,14 @@ void CWeaponStunStick::Precache()
 //-----------------------------------------------------------------------------
 float CWeaponStunStick::GetDamageForActivity( Activity hitActivity )
 {
+#ifndef HL2SB
 	return 40.0f;
+#else
+	if ( ( GetOwner() != NULL ) && ( GetOwner()->IsPlayer() ) )
+		return sk_plr_dmg_stunstick.GetFloat();
+	
+	return sk_npc_dmg_stunstick.GetFloat();
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -370,7 +377,7 @@ void CWeaponStunStick::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseComba
 				CNPC_MetroPolice *pCop = dynamic_cast<CNPC_MetroPolice *>(pOperator);
 #endif
 				bool bFlashed = false;
-				
+
 #ifdef HL2SB
 				if ( pCop != NULL && pPlayer != NULL )
 				{
