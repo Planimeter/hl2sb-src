@@ -85,7 +85,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies=" glu32.lib opengl32.lib glaux.lib odbc32.lib odbccp32.lib winmm.lib"
+				AdditionalDependencies=" glu32.lib opengl32.lib glaux.lib odbc32.lib odbccp32.lib winmm.lib user32.lib Gdi32.lib Advapi32.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/glview.exe"
 				LinkIncremental="2"
@@ -128,7 +128,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 				ExcludedFromBuild="false"
 			/>
@@ -205,7 +204,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies=" glu32.lib opengl32.lib glaux.lib odbc32.lib odbccp32.lib winmm.lib"
+				AdditionalDependencies=" glu32.lib opengl32.lib glaux.lib odbc32.lib odbccp32.lib winmm.lib user32.lib Gdi32.lib Advapi32.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/glview.exe"
 				LinkIncremental="1"
@@ -250,7 +249,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 				ExcludedFromBuild="false"
 			/>

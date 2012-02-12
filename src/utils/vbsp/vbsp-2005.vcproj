@@ -85,7 +85,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="ws2_32.lib odbc32.lib odbccp32.lib winmm.lib"
+				AdditionalDependencies="ws2_32.lib odbc32.lib odbccp32.lib winmm.lib advapi32.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/vbsp.exe"
 				LinkIncremental="2"
@@ -128,7 +128,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 				ExcludedFromBuild="false"
 			/>
@@ -205,7 +204,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="ws2_32.lib odbc32.lib odbccp32.lib winmm.lib"
+				AdditionalDependencies="ws2_32.lib odbc32.lib odbccp32.lib winmm.lib advapi32.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/vbsp.exe"
 				LinkIncremental="1"
@@ -250,7 +249,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 				ExcludedFromBuild="false"
 			/>

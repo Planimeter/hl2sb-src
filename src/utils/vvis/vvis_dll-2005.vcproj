@@ -79,7 +79,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib User32.lib Advapi32.lib Gdi32.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/vvis_dll.dll"
 				LinkIncremental="2"
@@ -123,7 +123,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 				ExcludedFromBuild="false"
 			/>
@@ -196,7 +195,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib User32.lib Advapi32.lib Gdi32.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/vvis_dll.dll"
 				LinkIncremental="1"
@@ -242,7 +241,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 				ExcludedFromBuild="false"
 			/>

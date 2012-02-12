@@ -74,6 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Advapi32.lib mathlib.lib"
 				OutputFile=".\Release/demoinfo.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -169,6 +170,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/FIXED:NO"
+				AdditionalDependencies="Advapi32.lib mathlib.lib"
 				OutputFile=".\Debug/demoinfo.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
