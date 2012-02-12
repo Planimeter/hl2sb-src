@@ -19,7 +19,6 @@
 #include "lcdll_util.h"
 #include "liclientshadowmgr.h"
 #include "lprediction.h"
-#include "vgui/LISurface.h"
 #include "vgui_controls/lPanel.h"
 #else
 #include "lbaseanimating.h"
