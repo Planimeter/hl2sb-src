@@ -2298,7 +2298,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\public\zip_utils.cpp"
+				RelativePath="..\..\public\zip_utils_src.cpp"
 				>
 			</File>
 			<Filter
