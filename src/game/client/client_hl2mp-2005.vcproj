@@ -3217,6 +3217,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\scripted_controls\lCheckButton.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\scripted_controls\lFrame.cpp"
 					>
 				</File>
@@ -5655,6 +5659,10 @@
 			>
 			<File
 				RelativePath=".\scripted_controls\lButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripted_controls\lCheckButton.h"
 				>
 			</File>
 			<File
