@@ -304,10 +304,26 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	DeathNoticeItem deathMsg;
 	deathMsg.Killer.iEntIndex = killer;
 	deathMsg.Victim.iEntIndex = victim;
+#ifndef HL2SB
 	Q_strncpy( deathMsg.Killer.szName, killer_name, MAX_PLAYER_NAME_LENGTH );
+#else
+	if ( killer )
+	{
+		Q_strncpy( deathMsg.Killer.szName, killer_name, MAX_PLAYER_NAME_LENGTH );
+	}
+	else
+	{
+		Q_strncpy( deathMsg.Killer.szName, killedwith, MAX_PLAYER_NAME_LENGTH );
+		fullkilledwith[0] = 0;
+	}
+#endif
 	Q_strncpy( deathMsg.Victim.szName, victim_name, MAX_PLAYER_NAME_LENGTH );
 	deathMsg.flDisplayTime = gpGlobals->curtime + hud_deathnotice_time.GetFloat();
+#ifndef HL2SB
 	deathMsg.iSuicide = ( !killer || killer == victim );
+#else
+	deathMsg.iSuicide = ( killer == victim );
+#endif
 
 	// Try and find the death identifier in the icon list
 	deathMsg.iconDeath = gHUD.GetIcon( fullkilledwith );
@@ -343,6 +359,12 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 		{
 			Q_strncat( sDeathMsg, VarArgs( " with %s.\n", fullkilledwith+6 ), sizeof( sDeathMsg ), COPY_ALL_CHARACTERS );
 		}
+#ifdef HL2SB
+		else
+		{
+			Q_strncat( sDeathMsg, "\n", sizeof( sDeathMsg ), COPY_ALL_CHARACTERS );
+		}
+#endif
 	}
 
 	Msg( "%s", sDeathMsg );
