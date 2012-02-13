@@ -46,6 +46,18 @@
 #include "vphysics/friction.h"
 #include "debugoverlay_shared.h"
 
+#ifdef HL2SB
+#ifdef CLIENT_DLL
+enum PhysGunForce_t
+{
+	PHYSGUN_FORCE_DROPPED,	// Dropped by +USE
+	PHYSGUN_FORCE_THROWN,	// Thrown from +USE
+	PHYSGUN_FORCE_PUNTED,	// Punted by cannon
+	PHYSGUN_FORCE_LAUNCHED,	// Launched by cannon
+};
+#endif
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -1147,7 +1159,11 @@ protected:
 	void	PuntVPhysics( CBaseEntity *pEntity, const Vector &forward, trace_t &tr );
 
 	// Velocity-based throw common to punt and launch code.
+#ifndef HL2SB
 	void	ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vector &forward );
+#else
+	void	ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vector &forward, const Vector &vecHitPos, PhysGunForce_t reason );
+#endif
 
 	// Physgun effects
 	void	DoEffectClosed( void );
@@ -1728,7 +1744,11 @@ void CWeaponPhysCannon::PuntVPhysics( CBaseEntity *pEntity, const Vector &vecFor
 		}
 		else
 		{
+#ifndef HL2SB
 			ApplyVelocityBasedForce( pEntity, vecForward );
+#else
+			ApplyVelocityBasedForce( pEntity, vecForward, tr.endpos, PHYSGUN_FORCE_PUNTED );
+#endif
 		}
 	}
 
@@ -1757,8 +1777,13 @@ void CWeaponPhysCannon::PuntVPhysics( CBaseEntity *pEntity, const Vector &vecFor
 //			ASSUMES: that pEntity is a vphysics entity.
 // Input  : - 
 //-----------------------------------------------------------------------------
+#ifndef HL2SB
 void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vector &forward )
+#else
+void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vector &forward, const Vector &vecHitPos, PhysGunForce_t reason )
+#endif
 {
+#ifndef HL2SB
 #ifndef CLIENT_DLL
 	IPhysicsObject *pPhysicsObject = pEntity->VPhysicsGetObject();
 	Assert(pPhysicsObject); // Shouldn't ever get here with a non-vphysics object.
@@ -1784,6 +1809,58 @@ void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vec
 
 #endif
 
+#else
+#ifndef CLIENT_DLL
+	// Get the launch velocity
+	Vector vVel = Pickup_PhysGunLaunchVelocity( pEntity, forward, reason );
+	
+	// Get the launch angular impulse
+	AngularImpulse aVel = Pickup_PhysGunLaunchAngularImpulse( pEntity, reason );
+		
+	// Get the physics object (MUST have one)
+	IPhysicsObject *pPhysicsObject = pEntity->VPhysicsGetObject();
+	if ( pPhysicsObject == NULL )
+	{
+		Assert( 0 );
+		return;
+	}
+
+	// Affect the object
+	CRagdollProp *pRagdoll = dynamic_cast<CRagdollProp*>( pEntity );
+	if ( pRagdoll == NULL )
+	{
+#ifdef HL2_EPISODIC
+		// The jeep being punted needs special force overrides
+		if ( reason == PHYSGUN_FORCE_PUNTED && pEntity->GetServerVehicle() )
+		{
+			// We want the point to emanate low on the vehicle to move it along the ground, not to twist it
+			Vector vecFinalPos = vecHitPos;
+			vecFinalPos.z = pEntity->GetAbsOrigin().z;
+			pPhysicsObject->ApplyForceOffset( vVel, vecFinalPos );
+		}
+		else
+		{
+			pPhysicsObject->AddVelocity( &vVel, &aVel );
+		}
+#else
+
+		pPhysicsObject->AddVelocity( &vVel, &aVel );
+
+#endif // HL2_EPISODIC
+	}
+	else
+	{
+		Vector	vTempVel;
+		AngularImpulse vTempAVel;
+
+		ragdoll_t *pRagdollPhys = pRagdoll->GetRagdoll( );
+		for ( int j = 0; j < pRagdollPhys->listCount; ++j )
+		{
+			pRagdollPhys->list[j].pObject->AddVelocity( &vVel, &aVel ); 
+		}
+	}
+#endif
+#endif
 }
 
 
@@ -2708,8 +2785,33 @@ void CWeaponPhysCannon::LaunchObject( const Vector &vecDir, float flForce )
 			m_hLastPuntedObject = pObject;
 			m_flRepuntObjectTime = gpGlobals->curtime + 0.5f;
 
+#ifndef HL2SB
 			// Launch
 			ApplyVelocityBasedForce( pObject, vecDir );
+#else
+			// Trace ahead a bit and make a chain of danger sounds ahead of the phys object
+			// to scare potential targets
+			trace_t	tr;
+			Vector	vecStart = pObject->GetAbsOrigin();
+			Vector	vecSpot;
+			int		iLength;
+			int		i;
+
+			UTIL_TraceLine( vecStart, vecStart + vecDir * flForce, MASK_SHOT, pObject, COLLISION_GROUP_NONE, &tr );
+			iLength = ( tr.startpos - tr.endpos ).Length();
+			vecSpot = vecStart + vecDir * PHYSCANNON_DANGER_SOUND_RADIUS;
+
+			for( i = PHYSCANNON_DANGER_SOUND_RADIUS ; i < iLength ; i += PHYSCANNON_DANGER_SOUND_RADIUS )
+			{
+#ifndef CLIENT_DLL
+				CSoundEnt::InsertSound( SOUND_PHYSICS_DANGER, vecSpot, PHYSCANNON_DANGER_SOUND_RADIUS, 0.5, pObject );
+#endif
+				vecSpot = vecSpot + ( vecDir * PHYSCANNON_DANGER_SOUND_RADIUS );
+			}
+					
+			// Launch
+			ApplyVelocityBasedForce( pObject, vecDir, tr.endpos, PHYSGUN_FORCE_LAUNCHED );
+#endif
 
 			// Don't allow the gun to regrab a thrown object!!
 			m_flNextSecondaryAttack = m_flNextPrimaryAttack = gpGlobals->curtime + 0.5;
