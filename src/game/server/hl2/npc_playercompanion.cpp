@@ -234,7 +234,7 @@ void CNPC_PlayerCompanion::Spawn()
 
 	m_AnnounceAttackTimer.Set( 10, 30 );
 
-#ifdef HL2_EPISODIC
+#if !defined( HL2SB ) && defined( HL2_EPISODIC )
 	// We strip this flag because it's been made obsolete by the StartScripting behavior
 	if ( HasSpawnFlags( SF_NPC_ALTCOLLISION ) )
 	{
@@ -243,7 +243,7 @@ void CNPC_PlayerCompanion::Spawn()
 	}
 
 	m_hFlare = NULL;
-#endif // HL2_EPISODIC
+#endif // !HL2SB && HL2_EPISODIC
 
 	BaseClass::Spawn();
 }
@@ -260,14 +260,14 @@ int CNPC_PlayerCompanion::Restore( IRestore &restore )
 		m_StandoffBehavior.SetActive( false );
 	}
 
-#ifdef HL2_EPISODIC
+#if !defined( HL2SB ) && defined( HL2_EPISODIC )
 	// We strip this flag because it's been made obsolete by the StartScripting behavior
 	if ( HasSpawnFlags( SF_NPC_ALTCOLLISION ) )
 	{
 		Warning( "NPC %s using alternate collision! -- DISABLED\n", STRING( GetEntityName() ) );
 		RemoveSpawnFlags( SF_NPC_ALTCOLLISION );
 	}
-#endif // HL2_EPISODIC
+#endif // !HL2SB && HL2_EPISODIC
 
 	return baseResult;
 }
