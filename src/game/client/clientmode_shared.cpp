@@ -176,7 +176,8 @@ ClientModeShared::ClientModeShared()
 ClientModeShared::~ClientModeShared()
 {
 #ifdef LUA_SDK
-	delete m_pScriptedViewport; 
+	// BUGBUG: why does this crash?
+	// delete m_pScriptedViewport; 
 #endif
 	delete m_pViewport; 
 #ifdef LUA_SDK

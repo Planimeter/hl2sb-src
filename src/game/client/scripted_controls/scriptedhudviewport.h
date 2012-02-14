@@ -19,7 +19,6 @@ class CScriptedHudViewport : public vgui::EditablePanel
 
 public: 
 	CScriptedHudViewport();
-	virtual ~CScriptedHudViewport();
 
 	virtual void SetParent(vgui::VPANEL parent);
 

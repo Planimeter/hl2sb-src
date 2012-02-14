@@ -36,13 +36,6 @@ CScriptedHudViewport::CScriptedHudViewport() : vgui::EditablePanel( NULL, "CScri
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-CScriptedHudViewport::~CScriptedHudViewport()
-{
-}
-
-//-----------------------------------------------------------------------------
 // Purpose: Sets the parent for each panel to use
 //-----------------------------------------------------------------------------
 void CScriptedHudViewport::SetParent(vgui::VPANEL parent)
