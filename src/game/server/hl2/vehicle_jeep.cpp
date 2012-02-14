@@ -143,9 +143,9 @@ IMPLEMENT_SERVERCLASS_ST( CPropJeep, DT_PropJeep )
 END_SEND_TABLE();
 
 // This is overriden for the episodic jeep
-#ifndef HL2_EPISODIC
+// #ifndef HL2_EPISODIC
 LINK_ENTITY_TO_CLASS( prop_vehicle_jeep, CPropJeep );
-#endif
+// #endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -894,6 +894,10 @@ void CPropJeep::FireCannon( void )
 	if ( m_bUnableToFire )
 		return;
 
+#ifdef HL2SB
+	CDisablePredictionFiltering disabler;
+#endif
+
 	m_flCannonTime = gpGlobals->curtime + 0.2f;
 	m_bCannonCharging = false;
 
@@ -928,6 +932,10 @@ void CPropJeep::FireCannon( void )
 //-----------------------------------------------------------------------------
 void CPropJeep::FireChargedCannon( void )
 {
+#ifdef HL2SB
+	CDisablePredictionFiltering disabler;
+#endif
+
 	bool penetrated = false;
 
 	m_bCannonCharging	= false;

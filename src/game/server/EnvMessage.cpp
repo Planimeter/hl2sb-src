@@ -219,12 +219,18 @@ void CCredits::RollOutroCredits()
 {
 	sv_unlockedchapters.SetValue( "15" );
 	
+#ifndef HL2SB
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 
 	CSingleUserRecipientFilter user( pPlayer );
 	user.MakeReliable();
 
 	UserMessageBegin( user, "CreditsMsg" );
+#else
+	CReliableBroadcastRecipientFilter filter;
+
+	UserMessageBegin( filter, "CreditsMsg" );
+#endif
 		WRITE_BYTE( 3 );
 	MessageEnd();
 }
@@ -241,24 +247,32 @@ void CCredits::InputRollOutroCredits( inputdata_t &inputdata )
 
 void CCredits::InputShowLogo( inputdata_t &inputdata )
 {
+#ifndef HL2SB
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#ifdef HL2SB
-	if ( !pPlayer )
-		return;
-#endif
 
 	CSingleUserRecipientFilter user( pPlayer );
 	user.MakeReliable();
+#else
+	CReliableBroadcastRecipientFilter filter;
+#endif
 
 	if ( m_flLogoLength )
 	{
+#ifndef HL2SB
 		UserMessageBegin( user, "LogoTimeMsg" );
+#else
+		UserMessageBegin( filter, "LogoTimeMsg" );
+#endif
 			WRITE_FLOAT( m_flLogoLength );
 		MessageEnd();
 	}
 	else
 	{
+#ifndef HL2SB
 		UserMessageBegin( user, "CreditsMsg" );
+#else
+		UserMessageBegin( filter, "CreditsMsg" );
+#endif
 			WRITE_BYTE( 1 );
 		MessageEnd();
 	}
@@ -271,12 +285,18 @@ void CCredits::InputSetLogoLength( inputdata_t &inputdata )
 
 void CCredits::InputRollCredits( inputdata_t &inputdata )
 {
+#ifndef HL2SB
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 
 	CSingleUserRecipientFilter user( pPlayer );
 	user.MakeReliable();
 
 	UserMessageBegin( user, "CreditsMsg" );
+#else
+	CReliableBroadcastRecipientFilter filter;
+
+	UserMessageBegin( filter, "CreditsMsg" );
+#endif
 		WRITE_BYTE( 2 );
 	MessageEnd();
 }
