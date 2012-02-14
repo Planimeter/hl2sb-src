@@ -13,6 +13,9 @@
 #endif
 
 
+#define LUA_HL2MPPLAYERLIBNAME	"CHL2MP_Player"
+LUALIB_API int (luaopen_CHL2MP_Player) (lua_State *L);
+
 #define LUA_ENGINEVGUILIBNAME	"enginevgui"
 LUALIB_API int (luaopen_enginevgui) (lua_State *L);
 

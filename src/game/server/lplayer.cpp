@@ -17,6 +17,21 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+static int CBasePlayer_GiveAmmo (lua_State *L) {
+  switch(lua_type(L, 3)) {
+    case LUA_TNUMBER:
+      lua_pushinteger(L, luaL_checkplayer(L, 1)->GiveAmmo(luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_optboolean(L, 4, false)));
+      break;
+    case LUA_TSTRING:
+      lua_pushinteger(L, luaL_checkplayer(L, 1)->GiveAmmo(luaL_checkint(L, 2), luaL_checkstring(L, 3), luaL_optboolean(L, 4, false)));
+      break;
+    default:
+      lua_pushinteger(L, luaL_checkplayer(L, 1)->GiveAmmo(luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_optboolean(L, 4, false)));
+      break;
+  }
+  return 1;
+}
+
 static int CBasePlayer_SetBodyPitch (lua_State *L) {
   luaL_checkplayer(L, 1)->SetBodyPitch(luaL_checknumber(L, 2));
   return 0;
@@ -470,8 +485,19 @@ static int CBasePlayer_CheckTrainUpdate (lua_State *L) {
   return 0;
 }
 
+static int CBasePlayer_EquipSuit (lua_State *L) {
+  luaL_checkplayer(L, 1)->EquipSuit(luaL_optboolean(L, 2, true));
+  return 0;
+}
+
+static int CBasePlayer_RemoveSuit (lua_State *L) {
+  luaL_checkplayer(L, 1)->RemoveSuit();
+  return 0;
+}
+
 
 static const luaL_Reg CBasePlayermeta[] = {
+  {"GiveAmmo", CBasePlayer_GiveAmmo},
   {"SetBodyPitch", CBasePlayer_SetBodyPitch},
   {"CreateViewModel", CBasePlayer_CreateViewModel},
   {"HideViewModels", CBasePlayer_HideViewModels},
@@ -562,6 +588,8 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"GiveNamedItem", CBasePlayer_GiveNamedItem},
   {"EnableControl", CBasePlayer_EnableControl},
   {"CheckTrainUpdate", CBasePlayer_CheckTrainUpdate},
+  {"EquipSuit", CBasePlayer_EquipSuit},
+  {"RemoveSuit", CBasePlayer_RemoveSuit},
   {NULL, NULL}
 };
 

@@ -75,6 +75,9 @@ static const luaL_Reg luasrclibs[] = {
   {"CGameTrace", luaopen_CGameTrace},
   {"gpGlobals", luaopen_gpGlobals},
   {"CHL2MP_Player", luaopen_CHL2MP_Player_shared},
+#ifdef GAME_DLL
+  {"CHL2MP_Player", luaopen_CHL2MP_Player},
+#endif
   {"cvar", luaopen_cvar},
   {"IMaterial", luaopen_IMaterial},
   {"IMoveHelper", luaopen_IMoveHelper},

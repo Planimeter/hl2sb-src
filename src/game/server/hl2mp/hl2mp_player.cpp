@@ -289,8 +289,7 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	BEGIN_LUA_CALL_HOOK( "GiveDefaultItems" );
 		lua_pushhl2mpplayer( L, this );
 	END_LUA_CALL_HOOK( 1, 0 );
-#endif
-
+#else
 	EquipSuit();
 
 	CBasePlayer::GiveAmmo( 255,	"Pistol");
@@ -325,6 +324,7 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	{
 		Weapon_Switch( Weapon_OwnsThisType( "weapon_physcannon" ) );
 	}
+#endif
 }
 
 void CHL2MP_Player::PickDefaultSpawnTeam( void )
@@ -672,8 +672,8 @@ bool CHL2MP_Player::Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmodelinde
 
 void CHL2MP_Player::PreThink( void )
 {
-	//Andrew; See http://forums.steampowered.com/forums/showthread.php?t=1372727
 #ifdef HL2SB
+	//Andrew; See http://forums.steampowered.com/forums/showthread.php?t=1372727
 	QAngle vOldAngles = GetLocalAngles();
 	QAngle vTempAngles = GetLocalAngles();
 

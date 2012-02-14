@@ -10,6 +10,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
 #include "linetchannelinfo.h"
 
@@ -107,6 +108,11 @@ static int engine_GetPlayerNetInfo (lua_State *L) {
 
 static int engine_GetSaveFileName (lua_State *L) {
   lua_pushstring(L, engine->GetSaveFileName());
+  return 1;
+}
+
+static int engine_IndexOfEdict (lua_State *L) {
+  lua_pushinteger(L, engine->IndexOfEdict(luaL_checkentity(L, 1)->edict()));
   return 1;
 }
 
@@ -293,6 +299,7 @@ static const luaL_Reg enginelib[] = {
   {"GetMostRecentlyLoadedFileName", engine_GetMostRecentlyLoadedFileName},
   {"GetPlayerNetInfo", engine_GetPlayerNetInfo},
   {"GetSaveFileName", engine_GetSaveFileName},
+  {"IndexOfEdict", engine_IndexOfEdict},
   {"InsertServerCommand", engine_InsertServerCommand},
   {"IsDecalPrecached", engine_IsDecalPrecached},
   {"IsDedicatedServer", engine_IsDedicatedServer},

@@ -4573,6 +4573,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\hl2\lhl2_player.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\hl2\lhl2_player.h"
+					>
+				</File>
+				<File
 					RelativePath="..\shared\hl2mp\lhl2mp_player_shared.cpp"
 					>
 				</File>
