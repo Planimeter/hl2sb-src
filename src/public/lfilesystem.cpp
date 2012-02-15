@@ -8,12 +8,44 @@
 #define lfilesystem_cpp
 
 #include "cbase.h"
-#include "luamanager.h"
 #include "filesystem.h"
+#include "luamanager.h"
+#include "lfilesystem.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+
+
+/*
+** access functions (stack -> C)
+*/
+
+
+LUA_API lua_FileHandle_t &lua_tofilehandle (lua_State *L, int idx) {
+  lua_FileHandle_t *phFile = (lua_FileHandle_t *)luaL_checkudata(L, idx, "FileHandle_t");
+  return *phFile;
+}
+
+
+
+/*
+** push functions (C -> stack)
+*/
+
+
+LUA_API void lua_pushfilehandle (lua_State *L, lua_FileHandle_t hFile) {
+  lua_FileHandle_t *phFile = (lua_FileHandle_t *)lua_newuserdata(L, sizeof(lua_FileHandle_t));
+  *phFile = hFile;
+  luaL_getmetatable(L, "FileHandle_t");
+  lua_setmetatable(L, -2);
+}
+
+
+LUALIB_API lua_FileHandle_t &luaL_checkfilehandle (lua_State *L, int narg) {
+  lua_FileHandle_t *d = (lua_FileHandle_t *)luaL_checkudata(L, narg, "FileHandle_t");
+  return *d;
+}
 
 
 static int filesystem_AddPackFile (lua_State *L) {
@@ -47,6 +79,11 @@ static int filesystem_BeginMapAccess (lua_State *L) {
 
 static int filesystem_CancelWaitForResources (lua_State *L) {
   filesystem->CancelWaitForResources(luaL_checkint(L, 1));
+  return 0;
+}
+
+static int filesystem_Close (lua_State *L) {
+  filesystem->Close(luaL_checkfilehandle(L, 1));
   return 0;
 }
 
@@ -145,6 +182,11 @@ static int filesystem_MountSteamContent (lua_State *L) {
   return 1;
 }
 
+static int filesystem_Open (lua_State *L) {
+  lua_pushfilehandle(L, filesystem->Open(luaL_checkstring(L, 1), luaL_checkstring(L, 2), luaL_optstring(L, 3, 0)));
+  return 1;
+}
+
 static int filesystem_Precache (lua_State *L) {
   lua_pushboolean(L, filesystem->Precache(luaL_checkstring(L, 1), luaL_optstring(L, 2, 0)));
   return 1;
@@ -158,6 +200,34 @@ static int filesystem_PrintOpenedFiles (lua_State *L) {
 static int filesystem_PrintSearchPaths (lua_State *L) {
   filesystem->PrintSearchPaths();
   return 0;
+}
+
+static int filesystem_Read (lua_State *L) {
+  byte *buffer;
+
+  FileHandle_t file;
+  file = luaL_checkfilehandle(L, 1);
+
+  int size = filesystem->Size( file );
+  buffer = new byte[ size + 1 ];
+  if ( !buffer )
+  {
+  	char fn[ 512 ] = { 0 };
+  	g_pFullFileSystem->String( file, fn, sizeof( fn ) );
+  	Warning( "filesystem.Read:  Couldn't allocate buffer of size %i for file %s\n", size + 1, fn );
+  	lua_pushstring(L, NULL);
+  	return 1;
+  }
+  filesystem->Read( buffer, size, file );
+
+  // Ensure null terminator
+  buffer[ size ] =0;
+
+  lua_pushinteger(L, size);
+  lua_pushstring(L, (const char *)buffer);
+  delete buffer;
+
+  return 2;
 }
 
 static int filesystem_RemoveAllSearchPaths (lua_State *L) {
@@ -231,6 +301,7 @@ static const luaL_Reg filesystemlib[] = {
   {"AddSearchPath",   filesystem_AddSearchPath},
   {"BeginMapAccess",   filesystem_BeginMapAccess},
   {"CancelWaitForResources",   filesystem_CancelWaitForResources},
+  {"Close",   filesystem_Close},
   {"CreateDirHierarchy",   filesystem_CreateDirHierarchy},
   {"DiscardPreloadData",   filesystem_DiscardPreloadData},
   {"Disconnect",   filesystem_Disconnect},
@@ -250,9 +321,11 @@ static const luaL_Reg filesystemlib[] = {
   {"MarkAllCRCsUnverified",   filesystem_MarkAllCRCsUnverified},
   {"MarkPathIDByRequestOnly",   filesystem_MarkPathIDByRequestOnly},
   {"MountSteamContent",   filesystem_MountSteamContent},
+  {"Open",   filesystem_Open},
   {"Precache",   filesystem_Precache},
   {"PrintOpenedFiles",   filesystem_PrintOpenedFiles},
   {"PrintSearchPaths",   filesystem_PrintSearchPaths},
+  {"Read",   filesystem_Read},
   {"RemoveAllSearchPaths",   filesystem_RemoveAllSearchPaths},
   {"RemoveFile",   filesystem_RemoveFile},
   {"RemoveSearchPath",   filesystem_RemoveSearchPath},
@@ -270,10 +343,41 @@ static const luaL_Reg filesystemlib[] = {
 };
 
 
+static int FileHandle_t___tostring (lua_State *L) {
+  FileHandle_t hFile = luaL_checkfilehandle(L, 1);
+  if (hFile == FILESYSTEM_INVALID_HANDLE)
+    lua_pushstring(L, "FILESYSTEM_INVALID_HANDLE");
+  else
+    lua_pushfstring(L, "FileHandle_t: %p", hFile);
+  return 1;
+}
+
+static int FileHandle_t___eq (lua_State *L) {
+  lua_pushboolean(L, luaL_checkfilehandle(L, 1) == luaL_checkfilehandle(L, 2));
+  return 1;
+}
+
+
+static const luaL_Reg FileHandle_tmeta[] = {
+  {"__tostring", FileHandle_t___tostring},
+  {"___eq", FileHandle_t___eq},
+  {NULL, NULL}
+};
+
+
 /*
 ** Open filesystem library
 */
 LUALIB_API int luaopen_filesystem (lua_State *L) {
+  luaL_newmetatable(L, "FileHandle_t");
+  luaL_register(L, NULL, FileHandle_tmeta);
+  lua_pushvalue(L, -1);  /* push metatable */
+  lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
+  lua_pushstring(L, "filehandle");
+  lua_setfield(L, -2, "__type");  /* metatable.__type = "filehandle" */
+  lua_pop(L, 1);
+  lua_pushfilehandle(L, FILESYSTEM_INVALID_HANDLE);
+  lua_setglobal(L, "FILESYSTEM_INVALID_HANDLE");
   luaL_register(L, "filesystem", filesystemlib);
   return 1;
 }
