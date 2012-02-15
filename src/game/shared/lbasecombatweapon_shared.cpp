@@ -46,7 +46,7 @@ LUA_API void lua_pushweapon (lua_State *L, lua_CBaseCombatWeapon *pWeapon) {
 LUALIB_API lua_CBaseCombatWeapon *luaL_checkweapon (lua_State *L, int narg) {
   lua_CBaseCombatWeapon *d = lua_toweapon(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index a NULL entity");
+    luaL_argerror(L, narg, "CBaseCombatWeapon expected, got NULL entity");
   return d;
 }
 

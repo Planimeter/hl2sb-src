@@ -27,8 +27,8 @@
 
 
 LUA_API lua_INetChannelInfo *lua_tonetchannel (lua_State *L, int idx) {
-  lua_INetChannelInfo **ppNetChannel = (lua_INetChannelInfo **)luaL_checkudata(L, idx, "INetChannelInfo");
-  return *ppNetChannel;
+  lua_INetChannelInfo *pNetChannel = *(lua_INetChannelInfo **)luaL_checkudata(L, idx, "INetChannelInfo");
+  return pNetChannel;
 }
 
 
@@ -51,9 +51,7 @@ LUA_API void lua_pushnetchannel (lua_State *L, INetChannelInfo *netchannel) {
 
 
 LUALIB_API lua_INetChannelInfo *luaL_checknetchannel (lua_State *L, int narg) {
-  lua_INetChannelInfo *d = lua_tonetchannel(L, narg);
-  if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_typerror(L, narg, "INetChannelInfo");
+  lua_INetChannelInfo *d = *(lua_INetChannelInfo **)luaL_checkudata(L, narg, "INetChannelInfo");
   return d;
 }
 

@@ -70,7 +70,7 @@ LUA_API void lua_pushbutton (lua_State *L, Button *pButton) {
 LUALIB_API lua_Button *luaL_checkbutton (lua_State *L, int narg) {
   lua_Button *d = lua_tobutton(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index an INVALID_PANEL");
+    luaL_argerror(L, narg, "Button expected, got INVALID_PANEL");
   return d;
 }
 

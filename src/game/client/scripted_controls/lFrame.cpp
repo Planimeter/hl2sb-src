@@ -69,7 +69,7 @@ LUA_API void lua_pushframe (lua_State *L, Frame *pFrame) {
 LUALIB_API lua_Frame *luaL_checkframe (lua_State *L, int narg) {
   lua_Frame *d = lua_toframe(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index an INVALID_PANEL");
+    luaL_argerror(L, narg, "Frame expected, got INVALID_PANEL");
   return d;
 }
 

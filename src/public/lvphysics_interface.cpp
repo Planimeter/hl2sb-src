@@ -425,7 +425,7 @@ LUA_API void lua_pushphysicssurfaceprops (lua_State *L, lua_IPhysicsSurfaceProps
 LUALIB_API lua_IPhysicsObject *luaL_checkphysicsobject (lua_State *L, int narg) {
   lua_IPhysicsObject *d = lua_tophysicsobject(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index a NULL physicsobject");
+    luaL_argerror(L, narg, "IPhysicsObject expected, got NULL physicsobject");
   return d;
 }
 

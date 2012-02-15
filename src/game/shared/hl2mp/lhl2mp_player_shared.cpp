@@ -54,7 +54,7 @@ LUA_API void lua_pushhl2mpplayer (lua_State *L, CHL2MP_Player *pPlayer) {
 LUALIB_API lua_CHL2MP_Player *luaL_checkhl2mpplayer (lua_State *L, int narg) {
   lua_CHL2MP_Player *d = lua_tohl2mpplayer(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index a NULL entity");
+    luaL_argerror(L, narg, "CHL2MP_Player expected, got NULL entity");
   return d;
 }
 

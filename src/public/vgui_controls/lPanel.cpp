@@ -61,7 +61,7 @@ LUA_API void lua_pushpanel (lua_State *L, VPANEL panel) {
 LUALIB_API lua_Panel *luaL_checkpanel (lua_State *L, int narg) {
   lua_Panel *d = lua_topanel(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index an INVALID_PANEL");
+    luaL_argerror(L, narg, "Panel expected, got INVALID_PANEL");
   return d;
 }
 
@@ -69,7 +69,7 @@ LUALIB_API lua_Panel *luaL_checkpanel (lua_State *L, int narg) {
 LUALIB_API VPANEL luaL_checkvpanel (lua_State *L, int narg) {
   lua_Panel *d = lua_topanel(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index an INVALID_PANEL");
+    luaL_argerror(L, narg, "Panel expected, got INVALID_PANEL");
   PHandle hPanel;
   hPanel.Set(d);
   return ivgui()->HandleToPanel(hPanel.m_iPanelID);

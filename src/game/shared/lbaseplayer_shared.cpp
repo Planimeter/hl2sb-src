@@ -49,7 +49,7 @@ LUA_API void lua_pushplayer (lua_State *L, CBasePlayer *pPlayer) {
 LUALIB_API lua_CBasePlayer *luaL_checkplayer (lua_State *L, int narg) {
   lua_CBasePlayer *d = lua_toplayer(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index a NULL entity");
+    luaL_argerror(L, narg, "CBasePlayer expected, got NULL entity");
   return d;
 }
 

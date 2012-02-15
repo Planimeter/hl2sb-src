@@ -44,6 +44,8 @@ LUA_API void lua_pushfilehandle (lua_State *L, lua_FileHandle_t hFile) {
 
 LUALIB_API lua_FileHandle_t &luaL_checkfilehandle (lua_State *L, int narg) {
   lua_FileHandle_t *d = (lua_FileHandle_t *)luaL_checkudata(L, narg, "FileHandle_t");
+  if (*d == FILESYSTEM_INVALID_HANDLE)  /* avoid extra test when d is not 0 */
+    luaL_argerror(L, narg, "FileHandle_t expected, got FILESYSTEM_INVALID_HANDLE");
   return *d;
 }
 
@@ -84,6 +86,7 @@ static int filesystem_CancelWaitForResources (lua_State *L) {
 
 static int filesystem_Close (lua_State *L) {
   filesystem->Close(luaL_checkfilehandle(L, 1));
+  luaL_checkfilehandle(L, 1) = FILESYSTEM_INVALID_HANDLE;
   return 0;
 }
 
@@ -112,9 +115,19 @@ static int filesystem_EndMapAccess (lua_State *L) {
   return 0;
 }
 
+static int filesystem_EndOfFile (lua_State *L) {
+  lua_pushboolean(L, filesystem->EndOfFile(luaL_checkfilehandle(L, 1)));
+  return 1;
+}
+
 static int filesystem_FileExists (lua_State *L) {
   lua_pushboolean(L, filesystem->FileExists(luaL_checkstring(L, 1), luaL_optstring(L, 2, 0)));
   return 1;
+}
+
+static int filesystem_Flush (lua_State *L) {
+  filesystem->Flush(luaL_checkfilehandle(L, 1));
+  return 0;
 }
 
 static int filesystem_GetDVDMode (lua_State *L) {
@@ -154,6 +167,11 @@ static int filesystem_IsFileImmediatelyAvailable (lua_State *L) {
 
 static int filesystem_IsFileWritable (lua_State *L) {
   lua_pushboolean(L, filesystem->IsFileWritable(luaL_checkstring(L, 1), luaL_optstring(L, 2, 0)));
+  return 1;
+}
+
+static int filesystem_IsOk (lua_State *L) {
+  lua_pushboolean(L, filesystem->IsOk(luaL_checkfilehandle(L, 1)));
   return 1;
 }
 
@@ -206,22 +224,30 @@ static int filesystem_Read (lua_State *L) {
   byte *buffer;
 
   FileHandle_t file;
-  file = luaL_checkfilehandle(L, 1);
+  file = luaL_checkfilehandle(L, 2);
 
-  int size = filesystem->Size( file );
+  int size = luaL_checkint(L, 1);
   buffer = new byte[ size + 1 ];
   if ( !buffer )
   {
   	char fn[ 512 ] = { 0 };
   	g_pFullFileSystem->String( file, fn, sizeof( fn ) );
   	Warning( "filesystem.Read:  Couldn't allocate buffer of size %i for file %s\n", size + 1, fn );
+  	lua_pushinteger(L, -1);
   	lua_pushstring(L, NULL);
-  	return 1;
+  	return 2;
   }
-  filesystem->Read( buffer, size, file );
+  int bytesRead = filesystem->Read( buffer, size, file );
 
-  // Ensure null terminator
-  buffer[ size ] =0;
+  if ( bytesRead )
+  {
+	  // Ensure null terminator
+	  buffer[ bytesRead ] =0;
+  }
+  else
+  {
+	  *buffer = 0;
+  }
 
   lua_pushinteger(L, size);
   lua_pushstring(L, (const char *)buffer);
@@ -281,7 +307,15 @@ static int filesystem_Shutdown (lua_State *L) {
 }
 
 static int filesystem_Size (lua_State *L) {
-  lua_pushinteger(L, filesystem->Size(luaL_checkstring(L, 1), luaL_optstring(L, 2, 0)));
+  switch(lua_type(L, 1)) {
+    case LUA_TSTRING:
+      lua_pushinteger(L, filesystem->Size(luaL_checkstring(L, 1), luaL_optstring(L, 2, 0)));
+      break;
+    case LUA_TUSERDATA:
+    default:
+      lua_pushinteger(L, filesystem->Size(luaL_checkfilehandle(L, 1)));
+      break;
+  }
   return 1;
 }
 
@@ -307,7 +341,9 @@ static const luaL_Reg filesystemlib[] = {
   {"Disconnect",   filesystem_Disconnect},
   {"EnableWhitelistFileTracking",   filesystem_EnableWhitelistFileTracking},
   {"EndMapAccess",   filesystem_EndMapAccess},
+  {"EndOfFile",   filesystem_EndOfFile},
   {"FileExists",   filesystem_FileExists},
+  {"Flush",   filesystem_Flush},
   {"GetDVDMode",   filesystem_GetDVDMode},
   {"GetLocalCopy",   filesystem_GetLocalCopy},
   {"GetWhitelistSpewFlags",   filesystem_GetWhitelistSpewFlags},
@@ -316,6 +352,7 @@ static const luaL_Reg filesystemlib[] = {
   {"IsDirectory",   filesystem_IsDirectory},
   {"IsFileImmediatelyAvailable",   filesystem_IsFileImmediatelyAvailable},
   {"IsFileWritable",   filesystem_IsFileWritable},
+  {"IsOk",   filesystem_IsOk},
   {"IsSteam",   filesystem_IsSteam},
   {"LoadCompiledKeyValues",   filesystem_LoadCompiledKeyValues},
   {"MarkAllCRCsUnverified",   filesystem_MarkAllCRCsUnverified},
@@ -344,11 +381,11 @@ static const luaL_Reg filesystemlib[] = {
 
 
 static int FileHandle_t___tostring (lua_State *L) {
-  FileHandle_t hFile = luaL_checkfilehandle(L, 1);
+  FileHandle_t hFile = lua_tofilehandle(L, 1);
   if (hFile == FILESYSTEM_INVALID_HANDLE)
     lua_pushstring(L, "FILESYSTEM_INVALID_HANDLE");
   else
-    lua_pushfstring(L, "FileHandle_t: %p", hFile);
+    lua_pushfstring(L, "FileHandle_t: %p", lua_tofilehandle(L, 1));
   return 1;
 }
 

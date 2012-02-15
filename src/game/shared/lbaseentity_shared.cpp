@@ -65,7 +65,7 @@ LUA_API void lua_pushentity (lua_State *L, CBaseEntity *pEntity) {
 LUALIB_API lua_CBaseEntity *luaL_checkentity (lua_State *L, int narg) {
   lua_CBaseEntity *d = lua_toentity(L, narg);
   if (d == NULL)  /* avoid extra test when d is not 0 */
-    luaL_argerror(L, narg, "attempt to index a NULL entity");
+    luaL_argerror(L, narg, "CBaseEntity expected, got NULL entity");
   return d;
 }
 
@@ -781,6 +781,7 @@ static int CBaseEntity_IsWeapon (lua_State *L) {
 static int CBaseEntity_KeyValue (lua_State *L) {
   switch(lua_type(L, 3)) {
 	case LUA_TNUMBER:
+	default:
 	  lua_pushboolean(L, luaL_checkentity(L, 1)->KeyValue(luaL_checkstring(L, 2), luaL_checknumber(L, 3)));
 	  break;
 	case LUA_TUSERDATA:
@@ -788,9 +789,6 @@ static int CBaseEntity_KeyValue (lua_State *L) {
 	    lua_pushboolean(L, luaL_checkentity(L, 1)->KeyValue(luaL_checkstring(L, 2), luaL_checkvector(L, 3)));
 	  else
 	    luaL_typerror(L, 3, "Vector");
-	  break;
-	default:
-	  lua_pushboolean(L, luaL_checkentity(L, 1)->KeyValue(luaL_checkstring(L, 2), luaL_checkstring(L, 3)));
 	  break;
   }
   return 1;
