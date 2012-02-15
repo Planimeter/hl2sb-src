@@ -215,7 +215,7 @@ static const char *s_PreserveEnts[] =
 			END_LUA_CALL_HOOK( 3, 2 );
 
 			if ( lua_isboolean( L, -2 ) )
-				bProximity = (bool)luaL_checkboolean( L, -2 );
+				bProximity = (bool)lua_toboolean( L, -2 );
 			lua_remove( L, -2 );
 
 			RETURN_LUA_BOOLEAN();

@@ -301,7 +301,7 @@ void CHL2MPClientScoreBoardDialog::UpdateTeamInfo()
 				if ( lua_isstring( L, -1 ) )
 				{
 					lua_remove( L, -2 );
-					gamemode = luaL_checkstring( L, -1 );
+					gamemode = lua_tostring( L, -1 );
 				}
 				else
 				{

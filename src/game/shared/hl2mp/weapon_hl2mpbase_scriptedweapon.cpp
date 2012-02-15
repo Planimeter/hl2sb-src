@@ -251,7 +251,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove( L, -2 );
 	if ( lua_isstring( L, -1 ) )
 	{
-		Q_strncpy( m_pLuaWeaponInfo->szPrintName, luaL_checkstring( L, -1 ), MAX_WEAPON_STRING );
+		Q_strncpy( m_pLuaWeaponInfo->szPrintName, lua_tostring( L, -1 ), MAX_WEAPON_STRING );
 	}
 	else
 	{
@@ -264,7 +264,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove( L, -2 );
 	if ( lua_isstring( L, -1 ) )
 	{
-		Q_strncpy( m_pLuaWeaponInfo->szViewModel, luaL_checkstring( L, -1 ), MAX_WEAPON_STRING );
+		Q_strncpy( m_pLuaWeaponInfo->szViewModel, lua_tostring( L, -1 ), MAX_WEAPON_STRING );
 	}
 	lua_pop( L, 1 );
 	lua_getref( L, m_nRefCount );
@@ -272,7 +272,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove( L, -2 );
 	if ( lua_isstring( L, -1 ) )
 	{
-		Q_strncpy( m_pLuaWeaponInfo->szWorldModel, luaL_checkstring( L, -1 ), MAX_WEAPON_STRING );
+		Q_strncpy( m_pLuaWeaponInfo->szWorldModel, lua_tostring( L, -1 ), MAX_WEAPON_STRING );
 	}
 	lua_pop( L, 1 );
 	lua_getref( L, m_nRefCount );
@@ -280,7 +280,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove( L, -2 );
 	if ( lua_isstring( L, -1 ) )
 	{
-		Q_strncpy( m_pLuaWeaponInfo->szAnimationPrefix, luaL_checkstring( L, -1 ), MAX_WEAPON_PREFIX );
+		Q_strncpy( m_pLuaWeaponInfo->szAnimationPrefix, lua_tostring( L, -1 ), MAX_WEAPON_PREFIX );
 	}
 	lua_pop( L, 1 );
 
@@ -290,7 +290,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove( L, -2 );
 	if ( lua_isstring( L, -1 ) )
 	{
-		const char *pAmmo = luaL_checkstring( L, -1 );
+		const char *pAmmo = lua_tostring( L, -1 );
 		if ( strcmp("None", pAmmo) == 0 )
 			Q_strncpy( m_pLuaWeaponInfo->szAmmo1, "", sizeof( m_pLuaWeaponInfo->szAmmo1 ) );
 		else
@@ -305,7 +305,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove( L, -2 );
 	if ( lua_isstring( L, -1 ) )
 	{
-		const char *pAmmo = luaL_checkstring( L, -1 );
+		const char *pAmmo = lua_tostring( L, -1 );
 		if ( strcmp("None", pAmmo) == 0)
 			Q_strncpy( m_pLuaWeaponInfo->szAmmo2, "", sizeof( m_pLuaWeaponInfo->szAmmo2 ) );
 		else
@@ -326,7 +326,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 			lua_getfield( L, -1, pWeaponSoundCategories[i] );
 			if ( lua_isstring( L, -1 ) )
 			{
-				const char *soundname = luaL_checkstring( L, -1 );
+				const char *soundname = lua_tostring( L, -1 );
 				if ( soundname && soundname[0] )
 				{
 					Q_strncpy( m_pLuaWeaponInfo->aShootSounds[i], soundname, MAX_WEAPON_STRING );
@@ -342,7 +342,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove( L, -2 );
 	if ( lua_isnumber( L, -1 ) )
 	{
-		m_pLuaWeaponInfo->m_iPlayerDamage = luaL_checkint( L, -1 );
+		m_pLuaWeaponInfo->m_iPlayerDamage = (int)lua_tointeger( L, -1 );
 	}
 	lua_pop( L, 1 );
 
@@ -558,7 +558,7 @@ bool CHL2MPScriptedWeapon::IsMeleeWeapon() const
 	{
 		if ( lua_isnumber( L, -1 ) )
 		{
-			int res = ( luaL_checkint( L, -1 ) != 0 ) ? true : false;
+			int res = ( (int)lua_tointeger( L, -1 ) != 0 ) ? true : false;
 			lua_pop(L, 1);
 			return res;
 		}
@@ -594,7 +594,7 @@ bool CHL2MPScriptedWeapon::AllowsAutoSwitchTo( void ) const
 	{
 		if ( lua_isnumber( L, -1 ) )
 		{
-			int res = ( luaL_checkint( L, -1 ) != 0 ) ? true : false;
+			int res = ( (int)lua_tointeger( L, -1 ) != 0 ) ? true : false;
 			lua_pop(L, 1);
 			return res;
 		}
@@ -617,7 +617,7 @@ bool CHL2MPScriptedWeapon::AllowsAutoSwitchFrom( void ) const
 	{
 		if ( lua_isnumber( L, -1 ) )
 		{
-			int res = ( luaL_checkint( L, -1 ) != 0 ) ? true : false;
+			int res = ( (int)lua_tointeger( L, -1 ) != 0 ) ? true : false;
 			lua_pop(L, 1);
 			return res;
 		}

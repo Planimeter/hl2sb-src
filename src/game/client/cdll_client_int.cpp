@@ -347,11 +347,11 @@ public:
 		END_LUA_CALL_HOOK( 4, 3 );
 
 		if ( lua_isnumber( L, -3 ) )
-			color[2] = luaL_checkint( L, -3 );
+			color[2] = (int)lua_tointeger( L, -3 );
 		if ( lua_isnumber( L, -2 ) )
-			color[1] = luaL_checkint( L, -2 );
+			color[1] = (int)lua_tointeger( L, -2 );
 		if ( lua_isnumber( L, -1 ) )
-			color[0] = luaL_checkint( L, -1 );
+			color[0] = (int)lua_tointeger( L, -1 );
 
 		lua_pop( L, 3 );
 #endif
