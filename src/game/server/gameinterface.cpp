@@ -92,6 +92,7 @@
 
 #ifdef HL2SB
 #include "mountsteamcontent.h"
+#include "ticketfix.h"
 #endif
 
 #ifdef CSTRIKE_DLL // BOTPORT: TODO: move these ifdefs out
@@ -633,6 +634,9 @@ bool CServerGameDLL::DLLInit( CreateInterfaceFn appSystemFactory,
 
 	// Finally, load all of the player's addons.
 	MountAddons();
+
+	// Fixes the issue where the external ip is not matching the local ip.
+	PatchTicketValidation();
 #endif
 
 	// cache the globals

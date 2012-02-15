@@ -3322,6 +3322,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ticketfix.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\timedeventmgr.cpp"
 				>
 			</File>
