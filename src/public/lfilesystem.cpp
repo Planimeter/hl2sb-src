@@ -86,6 +86,8 @@ static int filesystem_CancelWaitForResources (lua_State *L) {
 
 static int filesystem_Close (lua_State *L) {
   filesystem->Close(luaL_checkfilehandle(L, 1));
+  // Andrew; this isn't standard behavior or usage, but we do this for the sake
+  // of things being safe in Lua
   luaL_checkfilehandle(L, 1) = FILESYSTEM_INVALID_HANDLE;
   return 0;
 }
@@ -230,9 +232,7 @@ static int filesystem_Read (lua_State *L) {
   buffer = new byte[ size + 1 ];
   if ( !buffer )
   {
-  	char fn[ 512 ] = { 0 };
-  	g_pFullFileSystem->String( file, fn, sizeof( fn ) );
-  	Warning( "filesystem.Read:  Couldn't allocate buffer of size %i for file %s\n", size + 1, fn );
+  	Warning( "filesystem.Read:  Couldn't allocate buffer of size %i for file\n", size + 1 );
   	lua_pushinteger(L, -1);
   	lua_pushstring(L, NULL);
   	return 2;
