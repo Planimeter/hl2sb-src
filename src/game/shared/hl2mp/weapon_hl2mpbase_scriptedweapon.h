@@ -77,6 +77,12 @@ public:
 	virtual char const		*GetPrintName( void ) const;
 	bool					IsMeleeWeapon() const;
 
+public:
+// Server Only Methods
+#if !defined( CLIENT_DLL )
+	virtual int				CapabilitiesGet( void );
+#endif
+
 private:
 	
 	CHL2MPScriptedWeapon( const CHL2MPScriptedWeapon & );

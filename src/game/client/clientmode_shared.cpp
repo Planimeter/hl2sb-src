@@ -177,7 +177,7 @@ ClientModeShared::~ClientModeShared()
 {
 #ifdef LUA_SDK
 	// NOTE: Due to the behavior of many crashes, if you end up here from a
-	// .mdmp or debug attach, you might as well ignore this call trace.
+	// .mdmp or debug attach, you might as well ignore this call stack.
 	delete m_pScriptedViewport; 
 #endif
 	delete m_pViewport; 

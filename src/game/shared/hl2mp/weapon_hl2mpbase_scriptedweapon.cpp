@@ -737,4 +737,18 @@ void CHL2MPScriptedWeapon::ItemPostFrame( void )
 	BaseClass::ItemPostFrame();
 }
 
+#ifndef CLIENT_DLL
+int CHL2MPScriptedWeapon::CapabilitiesGet( void )
+{
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_WEAPON_METHOD( "CapabilitiesGet" );
+	END_LUA_CALL_WEAPON_METHOD( 0, 1 );
+
+	RETURN_LUA_INTEGER();
+#endif
+
+	return BaseClass::CapabilitiesGet();
+}
+#endif
+
 

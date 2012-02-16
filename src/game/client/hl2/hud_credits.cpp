@@ -141,7 +141,11 @@ void CHudCredits::PrepareCredits( const char *pKeyName )
 	Clear();
 
 	KeyValues *pKV= new KeyValues( "CreditsFile" );
+#ifndef HL2SB
 	if ( !pKV->LoadFromFile( filesystem, CREDITS_FILE, "MOD" ) )
+#else
+	if ( !pKV->LoadFromFile( filesystem, CREDITS_FILE, "GAME" ) )
+#endif
 	{
 		pKV->deleteThis();
 
