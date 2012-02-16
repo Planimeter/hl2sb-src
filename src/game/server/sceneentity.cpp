@@ -4013,7 +4013,11 @@ CBaseEntity *CSceneEntity::FindNamedEntityClosest( const char *name, CBaseEntity
 	} 
 	else if ( !stricmp( name, "Player" ) || !stricmp( name, "!player" ))
 	{
+#ifndef HL2SB
 		entity = ( gpGlobals->maxClients == 1 ) ? ( CBaseEntity * )UTIL_GetLocalPlayer() : NULL;
+#else
+		entity = ( CBaseEntity * )UTIL_GetLocalPlayer();
+#endif
 		return entity;
 	}
 	else if ( !stricmp( name, "!target1" ) )

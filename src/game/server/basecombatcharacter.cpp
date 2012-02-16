@@ -49,6 +49,10 @@
 	#include "portal_shareddefs.h"
 #endif
 
+#ifdef HL2SB
+#include "hl2mp_gamerules.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -1478,7 +1482,11 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 
 #ifdef HL2_EPISODIC
 	// Burning corpses are server-side in episodic, if we're in darkness mode
+#ifndef HL2SB
 	if ( IsOnFire() && HL2GameRules()->IsAlyxInDarknessMode() )
+#else
+	if ( IsOnFire() && HL2MPRules()->IsAlyxInDarknessMode() )
+#endif
 	{
 		CBaseEntity *pRagdoll = CreateServerRagdoll( this, m_nForceBone, newinfo, COLLISION_GROUP_DEBRIS );
 		FixupBurningServerRagdoll( pRagdoll );
@@ -1489,7 +1497,11 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 
 #ifdef HL2_DLL	
 	// Mega physgun requires everything to be a server-side ragdoll
+#ifndef HL2SB
 	if ( m_bForceServerRagdoll == true || ( HL2GameRules()->MegaPhyscannonActive() == true ) && !IsPlayer() && Classify() != CLASS_PLAYER_ALLY_VITAL && Classify() != CLASS_PLAYER_ALLY )
+#else
+	if ( m_bForceServerRagdoll == true || ( HL2MPRules()->MegaPhyscannonActive() == true ) && !IsPlayer() && Classify() != CLASS_PLAYER_ALLY_VITAL && Classify() != CLASS_PLAYER_ALLY )
+#endif
 	{
 		if ( CanBecomeServerRagdoll() == false )
 			return false;
@@ -2987,7 +2999,11 @@ void CBaseCombatCharacter::VPhysicsShadowCollision( int index, gamevcollisioneve
 	float flOtherAttackerTime = 0.0f;
 
 #ifdef HL2_DLL
+#ifndef HL2SB
 	if ( HL2GameRules()->MegaPhyscannonActive() == true )
+#else
+	if ( HL2MPRules()->MegaPhyscannonActive() == true )
+#endif
 	{
 		flOtherAttackerTime = 1.0f;
 	}

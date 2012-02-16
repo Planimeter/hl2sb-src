@@ -84,6 +84,14 @@ class CHL2MPRules : public CTeamplayRules
 public:
 	DECLARE_CLASS( CHL2MPRules, CTeamplayRules );
 
+#ifdef HL2SB
+private:
+	// Rules change for the mega physgun
+	CNetworkVar( bool, m_bMegaPhysgun );
+
+public:
+#endif
+
 #ifdef CLIENT_DLL
 
 	DECLARE_CLIENTCLASS_NOBASE(); // This makes datatables able to access our private vars.
@@ -176,6 +184,8 @@ public:
 #endif
 #ifdef HL2SB
 #ifndef CLIENT_DLL
+	bool	MegaPhyscannonActive( void ) { return m_bMegaPhysgun;	}
+
 	virtual bool IsAlyxInDarknessMode();
 #endif
 #endif
