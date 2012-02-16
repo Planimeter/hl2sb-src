@@ -1399,7 +1399,11 @@ void CNPC_Alyx::DoCustomSpeechAI( void )
 	{
 		// If we've left darkness mode, or if the player has blinded me with 
 		// the flashlight, don't bother speaking the found player line.
+#ifndef HL2SB
 		if ( !m_bIsFlashlightBlind && HL2GameRules()->IsAlyxInDarknessMode() && m_bDarknessSpeechAllowed )
+#else
+		if ( !m_bIsFlashlightBlind && HL2MPRules()->IsAlyxInDarknessMode() && m_bDarknessSpeechAllowed )
+#endif
 		{
 			if ( HasCondition(COND_SEE_PLAYER) && !HasCondition( COND_TALKER_PLAYER_DEAD ) )
 			{
@@ -1548,7 +1552,11 @@ bool CNPC_Alyx::FInViewCone( CBaseEntity *pEntity )
 	}
 
 	// Else, fall through...
+#ifndef HL2SB
  	if ( HL2GameRules()->IsAlyxInDarknessMode() )
+#else
+ 	if ( HL2MPRules()->IsAlyxInDarknessMode() )
+#endif
 	{
 		if ( CanSeeEntityInDarkness( pEntity ) )
 			return true;
@@ -1876,7 +1884,11 @@ int CNPC_Alyx::TranslateSchedule( int scheduleType )
 
 	case SCHED_HIDE_AND_RELOAD:
 		{
+#ifndef HL2SB
 			if ( HL2GameRules()->IsAlyxInDarknessMode() )
+#else
+			if ( HL2MPRules()->IsAlyxInDarknessMode() )
+#endif
 				return SCHED_RELOAD;
 
 			// If I don't have a ranged attacker as an enemy, don't try to hide
@@ -2282,7 +2294,11 @@ int CNPC_Alyx::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 
 	int taken = BaseClass::OnTakeDamage_Alive(info);
 
+#ifndef HL2SB
 	if ( taken && HL2GameRules()->IsAlyxInDarknessMode() && !HasCondition( COND_TALKER_PLAYER_DEAD ) )
+#else
+	if ( taken && HL2MPRules()->IsAlyxInDarknessMode() && !HasCondition( COND_TALKER_PLAYER_DEAD ) )
+#endif
 	{
 		if ( !HasCondition(COND_SEE_ENEMY) && (info.GetDamageType() & (DMG_SLASH | DMG_CLUB) ) )
 		{
@@ -2653,7 +2669,11 @@ bool CNPC_Alyx::CanBeBlindedByFlashlight( bool bCheckLightSources )
 {
 	// Can't be blinded if we're not in alyx darkness mode
  	/*
+#ifndef HL2SB
 	if ( !HL2GameRules()->IsAlyxInDarknessMode() )
+#else
+	if ( !HL2MPRules()->IsAlyxInDarknessMode() )
+#endif
 		return false;
 	*/
 
@@ -2706,7 +2726,11 @@ bool CNPC_Alyx::PlayerFlashlightOnMyEyes( CBasePlayer *pPlayer )
 	float flDist = VectorNormalize( vecToEyes ); 
 
 	// We can be blinded in daylight, but only at close range
+#ifndef HL2SB
 	if ( HL2GameRules()->IsAlyxInDarknessMode() == false )
+#else
+	if ( HL2MPRules()->IsAlyxInDarknessMode() == false )
+#endif
 	{
 		if ( flDist > (8*12.0f) )
 			return false;
