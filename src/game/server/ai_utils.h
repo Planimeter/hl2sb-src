@@ -43,6 +43,33 @@ inline CBasePlayer *AI_GetSinglePlayer()
 	return UTIL_GetLocalPlayer();
 }
 
+#ifdef HL2SB
+inline CBasePlayer *AI_GetNearestPlayer( const Vector& pos )
+{
+	CBasePlayer *pPlayer = NULL;
+	float	flNearestDistSqr = FLT_MAX;
+	float	flDistSqr;
+	for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
+	{
+		CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
+		if(!pEnt || !pEnt->IsPlayer())
+			continue;
+
+		// Distance is the deciding factor
+		flDistSqr = ( pos - pEnt->GetAbsOrigin() ).LengthSqr();
+
+		// Closer, take it
+		if ( flDistSqr < flNearestDistSqr )
+		{
+			flNearestDistSqr = flDistSqr;
+			pPlayer = pEnt;
+		}
+	}
+	
+	return pPlayer;
+}
+#endif
+
 inline bool AI_IsSinglePlayer()
 {
 	return ( gpGlobals->maxClients == 1 );
