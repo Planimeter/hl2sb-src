@@ -625,10 +625,16 @@ CBasePlayer* UTIL_PlayerByUserId( int userID )
 // 
 CBasePlayer *UTIL_GetLocalPlayer( void )
 {
+#ifdef HL2SB
+	// HACKHACK: We change the behavior of UTIL_GetLocalPlayer() here to be
+	// compatible with multiplayer games for the sake of not crashing.
+	CBasePlayer *pHostPlayer = UTIL_GetListenServerHost();
+	if ( pHostPlayer != NULL )
+		return pHostPlayer;
+#endif
+
 	if ( gpGlobals->maxClients > 1 )
 	{
-		// HACKHACK: We change the behavior of UTIL_GetLocalPlayer() here to be
-		// compatible with multiplayer games for the sake of not crashing.
 #ifdef HL2SB
 		for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
 		{
