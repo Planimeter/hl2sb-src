@@ -385,10 +385,16 @@ private:
 	CNetworkArray( float, m_flPoseParameter, NUM_POSEPAREMETERS );	// must be private so manual mode works!
 	CNetworkArray( float, m_flEncodedController, NUM_BONECTRLS );		// bone controller setting (0..1)
 
+#ifdef HL2SB
+public:
+#endif
 	// Client-side animation (useful for looping animation objects)
 	CNetworkVar( bool, m_bClientSideAnimation );
 	CNetworkVar( bool, m_bClientSideFrameReset );
 
+#ifdef HL2SB
+private:
+#endif
 	CNetworkVar( int, m_nNewSequenceParity );
 	CNetworkVar( int, m_nResetEventsParity );
 

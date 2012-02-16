@@ -800,6 +800,9 @@ void CFuncTank::Spawn( void )
 			if ( pProp )
 			{
 				pProp->m_bUseHitboxesForRenderBox = true;
+#ifdef HL2SB
+				pProp->m_bClientSideAnimation = false;
+#endif
 			}
 		}
 	}
