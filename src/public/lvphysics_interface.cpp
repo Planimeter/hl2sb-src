@@ -35,22 +35,32 @@ LUA_API lua_surfacephysicsparams_t lua_tosurfacephysicsparams (lua_State *L, int
   lua_getfield(L, idx, "friction");
   if (!lua_isnil(L, -1))
     physics.friction = luaL_checknumber(L, -1);
+  else
+    physics.friction = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "elasticity");
   if (!lua_isnil(L, -1))
     physics.elasticity = luaL_checknumber(L, -1);
+  else
+    physics.elasticity = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "density");
   if (!lua_isnil(L, -1))
     physics.density = luaL_checknumber(L, -1);
+  else
+    physics.density = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "thickness");
   if (!lua_isnil(L, -1))
     physics.thickness = luaL_checknumber(L, -1);
+  else
+    physics.thickness = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "dampening");
   if (!lua_isnil(L, -1))
     physics.dampening = luaL_checknumber(L, -1);
+  else
+    physics.dampening = 0;
   lua_pop(L, 1);
   return physics;
 }
@@ -62,27 +72,39 @@ LUA_API lua_surfaceaudioparams_t lua_tosurfaceaudioparams (lua_State *L, int idx
   lua_getfield(L, idx, "reflectivity");
   if (!lua_isnil(L, -1))
     audio.reflectivity = luaL_checknumber(L, -1);
+  else
+    audio.reflectivity = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "hardnessFactor");
   if (!lua_isnil(L, -1))
     audio.hardnessFactor = luaL_checknumber(L, -1);
+  else
+    audio.hardnessFactor = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "roughnessFactor");
   if (!lua_isnil(L, -1))
     audio.roughnessFactor = luaL_checknumber(L, -1);
+  else
+    audio.roughnessFactor = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "roughThreshold");
   if (!lua_isnil(L, -1))
     audio.roughThreshold = luaL_checknumber(L, -1);
+  else
+    audio.roughThreshold = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "hardThreshold");
   if (!lua_isnil(L, -1))
     audio.hardThreshold = luaL_checknumber(L, -1);
+  else
+    audio.hardThreshold = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "hardVelocityThreshold");
   if (!lua_isnil(L, -1))
     audio.hardVelocityThreshold = luaL_checknumber(L, -1);
+  else
+    audio.hardVelocityThreshold = 0;
   lua_pop(L, 1);
   return audio;
 }
@@ -94,46 +116,66 @@ LUA_API lua_surfacesoundnames_t lua_tosurfacesoundnames (lua_State *L, int idx) 
   lua_getfield(L, idx, "stepleft");
   if (!lua_isnil(L, -1))
     sounds.stepleft = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.stepleft = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "stepright");
   if (!lua_isnil(L, -1))
     sounds.stepright = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.stepright = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "impactSoft");
   if (!lua_isnil(L, -1))
     sounds.impactSoft = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.impactSoft = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "impactHard");
   if (!lua_isnil(L, -1))
     sounds.impactHard = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.impactHard = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "scrapeSmooth");
   if (!lua_isnil(L, -1))
     sounds.scrapeSmooth = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.scrapeSmooth = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "scrapeRough");
   if (!lua_isnil(L, -1))
     sounds.scrapeRough = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.scrapeRough = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "bulletImpact");
   if (!lua_isnil(L, -1))
     sounds.bulletImpact = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.bulletImpact = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "rolling");
   if (!lua_isnil(L, -1))
     sounds.rolling = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.rolling = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "breakSound");
   if (!lua_isnil(L, -1))
     sounds.breakSound = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.breakSound = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "strainSound");
   if (!lua_isnil(L, -1))
     sounds.strainSound = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    sounds.strainSound = 0;
   lua_pop(L, 1);
   return sounds;
 }
@@ -145,46 +187,66 @@ LUA_API lua_surfacesoundhandles_t lua_tosurfacesoundhandles (lua_State *L, int i
   lua_getfield(L, idx, "stepleft");
   if (!lua_isnil(L, -1))
     soundhandles.stepleft = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.stepleft = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "stepright");
   if (!lua_isnil(L, -1))
     soundhandles.stepright = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.stepright = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "impactSoft");
   if (!lua_isnil(L, -1))
     soundhandles.impactSoft = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.impactSoft = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "impactHard");
   if (!lua_isnil(L, -1))
     soundhandles.impactHard = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.impactHard = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "scrapeSmooth");
   if (!lua_isnil(L, -1))
     soundhandles.scrapeSmooth = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.scrapeSmooth = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "scrapeRough");
   if (!lua_isnil(L, -1))
     soundhandles.scrapeRough = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.scrapeRough = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "bulletImpact");
   if (!lua_isnil(L, -1))
     soundhandles.bulletImpact = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.bulletImpact = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "rolling");
   if (!lua_isnil(L, -1))
     soundhandles.rolling = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.rolling = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "breakSound");
   if (!lua_isnil(L, -1))
     soundhandles.breakSound = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.breakSound = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "strainSound");
   if (!lua_isnil(L, -1))
     soundhandles.strainSound = (short)luaL_checkinteger(L, -1);
+  else
+    soundhandles.strainSound = 0;
   lua_pop(L, 1);
   return soundhandles;
 }
@@ -196,24 +258,34 @@ LUA_API lua_surfacegameprops_t lua_tosurfacegameprops (lua_State *L, int idx) {
   lua_getfield(L, idx, "maxSpeedFactor");
   if (!lua_isnil(L, -1))
     game.maxSpeedFactor = luaL_checknumber(L, -1);
+  else
+    game.maxSpeedFactor = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "jumpFactor");
   if (!lua_isnil(L, -1))
     game.jumpFactor = luaL_checknumber(L, -1);
+  else
+    game.jumpFactor = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "material");
   if (!lua_isnil(L, -1))
     game.material = (unsigned short)luaL_checkinteger(L, -1);
+  else
+    game.material = 0;
   lua_pop(L, 1);
 
   lua_getfield(L, idx, "climbable");
   if (!lua_isnil(L, -1))
     game.climbable = (unsigned char)luaL_checkinteger(L, -1);
+  else
+    game.climbable = 0;
   lua_pop(L, 1);
   lua_getfield(L, idx, "pad");
   if (!lua_isnil(L, -1))
     game.pad = (unsigned char)luaL_checkinteger(L, -1);
+  else
+    game.pad = 0;
   lua_pop(L, 1);
   return game;
 }

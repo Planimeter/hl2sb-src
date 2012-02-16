@@ -144,7 +144,9 @@ IEntityFactory *CEntityFactoryDictionary::FindFactory( const char *pClassName )
 //-----------------------------------------------------------------------------
 void CEntityFactoryDictionary::InstallFactory( IEntityFactory *pFactory, const char *pClassName )
 {
+#ifndef HL2SB
 	Assert( FindFactory( pClassName ) == NULL );
+#endif
 	m_Factories.Insert( pClassName, pFactory );
 }
 

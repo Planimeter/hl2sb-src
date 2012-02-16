@@ -917,7 +917,11 @@ void CNPC_Alyx::AnalyzeGunfireSound( CSound *pSound )
 //-----------------------------------------------------------------------------
 bool CNPC_Alyx::IsValidEnemy( CBaseEntity *pEnemy )
 {
+#ifndef HL2SB
 	if ( HL2GameRules()->IsAlyxInDarknessMode() )
+#else
+	if ( HL2MPRules()->IsAlyxInDarknessMode() )
+#endif
 	{
 		if ( !CanSeeEntityInDarkness( pEnemy ) )
 			return false;
@@ -1209,7 +1213,11 @@ void CNPC_Alyx::DoCustomSpeechAI( void )
 
 	// Darkness mode speech
 	ClearCondition( COND_ALYX_IN_DARK );
+#ifndef HL2SB
  	if ( HL2GameRules()->IsAlyxInDarknessMode() )
+#else
+ 	if ( HL2MPRules()->IsAlyxInDarknessMode() )
+#endif
 	{
 		// Even though the darkness light system will take flares into account when Alyx
 		// says she's lost the player in the darkness, players still think she's silly
