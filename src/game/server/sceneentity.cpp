@@ -1714,6 +1714,9 @@ void CSceneEntity::DispatchStartSpeak( CChoreoScene *scene, CBaseFlex *actor, CC
 	if ( actor )
 	{
 		CPASAttenuationFilter filter( actor );
+#ifdef HL2SB
+		filter.AddAllPlayers();
+#endif
 
 		if ( m_pRecipientFilter )
 		{
