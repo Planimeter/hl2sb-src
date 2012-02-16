@@ -413,7 +413,9 @@ void CHL2MPRules::PlayerSpawn( CBasePlayer *pPlayer )
 {
 	BEGIN_LUA_CALL_HOOK( "PlayerSpawn" );
 		lua_pushplayer( L, pPlayer );
-	END_LUA_CALL_HOOK( 1, 0 );
+	END_LUA_CALL_HOOK( 1, 1 );
+
+	RETURN_LUA_NONE();
 
 	BaseClass::PlayerSpawn( pPlayer );
 }
