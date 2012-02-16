@@ -43,7 +43,11 @@
 #include "vstdlib/random.h"
 #include "engine/IEngineSound.h"
 #include "props.h"
+#ifndef HL2SB
 #include "hl2_gamerules.h"
+#else
+#include "hl2mp_gamerules.h"
+#endif
 #include "weapon_physcannon.h"
 #include "ammodef.h"
 #include "vehicle_base.h"
@@ -949,7 +953,11 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 //-----------------------------------------------------------------------------
 void CNPC_BaseZombie::MakeAISpookySound( float volume, float duration )
 {
+#ifndef HL2SB
 	if ( HL2GameRules()->IsAlyxInDarknessMode() )
+#else
+	if ( HL2MPRules()->IsAlyxInDarknessMode() )
+#endif
 	{
 		CSoundEnt::InsertSound( SOUND_COMBAT, EyePosition(), volume, duration, this, SOUNDENT_CHANNEL_SPOOKY_NOISE );
 	}
@@ -1054,7 +1062,11 @@ bool CNPC_BaseZombie::ShouldIgniteZombieGib( void )
 #ifdef HL2_EPISODIC
 	// If we're in darkness mode, don't ignite giblets, because we don't want to
 	// pay the perf cost of multiple dynamic lights per giblet.
+#ifndef HL2SB
 	return ( IsOnFire() && !HL2GameRules()->IsAlyxInDarknessMode() );
+#else
+	return ( IsOnFire() && !HL2MPRules()->IsAlyxInDarknessMode() );
+#endif
 #else
 	return IsOnFire();
 #endif 
@@ -1206,7 +1218,11 @@ void CNPC_BaseZombie::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize
 	BaseClass::Ignite( flFlameLifetime, bNPCOnly, flSize, bCalledByLevelDesigner );
 
 #ifdef HL2_EPISODIC
+#ifndef HL2SB
 	if ( HL2GameRules()->IsAlyxInDarknessMode() == true && GetEffectEntity() != NULL )
+#else
+	if ( HL2MPRules()->IsAlyxInDarknessMode() == true && GetEffectEntity() != NULL )
+#endif
 	{
 		GetEffectEntity()->AddEffects( EF_DIMLIGHT );
 	}
