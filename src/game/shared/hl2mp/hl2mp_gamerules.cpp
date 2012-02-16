@@ -200,6 +200,11 @@ static const char *s_PreserveEnts[] =
 	END_SEND_TABLE()
 #endif
 
+#ifdef HL2SB
+extern ConVar	sk_plr_health_drop_time;
+extern ConVar	sk_plr_grenade_drop_time;
+#endif
+
 #ifndef CLIENT_DLL
 
 	class CVoiceGameMgrHelper : public IVoiceGameMgrHelper
@@ -399,6 +404,63 @@ bool CHL2MPRules::AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info
 
 	return BaseClass::AllowDamage( pVictim, lInfo );
 }
+#ifdef HL2SB
+//-----------------------------------------------------------------------------
+// Purpose: Whether or not the NPC should drop a health vial
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CHL2MPRules::NPC_ShouldDropHealth( CBasePlayer *pRecipient )
+{
+	// Can only do this every so often
+	if ( m_flLastHealthDropTime > gpGlobals->curtime )
+		return false;
+
+	//Try to throw dynamic health
+	float healthPerc = ( (float) pRecipient->m_iHealth / (float) pRecipient->m_iMaxHealth );
+
+	if ( random->RandomFloat( 0.0f, 1.0f ) > healthPerc*1.5f )
+		return true;
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Whether or not the NPC should drop a health vial
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CHL2MPRules::NPC_ShouldDropGrenade( CBasePlayer *pRecipient )
+{
+	// Can only do this every so often
+	if ( m_flLastGrenadeDropTime > gpGlobals->curtime )
+		return false;
+	
+	int grenadeIndex = GetAmmoDef()->Index( "grenade" );
+	int numGrenades = pRecipient->GetAmmoCount( grenadeIndex );
+
+	// If we're not maxed out on grenades and we've randomly okay'd it
+	if ( ( numGrenades < GetAmmoDef()->MaxCarry( grenadeIndex ) ) && ( random->RandomInt( 0, 2 ) == 0 ) )
+		return true;
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Update the drop counter for health
+//-----------------------------------------------------------------------------
+void CHL2MPRules::NPC_DroppedHealth( void )
+{
+	m_flLastHealthDropTime = gpGlobals->curtime + sk_plr_health_drop_time.GetFloat();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Update the drop counter for grenades
+//-----------------------------------------------------------------------------
+void CHL2MPRules::NPC_DroppedGrenade( void )
+{
+	m_flLastGrenadeDropTime = gpGlobals->curtime + sk_plr_grenade_drop_time.GetFloat();
+}
+
+#endif
 
 void CHL2MPRules::PlayerThink( CBasePlayer *pPlayer )
 {

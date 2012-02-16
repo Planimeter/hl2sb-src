@@ -184,8 +184,12 @@ public:
 #endif
 #ifdef HL2SB
 #ifndef CLIENT_DLL
+	bool	NPC_ShouldDropGrenade( CBasePlayer *pRecipient );
+	bool	NPC_ShouldDropHealth( CBasePlayer *pRecipient );
+	void	NPC_DroppedHealth( void );
+	void	NPC_DroppedGrenade( void );
 	bool	MegaPhyscannonActive( void ) { return m_bMegaPhysgun;	}
-
+	
 	virtual bool IsAlyxInDarknessMode();
 #endif
 #endif
@@ -193,6 +197,13 @@ public:
 	
 private:
 	
+#ifdef HL2SB
+#ifndef CLIENT_DLL
+	float	m_flLastHealthDropTime;
+	float	m_flLastGrenadeDropTime;
+#endif
+#endif
+
 	CNetworkVar( bool, m_bTeamPlayEnabled );
 	CNetworkVar( float, m_flGameStartTime );
 	CUtlVector<EHANDLE> m_hRespawnableItemsAndWeapons;
