@@ -22,6 +22,10 @@
 	#include "info_darknessmode_lightsource.h"
 #endif
 
+#ifdef HL2SB
+	#include "hl2mp_gamerules.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
