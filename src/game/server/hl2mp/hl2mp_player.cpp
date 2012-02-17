@@ -446,7 +446,34 @@ void CHL2MP_Player::Spawn(void)
 
 void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "PlayerPickupObject" );
+		lua_pushentity( L, pObject );
+		lua_pushboolean( L, bLimitMassAndSize );
+	END_LUA_CALL_HOOK( 2, 1 );
+
+	RETURN_LUA_NONE();
+#endif
+
+#ifdef HL2SB
+	// can't pick up what you're standing on
+	if ( GetGroundEntity() == pObject )
+		return;
 	
+	if ( bLimitMassAndSize == true )
+	{
+		if ( CBasePlayer::CanPickupObject( pObject, 35, 128 ) == false )
+			 return;
+	}
+
+	// Can't be picked up if NPCs are on me
+	if ( pObject->HasNPCsOnIt() )
+		return;
+
+	PlayerPickupObject( this, pObject );
+#else
+	
+#endif
 }
 
 bool CHL2MP_Player::ValidatePlayerModel( const char *pModel )

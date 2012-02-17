@@ -2754,6 +2754,16 @@ bool CBasePlayer::IsUseableEntity( CBaseEntity *pEntity, unsigned int requiredCa
 //-----------------------------------------------------------------------------
 bool CBasePlayer::CanPickupObject( CBaseEntity *pObject, float massLimit, float sizeLimit )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "PlayerCanPickupObject" );
+		lua_pushentity( L, pObject );
+		lua_pushnumber( L, massLimit );
+		lua_pushnumber( L, sizeLimit );
+	END_LUA_CALL_HOOK( 3, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	// UNDONE: Make this virtual and move to HL2 player
 #ifdef HL2_DLL
 	//Must be valid
