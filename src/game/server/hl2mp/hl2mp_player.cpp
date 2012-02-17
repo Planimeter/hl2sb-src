@@ -448,9 +448,10 @@ void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
 {
 #ifdef LUA_SDK
 	BEGIN_LUA_CALL_HOOK( "PlayerPickupObject" );
+		lua_pushhl2mpplayer( L, this );
 		lua_pushentity( L, pObject );
 		lua_pushboolean( L, bLimitMassAndSize );
-	END_LUA_CALL_HOOK( 2, 1 );
+	END_LUA_CALL_HOOK( 3, 1 );
 
 	RETURN_LUA_NONE();
 #endif
