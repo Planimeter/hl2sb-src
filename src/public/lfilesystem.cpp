@@ -380,6 +380,13 @@ static const luaL_Reg filesystemlib[] = {
 };
 
 
+static int FileHandle_t___gc (lua_State *L) {
+  FileHandle_t hFile = lua_tofilehandle(L, 1);
+  if (hFile != FILESYSTEM_INVALID_HANDLE)
+    filesystem->Close(hFile);
+  return 0;
+}
+
 static int FileHandle_t___tostring (lua_State *L) {
   FileHandle_t hFile = lua_tofilehandle(L, 1);
   if (hFile == FILESYSTEM_INVALID_HANDLE)
@@ -389,15 +396,10 @@ static int FileHandle_t___tostring (lua_State *L) {
   return 1;
 }
 
-static int FileHandle_t___eq (lua_State *L) {
-  lua_pushboolean(L, luaL_checkfilehandle(L, 1) == luaL_checkfilehandle(L, 2));
-  return 1;
-}
-
 
 static const luaL_Reg FileHandle_tmeta[] = {
+  {"__gc", FileHandle_t___gc},
   {"__tostring", FileHandle_t___tostring},
-  {"___eq", FileHandle_t___eq},
   {NULL, NULL}
 };
 

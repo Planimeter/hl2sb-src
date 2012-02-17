@@ -25,6 +25,7 @@
 #include "bone_setup.h"
 #ifdef LUA_SDK
 #include "luamanager.h"
+#include "lbaseentity_shared.h"
 #include "lhl2mp_player_shared.h"
 #include "ltakedamageinfo.h"
 #endif
@@ -1284,6 +1285,14 @@ void CHL2MP_Player::DeathSound( const CTakeDamageInfo &info )
 
 CBaseEntity* CHL2MP_Player::EntSelectSpawnPoint( void )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "PlayerEntSelectSpawnPoint" );
+		lua_pushhl2mpplayer( L, this );
+	END_LUA_CALL_HOOK( 1, 1 );
+
+	RETURN_LUA_ENTITY();
+#endif
+
 	CBaseEntity *pSpot = NULL;
 	CBaseEntity *pLastSpawnPoint = g_pLastSpawn;
 	edict_t		*player = edict();
