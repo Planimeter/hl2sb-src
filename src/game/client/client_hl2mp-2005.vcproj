@@ -2142,6 +2142,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\vgui_basescriptedpanel.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\vgui_bitmapbutton.cpp"
 				>
 			</File>
