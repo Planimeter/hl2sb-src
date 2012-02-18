@@ -2854,6 +2854,10 @@ void CTriggerCamera::Spawn( void )
 	SetRenderColorA( 0 );								// The engine won't draw this model if this is set to 0 and blending is on
 	m_nRenderMode = kRenderTransTexture;
 
+#ifdef HL2SB
+	m_nOldTakeDamage = -1;
+#endif
+
 	m_state = USE_OFF;
 	
 	m_initialSpeed = m_flSpeed;
@@ -3129,7 +3133,12 @@ void CTriggerCamera::Disable( void )
 	}
 
 	//return the player to previous takedamage state
+#ifndef HL2SB
 	m_hPlayer->m_takedamage = m_nOldTakeDamage;
+#else
+	if ( m_nOldTakeDamage != -1 )
+		m_hPlayer->m_takedamage = m_nOldTakeDamage;
+#endif
 
 	m_state = USE_OFF;
 	m_flReturnTime = gpGlobals->curtime;
