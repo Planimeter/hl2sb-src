@@ -2587,6 +2587,10 @@ void CSceneEntity::StartPlayback( void )
 			return;
 		}
 
+#ifdef HL2SB
+		PrecacheScene( m_pScene );
+#endif
+
 		OnLoaded();
 
 		if ( ShouldNetwork() )
