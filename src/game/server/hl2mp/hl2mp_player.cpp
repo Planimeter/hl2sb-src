@@ -1311,6 +1311,35 @@ void CHL2MP_Player::DeathSound( const CTakeDamageInfo &info )
 	EmitSound( filter, entindex(), ep );
 }
 
+#ifdef HL2SB
+//-----------------------------------------------------------------------------
+// Purpose: Finds a player start entity of the given classname. If any entity of
+//			of the given classname has the SF_PLAYER_START_MASTER flag set, that
+//			is the entity that will be returned. Otherwise, the first entity of
+//			the given classname is returned.
+// Input  : pszClassName - should be "info_player_start", "info_player_coop", or
+//			"info_player_deathmatch"
+//-----------------------------------------------------------------------------
+static CBaseEntity *FindPlayerStart(const char *pszClassName)
+{
+	#define SF_PLAYER_START_MASTER	1
+	
+	CBaseEntity *pStart = gEntList.FindEntityByClassname(NULL, pszClassName);
+	CBaseEntity *pStartFirst = pStart;
+	while (pStart != NULL)
+	{
+		if (pStart->HasSpawnFlags(SF_PLAYER_START_MASTER))
+		{
+			return pStart;
+		}
+
+		pStart = gEntList.FindEntityByClassname(pStart, pszClassName);
+	}
+
+	return pStartFirst;
+}
+#endif
+
 CBaseEntity* CHL2MP_Player::EntSelectSpawnPoint( void )
 {
 #ifdef LUA_SDK
@@ -1465,6 +1494,22 @@ CBaseEntity* CHL2MP_Player::EntSelectSpawnPoint( void )
 		goto ReturnSpot;
 	}
 
+#ifdef HL2SB
+	// If startspot is set, (re)spawn there.
+	if ( !gpGlobals->startspot || !strlen(STRING(gpGlobals->startspot)))
+	{
+		pSpot = FindPlayerStart( "info_player_start" );
+		if ( pSpot )
+			goto ReturnSpot;
+	}
+	else
+	{
+		pSpot = gEntList.FindEntityByName( NULL, gpGlobals->startspot );
+		if ( pSpot )
+			goto ReturnSpot;
+	}
+
+#else
 	if ( !pSpot  )
 	{
 		pSpot = gEntList.FindEntityByClassname( pSpot, "info_player_start" );
@@ -1472,6 +1517,7 @@ CBaseEntity* CHL2MP_Player::EntSelectSpawnPoint( void )
 		if ( pSpot )
 			goto ReturnSpot;
 	}
+#endif
 
 ReturnSpot:
 
