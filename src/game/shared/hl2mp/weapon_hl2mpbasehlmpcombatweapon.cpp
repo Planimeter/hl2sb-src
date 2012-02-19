@@ -146,7 +146,9 @@ bool CBaseHL2MPCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 {
 	if ( BaseClass::Holster( pSwitchingTo ) )
 	{
+#ifndef HL2SB
 		SetWeaponVisible( false );
+#endif
 		m_flHolsterTime = gpGlobals->curtime;
 		return true;
 	}
