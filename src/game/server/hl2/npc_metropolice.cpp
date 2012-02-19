@@ -4022,7 +4022,11 @@ void CNPC_MetroPolice::AdministerJustice( void )
 //-----------------------------------------------------------------------------
 int CNPC_MetroPolice::SelectSchedule( void )
 {
+#ifdef HL2SB
+	if ( !GetEnemy() && HasCondition( COND_IN_PVS ) && AI_GetNearestPlayer( GetAbsOrigin() ) && !AI_GetNearestPlayer( GetAbsOrigin() )->IsAlive() )
+#else
 	if ( !GetEnemy() && HasCondition( COND_IN_PVS ) && AI_GetSinglePlayer() && !AI_GetSinglePlayer()->IsAlive() )
+#endif
 	{
 		return SCHED_PATROL_WALK;
 	}

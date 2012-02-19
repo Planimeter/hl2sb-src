@@ -639,7 +639,11 @@ void CAI_BaseNPC::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize, bo
 #ifdef HL2_EPISODIC
 	if ( AI_IsSinglePlayer() )
 	{
+#ifdef HL2SB
+		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 		if ( pPlayer->IRelationType( this ) != D_LI )
 		{
 			CNPC_Alyx *alyx = CNPC_Alyx::GetAlyx();
@@ -774,7 +778,11 @@ int CAI_BaseNPC::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		{
 			// See if the person that injured me is an NPC.
 			CAI_BaseNPC *pAttacker = dynamic_cast<CAI_BaseNPC *>( info.GetAttacker() );
+#ifdef HL2SB
+			CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 			CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 			if( pAttacker && pAttacker->IsAlive() && pPlayer )
 			{
@@ -3108,7 +3116,11 @@ void CAI_BaseNPC::UpdateEfficiency( bool bInPVS )
 
 	//---------------------------------
 
-	CBasePlayer *pPlayer = AI_GetSinglePlayer(); 
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
+	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 	static Vector vPlayerEyePosition;
 	static Vector vPlayerForward;
 	static int iPrevFrame = -1;
@@ -3352,7 +3364,11 @@ void CAI_BaseNPC::UpdateSleepState( bool bInPVS )
 {
 	if ( GetSleepState() > AISS_AWAKE )
 	{
+#ifdef HL2SB
+		CBasePlayer *pLocalPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+#endif
 		if ( !pLocalPlayer )
 		{
 			if ( gpGlobals->maxClients > 1 )
@@ -3552,7 +3568,11 @@ void CAI_BaseNPC::RebalanceThinks()
 
 		int i;
 
+#ifdef HL2SB
+		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 		Vector vPlayerForward;
 		Vector vPlayerEyePosition;
 
@@ -3833,7 +3853,11 @@ void CAI_BaseNPC::SetPlayerAvoidState( void )
 
 		GetPlayerAvoidBounds( &vMins, &vMaxs );
 
+#ifdef HL2SB
+		CBasePlayer *pLocalPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+#endif
 
 		if ( pLocalPlayer )
 		{
@@ -9894,7 +9918,7 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 	if ( !stricmp( name, "!player" ))
 	{
 #ifdef HL2SB
-		return AI_GetNearestPlayer( GetAbsOrigin() );
+		return ( CBaseEntity * )AI_GetNearestPlayer( GetAbsOrigin() );
 #else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
 #endif
@@ -9913,7 +9937,7 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 		// FIXME: look at CBaseEntity *CNPCSimpleTalker::FindNearestFriend(bool fPlayer)
 		// punt for now
 #ifdef HL2SB
-		return AI_GetNearestPlayer( GetAbsOrigin() );
+		return ( CBaseEntity * )AI_GetNearestPlayer( GetAbsOrigin() );
 #else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
 #endif
@@ -9937,7 +9961,7 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 			DevMsg( "ERROR: \"player\" is no longer used, use \"!player\" in vcd instead!\n" );
 		}
 #ifdef HL2SB
-		return AI_GetNearestPlayer( GetAbsOrigin() );
+		return ( CBaseEntity * )AI_GetNearestPlayer( GetAbsOrigin() );
 #else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
 #endif

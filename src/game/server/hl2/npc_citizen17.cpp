@@ -930,7 +930,11 @@ void CNPC_Citizen::GatherConditions()
 	// assume the player is 'staring' and wants health.
 	if( CanHeal() )
 	{
+#ifdef HL2SB
+		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 		if ( !pPlayer )
 		{
@@ -1439,7 +1443,11 @@ bool CNPC_Citizen::ShouldDeferToFollowBehavior()
 //-----------------------------------------------------------------------------
 int CNPC_Citizen::TranslateSchedule( int scheduleType ) 
 {
+#ifdef HL2SB
+	CBasePlayer *pLocalPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+#endif
 
 	switch( scheduleType )
 	{
@@ -1494,7 +1502,11 @@ int CNPC_Citizen::TranslateSchedule( int scheduleType )
 			}
 			else
 			{
-				CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#ifdef HL2SB
+				CBaseEntity *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
+				CBaseEntity *pPlayer = AI_GetSinglePlayer();
+#endif
 				if ( pPlayer && GetEnemy() && ( ( GetEnemy()->GetAbsOrigin() - 
 					pPlayer->GetAbsOrigin() ).LengthSqr() < RPG_SAFE_DISTANCE * RPG_SAFE_DISTANCE ) )
 				{
@@ -1767,7 +1779,11 @@ void CNPC_Citizen::RunTask( const Task_t *pTask )
 					}
 
 					Vector vecEnemyPos = GetEnemy()->BodyTarget(GetAbsOrigin(), false);
+#ifdef HL2SB
+					CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 					CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 					if ( pPlayer && ( ( vecEnemyPos - pPlayer->GetAbsOrigin() ).LengthSqr() < RPG_SAFE_DISTANCE * RPG_SAFE_DISTANCE ) )
 					{
 						m_bRPGAvoidPlayer = true;
@@ -2507,7 +2523,11 @@ bool CNPC_Citizen::SpeakCommandResponse( AIConcept_t concept, const char *modifi
 						   CFmtStr( "numselected:%d,"
 									"useradio:%d%s",
 									( GetSquad() ) ? GetSquad()->NumMembers() : 1,
+#ifdef HL2SB
 									ShouldSpeakRadio( AI_GetSinglePlayer() ),
+#else
+									ShouldSpeakRadio( AI_GetNearestPlayer( GetAbsOrigin() ) ),
+#endif
 									( modifiers ) ? CFmtStr(",%s", modifiers).operator const char *() : "" ) );
 }
 

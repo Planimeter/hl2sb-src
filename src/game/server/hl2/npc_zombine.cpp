@@ -415,7 +415,11 @@ void CNPC_Zombine::GatherGrenadeConditions( void )
 	if ( m_ActBusyBehavior.IsActive() )
 		return;
 
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 	if ( pPlayer && pPlayer->FVisible( this ) )
 	{
@@ -614,7 +618,11 @@ bool CNPC_Zombine::AllowedToSprint( void )
 
 	int iChance = SPRINT_CHANCE_VALUE;
 
+#ifdef HL2SB
+	CHL2MP_Player *pPlayer = dynamic_cast <CHL2MP_Player*> ( AI_GetNearestPlayer( GetAbsOrigin() ) );
+#else
 	CHL2_Player *pPlayer = dynamic_cast <CHL2_Player*> ( AI_GetSinglePlayer() );
+#endif
 
 	if ( pPlayer )
 	{

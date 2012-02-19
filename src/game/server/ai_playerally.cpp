@@ -417,7 +417,11 @@ void CAI_PlayerAlly::GatherConditions( void )
 		SetCondition( COND_TALKER_CLIENTUNSEEN );
 	}
 
+#ifdef HL2SB
+	CBasePlayer *pLocalPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+#endif
 
 	if ( !pLocalPlayer )
 	{
@@ -470,7 +474,11 @@ void CAI_PlayerAlly::GatherEnemyConditions( CBaseEntity *pEnemy )
 		{
 			if( Classify() == CLASS_PLAYER_ALLY_VITAL && hl2_episodic.GetBool() )
 			{
+#ifdef HL2SB
+				CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 				CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 				if( pPlayer )
 				{
@@ -1182,7 +1190,11 @@ void CAI_PlayerAlly::Event_Killed( const CTakeDamageInfo &info )
 	// notify the player
 	if ( IsInPlayerSquad() )
 	{
+#ifdef HL2SB
+		CBasePlayer *player = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *player = AI_GetSinglePlayer();
+#endif
 		if ( player )
 		{
 			variant_t emptyVariant;
@@ -1469,7 +1481,11 @@ bool CAI_PlayerAlly::IsOkToSpeak( ConceptCategory_t category, bool fRespondingTo
 		}
 
 		// Don't talk if we're too far from the player
-		CBaseEntity *pPlayer = AI_GetSinglePlayer();
+#ifdef HL2SB
+		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
+		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 		if ( pPlayer )
 		{
 			float flDist = sv_npc_talker_maxdist.GetFloat();

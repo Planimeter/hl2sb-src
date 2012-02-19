@@ -811,7 +811,11 @@ void CHunterFlechette::SeekThink()
 //-----------------------------------------------------------------------------
 void CHunterFlechette::DopplerThink()
 {
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 	if ( !pPlayer )
 		return;
 
@@ -2408,7 +2412,11 @@ void CNPC_Hunter::ManageSiegeTargets()
 	}
 
 	m_flTimeNextSiegeTargetAttack = gpGlobals->curtime + (hunter_siege_frequency.GetFloat() * RandomFloat( 0.8f, 1.2f) );
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 	// Start by assuming we are not going to create a siege target
 	bool bCreateSiegeTarget = false;

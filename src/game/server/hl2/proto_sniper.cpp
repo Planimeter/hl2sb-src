@@ -837,7 +837,11 @@ void CProtoSniper::PaintTarget( const Vector &vecTarget, float flPaintTime )
 //-----------------------------------------------------------------------------
 bool CProtoSniper::IsPlayerAllySniper()
 {
-	CBaseEntity *pPlayer = AI_GetSinglePlayer();
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
+	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 	return IRelationType( pPlayer ) == D_LI;
 }
@@ -1395,7 +1399,11 @@ int CProtoSniper::SelectSchedule ( void )
 		return SCHED_RELOAD;
 	}
 
+#ifdef HL2SB
+	if( !AI_GetNearestPlayer( GetAbsOrigin() )->IsAlive() && m_bKilledPlayer )
+#else
 	if( !AI_GetSinglePlayer()->IsAlive() && m_bKilledPlayer )
+#endif
 	{
 		if( HasCondition(COND_IN_PVS) )
 		{
@@ -1960,7 +1968,11 @@ void CProtoSniper::StartTask( const Task_t *pTask )
 	{
 	case TASK_SNIPER_PLAYER_DEAD:
 		{
+#ifdef HL2SB
+			m_hSweepTarget = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 			m_hSweepTarget = AI_GetSinglePlayer();
+#endif
 			SetWait( 4.0f );
 			LaserOn( m_hSweepTarget->GetAbsOrigin(), vec3_origin );
 		}
@@ -2605,10 +2617,18 @@ Vector CProtoSniper::LeadTarget( CBaseEntity *pTarget )
 CBaseEntity *CProtoSniper::PickDeadPlayerTarget()
 {
 	const int iSearchSize = 32;
-	CBaseEntity *pTarget = AI_GetSinglePlayer();
+#ifdef HL2SB
+	CBasePlayer *pTarget = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
+	CBasePlayer *pTarget = AI_GetSinglePlayer();
+#endif
 	CBaseEntity *pEntities[ iSearchSize ];
 
+#ifdef HL2SB
+	int iNumEntities = UTIL_EntitiesInSphere( pEntities, iSearchSize, AI_GetNearestPlayer( GetAbsOrigin() )->GetAbsOrigin(), 180.0f, 0 );
+#else
 	int iNumEntities = UTIL_EntitiesInSphere( pEntities, iSearchSize, AI_GetSinglePlayer()->GetAbsOrigin(), 180.0f, 0 );
+#endif
 
 	// Not very robust, but doesn't need to be. Randomly select a nearby object in the list that isn't an NPC.
 	if( iNumEntities > 0 )

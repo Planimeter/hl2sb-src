@@ -646,7 +646,11 @@ void CWeaponStriderBuster::Detonate( void )
 	if ( !m_bDud && pVictim )
 	{
 		// Kill the strider (with magic effect)
+#ifdef HL2SB
+		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 		CTakeDamageInfo info( pPlayer, this, RandomVector( -100.0f, 100.0f ), GetAbsOrigin(), pVictim->GetHealth(), DMG_GENERIC );
 		pVictim->TakeDamage( info );
 

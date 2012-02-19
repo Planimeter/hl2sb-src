@@ -682,7 +682,11 @@ CBaseEntity* CNPC_CScanner::BestInspectTarget(void)
 
 	if ( m_bOnlyInspectPlayers )
 	{
+#ifdef HL2SB
+		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 		if ( !pPlayer )
 			return NULL;
 

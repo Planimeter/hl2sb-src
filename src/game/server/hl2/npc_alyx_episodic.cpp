@@ -894,7 +894,11 @@ void CNPC_Alyx::AnalyzeGunfireSound( CSound *pSound )
 
 	CBaseEntity *pSoundTarget = pSound->m_hTarget.Get();
 
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 	Assert( pPlayer != NULL );
 
@@ -1036,7 +1040,11 @@ void CNPC_Alyx::EnemyIgnited( CAI_BaseNPC *pVictim )
 //-----------------------------------------------------------------------------
 void CNPC_Alyx::CombineBallSocketed( int iNumBounces )
 {
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 	
 	if ( !pPlayer || !FVisible(pPlayer) )
 	{
@@ -1182,7 +1190,11 @@ void CNPC_Alyx::DoCustomSpeechAI( void )
 {
 	BaseClass::DoCustomSpeechAI();
 
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 	if ( HasCondition(COND_NEW_ENEMY) && GetEnemy() )
 	{
@@ -1310,7 +1322,11 @@ void CNPC_Alyx::DoCustomSpeechAI( void )
 			{
 				m_SpeechWatch_LostPlayer.Set( 5,8 );
 				m_SpeechWatch_LostPlayer.Start();
+#ifdef HL2SB
+				m_MoveMonitor.SetMark( AI_GetNearestPlayer( GetAbsOrigin() ), 48 );
+#else
 				m_MoveMonitor.SetMark( AI_GetSinglePlayer(), 48 );
+#endif
 			}
 			else if ( m_SpeechWatch_LostPlayer.Expired() )
 			{
@@ -1319,7 +1335,11 @@ void CNPC_Alyx::DoCustomSpeechAI( void )
 					( !pPlayer || pPlayer->GetAbsOrigin().DistToSqr(GetAbsOrigin()) > ALYX_DARKNESS_LOST_PLAYER_DIST ) )
 				{
 					// only speak if player hasn't moved.
+#ifdef HL2SB
+					if ( m_MoveMonitor.TargetMoved( AI_GetNearestPlayer( GetAbsOrigin() ) ) )
+#else
 					if ( m_MoveMonitor.TargetMoved( AI_GetSinglePlayer() ) )
+#endif
 					{
 						SpeakIfAllowed( "TLK_DARKNESS_LOSTPLAYER" );
 						m_SpeechWatch_LostPlayer.Set(10);
@@ -3331,7 +3351,11 @@ void CNPC_Alyx::InputVehiclePunted( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CNPC_Alyx::InputOutsideTransition( inputdata_t &inputdata )
 {
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 	if ( pPlayer && pPlayer->IsInAVehicle() )
 	{
 		if ( ShouldAlwaysTransition() == false )

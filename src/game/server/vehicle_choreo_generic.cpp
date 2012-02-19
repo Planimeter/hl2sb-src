@@ -722,7 +722,11 @@ void CPropVehicleChoreoGeneric::InputEnterVehicle( inputdata_t &inputdata )
 	if ( pPlayer == NULL )
 	{
 		// Activator was not a player, just grab the single-player player.
+#ifdef HL2SB
+		pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		pPlayer = AI_GetSinglePlayer();
+#endif
 		if ( pPlayer == NULL )
 			return;
 	}
@@ -752,7 +756,11 @@ void CPropVehicleChoreoGeneric::InputEnterVehicleImmediate( inputdata_t &inputda
 	if ( pPlayer == NULL )
 	{
 		// Activator was not a player, just grab the singleplayer player.
+#ifdef HL2SB
+		pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		pPlayer = AI_GetSinglePlayer();
+#endif
 		if ( pPlayer == NULL )
 			return;
 	}
