@@ -973,15 +973,7 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 		{
 			if ( pOldLevel )
 			{
-#ifdef HL2SB
-				// Matt:
-				// We need to create a file that is stored inbetween the changes with all player data in a seperate file as a replacement.
-
 				MapEntity_ParseAllEntities( pMapEntities );
-				return false;
-#else
-				MapEntity_ParseAllEntities( pMapEntities );
-#endif
 			}
 			else
 			{
