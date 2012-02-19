@@ -1000,7 +1000,7 @@ void CAI_StandoffBehavior::OnChangeTacticalConstraints()
 bool CAI_StandoffBehavior::PlayerIsLeading()
 {
 #ifdef HL2SB
-	CBaseEntity *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+	CBaseEntity *pPlayer = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
 #else
 	CBaseEntity *pPlayer = AI_GetSinglePlayer();
 #endif
@@ -1012,7 +1012,7 @@ bool CAI_StandoffBehavior::PlayerIsLeading()
 CBaseEntity *CAI_StandoffBehavior::GetPlayerLeader()
 {
 #ifdef HL2SB
-	CBaseEntity *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+	CBaseEntity *pPlayer = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
 #else
 	CBaseEntity *pPlayer = AI_GetSinglePlayer();
 #endif

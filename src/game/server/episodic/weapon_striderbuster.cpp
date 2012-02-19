@@ -647,6 +647,7 @@ void CWeaponStriderBuster::Detonate( void )
 	{
 		// Kill the strider (with magic effect)
 #ifdef HL2SB
+		// Andrew; this is terrible. Find a way to fix this.
 		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
 #else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();

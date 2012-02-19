@@ -462,7 +462,7 @@ CAI_Hint *CAI_FearBehavior::FindFearWithdrawalDest()
 	hintCriteria.AddHintType( HINT_PLAYER_ALLY_FEAR_DEST );
 	hintCriteria.SetFlag( bits_HINT_NODE_VISIBLE_TO_PLAYER | bits_HINT_NOT_CLOSE_TO_ENEMY /*| bits_HINT_NODE_IN_VIEWCONE | bits_HINT_NPC_IN_NODE_FOV*/ );
 #ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+	CBasePlayer *pPlayer = AI_GetNearestVisiblePlayer( pOuter );
 	if( pPlayer )
 		hintCriteria.AddIncludePosition( pPlayer->GetAbsOrigin(), ( ai_fear_player_dist.GetFloat() ) );
 #else

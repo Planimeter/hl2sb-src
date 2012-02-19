@@ -1503,7 +1503,7 @@ int CNPC_Citizen::TranslateSchedule( int scheduleType )
 			else
 			{
 #ifdef HL2SB
-				CBaseEntity *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+				CBaseEntity *pPlayer = AI_GetNearestVisiblePlayer( this );
 #else
 				CBaseEntity *pPlayer = AI_GetSinglePlayer();
 #endif
@@ -1780,7 +1780,7 @@ void CNPC_Citizen::RunTask( const Task_t *pTask )
 
 					Vector vecEnemyPos = GetEnemy()->BodyTarget(GetAbsOrigin(), false);
 #ifdef HL2SB
-					CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+					CBasePlayer *pPlayer = AI_GetNearestVisiblePlayer( this );
 #else
 					CBasePlayer *pPlayer = AI_GetSinglePlayer();
 #endif
@@ -2524,9 +2524,9 @@ bool CNPC_Citizen::SpeakCommandResponse( AIConcept_t concept, const char *modifi
 									"useradio:%d%s",
 									( GetSquad() ) ? GetSquad()->NumMembers() : 1,
 #ifdef HL2SB
-									ShouldSpeakRadio( AI_GetSinglePlayer() ),
-#else
 									ShouldSpeakRadio( AI_GetNearestPlayer( GetAbsOrigin() ) ),
+#else
+									ShouldSpeakRadio( AI_GetSinglePlayer() ),
 #endif
 									( modifiers ) ? CFmtStr(",%s", modifiers).operator const char *() : "" ) );
 }

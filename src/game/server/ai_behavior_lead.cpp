@@ -557,7 +557,7 @@ int CAI_LeadBehavior::SelectSchedule()
 		if ( m_weaponname != NULL_STRING )
 		{
 #ifdef HL2SB
-			CBasePlayer *pFollower = AI_GetNearestPlayer( GetAbsOrigin() );
+			CBasePlayer *pFollower = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
 #else
 			CBasePlayer *pFollower = AI_GetSinglePlayer();
 #endif
@@ -589,7 +589,11 @@ int CAI_LeadBehavior::SelectSchedule()
 			else
 			{
 				// We have to collect data about the person we're leading around.
+#ifdef HL2SB
+				CBaseEntity *pFollower = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
+#else
 				CBaseEntity *pFollower = AI_GetSinglePlayer();
+#endif
 				if( pFollower )
 				{
 					float flFollowerDist = ( WorldSpaceCenter() - pFollower->WorldSpaceCenter() ).Length();
@@ -854,7 +858,7 @@ void CAI_LeadBehavior::StartTask( const Task_t *pTask )
 		case TASK_LEAD_RETRIEVE_WAIT:
 		{
 #ifdef HL2SB
-			m_MoveMonitor.SetMark( AI_GetNearestPlayer( GetAbsOrigin() ), 24 );
+			m_MoveMonitor.SetMark( AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() ), 24 );
 #else
 			m_MoveMonitor.SetMark( AI_GetSinglePlayer(), 24 );
 #endif
