@@ -271,6 +271,9 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	// the event should be "player_death"
 	int killer = engine->GetPlayerForUserID( event->GetInt("attacker") );
 	int victim = engine->GetPlayerForUserID( event->GetInt("userid") );
+#ifdef LUA_SDK
+	const char *killername = event->GetString( "attackername" );
+#endif
 	const char *killedwith = event->GetString( "weapon" );
 
 	char fullkilledwith[128];
@@ -313,8 +316,7 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	}
 	else
 	{
-		Q_strncpy( deathMsg.Killer.szName, killedwith, MAX_PLAYER_NAME_LENGTH );
-		fullkilledwith[0] = 0;
+		Q_strncpy( deathMsg.Killer.szName, killername, MAX_PLAYER_NAME_LENGTH );
 	}
 #endif
 	Q_strncpy( deathMsg.Victim.szName, victim_name, MAX_PLAYER_NAME_LENGTH );
@@ -355,11 +357,15 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	{
 		Q_snprintf( sDeathMsg, sizeof( sDeathMsg ), "%s killed %s", deathMsg.Killer.szName, deathMsg.Victim.szName );
 
+#ifndef LUA_SDK
 		if ( fullkilledwith && *fullkilledwith && (*fullkilledwith > 13 ) )
+#else
+		if ( fullkilledwith && *fullkilledwith && (*fullkilledwith > 13 ) && Q_strcmp( deathMsg.Killer.szName, fullkilledwith+6 ) )
+#endif
 		{
 			Q_strncat( sDeathMsg, VarArgs( " with %s.\n", fullkilledwith+6 ), sizeof( sDeathMsg ), COPY_ALL_CHARACTERS );
 		}
-#ifdef HL2SB
+#ifdef LUA_SDK
 		else
 		{
 			Q_strncat( sDeathMsg, "\n", sizeof( sDeathMsg ), COPY_ALL_CHARACTERS );

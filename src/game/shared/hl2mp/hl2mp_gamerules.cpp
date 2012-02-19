@@ -1009,6 +1009,10 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 	// Work out what killed the player, and send a message to all clients about it
 	const char *killer_weapon_name = "world";		// by default, the player is killed by the world
 	int killer_ID = 0;
+#if defined ( LUA_SDK )
+	const char *killer_class_name = "class C_World";		// by default, the player is killed by the world
+	const char *weapon_class_name = NULL;
+#endif
 
 	// Find the killer & the scorer
 #if defined ( LUA_SDK )
@@ -1025,6 +1029,8 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 	if ( lInfo.GetDamageCustom() )
 	{
 		killer_weapon_name = GetDamageCustomString( lInfo );
+		killer_class_name = pKiller->GetClassname();
+		weapon_class_name = pInflictor->GetClassname();
 #else
 	if ( info.GetDamageCustom() )
 	{
@@ -1034,6 +1040,18 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 		{
 			killer_ID = pScorer->GetUserID();
 		}
+
+#ifdef LUA_SDK
+		if ( !Q_strcmp( killer_class_name, weapon_class_name ) )
+		{
+			// If the inflictor is the killer,  then it must be their current weapon doing the damage
+			CAI_BaseNPC *pNPC = pKiller->MyNPCPointer();
+			if ( pNPC && pNPC->GetActiveWeapon() )
+			{
+				killer_weapon_name = pNPC->GetActiveWeapon()->GetClassname();
+			}
+		}
+#endif
 	}
 	else
 	{
@@ -1061,6 +1079,20 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 		else
 		{
 			killer_weapon_name = pInflictor->GetClassname();
+#ifdef LUA_SDK
+			killer_class_name = pKiller->GetClassname();
+			weapon_class_name = pInflictor->GetClassname();
+
+			if ( !Q_strcmp( killer_class_name, weapon_class_name ) )
+			{
+				// If the inflictor is the killer,  then it must be their current weapon doing the damage
+				CAI_BaseNPC *pNPC = pKiller->MyNPCPointer();
+				if ( pNPC && pNPC->GetActiveWeapon() )
+				{
+					killer_weapon_name = pNPC->GetActiveWeapon()->GetClassname();
+				}
+			}
+#endif
 		}
 
 		// strip the NPC_* or weapon_* from the inflictor's classname
@@ -1102,7 +1134,13 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 	{
 		event->SetInt("userid", pVictim->GetUserID() );
 		event->SetInt("attacker", killer_ID );
+#ifdef LUA_SDK
+		event->SetString("attackername", killer_class_name );
+#endif
 		event->SetString("weapon", killer_weapon_name );
+#ifdef LUA_SDK
+		event->SetString("weaponname", weapon_class_name );
+#endif
 		event->SetInt( "priority", 7 );
 		gameeventmanager->FireEvent( event );
 	}
