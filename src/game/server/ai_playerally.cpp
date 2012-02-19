@@ -366,13 +366,24 @@ void CAI_PlayerAlly::DisplayDeathMessage( void )
 	if ( npc_ally_deathmessage.GetBool() == 0 )
 		return;
 
-	CBaseEntity *pPlayer = AI_GetSinglePlayer();
-
+#ifdef HL2SB
+	for( int i = 1; i <= gpGlobals->maxClients; i++ )
+	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+		if ( pPlayer )	
+		{
+			UTIL_ShowMessageAll( GetDeathMessageText() );
+			ToBasePlayer(pPlayer)->NotifySinglePlayerGameEnding();
+		}
+	}
+#else
+	CBasePlayer *pPlayer = AI_GetSinglePlayer();
 	if ( pPlayer )	
 	{
 		UTIL_ShowMessage( GetDeathMessageText(), ToBasePlayer( pPlayer ) );
 		ToBasePlayer(pPlayer)->NotifySinglePlayerGameEnding();
 	}
+#endif 
 
 	CBaseEntity *pReload = CreatePlayerLoadSave( GetAbsOrigin(), 1.5f, 8.0f, 4.5f );
 

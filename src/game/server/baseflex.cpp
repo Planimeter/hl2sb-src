@@ -1197,7 +1197,11 @@ bool CBaseFlex::ProcessFlexAnimationSceneEvent( CSceneEventInfo *info, CChoreoSc
 					// only check occasionally
 					else if (info->m_flNext <= gpGlobals->curtime)
 					{
+#ifdef HL2SB
+						CBasePlayer *pPlayer = AI_GetNearestVisiblePlayer( this );
+#else
 						CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 
 						// if not in view, disable
 						info->m_bHasArrived = (pPlayer && !pPlayer->FInViewCone( this ) );

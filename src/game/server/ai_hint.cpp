@@ -1343,7 +1343,13 @@ bool CAI_Hint::HintMatchesCriteria( CAI_BaseNPC *pNPC, const CHintCriteria &hint
 
 	if ( hintCriteria.HasFlag(bits_HINT_HAS_LOS_TO_PLAYER|bits_HAS_EYEPOSITION_LOS_TO_PLAYER) )
 	{
+#ifdef HL2SB
+		CBasePlayer *pPlayer = AI_GetNearestVisiblePlayer( this );
+		if( !pPlayer )
+			pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 		if( pPlayer != NULL )
 		{

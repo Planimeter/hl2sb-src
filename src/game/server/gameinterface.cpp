@@ -973,7 +973,15 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 		{
 			if ( pOldLevel )
 			{
+#ifdef HL2SB
+				// Matt:
+				// We need to create a file that is stored inbetween the changes with all player data in a seperate file as a replacement.
+
 				MapEntity_ParseAllEntities( pMapEntities );
+				return false;
+#else
+				MapEntity_ParseAllEntities( pMapEntities );
+#endif
 			}
 			else
 			{
@@ -1276,7 +1284,11 @@ void CServerGameDLL::Think( bool finalTick )
 	if ( m_fAutoSaveDangerousTime != 0.0f && m_fAutoSaveDangerousTime < gpGlobals->curtime )
 	{
 		// The safety timer for a dangerous auto save has expired
+#ifdef HL2SB
+		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#else
 		CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 
 		if ( pPlayer && ( pPlayer->GetDeathTime() == 0.0f || pPlayer->GetDeathTime() > gpGlobals->curtime )
 			&& !pPlayer->IsSinglePlayerGameEnding()
@@ -2439,8 +2451,16 @@ void CServerGameClients::ClientActive( edict_t *pEdict, bool bLoadGame )
 
 	// Tell the sound controller to check looping sounds
 	CBasePlayer *pPlayer = ( CBasePlayer * )CBaseEntity::Instance( pEdict );
+#ifdef HL2SB
+	if( pPlayer )
+	{
+		CSoundEnvelopeController::GetController().CheckLoopingSoundsForPlayer( pPlayer );
+		SceneManager_ClientActive( pPlayer );
+	}
+#else
 	CSoundEnvelopeController::GetController().CheckLoopingSoundsForPlayer( pPlayer );
 	SceneManager_ClientActive( pPlayer );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -2892,7 +2912,11 @@ void CServerGameClients::GetBugReportInfo( char *buf, int buflen )
 
 	if ( gpGlobals->maxClients == 1 )
 	{
+#ifdef HL2SB
+		CBaseEntity *ent = FindPickerEntity( UTIL_GetLocalPlayer() );
+#else
 		CBaseEntity *ent = FindPickerEntity( UTIL_PlayerByIndex(1) );
+#endif
 		if ( ent )
 		{
 			Q_snprintf( buf, buflen, "Picker %i/%s - ent %s model %s\n",

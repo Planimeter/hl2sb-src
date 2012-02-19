@@ -72,6 +72,38 @@ inline CBasePlayer *AI_GetNearestPlayer( const Vector& pos )
 	
 	return pPlayer;
 }
+
+inline CBasePlayer *AI_GetNearestPlayer( const CBaseEntity* pEntity )
+{
+	return pEntity ? AI_GetNearestPlayer( pEntity->GetAbsOrigin() ) : AI_GetNearestPlayer( vec3_origin );
+}
+
+inline CBasePlayer *AI_GetNearestVisiblePlayer( CBaseEntity *pEntity, int mask = MASK_BLOCKLOS )
+{
+	const Vector& pos = pEntity->GetAbsOrigin();
+
+	CBasePlayer *pPlayer = NULL;
+	float	flNearestDistSqr = FLT_MAX;
+	float	flDistSqr;
+	for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
+	{
+		CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
+		if(!pEnt || !pEnt->IsPlayer())
+			continue;
+
+		// Distance is the deciding factor
+		flDistSqr = ( pos - pEnt->GetAbsOrigin() ).LengthSqr();
+
+		// Closer, take it
+		if ( flDistSqr < flNearestDistSqr && pEntity->FVisible( pEnt, mask ) )
+		{
+			flNearestDistSqr = flDistSqr;
+			pPlayer = pEnt;
+		}
+	}
+
+	return pPlayer;
+}
 #endif
 
 inline bool AI_IsSinglePlayer()
