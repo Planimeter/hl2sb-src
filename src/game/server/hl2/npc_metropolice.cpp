@@ -5131,7 +5131,11 @@ void CNPC_MetroPolice::VPhysicsCollision( int index, gamevcollisionevent_t *pEve
 
 	if ( pEvent->pObjects[otherIndex]->GetGameFlags() & FVPHYSICS_PLAYER_HELD )
 	{
+#ifdef HL2SB
+		CHL2MP_Player *pPlayer = dynamic_cast<CHL2MP_Player *>(AI_GetNearestPlayer( GetAbsOrigin() ));
+#else
 		CHL2_Player *pPlayer = dynamic_cast<CHL2_Player *>(UTIL_PlayerByIndex( 1 ));
+#endif
 
 		// See if it's being held by the player
 		if ( pPlayer != NULL && pPlayer->IsHoldingEntity( pHitEntity ) )
