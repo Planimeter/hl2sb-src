@@ -8657,7 +8657,12 @@ void CAI_BaseNPC::DrawDebugGeometryOverlays(void)
 
 		info.SetDamage( m_iHealth );
 		info.SetAttacker( this );
+#ifdef HL2SB
+		// Fix for multiplayer
+		info.SetInflictor( (CBaseEntity *)this );
+#else
 		info.SetInflictor( ( AI_IsSinglePlayer() ) ? (CBaseEntity *)AI_GetSinglePlayer() : (CBaseEntity *)this );
+#endif
 		info.SetDamageType( DMG_GENERIC );
 
 		m_debugOverlays &= ~OVERLAY_NPC_KILL_BIT;
@@ -9888,7 +9893,11 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 {
 	if ( !stricmp( name, "!player" ))
 	{
+#ifdef HL2SB
+		return AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
+#endif
 	}
 	else if ( !stricmp( name, "!enemy" ) )
 	{
@@ -9903,7 +9912,11 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 	{
 		// FIXME: look at CBaseEntity *CNPCSimpleTalker::FindNearestFriend(bool fPlayer)
 		// punt for now
+#ifdef HL2SB
+		return AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
+#endif
 	}
 	else if (!stricmp( name, "self" ))
 	{
@@ -9923,7 +9936,11 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 		{
 			DevMsg( "ERROR: \"player\" is no longer used, use \"!player\" in vcd instead!\n" );
 		}
+#ifdef HL2SB
+		return AI_GetNearestPlayer( GetAbsOrigin() );
+#else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
+#endif
 	}
 	else
 	{
@@ -11896,7 +11913,11 @@ bool CAI_BaseNPC::CineCleanup()
 			{
 				SetLocalOrigin( origin );
 
+#ifdef HL2SB
+				int drop = UTIL_DropToFloor( this, MASK_NPCSOLID, AI_GetNearestVisiblePlayer( this ) );
+#else
 				int drop = UTIL_DropToFloor( this, MASK_NPCSOLID, UTIL_GetLocalPlayer() );
+#endif
 
 				// Origin in solid?  Set to org at the end of the sequence
 				if ( ( drop < 0 ) || sv_test_scripted_sequences.GetBool() )
@@ -11973,7 +11994,11 @@ void CAI_BaseNPC::Teleport( const Vector *newPosition, const QAngle *newAngles, 
 
 bool CAI_BaseNPC::FindSpotForNPCInRadius( Vector *pResult, const Vector &vStartPos, CAI_BaseNPC *pNPC, float radius, bool bOutOfPlayerViewcone )
 {
+#ifdef HL2SB
+	CBasePlayer *pPlayer = AI_GetNearestPlayer( pNPC->GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 	QAngle fan;
 
 	fan.x = 0;
@@ -12497,11 +12522,15 @@ bool CAI_BaseNPC::IsPlayerAlly( CBasePlayer *pPlayer )
 	{
 		// in multiplayer mode we need a valid pPlayer 
 		// or override this virtual function
+#ifndef HL2SB
 		if ( !AI_IsSinglePlayer() )
 			return false;
 
 		// NULL means single player mode
 		pPlayer = UTIL_GetLocalPlayer();
+#else
+		pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+#endif
 	}
 
 	return ( !pPlayer || IRelationType( pPlayer ) == D_LI ); 
@@ -12795,7 +12824,11 @@ bool CAI_BaseNPC::FindNearestValidGoalPos( const Vector &vTestPoint, Vector *pRe
 
 	if ( vCandidate != vec3_invalid )
 	{
+#ifdef HL2SB
+		AI_Waypoint_t *pPathToPoint = GetPathfinder()->BuildRoute( GetAbsOrigin(), vCandidate, AI_GetNearestPlayer( GetAbsOrigin() ), 5*12, NAV_NONE, true );
+#else
 		AI_Waypoint_t *pPathToPoint = GetPathfinder()->BuildRoute( GetAbsOrigin(), vCandidate, AI_GetSinglePlayer(), 5*12, NAV_NONE, true );
+#endif
 		if ( pPathToPoint )
 		{
 			GetPathfinder()->UnlockRouteNodes( pPathToPoint );
