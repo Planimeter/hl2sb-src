@@ -48,29 +48,11 @@ inline CBasePlayer *AI_GetSinglePlayer()
 }
 
 #ifdef HL2SB
+// Andrew; these have been moved to UTIL_* functions, since we use them outside
+// of the scope of AI_
 inline CBasePlayer *AI_GetNearestPlayer( const Vector& pos )
 {
-	CBasePlayer *pPlayer = NULL;
-	float	flNearestDistSqr = FLT_MAX;
-	float	flDistSqr;
-	for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
-	{
-		CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
-		if(!pEnt || !pEnt->IsPlayer())
-			continue;
-
-		// Distance is the deciding factor
-		flDistSqr = ( pos - pEnt->GetAbsOrigin() ).LengthSqr();
-
-		// Closer, take it
-		if ( flDistSqr < flNearestDistSqr )
-		{
-			flNearestDistSqr = flDistSqr;
-			pPlayer = pEnt;
-		}
-	}
-	
-	return pPlayer;
+	return UTIL_GetNearestPlayer( pos );
 }
 
 inline CBasePlayer *AI_GetNearestPlayer( const CBaseEntity* pEntity )
@@ -80,29 +62,7 @@ inline CBasePlayer *AI_GetNearestPlayer( const CBaseEntity* pEntity )
 
 inline CBasePlayer *AI_GetNearestVisiblePlayer( CBaseEntity *pEntity, int mask = MASK_BLOCKLOS )
 {
-	const Vector& pos = pEntity->GetAbsOrigin();
-
-	CBasePlayer *pPlayer = NULL;
-	float	flNearestDistSqr = FLT_MAX;
-	float	flDistSqr;
-	for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
-	{
-		CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
-		if(!pEnt || !pEnt->IsPlayer())
-			continue;
-
-		// Distance is the deciding factor
-		flDistSqr = ( pos - pEnt->GetAbsOrigin() ).LengthSqr();
-
-		// Closer, take it
-		if ( flDistSqr < flNearestDistSqr && pEntity->FVisible( pEnt, mask ) )
-		{
-			flNearestDistSqr = flDistSqr;
-			pPlayer = pEnt;
-		}
-	}
-
-	return pPlayer;
+	return UTIL_GetNearestVisiblePlayer( pEntity, mask );
 }
 #endif
 

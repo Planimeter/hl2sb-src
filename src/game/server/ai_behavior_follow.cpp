@@ -2146,6 +2146,16 @@ void CAI_FollowGoal::EnableGoal( CAI_BaseNPC *pAI )
 		return;
 	
 	CBaseEntity *pGoalEntity = GetGoalEntity();
+#ifdef HL2SB
+	if ( !pGoalEntity )
+	{
+		if ( pAI->IRelationType(UTIL_GetNearestPlayer(pAI->GetAbsOrigin())) == D_LI )
+		{
+			pGoalEntity = UTIL_GetNearestPlayer(pAI->GetAbsOrigin());
+			SetGoalEntity( pGoalEntity );
+		}
+	}
+#else
 	if ( !pGoalEntity && AI_IsSinglePlayer() )
 	{
 		if ( pAI->IRelationType(UTIL_GetLocalPlayer()) == D_LI )
@@ -2154,6 +2164,7 @@ void CAI_FollowGoal::EnableGoal( CAI_BaseNPC *pAI )
 			SetGoalEntity( pGoalEntity );
 		}
 	}
+#endif
 
 	if ( pGoalEntity )
 		pBehavior->SetFollowGoal( this );

@@ -7471,7 +7471,11 @@ void CStripWeapons::StripWeapons(inputdata_t &data, bool stripSuit)
 	}
 	else if ( !g_pGameRules->IsDeathmatch() )
 	{
+#ifdef HL2SB
+		pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 		pPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	if ( pPlayer )
@@ -7567,7 +7571,11 @@ void CRevertSaved::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE 
 	SetNextThink( gpGlobals->curtime + LoadTime() );
 	SetThink( &CRevertSaved::LoadThink );
 
+#ifdef HL2SB
+	CBasePlayer *pPlayer = pActivator->IsPlayer() ? (CBasePlayer *)pActivator : UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 
 	if ( pPlayer )
 	{
@@ -7593,7 +7601,11 @@ void CRevertSaved::InputReload( inputdata_t &inputdata )
 	SetThink( &CRevertSaved::LoadThink );
 #endif
 
+#ifdef HL2SB
+	CBasePlayer *pPlayer = inputdata.pActivator->IsPlayer() ? (CBasePlayer *)inputdata.pActivator : UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 
 	if ( pPlayer )
 	{
@@ -7705,7 +7717,11 @@ void CMovementSpeedMod::InputSpeedMod(inputdata_t &data)
 	}
 	else if ( !g_pGameRules->IsDeathmatch() )
 	{
+#ifdef HL2SB
+		pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 		pPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	if ( pPlayer )

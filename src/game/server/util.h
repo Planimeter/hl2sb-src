@@ -231,6 +231,11 @@ CBasePlayer	*UTIL_PlayerByIndex( int playerIndex );
 // not useable in multiplayer - see UTIL_GetListenServerHost()
 CBasePlayer* UTIL_GetLocalPlayer( void );
 
+#ifdef HL2SB
+CBasePlayer *UTIL_GetNearestPlayer( const Vector& pos );
+CBasePlayer *UTIL_GetNearestVisiblePlayer( CBaseEntity *pEntity, int mask = MASK_BLOCKLOS );
+#endif
+
 // get the local player on a listen server
 CBasePlayer *UTIL_GetListenServerHost( void );
 

@@ -2904,11 +2904,7 @@ void CServerGameClients::GetBugReportInfo( char *buf, int buflen )
 
 	if ( gpGlobals->maxClients == 1 )
 	{
-#ifdef HL2SB
-		CBaseEntity *ent = FindPickerEntity( UTIL_GetLocalPlayer() );
-#else
 		CBaseEntity *ent = FindPickerEntity( UTIL_PlayerByIndex(1) );
-#endif
 		if ( ent )
 		{
 			Q_snprintf( buf, buflen, "Picker %i/%s - ent %s model %s\n",

@@ -676,7 +676,11 @@ void CPropJeep::Think( void )
 {
 	BaseClass::Think();
 
+#ifdef HL2SB
+	CBasePlayer	*pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer	*pPlayer = UTIL_GetLocalPlayer();
+#endif
 
 	if ( m_bEngineLocked )
 	{

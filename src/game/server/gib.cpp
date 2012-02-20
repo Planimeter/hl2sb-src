@@ -400,7 +400,11 @@ bool CGib::SUB_AllowedToFade( void )
 			return false;
 	}
 
+#ifdef HL2SB
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBasePlayer *pPlayer = ( AI_IsSinglePlayer() ) ? UTIL_GetLocalPlayer() : NULL;
+#endif
 
 	if ( pPlayer && pPlayer->FInViewCone( this ) && m_bForceRemove == false )
 	{

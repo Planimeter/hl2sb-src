@@ -26,7 +26,11 @@ CBaseEntity* MoveToRandomSpot( CBaseEntity *pEnt )
 {
 	if ( pEnt )
 	{
+#ifdef HL2SB
+		CBasePlayer *pLocalPlayer = UTIL_GetNearestPlayer( pEnt->GetAbsOrigin() );
+#else
 		CBasePlayer *pLocalPlayer = UTIL_GetLocalPlayer();
+#endif
 		if ( pLocalPlayer )
 		{			
 			Vector vForward;

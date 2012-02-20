@@ -847,29 +847,10 @@ void CRagdollLRURetirement::Update( float frametime ) // EPISODIC VERSION
 	// so just remove the furthest one.
 	int furthestOne = m_LRU.Head();
 	float furthestDistSq = 0;
-#ifndef HL2SB
 #ifdef CLIENT_DLL
 	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
 #else
 	CBasePlayer  *pPlayer = UTIL_GetLocalPlayer();
-#endif
-#else
-#ifdef CLIENT_DLL
-	C_BasePlayer *pPlayer = NULL;
-#else
-	CBasePlayer  *pPlayer = NULL;
-#endif
-	// HACKHACK: Half-Life 2: Sandbox uses episodic code, which internally is
-	// implied for singleplayer mods only. Here, we just don't call
-	// UTIL_GetLocalPlayer to avoid asserts thrown by the function.
-	if ( gpGlobals->maxClients == 1 )
-	{
-#ifdef CLIENT_DLL
-		pPlayer = C_BasePlayer::GetLocalPlayer();
-#else
-		pPlayer = UTIL_GetLocalPlayer();
-#endif
-	}
 #endif
 
 	if (pPlayer && m_LRU.Count() > iMaxRagdollCount) // find the furthest one algorithm

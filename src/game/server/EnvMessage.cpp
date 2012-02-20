@@ -105,7 +105,11 @@ void CMessage::InputShowMessage( inputdata_t &inputdata )
 		}
 		else
 		{
+#ifdef HL2SB
+			pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 			pPlayer = (gpGlobals->maxClients > 1) ? NULL : UTIL_GetLocalPlayer();
+#endif
 		}
 
 		if ( pPlayer && pPlayer->IsPlayer() )

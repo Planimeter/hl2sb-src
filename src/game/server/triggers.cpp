@@ -1439,6 +1439,14 @@ void CChangeLevel::InputChangeLevel( inputdata_t &inputdata )
 		if ( pPlayer && ( !pPlayer->IsAlive() || pPlayer->GetBonusChallenge() > 0 ) )
 			return;
 	}
+#ifdef HL2SB
+	else
+	{
+		CBasePlayer *pPlayer = inputdata.pActivator->IsPlayer() ? (CBasePlayer *)inputdata.pActivator : NULL;
+		if ( pPlayer && ( !pPlayer->IsAlive() || pPlayer->GetBonusChallenge() > 0 ) )
+			return;
+	}
+#endif
 
 	ChangeLevelNow( inputdata.pActivator );
 }
@@ -2945,7 +2953,11 @@ void CTriggerCamera::Enable( void )
 
 	if ( !m_hPlayer || !m_hPlayer->IsPlayer() )
 	{
+#ifdef HL2SB
+		m_hPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 		m_hPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	if ( !m_hPlayer )

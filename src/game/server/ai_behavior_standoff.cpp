@@ -716,7 +716,11 @@ Vector CAI_StandoffBehavior::GetStandoffGoalPosition()
 	}
 	else if( PlayerIsLeading() )
 	{
+#ifdef HL2SB
+		return UTIL_GetNearestPlayer( GetOuter()->GetAbsOrigin() )->GetAbsOrigin();
+#else
 		return UTIL_GetLocalPlayer()->GetAbsOrigin();
+#endif
 	}
 	else
 	{
@@ -768,7 +772,11 @@ void CAI_StandoffBehavior::UpdateBattleLines()
 			if ( m_params.fPlayerIsBattleline )
 			{
 				const float DIST_PLAYER_PLANE = 180;
+#ifdef HL2SB
+				CBaseEntity *pPlayer = UTIL_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
+#else
 				CBaseEntity *pPlayer = UTIL_GetLocalPlayer();
+#endif
 				
 				BattleLine_t playerLine;
 

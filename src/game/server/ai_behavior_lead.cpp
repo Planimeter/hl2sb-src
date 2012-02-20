@@ -147,10 +147,17 @@ void CAI_LeadBehavior::LeadPlayer( const AI_LeadArgs_t &leadArgs, CAI_LeadBehavi
 {
 #ifndef CSTRIKE_DLL
 	CAI_PlayerAlly *pOuter = dynamic_cast<CAI_PlayerAlly*>(GetOuter());
+#ifdef HL2SB
+	if ( pOuter )
+	{
+		pOuter->SetSpeechTarget( UTIL_GetNearestPlayer( pOuter->GetAbsOrigin() ) );
+	}
+#else
 	if ( pOuter && AI_IsSinglePlayer() )
 	{
 		pOuter->SetSpeechTarget( UTIL_GetLocalPlayer() );
 	}
+#endif
 #endif
 
 	if( SetGoal( leadArgs ) )

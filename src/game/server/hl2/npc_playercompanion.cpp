@@ -348,9 +348,15 @@ void CNPC_PlayerCompanion::GatherConditions()
 {
 	BaseClass::GatherConditions();
 
+#ifndef HL2SB
 	if ( AI_IsSinglePlayer() )
 	{
+#endif
+#ifdef HL2SB
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 
 		if ( Classify() == CLASS_PLAYER_ALLY_VITAL )
 		{
@@ -438,7 +444,9 @@ void CNPC_PlayerCompanion::GatherConditions()
 				m_flBoostSpeed *= mult;
 			}
 		}
+#ifndef HL2SB
 	}
+#endif
 
 	// Update our readiness if we're 
 	if ( IsReadinessCapable() )
@@ -496,9 +504,15 @@ void CNPC_PlayerCompanion::GatherConditions()
 		DoCustomSpeechAI();
 	}
 
+#ifdef HL2SB
+	if ( hl2_episodic.GetBool() && !GetEnemy() && HasCondition( COND_HEAR_PLAYER ) )
+	{
+		Vector los = ( UTIL_GetNearestPlayer( GetAbsOrigin() )->EyePosition() - EyePosition() );
+#else
 	if ( AI_IsSinglePlayer() && hl2_episodic.GetBool() && !GetEnemy() && HasCondition( COND_HEAR_PLAYER ) )
 	{
 		Vector los = ( UTIL_GetLocalPlayer()->EyePosition() - EyePosition() );
+#endif
 		los.z = 0;
 		VectorNormalize( los );
 
@@ -978,9 +992,13 @@ int CNPC_PlayerCompanion::TranslateSchedule( int scheduleType )
 
 			if( CanReload() && pWeapon->UsesClipsForAmmo1() && pWeapon->Clip1() < ( pWeapon->GetMaxClip1() * .5 ) && OccupyStrategySlot( SQUAD_SLOT_EXCLUSIVE_RELOAD ) )
 			{
+#ifdef HL2SB
+					CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 				if ( AI_IsSinglePlayer() )
 				{
 					CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 					pWeapon = pPlayer->GetActiveWeapon();
 					if( pWeapon && pWeapon->UsesClipsForAmmo1() && 
 						pWeapon->Clip1() < ( pWeapon->GetMaxClip1() * .75 ) &&
@@ -988,7 +1006,9 @@ int CNPC_PlayerCompanion::TranslateSchedule( int scheduleType )
 					{
 						SpeakIfAllowed( TLK_PLRELOAD );
 					}
+#ifndef HL2SB
 				}
+#endif
 				return SCHED_RELOAD;
 			}
 		}
@@ -1161,10 +1181,14 @@ void CNPC_PlayerCompanion::RunTask( const Task_t *pTask )
 
 		case TASK_PC_GET_PATH_OFF_COMPANION:
 			{
+#ifdef HL2SB
+				GetNavigator()->SetAllowBigStep( UTIL_GetNearestPlayer( GetAbsOrigin() ) );
+#else
 				if ( AI_IsSinglePlayer() )
 				{
 					GetNavigator()->SetAllowBigStep( UTIL_GetLocalPlayer() );
 				}
+#endif
 				ChainRunTask( TASK_MOVE_AWAY_PATH, 48 );
 			}
 			break;
@@ -3104,8 +3128,10 @@ bool CNPC_PlayerCompanion::ShouldAlwaysTransition( void )
 //-----------------------------------------------------------------------------
 void CNPC_PlayerCompanion::InputOutsideTransition( inputdata_t &inputdata )
 {
+#ifndef HL2SB
 	if ( !AI_IsSinglePlayer() )
 		return;
+#endif
 
 	// Must want to do this
 	if ( ShouldAlwaysTransition() == false )
@@ -3115,7 +3141,11 @@ void CNPC_PlayerCompanion::InputOutsideTransition( inputdata_t &inputdata )
 	if ( IsInAVehicle() )
 		return;
 
+#ifdef HL2SB
+	CBaseEntity *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 	CBaseEntity *pPlayer = UTIL_GetLocalPlayer();
+#endif
 	const Vector &playerPos = pPlayer->GetAbsOrigin();
 
 	// Mark us as already having succeeded if we're vital or always meant to come with the player

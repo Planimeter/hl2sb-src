@@ -1023,7 +1023,11 @@ void CAI_PlayerAlly::StartTask( const Task_t *pTask )
 			if ( HasCondition( COND_PLAYER_PUSHING ) && AI_IsSinglePlayer() )
 			{
 				// @TODO (toml 10-22-04): cope with multiplayer push
+#ifdef HL2SB
+				GetMotor()->SetIdealYawToTarget( UTIL_GetNearestPlayer( GetAbsOrigin() )->WorldSpaceCenter() );
+#else
 				GetMotor()->SetIdealYawToTarget( UTIL_GetLocalPlayer()->WorldSpaceCenter() );
+#endif
 			}
 			BaseClass::StartTask( pTask );
 			break;

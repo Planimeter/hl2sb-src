@@ -2710,7 +2710,11 @@ void CFlexCycler::Think( void )
 	Vector forward, right, up;
 	GetVectors( &forward, &right, &up );
 
+#ifdef HL2SB
+	CBaseEntity *pPlayer = (CBaseEntity *)UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 	CBaseEntity *pPlayer = (CBaseEntity *)UTIL_GetLocalPlayer();
+#endif
 	if (pPlayer)
 	{
 		if (pPlayer->GetSmoothedVelocity().Length() != 0 && DotProduct( forward, pPlayer->EyePosition() - EyePosition()) > 0.5)

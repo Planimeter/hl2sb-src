@@ -4832,14 +4832,22 @@ void CAI_BaseNPC::RunAI( void )
 		}
 	}
 
+#ifdef HL2SB
+	if( ai_debug_loners.GetBool() && !IsInSquad() )
+#else
 	if( ai_debug_loners.GetBool() && !IsInSquad() && AI_IsSinglePlayer() )
+#endif
 	{
 		Vector right;
 		Vector vecPoint;
 
 		vecPoint = EyePosition() + Vector( 0, 0, 12 );
 
+#ifdef HL2SB
+		UTIL_GetNearestPlayer( GetAbsOrigin() )->GetVectors( NULL, &right, NULL );
+#else
 		UTIL_GetLocalPlayer()->GetVectors( NULL, &right, NULL );
+#endif
 
 		NDebugOverlay::Line( vecPoint, vecPoint + Vector( 0, 0, 64 ), 255, 0, 0, false , 0.1 );
 		NDebugOverlay::Line( vecPoint, vecPoint + Vector( 0, 0, 32 ) + right * 32, 255, 0, 0, false , 0.1 );
@@ -12553,7 +12561,7 @@ bool CAI_BaseNPC::IsPlayerAlly( CBasePlayer *pPlayer )
 		// NULL means single player mode
 		pPlayer = UTIL_GetLocalPlayer();
 #else
-		pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
+		pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
 #endif
 	}
 

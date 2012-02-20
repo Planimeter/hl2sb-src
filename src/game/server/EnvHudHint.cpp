@@ -76,7 +76,11 @@ void CEnvHudHint::InputShowHudHint( inputdata_t &inputdata )
 	}
 	else
 	{
+#ifdef HL2SB
+		pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 		pPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	if ( pPlayer )
@@ -105,7 +109,11 @@ void CEnvHudHint::InputHideHudHint( inputdata_t &inputdata )
 	}
 	else
 	{
+#ifdef HL2SB
+		pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
+#else
 		pPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	if ( pPlayer )
