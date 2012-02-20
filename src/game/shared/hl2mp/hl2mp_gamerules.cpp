@@ -1049,6 +1049,7 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 			if ( pNPC && pNPC->GetActiveWeapon() )
 			{
 				killer_weapon_name = pNPC->GetActiveWeapon()->GetClassname();
+				weapon_class_name = pNPC->GetActiveWeapon()->GetClassname();
 			}
 		}
 #endif
@@ -1090,6 +1091,7 @@ void CHL2MPRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info
 				if ( pNPC && pNPC->GetActiveWeapon() )
 				{
 					killer_weapon_name = pNPC->GetActiveWeapon()->GetClassname();
+					weapon_class_name = pNPC->GetActiveWeapon()->GetClassname();
 				}
 			}
 #endif

@@ -275,6 +275,9 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	const char *killername = event->GetString( "attackername" );
 #endif
 	const char *killedwith = event->GetString( "weapon" );
+#ifdef LUA_SDK
+	const char *killedwithname = event->GetString( "weaponname" );
+#endif
 
 	char fullkilledwith[128];
 	if ( killedwith && *killedwith )
@@ -307,7 +310,7 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	DeathNoticeItem deathMsg;
 	deathMsg.Killer.iEntIndex = killer;
 	deathMsg.Victim.iEntIndex = victim;
-#ifndef HL2SB
+#ifndef LUA_SDK
 	Q_strncpy( deathMsg.Killer.szName, killer_name, MAX_PLAYER_NAME_LENGTH );
 #else
 	if ( killer )
@@ -321,7 +324,7 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 #endif
 	Q_strncpy( deathMsg.Victim.szName, victim_name, MAX_PLAYER_NAME_LENGTH );
 	deathMsg.flDisplayTime = gpGlobals->curtime + hud_deathnotice_time.GetFloat();
-#ifndef HL2SB
+#ifndef LUA_SDK
 	deathMsg.iSuicide = ( !killer || killer == victim );
 #else
 	deathMsg.iSuicide = ( killer == victim );
@@ -360,7 +363,7 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 #ifndef LUA_SDK
 		if ( fullkilledwith && *fullkilledwith && (*fullkilledwith > 13 ) )
 #else
-		if ( fullkilledwith && *fullkilledwith && (*fullkilledwith > 13 ) && Q_strcmp( deathMsg.Killer.szName, fullkilledwith+6 ) )
+		if ( fullkilledwith && *fullkilledwith && (*fullkilledwith > 13 ) && Q_strcmp( deathMsg.Killer.szName, killedwithname ) )
 #endif
 		{
 			Q_strncat( sDeathMsg, VarArgs( " with %s.\n", fullkilledwith+6 ), sizeof( sDeathMsg ), COPY_ALL_CHARACTERS );
