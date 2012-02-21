@@ -18,6 +18,7 @@
 #include "luamanager.h"
 #include "vgui_int.h"
 #include "lPanel.h"
+#include <scripted_controls/lPanel.h>
 #include "lColor.h"
 
 using namespace vgui;
@@ -330,6 +331,20 @@ static int Panel_GetPos (lua_State *L) {
   lua_pushinteger(L, x);
   lua_pushinteger(L, y);
   return 2;
+}
+
+static int Panel_GetRefTable (lua_State *L) {
+  LPanel *plPanel = dynamic_cast<LPanel *>(luaL_checkpanel(L, 1));
+  if (plPanel) {
+    if (plPanel->m_nRefCount == LUA_NOREF) {
+      lua_newtable(L);
+      plPanel->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, plPanel->m_nRefCount);
+  }
+  else
+    lua_pushnil(L);
+  return 1;
 }
 
 static int Panel_GetResizeOffset (lua_State *L) {
@@ -988,10 +1003,63 @@ static int Panel___index (lua_State *L) {
 	lua_pushfstring(L, "%s:%d: attempt to index an INVALID_PANEL", ar2.short_src, ar1.currentline);
 	return lua_error(L);
   }
-  lua_getmetatable(L, 1);
-  lua_pushvalue(L, 2);
-  lua_gettable(L, -2);
+  LPanel *plPanel = dynamic_cast<LPanel *>(pPanel);
+  if (plPanel && plPanel->m_nRefCount != LUA_NOREF) {
+    lua_getref(L, plPanel->m_nRefCount);
+    lua_pushvalue(L, 2);
+    lua_gettable(L, -2);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
+      lua_getmetatable(L, 1);
+      lua_pushvalue(L, 2);
+      lua_gettable(L, -2);
+    }
+  } else {
+    lua_getmetatable(L, 1);
+    lua_pushvalue(L, 2);
+    lua_gettable(L, -2);
+  }
   return 1;
+}
+
+static int Panel___newindex (lua_State *L) {
+  Panel *pPanel = lua_topanel(L, 1);
+  if (pPanel == NULL) {  /* avoid extra test when d is not 0 */
+    lua_Debug ar1;
+    lua_getstack(L, 1, &ar1);
+    lua_getinfo(L, "fl", &ar1);
+    lua_Debug ar2;
+    lua_getinfo(L, ">S", &ar2);
+    lua_pushfstring(L, "%s:%d: attempt to index an INVALID_PANEL", ar2.short_src, ar1.currentline);
+    return lua_error(L);
+  }
+  LPanel *plPanel = dynamic_cast<LPanel *>(pPanel);
+  if (plPanel) {
+    if (plPanel->m_nRefCount == LUA_NOREF) {
+      lua_newtable(L);
+      plPanel->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, plPanel->m_nRefCount);
+    lua_pushvalue(L, 3);
+    lua_setfield(L, -2, luaL_checkstring(L, 2));
+    return 0;
+  } else {
+    lua_Debug ar1;
+    lua_getstack(L, 1, &ar1);
+    lua_getinfo(L, "fl", &ar1);
+    lua_Debug ar2;
+    lua_getinfo(L, ">S", &ar2);
+    lua_pushfstring(L, "%s:%d: attempt to index a non-scripted panel", ar2.short_src, ar1.currentline);
+    return lua_error(L);
+  }
+}
+
+static int Panel___gc (lua_State *L) {
+  LPanel *plPanel = dynamic_cast<LPanel *>(lua_topanel(L, 1));
+  if (plPanel) {
+    delete plPanel;
+  }
+  return 0;
 }
 
 static int Panel___eq (lua_State *L) {
@@ -1058,6 +1126,7 @@ static const luaL_Reg Panelmeta[] = {
   {"GetPinCorner", Panel_GetPinCorner},
   {"GetPinOffset", Panel_GetPinOffset},
   {"GetPos", Panel_GetPos},
+  {"GetRefTable", Panel_GetRefTable},
   {"GetResizeOffset", Panel_GetResizeOffset},
   {"GetSize", Panel_GetSize},
   {"GetTabPosition", Panel_GetTabPosition},
@@ -1185,6 +1254,8 @@ static const luaL_Reg Panelmeta[] = {
   {"ShouldHandleInputMessage", Panel_ShouldHandleInputMessage},
   {"StringToKeyCode", Panel_StringToKeyCode},
   {"__index", Panel___index},
+  {"__newindex", Panel___newindex},
+  {"__gc", Panel___gc},
   {"__eq", Panel___eq},
   {"__tostring", Panel___tostring},
   {NULL, NULL}
