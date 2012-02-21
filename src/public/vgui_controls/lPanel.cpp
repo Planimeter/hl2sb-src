@@ -46,10 +46,7 @@ LUA_API lua_Panel *lua_topanel (lua_State *L, int idx) {
 LUA_API void lua_pushpanel (lua_State *L, Panel *pPanel) {
   LPanel *plPanel = dynamic_cast<LPanel *>(pPanel);
   if (plPanel)
-  {
     ++plPanel->m_nRefCount;
-	Warning( "LPanel m_nRefCount = %d!\n", plPanel->m_nRefCount );
-  }
   PHandle *phPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
   phPanel->Set(pPanel);
   luaL_getmetatable(L, "Panel");
