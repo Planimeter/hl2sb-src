@@ -83,7 +83,7 @@
   else \
     lua_pop(L, 1);
 
-#define BEGIN_LUA_CALL_WEAPON_HOOK(pWeapon, functionName) \
+#define BEGIN_LUA_CALL_WEAPON_HOOK(functionName, pWeapon) \
   if (pWeapon->IsScripted()) { \
     lua_getref(L, pWeapon->m_nRefCount); \
     lua_getfield(L, -1, functionName); \
@@ -112,6 +112,22 @@
   } \
   else \
     lua_pop(L, 1);
+
+#define BEGIN_LUA_CALL_PANEL_METHOD(functionName) \
+  lua_getref(m_lua_State, m_nRefCount); \
+  lua_getfield(m_lua_State, -1, functionName); \
+  lua_remove(m_lua_State, -2); \
+  if (lua_isfunction(m_lua_State, -1)) { \
+    int args = 0; \
+	lua_pushpanel(m_lua_State, this); \
+	++args;
+
+#define END_LUA_CALL_PANEL_METHOD(nArgs, nresults) \
+	args += nArgs; \
+	luasrc_pcall(m_lua_State, args, nresults, 0); \
+  } \
+  else \
+    lua_pop(m_lua_State, 1);
 
 #define RETURN_LUA_NONE() \
   if (lua_gettop(L) == 1) { \

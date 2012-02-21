@@ -2142,10 +2142,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\vgui_basescriptedpanel.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\vgui_bitmapbutton.cpp"
 				>
 			</File>
@@ -3227,6 +3223,28 @@
 				<File
 					RelativePath=".\scripted_controls\lFrame.cpp"
 					>
+				</File>
+				<File
+					RelativePath=".\scripted_controls\lPanel.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\scripted_controls\scriptedclientluapanel.cpp"
@@ -5671,6 +5689,10 @@
 			</File>
 			<File
 				RelativePath=".\scripted_controls\lFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripted_controls\lPanel.h"
 				>
 			</File>
 			<File

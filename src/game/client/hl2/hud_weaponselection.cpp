@@ -884,7 +884,7 @@ void CHudWeaponSelection::DrawLargeWeaponBox( C_BaseCombatWeapon *pWeapon, bool 
 	}
 
 #if defined ( LUA_SDK )
-	BEGIN_LUA_CALL_WEAPON_HOOK( pWeapon, "DrawLargeWeaponBox" );
+	BEGIN_LUA_CALL_WEAPON_HOOK( "DrawLargeWeaponBox", pWeapon );
 		lua_pushboolean( L, bSelected );
 		lua_pushinteger( L, xpos );
 		lua_pushinteger( L, ypos );
