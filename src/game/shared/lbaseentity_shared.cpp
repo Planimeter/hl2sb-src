@@ -233,8 +233,10 @@ static int CBaseEntity_EmitAmbientSound (lua_State *L) {
 
 static int CBaseEntity_EmitSound (lua_State *L) {
   if (lua_isuserdata(L, 1) && lua_toentity(L, 1)) {
-    float duration = luaL_optnumber(L, 4, 0);
+    float duration;
 	luaL_checkentity(L, 1)->EmitSound(luaL_checkstring(L, 2), luaL_optnumber(L, 3, 0.0f), &duration);
+	lua_pushnumber(L, duration);
+	return 1;
   } else if (lua_isuserdata(L, 1) && dynamic_cast<CRecipientFilter *>((CRecipientFilter *)lua_touserdata(L, 1))) {
     switch(lua_type(L, 3)) {
       case LUA_TSTRING:
@@ -242,8 +244,10 @@ static int CBaseEntity_EmitSound (lua_State *L) {
           if (lua_gettop(L) < 3)
             CBaseEntity::EmitSound(luaL_checkrecipientfilter(L, 1), luaL_checkint(L, 2), luaL_checkstring(L, 3));
           else {
-            float duration = luaL_optnumber(L, 6, 0);
+            float duration;
             CBaseEntity::EmitSound(luaL_checkrecipientfilter(L, 1), luaL_checkint(L, 2), luaL_checkstring(L, 3), &luaL_checkvector(L, 4), luaL_optnumber(L, 5, 0.0f), &duration);
+            lua_pushnumber(L, duration);
+            return 1;
           }
           break;
         }
