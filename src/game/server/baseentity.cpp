@@ -346,7 +346,7 @@ CBaseEntity::CBaseEntity( bool bServerOnly )
 #endif
 
 #if defined( LUA_SDK )
-	m_nRefCount = LUA_NOREF;
+	m_nTableReference = LUA_NOREF;
 #endif
 }
 
@@ -384,7 +384,7 @@ CBaseEntity::~CBaseEntity( )
 	}
 
 #if defined( LUA_SDK )
-	lua_unref( L, m_nRefCount );
+	lua_unref( L, m_nTableReference );
 #endif
 }
 

@@ -44,6 +44,12 @@ LUA_API lua_Panel *lua_topanel (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushpanel (lua_State *L, Panel *pPanel) {
+  LPanel *plPanel = dynamic_cast<LPanel *>(pPanel);
+  if (plPanel)
+  {
+    ++plPanel->m_nRefCount;
+	Warning( "LPanel m_nRefCount = %d!\n", plPanel->m_nRefCount );
+  }
   PHandle *phPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
   phPanel->Set(pPanel);
   luaL_getmetatable(L, "Panel");
@@ -336,11 +342,11 @@ static int Panel_GetPos (lua_State *L) {
 static int Panel_GetRefTable (lua_State *L) {
   LPanel *plPanel = dynamic_cast<LPanel *>(luaL_checkpanel(L, 1));
   if (plPanel) {
-    if (plPanel->m_nRefCount == LUA_NOREF) {
+    if (plPanel->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      plPanel->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+      plPanel->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, plPanel->m_nRefCount);
+    lua_getref(L, plPanel->m_nTableReference);
   }
   else
     lua_pushnil(L);
@@ -1004,8 +1010,8 @@ static int Panel___index (lua_State *L) {
 	return lua_error(L);
   }
   LPanel *plPanel = dynamic_cast<LPanel *>(pPanel);
-  if (plPanel && plPanel->m_nRefCount != LUA_NOREF) {
-    lua_getref(L, plPanel->m_nRefCount);
+  if (plPanel && plPanel->m_nTableReference != LUA_NOREF) {
+    lua_getref(L, plPanel->m_nTableReference);
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
@@ -1035,11 +1041,11 @@ static int Panel___newindex (lua_State *L) {
   }
   LPanel *plPanel = dynamic_cast<LPanel *>(pPanel);
   if (plPanel) {
-    if (plPanel->m_nRefCount == LUA_NOREF) {
+    if (plPanel->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      plPanel->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+      plPanel->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, plPanel->m_nRefCount);
+    lua_getref(L, plPanel->m_nTableReference);
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, luaL_checkstring(L, 2));
     return 0;
@@ -1057,7 +1063,10 @@ static int Panel___newindex (lua_State *L) {
 static int Panel___gc (lua_State *L) {
   LPanel *plPanel = dynamic_cast<LPanel *>(lua_topanel(L, 1));
   if (plPanel) {
-    delete plPanel;
+    --plPanel->m_nRefCount;
+	if (plPanel->m_nRefCount <= 0) {
+      delete plPanel;
+    }
   }
   return 0;
 }

@@ -93,7 +93,7 @@ CBaseScripted::CBaseScripted( void )
 {
 #ifdef LUA_SDK
 	// We're done in CBaseEntity
-	// m_nRefCount = LUA_NOREF;
+	// m_nTableReference = LUA_NOREF;
 #endif
 }
 
@@ -102,7 +102,7 @@ CBaseScripted::~CBaseScripted( void )
 	// Andrew; This is actually done in CBaseEntity. I'm doing it here because
 	// this is the class that initialized the reference.
 #ifdef LUA_SDK
-	lua_unref( L, m_nRefCount );
+	lua_unref( L, m_nTableReference );
 #endif
 }
 
@@ -111,7 +111,7 @@ void CBaseScripted::InitScriptedEntity( void )
 #if defined ( LUA_SDK )
 #ifndef CLIENT_DLL
 	// Let the instance reinitialize itself for the client.
-	if ( m_nRefCount != LUA_NOREF )
+	if ( m_nTableReference != LUA_NOREF )
 		return;
 #endif
 
@@ -156,7 +156,7 @@ void CBaseScripted::InitScriptedEntity( void )
 		lua_pop( L, 1 );
 	}
 
-	m_nRefCount = luaL_ref( L, LUA_REGISTRYINDEX );
+	m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
 
 	BEGIN_LUA_CALL_ENTITY_METHOD( "Initialize" );
 	END_LUA_CALL_ENTITY_METHOD( 0, 0 );

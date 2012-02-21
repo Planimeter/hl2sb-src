@@ -26,7 +26,8 @@ using namespace vgui;
 LButton::LButton(Panel *parent, const char *panelName, const char *text, Panel *pActionSignalTarget, const char *pCmd ) : Button(parent, panelName, text, pActionSignalTarget, pCmd)
 {
 #if defined( LUA_SDK )
-	m_nRefCount = LUA_NOREF;
+	m_nTableReference = LUA_NOREF;
+	m_nRefCount = 0;
 #endif
 }
 
@@ -36,7 +37,7 @@ LButton::LButton(Panel *parent, const char *panelName, const char *text, Panel *
 LButton::~LButton()
 {
 #ifdef LUA_SDK
-	lua_unref( L, m_nRefCount );
+	lua_unref( L, m_nTableReference );
 #endif
 }
 
@@ -133,11 +134,11 @@ static int Button_GetPanelClassName (lua_State *L) {
 static int Button_GetRefTable (lua_State *L) {
   LButton *plButton = dynamic_cast<LButton *>(luaL_checkbutton(L, 1));
   if (plButton) {
-    if (plButton->m_nRefCount == LUA_NOREF) {
+    if (plButton->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      plButton->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+      plButton->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, plButton->m_nRefCount);
+    lua_getref(L, plButton->m_nTableReference);
   }
   else
     lua_pushnil(L);
@@ -331,8 +332,8 @@ static int Button___index (lua_State *L) {
 	return lua_error(L);
   }
   LButton *plButton = dynamic_cast<LButton *>(pButton);
-  if (plButton && plButton->m_nRefCount != LUA_NOREF) {
-    lua_getref(L, plButton->m_nRefCount);
+  if (plButton && plButton->m_nTableReference != LUA_NOREF) {
+    lua_getref(L, plButton->m_nTableReference);
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
@@ -374,11 +375,11 @@ static int Button___newindex (lua_State *L) {
   }
   LButton *plButton = dynamic_cast<LButton *>(pButton);
   if (plButton) {
-    if (plButton->m_nRefCount == LUA_NOREF) {
+    if (plButton->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      plButton->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+      plButton->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, plButton->m_nRefCount);
+    lua_getref(L, plButton->m_nTableReference);
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, luaL_checkstring(L, 2));
     return 0;
@@ -396,7 +397,10 @@ static int Button___newindex (lua_State *L) {
 static int Button___gc (lua_State *L) {
   LButton *plButton = dynamic_cast<LButton *>(lua_tobutton(L, 1));
   if (plButton) {
-    delete plButton;
+    --plButton->m_nRefCount;
+	if (plButton->m_nRefCount <= 0) {
+      delete plButton;
+    }
   }
   return 0;
 }

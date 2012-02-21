@@ -68,7 +68,7 @@
     lua_pop(L, 1);
 
 #define BEGIN_LUA_CALL_WEAPON_METHOD(functionName) \
-  lua_getref(L, m_nRefCount); \
+  lua_getref(L, m_nTableReference); \
   lua_getfield(L, -1, functionName); \
   lua_remove(L, -2); \
   if (lua_isfunction(L, -1)) { \
@@ -85,7 +85,7 @@
 
 #define BEGIN_LUA_CALL_WEAPON_HOOK(functionName, pWeapon) \
   if (pWeapon->IsScripted()) { \
-    lua_getref(L, pWeapon->m_nRefCount); \
+    lua_getref(L, pWeapon->m_nTableReference); \
     lua_getfield(L, -1, functionName); \
     lua_remove(L, -2); \
     int args = 0; \
@@ -98,7 +98,7 @@
   }
 
 #define BEGIN_LUA_CALL_ENTITY_METHOD(functionName) \
-  lua_getref(L, m_nRefCount); \
+  lua_getref(L, m_nTableReference); \
   lua_getfield(L, -1, functionName); \
   lua_remove(L, -2); \
   if (lua_isfunction(L, -1)) { \
@@ -114,7 +114,7 @@
     lua_pop(L, 1);
 
 #define BEGIN_LUA_CALL_PANEL_METHOD(functionName) \
-  lua_getref(m_lua_State, m_nRefCount); \
+  lua_getref(m_lua_State, m_nTableReference); \
   lua_getfield(m_lua_State, -1, functionName); \
   lua_remove(m_lua_State, -2); \
   if (lua_isfunction(m_lua_State, -1)) { \

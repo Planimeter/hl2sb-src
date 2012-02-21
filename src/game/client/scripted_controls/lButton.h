@@ -31,6 +31,7 @@ public:
 
 public:
 #if defined( LUA_SDK )
+	int                m_nTableReference;
 	int                m_nRefCount;
 #endif
 };

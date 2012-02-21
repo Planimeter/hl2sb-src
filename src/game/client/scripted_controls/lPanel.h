@@ -98,6 +98,7 @@ protected:
 public:
 #if defined( LUA_SDK )
 	lua_State		*m_lua_State;
+	int				m_nTableReference;
 	int				m_nRefCount;
 #endif
 };

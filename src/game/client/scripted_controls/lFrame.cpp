@@ -25,7 +25,8 @@ using namespace vgui;
 LFrame::LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon) : Frame(parent, panelName, showTaskbarIcon)
 {
 #if defined( LUA_SDK )
-	m_nRefCount = LUA_NOREF;
+	m_nTableReference = LUA_NOREF;
+	m_nRefCount = 0;
 #endif
 }
 
@@ -35,7 +36,7 @@ LFrame::LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon) : Fra
 LFrame::~LFrame()
 {
 #ifdef LUA_SDK
-	lua_unref( L, m_nRefCount );
+	lua_unref( L, m_nTableReference );
 #endif
 }
 
@@ -177,11 +178,11 @@ static int Frame_GetPanelClassName (lua_State *L) {
 static int Frame_GetRefTable (lua_State *L) {
   LFrame *plFrame = dynamic_cast<LFrame *>(luaL_checkframe(L, 1));
   if (plFrame) {
-    if (plFrame->m_nRefCount == LUA_NOREF) {
+    if (plFrame->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      plFrame->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+      plFrame->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, plFrame->m_nRefCount);
+    lua_getref(L, plFrame->m_nTableReference);
   }
   else
     lua_pushnil(L);
@@ -320,8 +321,8 @@ static int Frame___index (lua_State *L) {
 	return lua_error(L);
   }
   LFrame *plFrame = dynamic_cast<LFrame *>(pFrame);
-  if (plFrame && plFrame->m_nRefCount != LUA_NOREF) {
-    lua_getref(L, plFrame->m_nRefCount);
+  if (plFrame && plFrame->m_nTableReference != LUA_NOREF) {
+    lua_getref(L, plFrame->m_nTableReference);
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
@@ -363,11 +364,11 @@ static int Frame___newindex (lua_State *L) {
   }
   LFrame *plFrame = dynamic_cast<LFrame *>(pFrame);
   if (plFrame) {
-    if (plFrame->m_nRefCount == LUA_NOREF) {
+    if (plFrame->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      plFrame->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+      plFrame->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, plFrame->m_nRefCount);
+    lua_getref(L, plFrame->m_nTableReference);
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, luaL_checkstring(L, 2));
     return 0;
@@ -385,7 +386,10 @@ static int Frame___newindex (lua_State *L) {
 static int Frame___gc (lua_State *L) {
   LFrame *plFrame = dynamic_cast<LFrame *>(lua_toframe(L, 1));
   if (plFrame) {
-    delete plFrame;
+    --plFrame->m_nRefCount;
+	if (plFrame->m_nRefCount <= 0) {
+      delete plFrame;
+    }
   }
   return 0;
 }

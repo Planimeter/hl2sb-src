@@ -944,7 +944,7 @@ C_BaseEntity::C_BaseEntity() :
 	ParticleProp()->Init( this );
 
 #if defined( LUA_SDK )
-	m_nRefCount = LUA_NOREF;
+	m_nTableReference = LUA_NOREF;
 #endif
 }
 
@@ -964,7 +964,7 @@ C_BaseEntity::~C_BaseEntity()
 	RemoveFromInterpolationList();
 	RemoveFromTeleportList();
 #if defined( LUA_SDK )
-	lua_unref( L, m_nRefCount );
+	lua_unref( L, m_nTableReference );
 #endif
 }
 

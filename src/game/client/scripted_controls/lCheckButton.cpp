@@ -25,7 +25,8 @@ using namespace vgui;
 LCheckButton::LCheckButton(Panel *parent, const char *panelName, const char *text) : CheckButton(parent, panelName, text)
 {
 #if defined( LUA_SDK )
-	m_nRefCount = LUA_NOREF;
+	m_nTableReference = LUA_NOREF;
+	m_nRefCount = 0;
 #endif
 }
 
@@ -36,7 +37,7 @@ LCheckButton::LCheckButton(Panel *parent, const char *panelName, const char *tex
 LCheckButton::~LCheckButton()
 {
 #ifdef LUA_SDK
-	lua_unref( L, m_nRefCount );
+	lua_unref( L, m_nTableReference );
 #endif
 }
 
@@ -108,11 +109,11 @@ static int CheckButton_GetPanelClassName (lua_State *L) {
 static int CheckButton_GetRefTable (lua_State *L) {
   LCheckButton *plCheckButton = dynamic_cast<LCheckButton *>(luaL_checkcheckbutton(L, 1));
   if (plCheckButton) {
-    if (plCheckButton->m_nRefCount == LUA_NOREF) {
+    if (plCheckButton->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      plCheckButton->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+      plCheckButton->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, plCheckButton->m_nRefCount);
+    lua_getref(L, plCheckButton->m_nTableReference);
   }
   else
     lua_pushnil(L);
@@ -151,8 +152,8 @@ static int CheckButton___index (lua_State *L) {
 	return lua_error(L);
   }
   LCheckButton *plCheckButton = dynamic_cast<LCheckButton *>(pCheckButton);
-  if (plCheckButton && plCheckButton->m_nRefCount != LUA_NOREF) {
-    lua_getref(L, plCheckButton->m_nRefCount);
+  if (plCheckButton && plCheckButton->m_nTableReference != LUA_NOREF) {
+    lua_getref(L, plCheckButton->m_nTableReference);
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
@@ -194,11 +195,11 @@ static int CheckButton___newindex (lua_State *L) {
   }
   LCheckButton *plCheckButton = dynamic_cast<LCheckButton *>(pCheckButton);
   if (plCheckButton) {
-    if (plCheckButton->m_nRefCount == LUA_NOREF) {
+    if (plCheckButton->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      plCheckButton->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+      plCheckButton->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, plCheckButton->m_nRefCount);
+    lua_getref(L, plCheckButton->m_nTableReference);
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, luaL_checkstring(L, 2));
     return 0;
@@ -216,7 +217,10 @@ static int CheckButton___newindex (lua_State *L) {
 static int CheckButton___gc (lua_State *L) {
   LCheckButton *plCheckButton = dynamic_cast<LCheckButton *>(lua_tocheckbutton(L, 1));
   if (plCheckButton) {
-    delete plCheckButton;
+    --plCheckButton->m_nRefCount;
+	if (plCheckButton->m_nRefCount <= 0) {
+      delete plCheckButton;
+    }
   }
   return 0;
 }

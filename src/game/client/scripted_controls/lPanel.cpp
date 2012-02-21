@@ -25,7 +25,8 @@ LPanel::LPanel(Panel *parent, const char *panelName, lua_State *L) : Panel(paren
 {
 #if defined( LUA_SDK )
 	m_lua_State = L;
-	m_nRefCount = LUA_NOREF;
+	m_nTableReference = LUA_NOREF;
+	m_nRefCount = 0;
 #endif // LUA_SDK
 }
 
@@ -35,7 +36,7 @@ LPanel::LPanel(Panel *parent, const char *panelName, lua_State *L) : Panel(paren
 LPanel::~LPanel()
 {
 #if defined( LUA_SDK )
-	lua_unref( m_lua_State, m_nRefCount );
+	lua_unref( m_lua_State, m_nTableReference );
 #endif // LUA_SDK
 }
 
