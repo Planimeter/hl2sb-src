@@ -130,6 +130,20 @@ static int Button_GetPanelClassName (lua_State *L) {
   return 1;
 }
 
+static int Button_GetRefTable (lua_State *L) {
+  LButton *plButton = dynamic_cast<LButton *>(luaL_checkbutton(L, 1));
+  if (plButton) {
+    if (plButton->m_nRefCount == LUA_NOREF) {
+      lua_newtable(L);
+      plButton->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, plButton->m_nRefCount);
+  }
+  else
+    lua_pushnil(L);
+  return 1;
+}
+
 static int Button_IsArmed (lua_State *L) {
   lua_pushboolean(L, luaL_checkbutton(L, 1)->IsArmed());
   return 1;
@@ -418,6 +432,7 @@ static const luaL_Reg Buttonmeta[] = {
   {"GetButtonFgColor", Button_GetButtonFgColor},
   {"GetPanelBaseClassName", Button_GetPanelBaseClassName},
   {"GetPanelClassName", Button_GetPanelClassName},
+  {"GetRefTable", Button_GetRefTable},
   {"IsArmed", Button_IsArmed},
   {"IsBlinking", Button_IsBlinking},
   {"IsDepressed", Button_IsDepressed},

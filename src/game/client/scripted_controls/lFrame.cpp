@@ -174,6 +174,20 @@ static int Frame_GetPanelClassName (lua_State *L) {
   return 1;
 }
 
+static int Frame_GetRefTable (lua_State *L) {
+  LFrame *plFrame = dynamic_cast<LFrame *>(luaL_checkframe(L, 1));
+  if (plFrame) {
+    if (plFrame->m_nRefCount == LUA_NOREF) {
+      lua_newtable(L);
+      plFrame->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, plFrame->m_nRefCount);
+  }
+  else
+    lua_pushnil(L);
+  return 1;
+}
+
 static int Frame_IsMinimized (lua_State *L) {
   lua_pushboolean(L, luaL_checkframe(L, 1)->IsMinimized());
   return 1;
@@ -416,6 +430,7 @@ static const luaL_Reg Framemeta[] = {
   {"GetDraggerSize", Frame_GetDraggerSize},
   {"GetPanelBaseClassName", Frame_GetPanelBaseClassName},
   {"GetPanelClassName", Frame_GetPanelClassName},
+  {"GetRefTable", Frame_GetRefTable},
   {"IsMinimized", Frame_IsMinimized},
   {"IsMoveable", Frame_IsMoveable},
   {"IsSizeable", Frame_IsSizeable},

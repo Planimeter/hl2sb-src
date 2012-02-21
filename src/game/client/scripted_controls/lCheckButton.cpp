@@ -105,6 +105,20 @@ static int CheckButton_GetPanelClassName (lua_State *L) {
   return 1;
 }
 
+static int CheckButton_GetRefTable (lua_State *L) {
+  LCheckButton *plCheckButton = dynamic_cast<LCheckButton *>(luaL_checkcheckbutton(L, 1));
+  if (plCheckButton) {
+    if (plCheckButton->m_nRefCount == LUA_NOREF) {
+      lua_newtable(L);
+      plCheckButton->m_nRefCount = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, plCheckButton->m_nRefCount);
+  }
+  else
+    lua_pushnil(L);
+  return 1;
+}
+
 static int CheckButton_KB_AddBoundKey (lua_State *L) {
   luaL_checkcheckbutton(L, 1)->KB_AddBoundKey(luaL_checkstring(L, 2), luaL_checkint(L, 3), luaL_checkint(L, 4));
   return 0;
@@ -233,6 +247,7 @@ static const luaL_Reg CheckButtonmeta[] = {
   {"GetDisabledFgColor", CheckButton_GetDisabledFgColor},
   {"GetPanelBaseClassName", CheckButton_GetPanelBaseClassName},
   {"GetPanelClassName", CheckButton_GetPanelClassName},
+  {"GetRefTable", CheckButton_GetRefTable},
   {"KB_AddBoundKey", CheckButton_KB_AddBoundKey},
   {"KB_ChainToMap", CheckButton_KB_ChainToMap},
   {"SetCheckButtonCheckable", CheckButton_SetCheckButtonCheckable},
