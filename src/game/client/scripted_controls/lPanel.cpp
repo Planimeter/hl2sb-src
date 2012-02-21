@@ -125,7 +125,7 @@ void LPanel::PaintBuildOverlay()
 void LPanel::OnChildAdded(VPANEL child)
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_PANEL_METHOD( "PostChildPaint" );
+	BEGIN_LUA_CALL_PANEL_METHOD( "OnChildAdded" );
 		lua_pushpanel( m_lua_State, child );
 	END_LUA_CALL_PANEL_METHOD( 0, 1 );
 
