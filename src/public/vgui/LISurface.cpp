@@ -443,6 +443,16 @@ static int surface_SetBitmapFontName (lua_State *L) {
   return 0;
 }
 
+static int surface_SetEmbeddedPanel (lua_State *L) {
+  surface()->SetEmbeddedPanel(luaL_checkvpanel(L, 1));
+  return 0;
+}
+
+static int surface_SetFontGlyphSet (lua_State *L) {
+  lua_pushboolean(L, surface()->SetFontGlyphSet(luaL_checkfont(L, 1), luaL_checkstring(L, 2), luaL_checkint(L, 3), luaL_checkint(L, 4), luaL_checkint(L, 5), luaL_checkint(L, 6), luaL_checkint(L, 7), luaL_optint(L, 8, 0), luaL_optint(L, 9, 0)));
+  return 1;
+}
+
 static int surface_SetTranslateExtendedKeys (lua_State *L) {
   surface()->SetTranslateExtendedKeys(luaL_checkboolean(L, 1));
   return 0;
@@ -557,6 +567,8 @@ static const luaL_Reg surfacelib[] = {
   {"RunFrame",   surface_RunFrame},
   {"SetAllowHTMLJavaScript",   surface_SetAllowHTMLJavaScript},
   {"SetBitmapFontName",   surface_SetBitmapFontName},
+  {"SetEmbeddedPanel",   surface_SetEmbeddedPanel},
+  {"SetFontGlyphSet",   surface_SetFontGlyphSet},
   {"SetTranslateExtendedKeys",   surface_SetTranslateExtendedKeys},
   {"SetWorkspaceInsets",   surface_SetWorkspaceInsets},
   {"Shutdown",   surface_Shutdown},
