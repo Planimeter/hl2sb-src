@@ -115,7 +115,7 @@ static int scheme_GetDefaultScheme (lua_State *L) {
 }
 
 static int scheme_GetIScheme (lua_State *L) {
-  // lua_pushischeme(L, scheme()->GetIScheme(luaL_checkhscheme(L, 1)));
+  lua_pushischeme(L, scheme()->GetIScheme(luaL_checkscheme(L, 1)));
   return 1;
 }
 
