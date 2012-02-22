@@ -34,6 +34,4 @@ LUA_API void  (lua_pushfilehandle) (lua_State *L, lua_FileHandle_t hFile);
 LUALIB_API lua_FileHandle_t &(luaL_checkfilehandle) (lua_State *L, int narg);
 
 
-LUALIB_API int luaopen_filesystem(lua_State *L);
-
 #endif // LFILESYSTEM_H

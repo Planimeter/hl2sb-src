@@ -10,6 +10,7 @@
 #include "cbase.h"
 #include "networkstringtabledefs.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lnetworkstringtabledefs.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -134,7 +135,7 @@ static const luaL_Reg INetworkStringTablemeta[] = {
 ** Open INetworkStringTable object
 */
 LUALIB_API int luaopen_INetworkStringTable (lua_State *L) {
-  luaL_newmetatable(L, "INetworkStringTable");
+  luaL_newmetatable(L, LUA_INETWORKSTRINGTABLELIBNAME);
   luaL_register(L, NULL, INetworkStringTablemeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
@@ -199,7 +200,7 @@ static const luaL_Reg networkstringtablelib[] = {
 ** Open networkstringtable library
 */
 LUALIB_API int luaopen_networkstringtable (lua_State *L) {
-  luaL_register(L, "networkstringtable", networkstringtablelib);
+  luaL_register(L, LUA_NETWORKSTRINGTABLELIBNAME, networkstringtablelib);
   return 1;
 }
 

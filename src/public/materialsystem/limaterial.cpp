@@ -11,6 +11,7 @@
 #include "cbase.h"
 #include "imaterial.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "limaterial.h"
 #include "mathlib/lvector.h"
 
@@ -350,7 +351,7 @@ static const luaL_Reg IMaterialmeta[] = {
 ** Open IMaterial object
 */
 LUALIB_API int luaopen_IMaterial (lua_State *L) {
-  luaL_newmetatable(L, "IMaterial");
+  luaL_newmetatable(L, LUA_MATERIALLIBNAME);
   luaL_register(L, NULL, IMaterialmeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */

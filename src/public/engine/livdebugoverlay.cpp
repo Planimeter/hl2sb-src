@@ -17,6 +17,7 @@
 #include "cbase.h"
 #include "engine/ivdebugoverlay.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "mathlib/lvector.h"
 #include "lColor.h"
 
@@ -101,7 +102,7 @@ static const luaL_Reg debugoverlaylib[] = {
 ** Open debugoverlay library
 */
 LUALIB_API int luaopen_debugoverlay (lua_State *L) {
-  luaL_register(L, "debugoverlay", debugoverlaylib);
+  luaL_register(L, LUA_DEBUGOVERLAYLIBNAME, debugoverlaylib);
   return 1;
 }
 

@@ -35,6 +35,4 @@ LUA_API void  (lua_pushsteamfriends) (lua_State *L, lua_ISteamFriends *pSteamFri
 LUALIB_API lua_ISteamFriends *(luaL_checksteamfriends) (lua_State *L, int narg);
 
 
-LUALIB_API int luaopen_ISteamFriends(lua_State *L);
-
 #endif // LISTEAMFRIENDS_H

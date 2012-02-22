@@ -9,6 +9,7 @@
 #include "cbase.h"
 #include "steam_api.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 #include "listeamfriends.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -42,7 +43,7 @@ static const luaL_Reg steamapicontextlib[] = {
 ** Open steamapicontext library
 */
 LUALIB_API int luaopen_steamapicontext (lua_State *L) {
-  luaL_register(L, "steamapicontext", steamapicontextlib);
+  luaL_register(L, LUA_STEAMAPICONTEXTLIBNAME, steamapicontextlib);
   return 1;
 }
 

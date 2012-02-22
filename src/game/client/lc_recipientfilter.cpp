@@ -10,6 +10,7 @@
 #include "cbase.h"
 #include "c_recipientfilter.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lc_recipientfilter.h"
 #include "lbaseplayer_shared.h"
 #include "mathlib/lvector.h"
@@ -177,7 +178,7 @@ static const luaL_Reg C_RecipientFilter_funcs[] = {
 ** Open CRecipientFilter object
 */
 LUALIB_API int luaopen_CRecipientFilter (lua_State *L) {
-  luaL_newmetatable(L, "CRecipientFilter");
+  luaL_newmetatable(L, LUA_RECIPIENTFILTERLIBNAME);
   luaL_register(L, NULL, C_RecipientFiltermeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */

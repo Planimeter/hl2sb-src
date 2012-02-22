@@ -11,6 +11,7 @@
 #include "Color.h"
 #include "fmtstr.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 #include "lColor.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -136,7 +137,7 @@ static const luaL_Reg Color_funcs[] = {
 ** Open Color object
 */
 LUALIB_API int luaopen_Color (lua_State *L) {
-  luaL_newmetatable(L, "Color");
+  luaL_newmetatable(L, LUA_COLORLIBNAME);
   luaL_register(L, NULL, Colormeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */

@@ -35,7 +35,4 @@ LUA_API void  (lua_pushmaterial) (lua_State *L, lua_IMaterial *pMaterial);
 LUALIB_API lua_IMaterial *(luaL_checkmaterial) (lua_State *L, int narg);
 
 
-LUALIB_API int luaopen_IMaterial(lua_State *L);
-
-
 #endif // LIMATERIAL_H

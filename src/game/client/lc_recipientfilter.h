@@ -33,6 +33,4 @@ LUA_API void  (lua_pushrecipientfilter) (lua_State *L, lua_CRecipientFilter &fil
 LUALIB_API lua_CRecipientFilter &(luaL_checkrecipientfilter) (lua_State *L, int narg);
 
 
-LUALIB_API int luaopen_CRecipientFilter(lua_State *L);
-
 #endif // LC_RECIPIENTFILTER_H

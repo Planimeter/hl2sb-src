@@ -8,6 +8,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lColor.h"
 #include "lconvar.h"
 
@@ -99,7 +100,7 @@ void RemoveGlobalChangeCallbacks( void )
 ** Open cvar library
 */
 LUALIB_API int luaopen_cvar (lua_State *L) {
-  luaL_register(L, "cvar", cvarlib);
+  luaL_register(L, LUA_CVARLIBNAME, cvarlib);
   InstallGlobalChangeCallbacks();
   return 1;
 }

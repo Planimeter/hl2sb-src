@@ -15,6 +15,7 @@
 #include "cbase.h"
 #include "inetchannelinfo.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 #include "linetchannelinfo.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -237,7 +238,7 @@ static const luaL_Reg INetChannelInfometa[] = {
 ** Open INetChannelInfo object
 */
 LUALIB_API int luaopen_INetChannelInfo (lua_State *L) {
-  luaL_newmetatable(L, "INetChannelInfo");
+  luaL_newmetatable(L, LUA_NETCHANNELINFOLIBNAME);
   luaL_register(L, NULL, INetChannelInfometa);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */

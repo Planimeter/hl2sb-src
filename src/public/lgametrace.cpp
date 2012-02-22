@@ -8,6 +8,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lgametrace.h"
 #include "lbaseentity_shared.h"
 #include "mathlib/lvector.h"
@@ -184,7 +185,7 @@ static const luaL_Reg CGameTracemeta[] = {
 ** Open CGameTrace object
 */
 LUALIB_API int luaopen_CGameTrace (lua_State *L) {
-  luaL_newmetatable(L, "CGameTrace");
+  luaL_newmetatable(L, LUA_GAMETRACELIBNAME);
   luaL_register(L, NULL, CGameTracemeta);
   lua_pushstring(L, "trace");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "trace" */

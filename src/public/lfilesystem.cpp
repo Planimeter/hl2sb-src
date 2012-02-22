@@ -10,6 +10,7 @@
 #include "cbase.h"
 #include "filesystem.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lfilesystem.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -417,7 +418,7 @@ LUALIB_API int luaopen_filesystem (lua_State *L) {
   lua_pop(L, 1);
   lua_pushfilehandle(L, FILESYSTEM_INVALID_HANDLE);
   lua_setglobal(L, "FILESYSTEM_INVALID_HANDLE");
-  luaL_register(L, "filesystem", filesystemlib);
+  luaL_register(L, LUA_FILESYSTEMLIBNAME, filesystemlib);
   return 1;
 }
 

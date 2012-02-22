@@ -8,6 +8,7 @@
 #include "cbase.h"
 #include "takedamageinfo.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 #include "ltakedamageinfo.h"
 #include "lbaseentity_shared.h"
 #include "mathlib/lvector.h"
@@ -294,7 +295,7 @@ static const luaL_Reg CTakeDamageInfo_funcs[] = {
 ** Open CTakeDamageInfo object
 */
 LUALIB_API int luaopen_CTakeDamageInfo (lua_State *L) {
-  luaL_newmetatable(L, "CTakeDamageInfo");
+  luaL_newmetatable(L, LUA_TAKEDAMAGEINFOLIBNAME);
   luaL_register(L, NULL, CTakeDamageInfometa);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */

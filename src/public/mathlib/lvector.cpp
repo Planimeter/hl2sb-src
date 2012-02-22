@@ -12,6 +12,7 @@
 #include "vector.h"
 #include "fmtstr.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 #include "lvector.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -296,7 +297,7 @@ static const luaL_Reg Vector_funcs[] = {
 ** Open Vector object
 */
 LUALIB_API int luaopen_Vector (lua_State *L) {
-  luaL_newmetatable(L, "Vector");
+  luaL_newmetatable(L, LUA_VECTORLIBNAME);
   luaL_register(L, NULL, Vectormeta);
   lua_pushstring(L, "vector");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "vector" */
@@ -466,7 +467,7 @@ static const luaL_Reg QAngle_funcs[] = {
 ** Open QAngle object
 */
 LUALIB_API int luaopen_QAngle (lua_State *L) {
-  luaL_newmetatable(L, "QAngle");
+  luaL_newmetatable(L, LUA_QANGLELIBNAME);
   luaL_register(L, NULL, QAnglemeta);
   lua_pushstring(L, "angle");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "angle" */

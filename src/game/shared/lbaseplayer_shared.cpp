@@ -9,6 +9,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lbaseplayer_shared.h"
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
@@ -966,10 +967,10 @@ static const luaL_Reg CBasePlayermeta[] = {
 ** Open CBasePlayer object
 */
 LUALIB_API int luaopen_CBasePlayer_shared (lua_State *L) {
-  luaL_getmetatable(L, "CBasePlayer");
+  luaL_getmetatable(L, LUA_BASEPLAYERLIBNAME);
   if (lua_isnoneornil(L, -1)) {
     lua_pop(L, 1);
-    luaL_newmetatable(L, "CBasePlayer");
+    luaL_newmetatable(L, LUA_BASEPLAYERLIBNAME);
   }
   luaL_register(L, NULL, CBasePlayermeta);
   lua_pushstring(L, "entity");

@@ -32,6 +32,4 @@ LUA_API void  (lua_pushanimating) (lua_State *L, lua_CBaseAnimating *pEntity);
 LUALIB_API lua_CBaseAnimating *(luaL_checkanimating) (lua_State *L, int narg);
 
 
-LUALIB_API int luaopen_CBaseAnimating(lua_State *L);
-
 #endif // LBASEANIMATING_H

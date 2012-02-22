@@ -10,6 +10,7 @@
 #include "cbase.h"
 #include "prediction.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "mathlib/lvector.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -133,7 +134,6 @@ static const luaL_Reg predictionlib[] = {
 ** Open prediction library
 */
 LUALIB_API int luaopen_prediction (lua_State *L) {
-  luaL_register(L, "prediction", predictionlib);
-  lua_pop(L, 1);
+  luaL_register(L, LUA_PREDICTIONLIBNAME, predictionlib);
   return 1;
 }

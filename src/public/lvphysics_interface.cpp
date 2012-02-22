@@ -11,6 +11,7 @@
 #include "vphysics_interface.h"
 #include "vphysics/performance.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lvphysics_interface.h"
 #include "vphysics/lperformance.h"
 #include "mathlib/lvector.h"
@@ -636,7 +637,7 @@ static const luaL_Reg physenvlib[] = {
 ** Open physenv library
 */
 LUALIB_API int luaopen_physenv (lua_State *L) {
-  luaL_register(L, "physenv", physenvlib);
+  luaL_register(L, LUA_PHYSENVLIBNAME, physenvlib);
   return 1;
 }
 
@@ -1098,7 +1099,7 @@ static const luaL_Reg IPhysicsObjectmeta[] = {
 ** Open IPhysicsObject object
 */
 LUALIB_API int luaopen_IPhysicsObject (lua_State *L) {
-  luaL_newmetatable(L, "IPhysicsObject");
+  luaL_newmetatable(L, LUA_PHYSICSOBJECTLIBNAME);
   luaL_register(L, NULL, IPhysicsObjectmeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
@@ -1179,7 +1180,7 @@ static const luaL_Reg IPhysicsSurfacePropsmeta[] = {
 ** Open IPhysicsSurfaceProps object
 */
 LUALIB_API int luaopen_IPhysicsSurfaceProps (lua_State *L) {
-  luaL_newmetatable(L, "IPhysicsSurfaceProps");
+  luaL_newmetatable(L, LUA_PHYSICSSURFACEPROPSLIBNAME);
   luaL_register(L, NULL, IPhysicsSurfacePropsmeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */

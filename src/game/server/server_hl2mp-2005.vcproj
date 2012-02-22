@@ -2166,10 +2166,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\lplayer.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\public\vstdlib\lrandom.cpp"
 				>
 			</File>
@@ -5254,10 +5250,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\public\leiface.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\public\lfilesystem.h"
 				>
 			</File>
@@ -5295,10 +5287,6 @@
 			</File>
 			<File
 				RelativePath=".\logicrelay.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\public\vstdlib\lrandom.h"
 				>
 			</File>
 			<File

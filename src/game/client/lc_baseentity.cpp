@@ -8,6 +8,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lbaseentity_shared.h"
 #include "mathlib/lvector.h"
 
@@ -172,10 +173,10 @@ static const luaL_Reg CBaseEntitymeta[] = {
 ** Open CBaseEntity object
 */
 LUALIB_API int luaopen_CBaseEntity (lua_State *L) {
-  luaL_getmetatable(L, "CBaseEntity");
+  luaL_getmetatable(L, LUA_BASEENTITYLIBNAME);
   if (lua_isnoneornil(L, -1)) {
     lua_pop(L, 1);
-    luaL_newmetatable(L, "CBaseEntity");
+    luaL_newmetatable(L, LUA_BASEENTITYLIBNAME);
   }
   luaL_register(L, NULL, CBaseEntitymeta);
   return 1;

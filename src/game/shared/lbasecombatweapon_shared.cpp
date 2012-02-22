@@ -8,6 +8,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
@@ -1079,7 +1080,7 @@ static const luaL_Reg CBaseCombatWeaponmeta[] = {
 ** Open CBaseCombatWeapon object
 */
 LUALIB_API int luaopen_CBaseCombatWeapon (lua_State *L) {
-  luaL_newmetatable(L, "CBaseCombatWeapon");
+  luaL_newmetatable(L, LUA_BASECOMBATWEAPONLIBNAME);
   luaL_register(L, NULL, CBaseCombatWeaponmeta);
   lua_pushstring(L, "entity");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */

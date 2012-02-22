@@ -8,6 +8,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lc_baseanimating.h"
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
@@ -970,7 +971,7 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
 ** Open CBaseAnimating object
 */
 LUALIB_API int luaopen_CBaseAnimating (lua_State *L) {
-  luaL_newmetatable(L, "CBaseAnimating");
+  luaL_newmetatable(L, LUA_BASEANIMATINGLIBNAME);
   luaL_register(L, NULL, CBaseAnimatingmeta);
   lua_pushstring(L, "entity");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */

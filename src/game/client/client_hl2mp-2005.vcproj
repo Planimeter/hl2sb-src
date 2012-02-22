@@ -1422,6 +1422,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\vgui\LIScheme.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\SoundEmitterSystem\lisoundemittersystembase.cpp"
 				>
 			</File>
@@ -3920,10 +3924,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\lprediction.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\public\lvphysics_interface.h"
 				>
 			</File>
@@ -4728,19 +4728,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\vgui\LIScheme.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\SoundEmitterSystem\lisoundemittersystembase.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\public\vgui_controls\ListPanel.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\public\vgui\LISurface.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\public\engine\livdebugoverlay.h"
 				>
 			</File>
 			<File

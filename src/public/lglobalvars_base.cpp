@@ -8,6 +8,7 @@
 
 #include "cbase.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -90,7 +91,7 @@ static const luaL_Reg gpGlobalslib[] = {
 ** Open gpGlobals library
 */
 LUALIB_API int luaopen_gpGlobals (lua_State *L) {
-  luaL_register(L, "gpGlobals", gpGlobalslib);
+  luaL_register(L, LUA_GLOBALSLIBNAME, gpGlobalslib);
   return 1;
 }
 

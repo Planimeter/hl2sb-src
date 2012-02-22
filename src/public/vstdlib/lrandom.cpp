@@ -10,6 +10,7 @@
 
 #include "cbase.h"
 #include "lua.hpp"
+#include "luasrclib.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -88,7 +89,7 @@ static const luaL_Reg random_funcs[] = {
 ** Open random library
 */
 LUALIB_API int luaopen_random (lua_State *L) {
-  luaL_register(L, "random", randomlib);
+  luaL_register(L, LUA_RANDOMLIBNAME, randomlib);
   // UNDONE: this has always been redundant.
   // luaL_register(L, "_G", random_funcs);
   return 1;

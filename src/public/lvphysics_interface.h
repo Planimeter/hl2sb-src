@@ -58,8 +58,4 @@ LUALIB_API lua_IPhysicsObject *(luaL_checkphysicsobject) (lua_State *L, int narg
 LUALIB_API lua_IPhysicsSurfaceProps *(luaL_checkphysicssurfaceprops) (lua_State *L, int narg);
 
 
-LUALIB_API int luaopen_physenv(lua_State *L);
-LUALIB_API int luaopen_IPhysicsObject(lua_State *L);
-LUALIB_API int luaopen_IPhysicsSurfaceProps(lua_State *L);
-
 #endif // LVPHYSICS_INTERFACE_H

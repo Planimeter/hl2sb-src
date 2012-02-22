@@ -51,8 +51,4 @@ void ResetGameUIConCommandDatabase( void );
 void ResetConCommandDatabase( void );
 void ResetConVarDatabase( void );
 
-LUALIB_API int luaopen_ConCommand(lua_State *L);
-LUALIB_API int luaopen_ConVar(lua_State *L);
-
-
 #endif // LCONVAR_H

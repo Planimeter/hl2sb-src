@@ -41,6 +41,4 @@ LUA_API void  (lua_pushnetchannel) (lua_State *L, lua_INetChannelInfo *netchanne
 LUALIB_API lua_INetChannelInfo *(luaL_checknetchannel) (lua_State *L, int narg);
 
 
-LUALIB_API int luaopen_INetChannelInfo(lua_State *L);
-
 #endif // LINETCHANNELINFO_H

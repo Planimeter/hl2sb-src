@@ -12,7 +12,4 @@
 
 void RemoveGlobalChangeCallbacks( void );
 
-LUALIB_API int luaopen_cvar(lua_State *L);
-
-
 #endif // LICVAR_H

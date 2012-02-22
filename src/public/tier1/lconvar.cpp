@@ -13,6 +13,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lconvar.h"
 #include "lbaseplayer_shared.h"
 
@@ -299,7 +300,7 @@ static const luaL_Reg ConCommand_funcs[] = {
 ** Open ConCommand object
 */
 LUALIB_API int luaopen_ConCommand (lua_State *L) {
-  luaL_newmetatable(L, "ConCommand");
+  luaL_newmetatable(L, LUA_CONCOMMANDLIBNAME);
   luaL_register(L, NULL, ConCommandmeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
@@ -468,7 +469,7 @@ static const luaL_Reg ConVar_funcs[] = {
 ** Open ConVar object
 */
 LUALIB_API int luaopen_ConVar (lua_State *L) {
-  luaL_newmetatable(L, "ConVar");
+  luaL_newmetatable(L, LUA_CONVARLIBNAME);
   luaL_register(L, NULL, ConVarmeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */

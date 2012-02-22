@@ -5,15 +5,16 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef LCOLOR_H
-#define LCOLOR_H
+#ifndef LISCHEME_H
+#define LISCHEME_H
 
 #ifdef _WIN32
 #pragma once
 #endif
 
-/* type for Color functions */
-typedef Color lua_Color;
+
+/* type for IScheme functions */
+typedef vgui::IScheme lua_IScheme;
 
 
 
@@ -21,17 +22,17 @@ typedef Color lua_Color;
 ** access functions (stack -> C)
 */
 
-LUA_API lua_Color      &(lua_tocolor) (lua_State *L, int idx);
+LUA_API lua_IScheme             *(lua_toischeme) (lua_State *L, int idx);
 
 
 /*
 ** push functions (C -> stack)
 */
-LUA_API void  (lua_pushcolor) (lua_State *L, lua_Color &clr);
+LUA_API void  (lua_pushischeme) (lua_State *L, lua_IScheme *pScheme);
 
 
 
-LUALIB_API lua_Color &(luaL_checkcolor) (lua_State *L, int narg);
+LUALIB_API lua_IScheme *(luaL_checkischeme) (lua_State *L, int narg);
 
 
-#endif // LCOLOR_H
+#endif // LISCHEME_H

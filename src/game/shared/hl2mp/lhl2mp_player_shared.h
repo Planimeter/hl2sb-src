@@ -39,6 +39,4 @@ LUALIB_API lua_CHL2MP_Player *(luaL_opthl2mpplayer) (lua_State *L, int narg,
                                                                    lua_CHL2MP_Player *def);
 
 
-LUALIB_API int luaopen_CHL2MP_Player_shared(lua_State *L);
-
 #endif //LHL2MP_PLAYER_SHARED_h

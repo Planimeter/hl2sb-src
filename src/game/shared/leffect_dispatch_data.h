@@ -34,6 +34,4 @@ LUA_API void  (lua_pusheffect) (lua_State *L, lua_CEffectData &data);
 LUALIB_API lua_CEffectData &(luaL_checkeffect) (lua_State *L, int narg);
 
 
-LUALIB_API int luaopen_CEffectData(lua_State *L);
-
 #endif // LEFFECT_DISPATCH_DATA_H

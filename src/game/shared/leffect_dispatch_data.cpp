@@ -14,6 +14,7 @@
 #include "te_effect_dispatch.h"
 #endif
 #include "lua.hpp"
+#include "luasrclib.h"
 #include "leffect_dispatch_data.h"
 #include "lbaseentity_shared.h"
 #include "mathlib/lvector.h"
@@ -199,7 +200,7 @@ static const luaL_Reg CEffectData_funcs[] = {
 ** Open CEffectData object
 */
 LUALIB_API int luaopen_CEffectData (lua_State *L) {
-  luaL_newmetatable(L, "CEffectData");
+  luaL_newmetatable(L, LUA_EFFECTDATALIBNAME);
   luaL_register(L, NULL, CEffectDatameta);
   lua_pushstring(L, "effect");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "effect" */
