@@ -918,12 +918,13 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 	// Add Lua environment
 	luasrc_init();
 
-	luasrc_dofolder( L, LUA_PATH_ENUM );
+	// luasrc_dofolder( L, LUA_PATH_ENUM );
 	luasrc_dofolder( L, LUA_PATH_EXTENSIONS );
 	luasrc_dofolder( L, LUA_PATH_MODULES );
-	luasrc_dofolder( L, LUA_PATH_INCLUDES );
-	luasrc_dofolder( L, LUA_PATH_AUTORUN );
-	luasrc_dofolder( L, LUA_PATH_AUTORUN_SERVER );
+	// Do we need to load this?
+	// luasrc_dofolder( L, LUA_PATH_INCLUDES );
+	luasrc_dofolder( L, LUA_PATH_GAME_SHARED );
+	luasrc_dofolder( L, LUA_PATH_GAME_SERVER );
 
 	luasrc_LoadEntities();
 	luasrc_LoadWeapons();

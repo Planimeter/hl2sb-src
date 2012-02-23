@@ -13,6 +13,7 @@
 #else
 #include "networkstringtable_gamedll.h"
 #endif
+#include "utldict.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -65,4 +66,54 @@ LUA_API void luasrc_ExtractLcf ()
 			break;
 		}
 	}
+
+	DevMsg( "Unpacking Lua cache file\n" );
 }
+
+static CUtlDict< char *, int > m_LcfDatabase;
+
+static int luasrc_sendfile (lua_State *L) {
+  lua_Debug ar1;
+  lua_getstack(L, 1, &ar1);
+  lua_getinfo(L, "f", &ar1);
+  lua_Debug ar2;
+  lua_getinfo(L, ">S", &ar2);
+  int iLength = Q_strlen( ar2.source );
+  char source[MAX_PATH];
+  Q_StrRight( ar2.source, iLength-1, source, sizeof( source ) );
+  Q_StripFilename( source );
+  char filename[MAX_PATH];
+  Q_snprintf( filename, sizeof( filename ), "%s\\%s", source, luaL_checkstring(L, 1) );
+  m_LcfDatabase.Insert( luaL_checkstring(L, 1), strdup( filename ) );
+  return 0;
+}
+
+
+static const luaL_Reg lcf_funcs[] = {
+  {"sendfile", luasrc_sendfile},
+  {NULL, NULL}
+};
+
+
+extern void lcf_open (lua_State *L) {
+  /* open lib into global table */
+  luaL_register(L, "_G", lcf_funcs);
+  lua_pop(L, 1);
+}
+
+extern void lcf_close (lua_State *L) {
+	m_LcfDatabase.PurgeAndDeleteElements();
+}
+
+#ifndef CLIENT_DLL
+
+CON_COMMAND(dumpluacachefile, "Dump the contents of the Lua cache file database to the console.")
+{
+	int c = m_LcfDatabase.Count();
+	for ( int i = 0; i < c; i++ )
+	{
+		Msg( "%s: %s\n", m_LcfDatabase.GetElementName( i ), m_LcfDatabase[ i ] );
+	}
+}
+
+#endif

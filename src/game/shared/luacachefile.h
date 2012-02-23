@@ -20,4 +20,7 @@ void				luasrc_ExtractLcf( void );
 
 void  (luasrc_parsefromdownloadables) (void);
 
+extern void lcf_open (lua_State *L);
+extern void lcf_close (lua_State *L);
+
 #endif // LUACACHEFILE_H
