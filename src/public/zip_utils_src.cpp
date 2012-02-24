@@ -7,7 +7,7 @@
 #include <cbase.h>
 #include <tier0/platform.h>
 #ifdef IS_WINDOWS_PC
-#ifndef HL2SB
+#ifndef LUA_SDK
 #include <windows.h>
 #else
 #include <winlite.h>
@@ -20,7 +20,7 @@
 #include "checksum_crc.h"
 #include "byteswap.h"
 #include "utlstring.h"
-#ifdef HL2SB
+#ifdef LUA_SDK
 #include "filesystem.h"
 #endif
 
@@ -197,8 +197,13 @@ private:
 class CFileStream : public IWriteStream
 {
 public:
+#ifndef LUA_SDK
 	CFileStream( FILE *fout ) : IWriteStream(), m_file( fout ), m_hFile( INVALID_HANDLE_VALUE ) {}
 	CFileStream( HANDLE hOutFile ) : IWriteStream(), m_file( NULL ), m_hFile( hOutFile ) {}
+#else
+	CFileStream( FILE *fout ) : IWriteStream(), m_file( fout ), m_hFile( FILESYSTEM_INVALID_HANDLE ) {}
+	CFileStream( FileHandle_t hOutFile ) : IWriteStream(), m_file( NULL ), m_hFile( hOutFile ) {}
+#endif
 
 	// Implementing IWriteStream method
 	virtual void Put( const void* pMem, int size ) 
@@ -207,11 +212,18 @@ public:
 		{
 			fwrite( pMem, size, 1, m_file ); 
 		}
+#ifndef LUA_SDK
 		else
 		{
 			DWORD numBytesWritten;
 			WriteFile( m_hFile, pMem, size, &numBytesWritten, NULL );
 		}
+#else
+		else
+		{
+			filesystem->Write( pMem, size, m_hFile );
+		}
+#endif
 	}
 
 	// Implementing IWriteStream method
@@ -221,15 +233,25 @@ public:
 		{
 			return ftell( m_file );
 		}
+#ifndef LUA_SDK
 		else
 		{
 			return CWin32File::FileTell( m_hFile );
 		} 
+#else
+		else
+		{
+			return filesystem->Tell( m_hFile );
+		} 
+#endif
 	}
 
 private:
 	FILE	*m_file;
 	HANDLE	m_hFile;
+#ifdef LUA_SDK
+	FileHandle_t	m_fhFile;
+#endif
 };
 
 //-----------------------------------------------------------------------------
@@ -282,7 +304,11 @@ public:
 	void			SaveToBuffer( CUtlBuffer& buffer );
 	// Write the zip to a filestream
 	void			SaveToDisk( FILE *fout );
+#ifndef LUA_SDK
 	void			SaveToDisk( HANDLE hOutFile );
+#else
+	void			SaveToDisk( FileHandle_t fhOutFile );
+#endif
 
 	unsigned int	CalculateSize( void );
 
@@ -1032,7 +1058,7 @@ bool CZipFile::FileExistsInZip( const char *pRelativeName )
 //-----------------------------------------------------------------------------
 void CZipFile::AddFileToZip( const char *relativename, const char *fullpath )
 {
-#ifndef HL2SB
+#ifndef LUA_SDK
 	FILE *temp = fopen( fullpath, "rb" );
 #else
 	FileHandle_t temp = filesystem->Open( fullpath, "rb" );
@@ -1041,7 +1067,7 @@ void CZipFile::AddFileToZip( const char *relativename, const char *fullpath )
 		return;
 
 	// Determine length
-#ifndef HL2SB
+#ifndef LUA_SDK
 	fseek( temp, 0, SEEK_END );
 	int size = ftell( temp );
 	fseek( temp, 0, SEEK_SET );
@@ -1053,7 +1079,7 @@ void CZipFile::AddFileToZip( const char *relativename, const char *fullpath )
 	byte *buf = (byte *)malloc( size + 1 );
 
 	// Read data
-#ifndef HL2SB
+#ifndef LUA_SDK
 	fread( buf, size, 1, temp );
 	fclose( temp );
 #else
@@ -1239,11 +1265,19 @@ void CZipFile::SaveToDisk( FILE *fout )
 	SaveDirectory( stream );
 }
 
+#ifndef LUA_SDK
 void CZipFile::SaveToDisk( HANDLE hOutFile )
 {
 	CFileStream stream( hOutFile );
 	SaveDirectory( stream );
 }
+#else
+void CZipFile::SaveToDisk( FileHandle_t fhOutFile )
+{
+	CFileStream stream( fhOutFile );
+	SaveDirectory( stream );
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Store data out to a CUtlBuffer
@@ -1592,10 +1626,17 @@ void CZip::SaveToDisk( FILE *fout )
 	m_ZipFile.SaveToDisk( fout );
 }
 
+#ifndef LUA_SDK
 void CZip::SaveToDisk( HANDLE hOutFile )
 {
 	m_ZipFile.SaveToDisk( hOutFile );
 }
+#else
+void CZip::SaveToDisk( FileHandle_t fhOutFile )
+{
+	m_ZipFile.SaveToDisk( fhOutFile );
+}
+#endif
 
 void CZip::ParseFromBuffer( void *buffer, int bufferlength )
 {

@@ -1281,6 +1281,8 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 	g_bLevelInitialized = true;
 
 #if defined ( LUA_SDK )
+	lcf_recursivedeletefile( LUA_PATH_CACHE );
+
 	// Add the Lua environment.
 	// Andrew; unarchive the Lua Cache File
 	if ( gpGlobals->maxClients > 1 )
@@ -1290,11 +1292,8 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 
 	luasrc_init();
 
-	// luasrc_dofolder( L, LUA_PATH_ENUM );
 	luasrc_dofolder( L, LUA_PATH_EXTENSIONS );
 	luasrc_dofolder( L, LUA_PATH_MODULES );
-	// Do we need to load this?
-	// luasrc_dofolder( L, LUA_PATH_INCLUDES );
 	luasrc_dofolder( L, LUA_PATH_GAME_SHARED );
 	luasrc_dofolder( L, LUA_PATH_GAME_CLIENT );
 

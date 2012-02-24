@@ -207,9 +207,7 @@ void luasrc_init (void) {
 
   luaL_openlibs(L);
   base_open(L);
-#ifndef CLIENT_DLL
   lcf_open(L);
-#endif
 
   // Andrew; Someone set us up the path for great justice
   luasrc_setmodulepaths(L);

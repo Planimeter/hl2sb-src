@@ -14,8 +14,8 @@
 #include "lua.hpp"
 
 #define LUA_ROOT					"lua" // Can't be "LUA_PATH" because luaconf.h uses it.
+#define LUA_PATH_CACHE				"lua_cache"
 #define LUA_PATH_ADDONS				"addons"
-#define LUA_PATH_CACHE				"cache\\lua"
 #define LUA_PATH_ENUM				LUA_ROOT "\\includes\\enum"
 #define LUA_PATH_EXTENSIONS			LUA_ROOT "\\includes\\extensions"
 #define LUA_PATH_MODULES			LUA_ROOT "\\includes\\modules"

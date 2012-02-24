@@ -13,6 +13,24 @@
 
 void MountAddons()
 {
+	// Andrew; mount the Lua cache directory first. We consider this a temporary
+	// addon used across servers
+	char fullpath[ 512 ] = { 0 };
+	bool bGetCurrentDirectory = V_GetCurrentDirectory( fullpath, sizeof( fullpath ) );
+	if ( bGetCurrentDirectory )
+	{
+#ifdef CLIENT_DLL
+		const char *gamePath = engine->GetGameDirectory();
+#else
+		char gamePath[ 256 ];
+		engine->GetGameDir( gamePath, 256 );
+#endif
+		V_SetCurrentDirectory( gamePath );
+	}
+	filesystem->AddSearchPath( LUA_PATH_CACHE, "MOD", PATH_ADD_TO_TAIL );
+	if ( bGetCurrentDirectory )
+		V_SetCurrentDirectory( fullpath );
+
 	FileFindHandle_t fh;
 
 	char relativepath[ MAX_PATH ] = { 0 };

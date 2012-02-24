@@ -87,6 +87,7 @@
 
 #ifdef LUA_SDK
 #include "luamanager.h"
+#include "luacachefile.h"
 #include "mountaddons.h"
 #endif
 
@@ -915,25 +916,25 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 {
 	VPROF("CServerGameDLL::LevelInit");
 #if defined ( LUA_SDK )
-	// Add Lua environment
-	luasrc_init();
+	lcf_recursivedeletefile( LUA_PATH_CACHE );
+		// Add Lua environment
+		luasrc_init();
 
-	// luasrc_dofolder( L, LUA_PATH_ENUM );
-	luasrc_dofolder( L, LUA_PATH_EXTENSIONS );
-	luasrc_dofolder( L, LUA_PATH_MODULES );
-	// Do we need to load this?
-	// luasrc_dofolder( L, LUA_PATH_INCLUDES );
-	luasrc_dofolder( L, LUA_PATH_GAME_SHARED );
-	luasrc_dofolder( L, LUA_PATH_GAME_SERVER );
+		luasrc_dofolder( L, LUA_PATH_EXTENSIONS );
+		luasrc_dofolder( L, LUA_PATH_MODULES );
+		luasrc_dofolder( L, LUA_PATH_GAME_SHARED );
+		luasrc_dofolder( L, LUA_PATH_GAME_SERVER );
 
-	luasrc_LoadEntities();
-	luasrc_LoadWeapons();
+		luasrc_LoadEntities();
+		luasrc_LoadWeapons();
 
-	//Andrew; loadup base gamemode.
-	luasrc_LoadGamemode( LUA_BASE_GAMEMODE );
+		//Andrew; loadup base gamemode.
+		luasrc_LoadGamemode( LUA_BASE_GAMEMODE );
 
-	luasrc_LoadGamemode( sv_gamemode.GetString() );
-	luasrc_SetGamemode( sv_gamemode.GetString() );
+		luasrc_LoadGamemode( sv_gamemode.GetString() );
+		luasrc_SetGamemode( sv_gamemode.GetString() );
+	// load LCF into stringtable
+	lcf_preparecachefile();
 
 	BEGIN_LUA_CALL_HOOK( "LevelInit" );
 		lua_pushstring( L, pMapName );

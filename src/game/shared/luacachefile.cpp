@@ -6,7 +6,7 @@
 
 #include "cbase.h"
 #include "filesystem.h"
-#include "lua.hpp"
+#include "luamanager.h"
 #include "luacachefile.h"
 #ifdef CLIENT_DLL
 #include "networkstringtable_clientdll.h"
@@ -43,15 +43,11 @@ LUA_API void luasrc_AddFileToLcf( const char *relativename, const char *fullpath
 	s_lcfFile->AddFileToZip( relativename, fullpath );
 }
 
-LUA_API void luasrc_parsefromdownloadables ()
-{
-	// Andrew; Do we even need this anymore? We're not going to be listing .lua
-	// files in downloadables anyway.
-	// INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
-}
+#ifdef CLIENT_DLL
 
 LUA_API void luasrc_ExtractLcf ()
 {
+	DevMsg( "LCF: unpacking Lua cache file...\n" );
 	INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
 	const char *pFilename = NULL;
 	for ( int i=0; i<downloadables->GetNumStrings(); i++ )
@@ -63,12 +59,20 @@ LUA_API void luasrc_ExtractLcf ()
 		if ( !Q_stricmp( ext, "lcf" ) )
 		{
 			// Andrew; extract the .lcf here.
+			if ( filesystem->UnzipFile( pFilename, "MOD", LUA_PATH_CACHE ) )
+			{
+				DevMsg( "LCF: unpacked Lua cache file successfully!\n" );
+			}
+			else
+			{
+				Warning( "LCF: failed to unpack Lua cache file!\n" );
+			}
 			break;
 		}
 	}
-
-	DevMsg( "Unpacking Lua cache file\n" );
 }
+
+#else
 
 static CUtlDict< char *, int > m_LcfDatabase;
 
@@ -95,17 +99,108 @@ static const luaL_Reg lcf_funcs[] = {
 };
 
 
+#endif
+
 extern void lcf_open (lua_State *L) {
+#ifndef CLIENT_DLL
   /* open lib into global table */
   luaL_register(L, "_G", lcf_funcs);
   lua_pop(L, 1);
+#else
+  // force create this directory incase it doesn't exist
+  filesystem->CreateDirHierarchy( LUA_PATH_CACHE, "MOD");
+#endif
+}
+
+extern void lcf_recursivedeletefile( const char *current ) {
+	FileFindHandle_t fh;
+
+	char path[ 512 ];
+	if ( current[ 0 ] )
+	{
+        Q_snprintf( path, sizeof( path ), "%s/*.*", current );
+	}
+	else
+	{
+		Q_snprintf( path, sizeof( path ), "*.*" );
+	}
+
+	Q_FixSlashes( path );
+
+	char const *fn = g_pFullFileSystem->FindFirstEx( path, "MOD", &fh );
+	if ( fn )
+	{
+		do
+		{
+			if ( fn[0] != '.' )
+			{
+				if ( g_pFullFileSystem->FindIsDirectory( fh ) )
+				{
+					char nextdir[ 512 ];
+					if ( current[ 0 ] )
+					{
+						Q_snprintf( nextdir, sizeof( nextdir ), "%s/%s", current, fn );
+					}
+					else
+					{
+						Q_snprintf( nextdir, sizeof( nextdir ), "%s", fn );
+					}
+
+					lcf_recursivedeletefile( nextdir );
+				}
+				else
+				{
+					char relative[ 512 ];
+					if ( current[ 0 ] )
+					{
+						Q_snprintf( relative, sizeof( relative ), "%s/%s", current, fn );
+					}
+					else
+					{
+						Q_snprintf( relative, sizeof( relative ), "%s", fn );
+					}
+					DevMsg( "Deleting '%s/%s'...\n", current, fn );
+
+					Q_FixSlashes( relative );
+					g_pFullFileSystem->RemoveFile( relative, "MOD" );
+				}
+			}
+
+			fn = g_pFullFileSystem->FindNext( fh );
+
+		} while ( fn );
+
+		g_pFullFileSystem->FindClose( fh );
+	}
 }
 
 extern void lcf_close (lua_State *L) {
+#ifndef CLIENT_DLL
 	m_LcfDatabase.PurgeAndDeleteElements();
+#else
+	lcf_recursivedeletefile( LUA_PATH_CACHE );
+#endif
 }
 
 #ifndef CLIENT_DLL
+
+extern void lcf_preparecachefile (void) {
+	DevMsg( "LCF: preparing Lua cache file...\n" );
+	IZip *pZip = luasrc_GetLcfFile();
+	int c = m_LcfDatabase.Count();
+	for ( int i = 0; i < c; i++ )
+	{
+		pZip->AddFileToZip( m_LcfDatabase.GetElementName( i ), m_LcfDatabase[ i ] ); 
+	}
+	// force create this directory incase it doesn't exist
+	filesystem->CreateDirHierarchy( "cache\\lua", "MOD");
+	FileHandle_t fh = g_pFullFileSystem->Open( "cache\\lua\\cache.lcf", "wb", "MOD" );
+	if ( FILESYSTEM_INVALID_HANDLE != fh )
+	{
+		pZip->SaveToDisk( fh );
+	}
+	g_pFullFileSystem->Close( fh );
+}
 
 CON_COMMAND(dumpluacachefile, "Dump the contents of the Lua cache file database to the console.")
 {
