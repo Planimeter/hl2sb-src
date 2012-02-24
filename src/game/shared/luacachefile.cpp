@@ -247,8 +247,8 @@ extern void lcf_preparecachefile (void) {
 		pZip->AddFileToZip( m_LcfDatabase.GetElementName( i ), m_LcfDatabase[ i ] ); 
 	}
 	// force create this directory incase it doesn't exist
-	filesystem->CreateDirHierarchy( "cache\\lua", "MOD");
-	FileHandle_t fh = g_pFullFileSystem->Open( "cache\\lua\\cache_temp.lcf", "wb", "MOD" );
+	filesystem->CreateDirHierarchy( "cache", "MOD");
+	FileHandle_t fh = g_pFullFileSystem->Open( "cache\\cache_temp.lcf", "wb", "MOD" );
 	if ( FILESYSTEM_INVALID_HANDLE != fh )
 	{
 		pZip->SaveToDisk( fh );
@@ -257,7 +257,7 @@ extern void lcf_preparecachefile (void) {
 
 	byte *buffer;
 
-	fh = g_pFullFileSystem->Open( "cache\\lua\\cache_temp.lcf", "rb", "MOD" );
+	fh = g_pFullFileSystem->Open( "cache\\cache_temp.lcf", "rb", "MOD" );
 
 	int size = g_pFullFileSystem->Size( fh );
 	buffer = new byte[ size + 1 ];
@@ -284,14 +284,14 @@ extern void lcf_preparecachefile (void) {
 	char filename[ MAX_PATH ];
 	char hexname[ 16 ];
 	Q_binarytohex( (const byte *)&crc, sizeof( crc ), hexname, sizeof( hexname ) );
-	Q_snprintf( filename, sizeof( filename ), "cache\\lua\\%s.lcf", hexname );
+	Q_snprintf( filename, sizeof( filename ), "cache\\%s.lcf", hexname );
 	if ( g_pFullFileSystem->FileExists( filename, "MOD" ) )
 	{
-		g_pFullFileSystem->RemoveFile( "cache\\lua\\cache_temp.lcf", "MOD" );
+		g_pFullFileSystem->RemoveFile( "cache\\cache_temp.lcf", "MOD" );
 	}
 	else
 	{
-		g_pFullFileSystem->RenameFile( "cache\\lua\\cache_temp.lcf", filename, "MOD" );
+		g_pFullFileSystem->RenameFile( "cache\\cache_temp.lcf", filename, "MOD" );
 	}
 
 	INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
