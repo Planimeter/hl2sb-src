@@ -1,6 +1,7 @@
 //========== Copyleft © 2011, Team Sandbox, Some rights reserved. ===========//
 //
-// Purpose: Handles the creation of Lua Cache Files for multiplayer.
+// Purpose: Handles the creation of Lua Cache Files for multiplayer. This code
+// is currently extremely experimental.
 //
 //===========================================================================//
 
