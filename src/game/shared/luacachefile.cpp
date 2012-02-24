@@ -239,9 +239,16 @@ extern void lcf_close (lua_State *L) {
 #ifndef CLIENT_DLL
 
 extern void lcf_preparecachefile (void) {
-	DevMsg( "Preparing Lua cache file...\n" );
-	IZip *pZip = luasrc_GetLcfFile();
 	int c = m_LcfDatabase.Count();
+	if ( c > 0 )
+	{
+		DevMsg( "Preparing Lua cache file...\n" );
+	}
+	else
+	{
+		return;
+	}
+	IZip *pZip = luasrc_GetLcfFile();
 	for ( int i = 0; i < c; i++ )
 	{
 		pZip->AddFileToZip( m_LcfDatabase.GetElementName( i ), m_LcfDatabase[ i ] ); 
