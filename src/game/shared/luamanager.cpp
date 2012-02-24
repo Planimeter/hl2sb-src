@@ -286,8 +286,10 @@ LUA_API void luasrc_dofolder (lua_State *L, const char *path)
 
 				if ( !Q_stricmp( ext, "lua" ) )
 				{
+					char relative[ 512 ];
 					char loadname[ 512 ];
-					filesystem->RelativePathToFullPath( fn, "MOD", loadname, sizeof( loadname ) );
+					Q_snprintf( relative, sizeof( relative ), "%s\\%s", path, fn );
+					filesystem->RelativePathToFullPath( relative, "MOD", loadname, sizeof( loadname ) );
 					luasrc_dofile( L, loadname );
 				}
 			}
