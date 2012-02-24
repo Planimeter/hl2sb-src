@@ -63,14 +63,13 @@ LUA_API void luasrc_ExtractLcf ()
 		if ( !Q_stricmp( ext, "lcf" ) )
 		{
 			char current[ 512 ] = { 0 };
+			char cachePath[MAX_PATH];
 			bool bGetCurrentDirectory = V_GetCurrentDirectory( current, sizeof( current ) );
 			if ( bGetCurrentDirectory )
 			{
 #ifdef CLIENT_DLL
-				char cachePath[MAX_PATH];
 				const char *gamePath = engine->GetGameDirectory();
 #else
-				char cachePath[MAX_PATH];
 				char gamePath[ 256 ];
 				engine->GetGameDir( gamePath, 256 );
 #endif
@@ -88,7 +87,20 @@ LUA_API void luasrc_ExtractLcf ()
 			for ( int i = 0; i < numitems; i++ )
 			{
 				GetZipItem( hz, i, &ze );
-				UnzipItem( hz, i, ze.name, 0, ZIP_FILENAME );
+				// forget directories, we create hierarchies from file names
+				if ((ze.attr & FILE_ATTRIBUTE_DIRECTORY) != 1)
+				{
+					char fullpath[MAX_PATH];
+					char path[MAX_PATH];
+					Q_snprintf( path, sizeof( path ), LUA_PATH_CACHE"\\%s", ze.name );
+					Q_StripFilename( path );
+					filesystem->CreateDirHierarchy( path, "MOD" );
+					Q_snprintf( fullpath, sizeof( fullpath ), "%s%s", cachePath, path + Q_strlen( LUA_PATH_CACHE ) );
+					DevMsg( "LCF: setting current directory to %s...\n", fullpath );
+					V_SetCurrentDirectory( fullpath );
+					DevMsg( "LCF: unpacking %s...\n", ze.name );
+					UnzipItem( hz, i, (void *)V_UnqualifiedFileName( ze.name ), 0, ZIP_FILENAME );
+				}
 			}
 			CloseZip( hz );
 
@@ -121,7 +133,10 @@ static int luasrc_sendfile (lua_State *L) {
   Q_StripFilename( source );
   char filename[MAX_PATH];
   Q_snprintf( filename, sizeof( filename ), "%s\\%s", source, luaL_checkstring(L, 1) );
-  m_LcfDatabase.Insert( luaL_checkstring(L, 1), strdup( filename ) );
+  char gamePath[ 256 ];
+  engine->GetGameDir( gamePath, 256 );
+  DevMsg( "LCF: adding %s to the Lua cache file at %s...\n", filename + Q_strlen( gamePath ) + Q_strlen( LUA_ROOT ) + 2, filename );
+  m_LcfDatabase.Insert( filename + Q_strlen( gamePath ) + Q_strlen( LUA_ROOT ) + 2, strdup( filename ) );
   return 0;
 }
 
@@ -243,6 +258,7 @@ extern void lcf_preparecachefile (void) {
 	INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
 	downloadables->AddString( true, "cache\\lua\\cache.lcf", -1 );
 	IZip::ReleaseZip( pZip );
+	s_lcfFile = 0;
 }
 
 CON_COMMAND(dumpluacachefile, "Dump the contents of the Lua cache file database to the console.")
