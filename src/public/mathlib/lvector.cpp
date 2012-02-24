@@ -205,7 +205,7 @@ static int Vector___newindex (lua_State *L) {
 
 static int Vector___tostring (lua_State *L) {
   Vector v = luaL_checkvector(L, 1);
-  lua_pushfstring(L, "Vector: %s", static_cast<const char *>(CFmtStr("(%f, %f, %f)", v.x, v.y, v.z)));
+  lua_pushfstring(L, "Vector: %s", VecToString( v ));
   return 1;
 }
 
@@ -215,32 +215,27 @@ static int Vector___eq (lua_State *L) {
 }
 
 static int Vector___add (lua_State *L) {
-  Vector res = luaL_checkvector(L, 1) + luaL_checkvector(L, 2);
-  lua_pushvector(L, res);
+  lua_pushvector(L, luaL_checkvector(L, 1) + luaL_checkvector(L, 2));
   return 1;
 }
 
 static int Vector___sub (lua_State *L) {
-  Vector res = luaL_checkvector(L, 1) - luaL_checkvector(L, 2);
-  lua_pushvector(L, res);
+  lua_pushvector(L, luaL_checkvector(L, 1) - luaL_checkvector(L, 2));
   return 1;
 }
 
 static int Vector___mul (lua_State *L) {
-  Vector res = luaL_checkvector(L, 1) * luaL_checknumber(L, 2);
-  lua_pushvector(L, res);
+  lua_pushvector(L, luaL_checkvector(L, 1) * luaL_checknumber(L, 2));
   return 1;
 }
 
 static int Vector___div (lua_State *L) {
-  Vector res = luaL_checkvector(L, 1) / luaL_checknumber(L, 2);
-  lua_pushvector(L, res);
+  lua_pushvector(L, luaL_checkvector(L, 1) / luaL_checknumber(L, 2));
   return 1;
 }
 
 static int Vector___unm (lua_State *L) {
-  Vector v = -luaL_checkvector(L, 1);
-  lua_pushvector(L, v);
+  lua_pushvector(L, -luaL_checkvector(L, 1));
   return 1;
 }
 
@@ -281,8 +276,7 @@ static const luaL_Reg Vectormeta[] = {
 
 
 static int luasrc_Vector (lua_State *L) {
-  Vector v = Vector((vec_t)luaL_optnumber(L, 1, 0.0f), (vec_t)luaL_optnumber(L, 2, 0.0f), (vec_t)luaL_optnumber(L, 3, 0.0f));
-  lua_pushvector(L, v);
+  lua_pushvector(L, Vector((vec_t)luaL_optnumber(L, 1, 0.0f), (vec_t)luaL_optnumber(L, 2, 0.0f), (vec_t)luaL_optnumber(L, 3, 0.0f)));
   return 1;
 }
 
@@ -369,7 +363,7 @@ static int QAngle___newindex (lua_State *L) {
 
 static int QAngle___tostring (lua_State *L) {
   QAngle v = luaL_checkangle(L, 1);
-  lua_pushfstring(L, "QAngle: %s", static_cast<const char *>(CFmtStr("(%f, %f, %f)", v.x, v.y, v.z)));
+  lua_pushfstring(L, VecToString( v ));
   return 1;
 }
 
@@ -379,54 +373,27 @@ static int QAngle___eq (lua_State *L) {
 }
 
 static int QAngle___add (lua_State *L) {
-  QAngle result;
-  VectorAdd(luaL_checkangle(L, 1), luaL_checkangle(L, 2), result);
-  lua_pushangle(L, result);
+  lua_pushangle(L, luaL_checkangle(L, 1) + luaL_checkangle(L, 2));
   return 1;
 }
 
 static int QAngle___sub (lua_State *L) {
-  QAngle a = luaL_checkangle(L, 1);
-  QAngle b = luaL_checkangle(L, 2);
-  QAngle c;
-  c.x = a.x - b.x;
-  c.y = a.y - b.y;
-  c.z = a.z - b.z;
-  lua_pushangle(L, c);
+  lua_pushangle(L, luaL_checkangle(L, 1) - luaL_checkangle(L, 2));
   return 1;
 }
 
 static int QAngle___mul (lua_State *L) {
-  QAngle in = luaL_checkangle(L, 1);
-  float scale = luaL_checknumber(L, 2);
-  QAngle out;
-  out[0] = in[0]*scale;
-  out[1] = in[1]*scale;
-  out[2] = in[2]*scale;
-  lua_pushangle(L, out);
+  lua_pushangle(L, luaL_checkangle(L, 1) * luaL_checknumber(L, 2));
   return 1;
 }
 
 static int QAngle___div (lua_State *L) {
-  QAngle a = luaL_checkangle(L, 1);
-  float b = luaL_checknumber(L, 2);
-  QAngle c;
-  CHECK_VALID(a);
-  Assert( b != 0.0f );
-  vec_t oob = 1.0f / b;
-  c.x = a.x * oob;
-  c.y = a.y * oob;
-  c.z = a.z * oob;
-  lua_pushangle(L, c);
+  lua_pushangle(L, luaL_checkangle(L, 1) / luaL_checknumber(L, 2));
   return 1;
 }
 
 static int QAngle___unm (lua_State *L) {
-  QAngle a = luaL_checkangle(L, 1);
-  a.x = -a.x;
-  a.y = -a.y;
-  a.z = -a.z;
-  lua_pushangle(L, a);
+  lua_pushangle(L, -luaL_checkangle(L, 1));
   return 1;
 }
 
@@ -451,8 +418,7 @@ static const luaL_Reg QAnglemeta[] = {
 
 
 static int luasrc_QAngle (lua_State *L) {
-  QAngle v = QAngle((vec_t)luaL_optnumber(L, 1, 0.0f), (vec_t)luaL_optnumber(L, 2, 0.0f), (vec_t)luaL_optnumber(L, 3, 0.0f));
-  lua_pushangle(L, v);
+  lua_pushangle(L, QAngle((vec_t)luaL_optnumber(L, 1, 0.0f), (vec_t)luaL_optnumber(L, 2, 0.0f), (vec_t)luaL_optnumber(L, 3, 0.0f)));
   return 1;
 }
 
