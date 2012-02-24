@@ -274,13 +274,6 @@ LUA_API void luasrc_dofolder (lua_State *L, const char *path)
 	char searchPath[ 512 ];
 	Q_snprintf( searchPath, sizeof( searchPath ), "%s\\*.lua", path );
 
-#ifdef CLIENT_DLL
-	const char *gamePath = engine->GetGameDirectory();
-#else
-	char gamePath[ 256 ];
-	engine->GetGameDir( gamePath, 256 );
-#endif
-
 	char const *fn = g_pFullFileSystem->FindFirstEx( searchPath, "MOD", &fh );
 	if ( fn )
 	{
@@ -294,7 +287,7 @@ LUA_API void luasrc_dofolder (lua_State *L, const char *path)
 				if ( !Q_stricmp( ext, "lua" ) )
 				{
 					char loadname[ 512 ];
-					Q_snprintf( loadname, sizeof( loadname ), "%s\\%s\\%s", gamePath, path, fn );
+					filesystem->RelativePathToFullPath( fn, "MOD", loadname, sizeof( loadname ) );
 					luasrc_dofile( L, loadname );
 				}
 			}
