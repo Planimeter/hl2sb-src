@@ -105,6 +105,11 @@ LUA_API void luasrc_ExtractLcf ()
 static CUtlDict< char *, int > m_LcfDatabase;
 
 static int luasrc_sendfile (lua_State *L) {
+  // Can only send files in multiplayer!!!
+  if ( gpGlobals->maxClients == 1 )
+  {
+  	return 0;
+  }
   lua_Debug ar1;
   lua_getstack(L, 1, &ar1);
   lua_getinfo(L, "f", &ar1);
@@ -190,6 +195,7 @@ extern void lcf_recursivedeletefile( const char *current ) {
 					DevMsg( "Deleting '%s/%s'...\n", current, fn );
 
 					Q_FixSlashes( relative );
+					g_pFullFileSystem->SetFileWritable( relative, true, "MOD" );
 					g_pFullFileSystem->RemoveFile( relative, "MOD" );
 				}
 			}
@@ -204,7 +210,12 @@ extern void lcf_recursivedeletefile( const char *current ) {
 
 extern void lcf_close (lua_State *L) {
 #ifndef CLIENT_DLL
-	m_LcfDatabase.PurgeAndDeleteElements();
+	int c = m_LcfDatabase.Count(); 
+	for ( int i = 0; i < c; ++i )
+	{
+		delete m_LcfDatabase[ i ];
+	}
+	m_LcfDatabase.RemoveAll();
 #else
 	lcf_recursivedeletefile( LUA_PATH_CACHE );
 #endif
@@ -213,7 +224,7 @@ extern void lcf_close (lua_State *L) {
 #ifndef CLIENT_DLL
 
 extern void lcf_preparecachefile (void) {
-	DevMsg( "LCF: preparing Lua cache file...\n" );
+	DevMsg( "Preparing Lua cache file...\n" );
 	IZip *pZip = luasrc_GetLcfFile();
 	int c = m_LcfDatabase.Count();
 	for ( int i = 0; i < c; i++ )
