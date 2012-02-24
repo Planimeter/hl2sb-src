@@ -135,7 +135,7 @@ static int luasrc_sendfile (lua_State *L) {
   Q_snprintf( filename, sizeof( filename ), "%s\\%s", source, luaL_checkstring(L, 1) );
   char gamePath[ 256 ];
   engine->GetGameDir( gamePath, 256 );
-  DevMsg( "LCF: adding %s to the Lua cache file at %s...\n", filename + Q_strlen( gamePath ) + Q_strlen( LUA_ROOT ) + 2, filename );
+  DevMsg( "LCF: adding %s to the Lua cache file...\n", filename + Q_strlen( gamePath ) + Q_strlen( LUA_ROOT ) + 2 );
   m_LcfDatabase.Insert( filename + Q_strlen( gamePath ) + Q_strlen( LUA_ROOT ) + 2, strdup( filename ) );
   return 0;
 }
@@ -248,15 +248,54 @@ extern void lcf_preparecachefile (void) {
 	}
 	// force create this directory incase it doesn't exist
 	filesystem->CreateDirHierarchy( "cache\\lua", "MOD");
-	FileHandle_t fh = g_pFullFileSystem->Open( "cache\\lua\\cache.lcf", "wb", "MOD" );
+	FileHandle_t fh = g_pFullFileSystem->Open( "cache\\lua\\cache_temp.lcf", "wb", "MOD" );
 	if ( FILESYSTEM_INVALID_HANDLE != fh )
 	{
 		pZip->SaveToDisk( fh );
 	}
 	g_pFullFileSystem->Close( fh );
 
+	byte *buffer;
+
+	fh = g_pFullFileSystem->Open( "cache\\lua\\cache_temp.lcf", "rb", "MOD" );
+
+	int size = g_pFullFileSystem->Size( fh );
+	buffer = new byte[ size + 1 ];
+	if ( !buffer )
+	{
+		Warning( "lcf_preparecachefile:  Couldn't allocate buffer of size %i\n", size + 1 );
+		g_pFullFileSystem->Close( fh );
+		return;
+	}
+	g_pFullFileSystem->Read( buffer, size, fh );
+	g_pFullFileSystem->Close( fh );
+
+	// Ensure null terminator
+	buffer[ size ] =0;
+
+	CRC32_t crc;
+
+	CRC32_Init( &crc );
+	CRC32_ProcessBuffer( &crc, buffer, sizeof( buffer ) );
+	CRC32_Final( &crc );
+
+	delete[] buffer;
+
+	char filename[ MAX_PATH ];
+	char hexname[ 16 ];
+	Q_binarytohex( (const byte *)&crc, sizeof( crc ), hexname, sizeof( hexname ) );
+	Q_snprintf( filename, sizeof( filename ), "cache\\lua\\%s.lcf", hexname );
+	if ( g_pFullFileSystem->FileExists( filename, "MOD" ) )
+	{
+		g_pFullFileSystem->RemoveFile( "cache\\lua\\cache_temp.lcf", "MOD" );
+	}
+	else
+	{
+		g_pFullFileSystem->RenameFile( "cache\\lua\\cache_temp.lcf", filename, "MOD" );
+	}
+
 	INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
-	downloadables->AddString( true, "cache\\lua\\cache.lcf", -1 );
+	downloadables->AddString( true, filename, -1 );
 	IZip::ReleaseZip( pZip );
 	s_lcfFile = 0;
 }
