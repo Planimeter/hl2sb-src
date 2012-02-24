@@ -47,7 +47,6 @@ LUA_API void luasrc_AddFileToLcf( const char *relativename, const char *fullpath
 
 LUA_API void luasrc_ExtractLcf ()
 {
-	DevMsg( "LCF: unpacking Lua cache file...\n" );
 	INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
 	const char *pFilename = NULL;
 	for ( int i=0; i<downloadables->GetNumStrings(); i++ )
@@ -59,14 +58,8 @@ LUA_API void luasrc_ExtractLcf ()
 		if ( !Q_stricmp( ext, "lcf" ) )
 		{
 			// Andrew; extract the .lcf here.
-			if ( filesystem->UnzipFile( pFilename, "MOD", LUA_PATH_CACHE ) )
-			{
-				DevMsg( "LCF: unpacked Lua cache file successfully!\n" );
-			}
-			else
-			{
-				Warning( "LCF: failed to unpack Lua cache file!\n" );
-			}
+			DevMsg( "LCF: found \"%s\"!\n", pFilename );
+			DevMsg( "LCF: unpacking Lua cache file...\n" );
 			break;
 		}
 	}
@@ -200,6 +193,10 @@ extern void lcf_preparecachefile (void) {
 		pZip->SaveToDisk( fh );
 	}
 	g_pFullFileSystem->Close( fh );
+
+	INetworkStringTable *downloadables = networkstringtable->FindTable( "downloadables" );
+	downloadables->AddString( true, "cache\\lua\\cache.lcf", -1 );
+	IZip::ReleaseZip( pZip );
 }
 
 CON_COMMAND(dumpluacachefile, "Dump the contents of the Lua cache file database to the console.")

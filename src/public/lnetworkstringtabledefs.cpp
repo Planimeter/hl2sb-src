@@ -23,8 +23,8 @@
 
 
 LUA_API lua_INetworkStringTable *lua_tostringtable (lua_State *L, int idx) {
-  lua_INetworkStringTable *pNetworkStringTable = (lua_INetworkStringTable *)lua_touserdata(L, idx);
-  return pNetworkStringTable;
+  lua_INetworkStringTable **ppNetworkStringTable = (lua_INetworkStringTable **)lua_touserdata(L, idx);
+  return *ppNetworkStringTable;
 }
 
 
@@ -47,8 +47,8 @@ LUA_API void lua_pushstringtable (lua_State *L, lua_INetworkStringTable *pNetwor
 
 
 LUALIB_API lua_INetworkStringTable *luaL_checkstringtable (lua_State *L, int narg) {
-  lua_INetworkStringTable *d = (lua_INetworkStringTable *)luaL_checkudata(L, narg, "INetworkStringTable");
-  return d;
+  lua_INetworkStringTable **d = (lua_INetworkStringTable **)luaL_checkudata(L, narg, "INetworkStringTable");
+  return *d;
 }
 
 

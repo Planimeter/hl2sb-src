@@ -49,8 +49,8 @@ LUA_API void lua_pushmaterial (lua_State *L, lua_IMaterial *pMaterial) {
 
 
 LUALIB_API lua_IMaterial *luaL_checkmaterial (lua_State *L, int narg) {
-  lua_IMaterial *d = (lua_IMaterial *)luaL_checkudata(L, narg, "IMaterial");
-  return d;
+  lua_IMaterial **d = (lua_IMaterial **)luaL_checkudata(L, narg, "IMaterial");
+  return *d;
 }
 
 
