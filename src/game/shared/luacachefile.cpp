@@ -1,20 +1,24 @@
 //========== Copyleft © 2011, Team Sandbox, Some rights reserved. ===========//
 //
-// Purpose: Handles the creation of Lua Cache Files for multiplayer. This code
-// is currently extremely experimental.
+// Purpose: Handles the creation of Lua Cache Files for multiplayer.
 //
 //===========================================================================//
 
 #include "cbase.h"
 #include "filesystem.h"
+#ifdef WIN32
+#include "winlite.h"
+#endif
+#include "zip/XUnzip.h"
+#include "utldict.h"
 #include "luamanager.h"
 #include "luacachefile.h"
-#ifdef CLIENT_DLL
-#include "networkstringtable_clientdll.h"
-#else
+
+#ifdef GAME_DLL
 #include "networkstringtable_gamedll.h"
+#else
+#include "networkstringtable_clientdll.h"
 #endif
-#include "utldict.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -58,9 +62,39 @@ LUA_API void luasrc_ExtractLcf ()
 
 		if ( !Q_stricmp( ext, "lcf" ) )
 		{
-			// Andrew; extract the .lcf here.
-			DevMsg( "LCF: found \"%s\"!\n", pFilename );
-			DevMsg( "LCF: unpacking Lua cache file...\n" );
+			char current[ 512 ] = { 0 };
+			bool bGetCurrentDirectory = V_GetCurrentDirectory( current, sizeof( current ) );
+			if ( bGetCurrentDirectory )
+			{
+#ifdef CLIENT_DLL
+				char cachePath[MAX_PATH];
+				const char *gamePath = engine->GetGameDirectory();
+#else
+				char cachePath[MAX_PATH];
+				char gamePath[ 256 ];
+				engine->GetGameDir( gamePath, 256 );
+#endif
+				Q_strncpy( cachePath, gamePath, sizeof( cachePath ) );
+				Q_strncat( cachePath, "\\"LUA_PATH_CACHE, sizeof( cachePath ), COPY_ALL_CHARACTERS );
+				V_SetCurrentDirectory( cachePath );
+			}
+
+			char fullpath[MAX_PATH];
+			filesystem->RelativePathToFullPath( pFilename, "MOD", fullpath, sizeof( fullpath ) );
+			HZIP hz = OpenZip( fullpath, 0, ZIP_FILENAME );
+			ZIPENTRY ze;
+			GetZipItem( hz, -1, &ze );
+			int numitems = ze.index;
+			for ( int i = 0; i < numitems; i++ )
+			{
+				GetZipItem( hz, i, &ze );
+				UnzipItem( hz, i, ze.name, 0, ZIP_FILENAME );
+			}
+			CloseZip( hz );
+
+			if ( bGetCurrentDirectory )
+				V_SetCurrentDirectory( current );
+
 			break;
 		}
 	}
