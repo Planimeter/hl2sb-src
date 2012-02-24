@@ -135,8 +135,8 @@ static int luasrc_sendfile (lua_State *L) {
   Q_snprintf( filename, sizeof( filename ), "%s\\%s", source, luaL_checkstring(L, 1) );
   char gamePath[ 256 ];
   engine->GetGameDir( gamePath, 256 );
-  DevMsg( "LCF: adding %s to the Lua cache file...\n", filename + Q_strlen( gamePath ) + Q_strlen( LUA_ROOT ) + 2 );
-  m_LcfDatabase.Insert( filename + Q_strlen( gamePath ) + Q_strlen( LUA_ROOT ) + 2, strdup( filename ) );
+  DevMsg( "LCF: adding %s to the Lua cache file...\n", filename + Q_strlen( gamePath ) + 1 );
+  m_LcfDatabase.Insert( filename + Q_strlen( gamePath ) + 1, strdup( filename ) );
   return 0;
 }
 
