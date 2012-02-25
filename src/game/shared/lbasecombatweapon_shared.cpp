@@ -133,6 +133,11 @@ static int CBaseCombatWeapon_Clip2 (lua_State *L) {
   return 1;
 }
 
+static int CBaseCombatWeapon_DefaultDeploy (lua_State *L) {
+  lua_pushboolean(L, luaL_checkweapon(L, 1)->DefaultDeploy( (char*)luaL_checkstring(L, 2), (char*)luaL_checkstring(L, 3), luaL_checkint(L, 4), (char*)luaL_checkstring(L, 5) ));
+  return 1;
+}
+
 static int CBaseCombatWeapon_DefaultReload (lua_State *L) {
   lua_pushboolean(L, luaL_checkweapon(L, 1)->DefaultReload(luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_checkint(L, 4)));
   return 1;
@@ -971,6 +976,7 @@ static const luaL_Reg CBaseCombatWeaponmeta[] = {
   {"CheckReload", CBaseCombatWeapon_CheckReload},
   {"Clip1", CBaseCombatWeapon_Clip1},
   {"Clip2", CBaseCombatWeapon_Clip2},
+  {"DefaultDeploy", CBaseCombatWeapon_DefaultDeploy},
   {"DefaultReload", CBaseCombatWeapon_DefaultReload},
   {"DefaultTouch", CBaseCombatWeapon_DefaultTouch},
   {"Deploy", CBaseCombatWeapon_Deploy},

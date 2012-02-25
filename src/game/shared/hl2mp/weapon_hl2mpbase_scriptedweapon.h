@@ -49,6 +49,8 @@ public:
 	virtual void	ItemPostFrame( void );
 	virtual void	ItemBusyFrame( void );
 	virtual void	FireBullets( const FireBulletsInfo_t &info );
+	virtual bool	Reload();
+	
 	virtual bool	Deploy( void );
 	virtual bool	Holster( CBaseCombatWeapon *pSwitchingTo );
 

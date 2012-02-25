@@ -304,7 +304,15 @@ static int CBaseAnimating_SelectWeightedSequence (lua_State *L) {
 }
 
 static int CBaseAnimating_SequenceDuration (lua_State *L) {
-  lua_pushnumber(L, luaL_checkanimating(L, 1)->SequenceDuration());
+  switch(lua_type(L, 2)) {
+    case LUA_TNONE:
+    default:
+      lua_pushnumber(L, luaL_checkanimating(L, 1)->SequenceDuration());
+      break;
+    case LUA_TNUMBER:
+      lua_pushnumber(L, luaL_checkanimating(L, 1)->SequenceDuration(luaL_checkint(L, 2)));
+      break;
+  }
   return 1;
 }
 

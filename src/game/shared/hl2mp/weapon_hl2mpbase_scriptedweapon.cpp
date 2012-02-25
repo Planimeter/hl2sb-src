@@ -707,6 +707,18 @@ void CHL2MPScriptedWeapon::FireBullets( const FireBulletsInfo_t &info )
 	}
 }
 
+bool CHL2MPScriptedWeapon::Reload( void )
+{
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_WEAPON_METHOD( "Reload" );
+	// END_LUA_CALL_WEAPON_METHOD( 0, 1 );
+	END_LUA_CALL_WEAPON_METHOD( 0, 0 );
+
+	// RETURN_LUA_BOOLEAN();
+#endif
+	return BaseClass::Reload();
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Output : Returns true on success, false on failure.
