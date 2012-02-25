@@ -657,6 +657,11 @@ static int CBasePlayer_SetStepSoundCache (lua_State *L) {
   return 1;
 }
 
+static int CBasePlayer_SetSuitUpdate (lua_State *L) {
+  luaL_checkplayer(L, 1)->SetSuitUpdate((char *)luaL_checkstring(L, 2), luaL_checkint(L, 3), luaL_checkint(L, 4));
+  return 0;
+}
+
 static int CBasePlayer_SetSwimSoundTime (lua_State *L) {
   luaL_checkplayer(L, 1)->SetSwimSoundTime(luaL_checknumber(L, 2));
   return 0;
@@ -949,6 +954,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"SetPlayerUnderwater", CBasePlayer_SetPlayerUnderwater},
   {"SetPreviouslyPredictedOrigin", CBasePlayer_SetPreviouslyPredictedOrigin},
   {"SetStepSoundCache", CBasePlayer_SetStepSoundCache},
+  {"SetSuitUpdate", CBasePlayer_SetSuitUpdate},
   {"SetSwimSoundTime", CBasePlayer_SetSwimSoundTime},
   {"SetWaterJumpTime", CBasePlayer_SetWaterJumpTime},
   {"SharedSpawn", CBasePlayer_SharedSpawn},
