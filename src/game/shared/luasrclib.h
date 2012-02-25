@@ -95,16 +95,19 @@ LUALIB_API int (luaopen_INetChannelInfo) (lua_State *L);
 LUALIB_API int (luaopen_INetworkStringTable) (lua_State *L);
 
 #define LUA_PHYSICSOBJECTLIBNAME		"IPhysicsObject"
-LUALIB_API int luaopen_IPhysicsObject(lua_State *L);
+LUALIB_API int (luaopen_IPhysicsObject) (lua_State *L);
 
 #define LUA_PHYSICSSURFACEPROPSLIBNAME	"IPhysicsSurfaceProps"
-LUALIB_API int luaopen_IPhysicsSurfaceProps(lua_State *L);
+LUALIB_API int (luaopen_IPhysicsSurfaceProps) (lua_State *L);
 
 #define LUA_ISCHEMELIBNAME				"IScheme"
 LUALIB_API int (luaopen_IScheme) (lua_State *L);
 
 #define LUA_STEAMFRIENDSLIBNAME			"ISteamFriends"
 LUALIB_API int (luaopen_ISteamFriends) (lua_State *L);
+
+#define LUA_MATHLIBLIBNAME				"mathlib"
+LUALIB_API int (luaopen_mathlib) (lua_State *L);
 
 #define LUA_NETWORKSTRINGTABLELIBNAME	"networkstringtable"
 LUALIB_API int (luaopen_networkstringtable) (lua_State *L);

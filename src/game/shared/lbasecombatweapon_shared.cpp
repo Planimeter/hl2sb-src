@@ -842,20 +842,26 @@ static int CBaseCombatWeapon___index (lua_State *L) {
     lua_pushinteger(L, pWeapon->m_iWorldModelIndex);
   else if (Q_strcmp(field, "m_nViewModelIndex") == 0)
     lua_pushinteger(L, pWeapon->m_nViewModelIndex);
-  else {
-    lua_getmetatable(L, 1);
+  else if (pWeapon->m_nTableReference != LUA_NOREF) {
+    lua_getref(L, pWeapon->m_nTableReference);
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
       lua_pop(L, 1);
-      luaL_getmetatable(L, "CBaseAnimating");
+      lua_getmetatable(L, 1);
       lua_pushvalue(L, 2);
       lua_gettable(L, -2);
       if (lua_isnil(L, -1)) {
         lua_pop(L, 1);
-        luaL_getmetatable(L, "CBaseEntity");
+        luaL_getmetatable(L, "CBaseAnimating");
         lua_pushvalue(L, 2);
         lua_gettable(L, -2);
+        if (lua_isnil(L, -1)) {
+          lua_pop(L, 1);
+          luaL_getmetatable(L, "CBaseEntity");
+          lua_pushvalue(L, 2);
+          lua_gettable(L, -2);
+        }
       }
     }
   }

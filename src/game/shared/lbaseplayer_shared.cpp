@@ -144,6 +144,20 @@ static int CBasePlayer_GetActiveWeapon (lua_State *L) {
   return 1;
 }
 
+//Andrew; move this to CBaseCombatCharacter.
+static int CBasePlayer_GetAmmoCount (lua_State *L) {
+  switch(lua_type(L, 2)) {
+	case LUA_TNUMBER:
+	default:
+      lua_pushinteger(L, luaL_checkplayer(L, 1)->GetAmmoCount(luaL_checkint(L, 2)));
+	  break;
+	case LUA_TSTRING:
+      lua_pushinteger(L, luaL_checkplayer(L, 1)->GetAmmoCount((char *)luaL_checkstring(L, 2)));
+	  break;
+  }
+  return 1;
+}
+
 static int CBasePlayer_GetAutoaimVector (lua_State *L) {
   Vector v = luaL_checkplayer(L, 1)->GetAutoaimVector(luaL_checknumber(L, 2));
   lua_pushvector(L, v);
@@ -861,6 +875,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"EyeVectors", CBasePlayer_EyeVectors},
   {"FindUseEntity", CBasePlayer_FindUseEntity},
   {"GetActiveWeapon", CBasePlayer_GetActiveWeapon},
+  {"GetAmmoCount", CBasePlayer_GetAmmoCount},
   {"GetAutoaimVector", CBasePlayer_GetAutoaimVector},
   {"GetBonusChallenge", CBasePlayer_GetBonusChallenge},
   {"GetBonusProgress", CBasePlayer_GetBonusProgress},
@@ -963,6 +978,18 @@ static const luaL_Reg CBasePlayermeta[] = {
 };
 
 
+static int luasrc_ToBasePlayer (lua_State *L) {
+  lua_pushplayer(L, ToBasePlayer(luaL_checkentity(L, 1)));
+  return 1;
+}
+
+
+static const luaL_Reg CBasePlayer_funcs[] = {
+  {"ToBasePlayer", luasrc_ToBasePlayer},
+  {NULL, NULL}
+};
+
+
 /*
 ** Open CBasePlayer object
 */
@@ -975,6 +1002,8 @@ LUALIB_API int luaopen_CBasePlayer_shared (lua_State *L) {
   luaL_register(L, NULL, CBasePlayermeta);
   lua_pushstring(L, "entity");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
+  luaL_register(L, "_G", CBasePlayer_funcs);
+  lua_pop(L, 1);
   return 1;
 }
 

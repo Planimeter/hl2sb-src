@@ -63,6 +63,7 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_ISCHEMELIBNAME, luaopen_IScheme},
 #endif
   {LUA_STEAMFRIENDSLIBNAME, luaopen_ISteamFriends},
+  {LUA_MATHLIBLIBNAME, luaopen_mathlib},
   {LUA_NETWORKSTRINGTABLELIBNAME, luaopen_networkstringtable},
 #ifdef CLIENT_DLL
   {LUA_PANELLIBNAME, luaopen_Panel},

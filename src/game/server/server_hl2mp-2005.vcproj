@@ -2122,6 +2122,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\mathlib\lmathlib.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lnetworkstringtabledefs.cpp"
 				>
 			</File>
