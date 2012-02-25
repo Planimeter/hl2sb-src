@@ -33,6 +33,7 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_COLORLIBNAME, luaopen_Color},
   {LUA_CONCOMMANDLIBNAME, luaopen_ConCommand},
   {LUA_CONVARLIBNAME, luaopen_ConVar},
+  {LUA_PASFILTERLIBNAME, luaopen_CPASFilter},
   {LUA_RECIPIENTFILTERLIBNAME, luaopen_CRecipientFilter},
   {LUA_TAKEDAMAGEINFOLIBNAME, luaopen_CTakeDamageInfo},
   {LUA_CVARLIBNAME, luaopen_cvar},

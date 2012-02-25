@@ -10,6 +10,7 @@
 #include "cbase.h"
 #include "recipientfilter.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lrecipientfilter.h"
 #include "lbaseplayer_shared.h"
 #include "mathlib/lvector.h"
@@ -18,6 +19,7 @@
 #include "tier0/memdbgon.h"
 
 static lua_CRecipientFilter *s_pFilter = new CRecipientFilter();
+static lua_CPASFilter *s_pPASFilter = new CPASFilter();
 
 /*
 ** access functions (stack -> C)
@@ -26,6 +28,12 @@ static lua_CRecipientFilter *s_pFilter = new CRecipientFilter();
 
 LUA_API lua_CRecipientFilter &lua_torecipientfilter (lua_State *L, int idx) {
   lua_CRecipientFilter **ppFilter = (lua_CRecipientFilter **)lua_touserdata(L, idx);
+  return **ppFilter;
+}
+
+
+LUA_API lua_CPASFilter &lua_topasfilter (lua_State *L, int idx) {
+  lua_CPASFilter **ppFilter = (lua_CPASFilter **)lua_touserdata(L, idx);
   return **ppFilter;
 }
 
@@ -46,8 +54,26 @@ LUA_API void lua_pushrecipientfilter (lua_State *L, lua_CRecipientFilter &filter
 }
 
 
+LUA_API void lua_pushpasfilter (lua_State *L, lua_CPASFilter &filter) {
+  lua_CPASFilter **ppFilter = (lua_CPASFilter **)lua_newuserdata(L, sizeof(lua_CPASFilter));
+  s_pPASFilter->Reset();
+  s_pPASFilter->CopyFrom(filter);
+  *ppFilter = s_pPASFilter;
+  luaL_getmetatable(L, "CPASFilter");
+  lua_setmetatable(L, -2);
+}
+
+
 LUALIB_API lua_CRecipientFilter &luaL_checkrecipientfilter (lua_State *L, int narg) {
-  lua_CRecipientFilter **d = (lua_CRecipientFilter **)luaL_checkudata(L, narg, "CRecipientFilter");
+  lua_CRecipientFilter *d = (lua_CRecipientFilter *)lua_touserdata(L, narg);
+  if (!d)
+    luaL_typerror(L, narg, "CRecipientFilter");
+  return **(lua_CRecipientFilter **)d;
+}
+
+
+LUALIB_API lua_CPASFilter &luaL_checkpasfilter (lua_State *L, int narg) {
+  lua_CPASFilter **d = (lua_CPASFilter **)luaL_checkudata(L, narg, "CPASFilter");
   return **d;
 }
 
@@ -201,13 +227,66 @@ static const luaL_Reg CRecipientFilter_funcs[] = {
 ** Open CRecipientFilter object
 */
 LUALIB_API int luaopen_CRecipientFilter (lua_State *L) {
-  luaL_newmetatable(L, "CRecipientFilter");
+  luaL_newmetatable(L, LUA_RECIPIENTFILTERLIBNAME);
   luaL_register(L, NULL, CRecipientFiltermeta);
   lua_pushvalue(L, -1);  /* push metatable */
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
   lua_pushstring(L, "recipientfilter");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "recipientfilter" */
   luaL_register(L, "_G", CRecipientFilter_funcs);
-  lua_pop(L, 2);
+  lua_pop(L, 1);
+  return 1;
+}
+
+
+static int CPASFilter___index (lua_State *L) {
+  lua_getmetatable(L, 1);
+  lua_pushvalue(L, 2);
+  lua_gettable(L, -2);
+  if (lua_isnil(L, -1)) {
+    lua_pop(L, 1);
+    luaL_getmetatable(L, "CRecipientFilter");
+    lua_pushvalue(L, 2);
+    lua_gettable(L, -2);
+  }
+  return 1;
+}
+
+static int CPASFilter___tostring (lua_State *L) {
+  lua_pushfstring(L, "CPASFilter: %p", luaL_checkudata(L, 1, "CPASFilter"));
+  return 1;
+}
+
+
+static const luaL_Reg CPASFiltermeta[] = {
+  {"__index", CPASFilter___index},
+  {"__tostring", CPASFilter___tostring},
+  {NULL, NULL}
+};
+
+
+static int luasrc_CPASFilter (lua_State *L) {
+  CPASFilter filter(luaL_checkvector(L, 1));
+  lua_pushpasfilter(L, filter);
+  return 1;
+}
+
+
+static const luaL_Reg CPASFilter_funcs[] = {
+  {"CPASFilter", luasrc_CPASFilter},
+  {NULL, NULL}
+};
+
+
+/*
+** Open CPASFilter object
+*/
+LUALIB_API int luaopen_CPASFilter (lua_State *L) {
+  luaL_newmetatable(L, LUA_PASFILTERLIBNAME);
+  luaL_register(L, NULL, CPASFiltermeta);
+  lua_pushstring(L, "recipientfilter");
+  lua_setfield(L, -2, "__type");  /* metatable.__type = "recipientfilter" */
+  luaL_register(L, "_G", CPASFilter_funcs);
+  lua_pop(L, 1);
   return 1;
 }

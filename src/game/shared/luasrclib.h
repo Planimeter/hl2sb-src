@@ -46,6 +46,9 @@ LUALIB_API int luaopen_ConCommand(lua_State *L);
 #define LUA_CONVARLIBNAME				"ConVar"
 LUALIB_API int luaopen_ConVar(lua_State *L);
 
+#define LUA_PASFILTERLIBNAME			"CPASFilter"
+LUALIB_API int (luaopen_CPASFilter) (lua_State *L);
+
 #define LUA_RECIPIENTFILTERLIBNAME		"CRecipientFilter"
 LUALIB_API int (luaopen_CRecipientFilter) (lua_State *L);
 
