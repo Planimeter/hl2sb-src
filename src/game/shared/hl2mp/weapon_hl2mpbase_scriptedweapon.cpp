@@ -708,7 +708,8 @@ void CHL2MPScriptedWeapon::FireBullets( const FireBulletsInfo_t &info )
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: Reset our shots fired
+// Purpose: 
+// Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
 bool CHL2MPScriptedWeapon::Deploy( void )
 {
@@ -722,7 +723,22 @@ bool CHL2MPScriptedWeapon::Deploy( void )
 	return BaseClass::Deploy();
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CHL2MPScriptedWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
+{
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_WEAPON_METHOD( "Holster" );
+		lua_pushweapon( L, pSwitchingTo );
+	END_LUA_CALL_WEAPON_METHOD( 1, 1 );
 
+	RETURN_LUA_BOOLEAN();
+#endif
+
+	return BaseClass::Holster( pSwitchingTo );
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -735,6 +751,19 @@ void CHL2MPScriptedWeapon::ItemPostFrame( void )
 #endif
 
 	BaseClass::ItemPostFrame();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Called each frame by the player PostThink, if the player's not ready to attack yet
+//-----------------------------------------------------------------------------
+void CHL2MPScriptedWeapon::ItemBusyFrame( void )
+{
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_WEAPON_METHOD( "ItemBusyFrame" );
+	END_LUA_CALL_WEAPON_METHOD( 0, 0 );
+#endif
+
+	BaseClass::ItemBusyFrame();
 }
 
 #ifndef CLIENT_DLL

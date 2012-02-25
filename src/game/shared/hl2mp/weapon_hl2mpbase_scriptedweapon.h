@@ -47,8 +47,11 @@ public:
 
 	// Default calls through to m_hOwner, but plasma weapons can override and shoot projectiles here.
 	virtual void	ItemPostFrame( void );
+	virtual void	ItemBusyFrame( void );
 	virtual void	FireBullets( const FireBulletsInfo_t &info );
 	virtual bool	Deploy( void );
+	virtual bool	Holster( CBaseCombatWeapon *pSwitchingTo );
+
 #ifdef CLIENT_DLL
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual const char *GetScriptedClassname( void );

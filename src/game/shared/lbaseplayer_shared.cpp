@@ -144,7 +144,7 @@ static int CBasePlayer_GetActiveWeapon (lua_State *L) {
   return 1;
 }
 
-//Andrew; move this to CBaseCombatCharacter.
+// FIXME: move to CBaseCombatCharacter
 static int CBasePlayer_GetAmmoCount (lua_State *L) {
   switch(lua_type(L, 2)) {
 	case LUA_TNUMBER:

@@ -268,6 +268,7 @@ static int CBaseCombatWeapon_GetName (lua_State *L) {
   return 1;
 }
 
+// FIXME: push CBaseCombatCharacter instead
 static int CBaseCombatWeapon_GetOwner (lua_State *L) {
   lua_pushplayer(L, (CBasePlayer *)luaL_checkweapon(L, 1)->GetOwner());
   return 1;
@@ -928,6 +929,13 @@ static int CBaseCombatWeapon___newindex (lua_State *L) {
     pWeapon->m_iWorldModelIndex.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nViewModelIndex") == 0)
     pWeapon->m_nViewModelIndex.GetForModify() = luaL_checkint(L, 3);
+  else if (pWeapon->m_nTableReference == LUA_NOREF) {
+    lua_newtable(L);
+    pWeapon->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+  }
+  lua_getref(L, pWeapon->m_nTableReference);
+  lua_pushvalue(L, 3);
+  lua_setfield(L, -2, field);
   return 0;
 }
 
