@@ -834,7 +834,14 @@ static int CBasePlayer___newindex (lua_State *L) {
 }
 
 static int CBasePlayer___eq (lua_State *L) {
-  lua_pushboolean(L, lua_toplayer(L, 1) == lua_toplayer(L, 2));
+  CBasePlayer *a = lua_toplayer(L, 1);
+  CBasePlayer *b = lua_toplayer(L, 2);
+  if ( ( a == NULL ) && ( b == NULL ) )
+    lua_pushboolean(L, 1);
+  else if ( ( a == NULL ) || ( b == NULL ) )
+    lua_pushboolean(L, 0);
+  else
+	lua_pushboolean(L, a->entindex() == b->entindex() );
   return 1;
 }
 

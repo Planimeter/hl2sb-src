@@ -1434,7 +1434,14 @@ static int CBaseEntity___newindex (lua_State *L) {
 }
 
 static int CBaseEntity___eq (lua_State *L) {
-  lua_pushboolean(L, lua_toentity(L, 1) == lua_toentity(L, 2));
+  CBaseEntity *a = lua_toentity(L, 1);
+  CBaseEntity *b = lua_toentity(L, 2);
+  if ( ( a == NULL ) && ( b == NULL ) )
+    lua_pushboolean(L, 1);
+  else if ( ( a == NULL ) || ( b == NULL ) )
+    lua_pushboolean(L, 0);
+  else
+	lua_pushboolean(L, a->entindex() == b->entindex() );
   return 1;
 }
 

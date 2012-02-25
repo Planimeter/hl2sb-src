@@ -166,7 +166,14 @@ static int CHL2MP_Player___newindex (lua_State *L) {
 }
 
 static int CHL2MP_Player___eq (lua_State *L) {
-  lua_pushboolean(L, lua_tohl2mpplayer(L, 1) == lua_tohl2mpplayer(L, 2));
+  CHL2MP_Player *a = lua_tohl2mpplayer(L, 1);
+  CHL2MP_Player *b = lua_tohl2mpplayer(L, 2);
+  if ( ( a == NULL ) && ( b == NULL ) )
+    lua_pushboolean(L, 1);
+  else if ( ( a == NULL ) || ( b == NULL ) )
+    lua_pushboolean(L, 0);
+  else
+	lua_pushboolean(L, a->entindex() == b->entindex() );
   return 1;
 }
 
