@@ -811,14 +811,7 @@ static int CBaseAnimating___index (lua_State *L) {
 }
 
 static int CBaseAnimating___eq (lua_State *L) {
-  CBaseAnimating *a = lua_toanimating(L, 1);
-  CBaseAnimating *b = lua_toanimating(L, 2);
-  if ( ( a == NULL ) && ( b == NULL ) )
-    lua_pushboolean(L, 1);
-  else if ( ( a == NULL ) || ( b == NULL ) )
-    lua_pushboolean(L, 0);
-  else
-	lua_pushboolean(L, a->entindex() == b->entindex() );
+  lua_pushboolean(L, lua_toanimating(L, 1) == lua_toanimating(L, 2));
   return 1;
 }
 

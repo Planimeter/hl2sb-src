@@ -926,14 +926,7 @@ static int CBaseCombatWeapon___newindex (lua_State *L) {
 }
 
 static int CBaseCombatWeapon___eq (lua_State *L) {
-  CBaseCombatWeapon *a = lua_toweapon(L, 1);
-  CBaseCombatWeapon *b = lua_toweapon(L, 2);
-  if ( ( a == NULL ) && ( b == NULL ) )
-    lua_pushboolean(L, 1);
-  else if ( ( a == NULL ) || ( b == NULL ) )
-    lua_pushboolean(L, 0);
-  else
-	lua_pushboolean(L, a->entindex() == b->entindex() );
+  lua_pushboolean(L, lua_toweapon(L, 1) == lua_toweapon(L, 2));
   return 1;
 }
 
