@@ -285,10 +285,8 @@ static int CBaseEntity_entindex (lua_State *L) {
 }
 
 static int CBaseEntity_EntityToWorldSpace (lua_State *L) {
-  Vector pOut;
-  luaL_checkentity(L, 1)->EntityToWorldSpace(luaL_checkvector(L, 2), &pOut);
-  lua_pushvector(L, pOut);
-  return 1;
+  luaL_checkentity(L, 1)->EntityToWorldSpace(luaL_checkvector(L, 2), &luaL_checkvector(L, 3));
+  return 0;
 }
 
 static int CBaseEntity_EyeAngles (lua_State *L) {
