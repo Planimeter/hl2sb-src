@@ -195,6 +195,10 @@ CHL2MPScriptedWeapon::~CHL2MPScriptedWeapon( void )
 
 extern const char *pWeaponSoundCategories[ NUM_SHOOT_SOUND_TYPES ];
 
+#ifdef CLIENT_DLL
+extern ConVar hud_fastswitch;
+#endif
+
 void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 {
 #if defined ( LUA_SDK )
@@ -283,7 +287,129 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 		Q_strncpy( m_pLuaWeaponInfo->szAnimationPrefix, lua_tostring( L, -1 ), MAX_WEAPON_PREFIX );
 	}
 	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "bucket" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->iSlot = lua_tonumber( L, -1 );
+	}
+	else
+	{
+		m_pLuaWeaponInfo->iSlot = 0;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "bucket_position" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->iPosition = lua_tonumber( L, -1 );
+	}
+	else
+	{
+		m_pLuaWeaponInfo->iPosition = 0;
+	}
+	lua_pop( L, 1 );
 
+	// Use the console (X360) buckets if hud_fastswitch is set to 2.
+#ifdef CLIENT_DLL
+	if ( hud_fastswitch.GetInt() == 2 )
+#else
+	if ( IsX360() )
+#endif
+	{
+		lua_getref( L, m_nTableReference );
+		lua_getfield( L, -1, "bucket_360" );
+		lua_remove( L, -2 );
+		if ( lua_isnumber( L, -1 ) )
+		{
+			m_pLuaWeaponInfo->iSlot = lua_tonumber( L, -1 );
+		}
+		lua_pop( L, 1 );
+		lua_getref( L, m_nTableReference );
+		lua_getfield( L, -1, "bucket_position_360" );
+		lua_remove( L, -2 );
+		if ( lua_isnumber( L, -1 ) )
+		{
+			m_pLuaWeaponInfo->iPosition = lua_tonumber( L, -1 );
+		}
+		lua_pop( L, 1 );
+	}
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "clip_size" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->iMaxClip1 = lua_tonumber( L, -1 );					// Max primary clips gun can hold (assume they don't use clips by default)
+	}
+	else
+	{
+		m_pLuaWeaponInfo->iMaxClip1 = WEAPON_NOCLIP;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "clip2_size" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->iMaxClip2 = lua_tonumber( L, -1 );					// Max secondary clips gun can hold (assume they don't use clips by default)
+	}
+	else
+	{
+		m_pLuaWeaponInfo->iMaxClip2 = WEAPON_NOCLIP;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "default_clip" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->iDefaultClip1 = lua_tonumber( L, -1 );		// amount of primary ammo placed in the primary clip when it's picked up
+	}
+	else
+	{
+		m_pLuaWeaponInfo->iDefaultClip1 = m_pLuaWeaponInfo->iMaxClip1;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "default_clip2" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->iDefaultClip2 = lua_tonumber( L, -1 );		// amount of secondary ammo placed in the secondary clip when it's picked up
+	}
+	else
+	{
+		m_pLuaWeaponInfo->iDefaultClip2 = m_pLuaWeaponInfo->iMaxClip2;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "weight" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->iWeight = lua_tonumber( L, -1 );
+	}
+	else
+	{
+		m_pLuaWeaponInfo->iWeight = 0;
+	}
+	lua_pop( L, 1 );
+
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "rumble" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->iWeight = lua_tonumber( L, -1 );
+	}
+	else
+	{
+		m_pLuaWeaponInfo->iWeight = -1;
+	}
+	lua_pop( L, 1 );
+	
 	// Primary ammo used
 	lua_getref( L, m_nTableReference );
 	lua_getfield( L, -1, "primary_ammo" );
@@ -711,10 +837,9 @@ bool CHL2MPScriptedWeapon::Reload( void )
 {
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_WEAPON_METHOD( "Reload" );
-	// END_LUA_CALL_WEAPON_METHOD( 0, 1 );
-	END_LUA_CALL_WEAPON_METHOD( 0, 0 );
+	END_LUA_CALL_WEAPON_METHOD( 0, 1 );
 
-	// RETURN_LUA_BOOLEAN();
+	RETURN_LUA_BOOLEAN();
 #endif
 	return BaseClass::Reload();
 }
