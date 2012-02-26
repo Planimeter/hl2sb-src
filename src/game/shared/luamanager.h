@@ -272,9 +272,9 @@ LUA_API int   (luasrc_pcall) (lua_State *L, int nargs, int nresults, int errfunc
 LUA_API void  (luasrc_print) (lua_State *L, int narg);
 LUA_API void  (luasrc_dumpstack) (lua_State *L);
 
-// void    luasrc_LoadEffects (void);
-void       luasrc_LoadEntities (void);
-void       luasrc_LoadWeapons (void);
+// void    luasrc_LoadEffects (const char *path = 0);
+void       luasrc_LoadEntities (const char *path = 0);
+void       luasrc_LoadWeapons (const char *path = 0);
 
 bool       luasrc_LoadGamemode (const char *gamemode);
 bool       luasrc_SetGamemode (const char *gamemode);

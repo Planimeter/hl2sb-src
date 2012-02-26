@@ -23,6 +23,7 @@
 #include "tier0/memdbgon.h"
 
 ConVar sv_gamemode( "sv_gamemode", "sandbox", FCVAR_ARCHIVE | FCVAR_REPLICATED );
+char contentSearchPath[MAX_PATH];
 
 static void tag_error (lua_State *L, int narg, int tag) {
   luaL_typerror(L, narg, lua_typename(L, tag));
@@ -237,6 +238,8 @@ void luasrc_shutdown (void) {
 
   g_bLuaInitialized = false;
 
+  filesystem->RemoveSearchPath( contentSearchPath, "MOD" );
+
   ResetConCommandDatabase();
 
   RemoveGlobalChangeCallbacks();
@@ -339,15 +342,24 @@ LUA_API void luasrc_dumpstack(lua_State *L) {
   lua_pop(L, 1);  /* pop function */
 }
 
-void luasrc_LoadEntities (void)
+void luasrc_LoadEntities (const char *path)
 {
 	FileFindHandle_t fh;
+
+	if ( !path )
+	{
+		path = "";
+	}
+
+	char root[ MAX_PATH ] = { 0 };
 
 	char filename[ MAX_PATH ] = { 0 };
 	char fullpath[ MAX_PATH ] = { 0 };
 	char className[ 255 ] = { 0 };
 
-	char const *fn = g_pFullFileSystem->FindFirstEx( LUA_PATH_ENTITIES "\\*", "MOD", &fh );
+	Q_snprintf( root, sizeof( root ), "%s" LUA_PATH_ENTITIES "\\*", path );
+
+	char const *fn = g_pFullFileSystem->FindFirstEx( root, "MOD", &fh );
 	if ( fn )
 	{
 		do
@@ -359,17 +371,17 @@ void luasrc_LoadEntities (void)
 				if ( g_pFullFileSystem->FindIsDirectory( fh ) )
 				{
 #ifdef CLIENT_DLL
-					Q_snprintf( filename, sizeof( filename ), LUA_PATH_ENTITIES "\\%s\\cl_init.lua", className );
+					Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_ENTITIES "\\%s\\cl_init.lua", path, className );
 #else
-					Q_snprintf( filename, sizeof( filename ), LUA_PATH_ENTITIES "\\%s\\init.lua", className );
+					Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_ENTITIES "\\%s\\init.lua", path, className );
 #endif
 					if ( filesystem->FileExists( filename, "MOD" ) )
 					{
 						filesystem->RelativePathToFullPath( filename, "MOD", fullpath, sizeof( fullpath ) );
 						lua_newtable( L );
-						char path[ MAX_PATH ];
-						Q_snprintf( path, sizeof( path ), "entities\\%s", className );
-						lua_pushstring( L, path );
+						char entDir[ MAX_PATH ];
+						Q_snprintf( entDir, sizeof( entDir ), "entities\\%s", className );
+						lua_pushstring( L, entDir );
 						lua_setfield( L, -2, "__folder" );
 						lua_pushstring( L, LUA_BASE_ENTITY_CLASS );
 						lua_setfield( L, -2, "__base" );
@@ -413,15 +425,24 @@ void luasrc_LoadEntities (void)
 	}
 }
 
-void luasrc_LoadWeapons (void)
+void luasrc_LoadWeapons (const char *path)
 {
 	FileFindHandle_t fh;
+
+	if ( !path )
+	{
+		path = "";
+	}
+
+	char root[ MAX_PATH ] = { 0 };
 
 	char filename[ MAX_PATH ] = { 0 };
 	char fullpath[ MAX_PATH ] = { 0 };
 	char className[ MAX_WEAPON_STRING ] = { 0 };
 
-	char const *fn = g_pFullFileSystem->FindFirstEx( LUA_PATH_WEAPONS "\\*", "MOD", &fh );
+	Q_snprintf( root, sizeof( root ), "%s" LUA_PATH_WEAPONS "\\*", path );
+
+	char const *fn = g_pFullFileSystem->FindFirstEx( root, "MOD", &fh );
 	if ( fn )
 	{
 		do
@@ -433,17 +454,17 @@ void luasrc_LoadWeapons (void)
 				if ( g_pFullFileSystem->FindIsDirectory( fh ) )
 				{
 #ifdef CLIENT_DLL
-					Q_snprintf( filename, sizeof( filename ), LUA_PATH_WEAPONS "\\%s\\cl_init.lua", className );
+					Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_WEAPONS "\\%s\\cl_init.lua", path, className );
 #else
-					Q_snprintf( filename, sizeof( filename ), LUA_PATH_WEAPONS "\\%s\\init.lua", className );
+					Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_WEAPONS "\\%s\\init.lua", path, className );
 #endif
 					if ( filesystem->FileExists( filename, "MOD" ) )
 					{
 						filesystem->RelativePathToFullPath( filename, "MOD", fullpath, sizeof( fullpath ) );
 						lua_newtable( L );
-						char path[ MAX_PATH ];
-						Q_snprintf( path, sizeof( path ), "weapons\\%s", className );
-						lua_pushstring( L, path );
+						char entDir[ MAX_PATH ];
+						Q_snprintf( entDir, sizeof( entDir ), "weapons\\%s", className );
+						lua_pushstring( L, entDir );
 						lua_setfield( L, -2, "__folder" );
 						lua_pushstring( L, LUA_BASE_WEAPON );
 						lua_setfield( L, -2, "__base" );
@@ -546,6 +567,13 @@ bool luasrc_SetGamemode (const char *gamemode) {
 	  lua_pushstring(L, gamemode);
 	  luasrc_pcall(L, 1, 1, 0);
 	  lua_setglobal(L, "_GAMEMODE");
+	  Q_snprintf( contentSearchPath, sizeof( contentSearchPath ), "gamemodes\\%s\\content", gamemode );
+	  filesystem->AddSearchPath( contentSearchPath, "MOD" );
+	  char loadPath[MAX_PATH];
+	  Q_snprintf( loadPath, sizeof( loadPath ), "%s\\", contentSearchPath );
+	  luasrc_LoadWeapons( loadPath );
+	  luasrc_LoadEntities( loadPath );
+	  // luasrc_LoadEffects( loadPath );
 	  BEGIN_LUA_CALL_HOOK("Initialize");
 	  END_LUA_CALL_HOOK(0,0);
 	  return true;

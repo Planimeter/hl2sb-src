@@ -926,8 +926,9 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 	luasrc_dofolder( L, LUA_PATH_GAME_SHARED );
 	luasrc_dofolder( L, LUA_PATH_GAME_SERVER );
 
-	luasrc_LoadEntities();
 	luasrc_LoadWeapons();
+	luasrc_LoadEntities();
+	// luasrc_LoadEffects();
 
 	//Andrew; loadup base gamemode.
 	luasrc_LoadGamemode( LUA_BASE_GAMEMODE );
