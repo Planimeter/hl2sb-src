@@ -60,6 +60,7 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_INETWORKSTRINGTABLELIBNAME, luaopen_INetworkStringTable},
   {LUA_PHYSICSOBJECTLIBNAME, luaopen_IPhysicsObject},
   {LUA_PHYSICSSURFACEPROPSLIBNAME, luaopen_IPhysicsSurfaceProps},
+  {LUA_PREDICTIONSYSTEMLIBNAME, luaopen_IPredictionSystem},
 #ifdef CLIENT_DLL
   {LUA_ISCHEMELIBNAME, luaopen_IScheme},
 #endif

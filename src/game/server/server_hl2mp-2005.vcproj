@@ -2106,6 +2106,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\lipredictionsystem.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\SoundEmitterSystem\lisoundemittersystembase.cpp"
 				>
 			</File>

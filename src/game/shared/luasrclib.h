@@ -103,6 +103,9 @@ LUALIB_API int (luaopen_IPhysicsObject) (lua_State *L);
 #define LUA_PHYSICSSURFACEPROPSLIBNAME	"IPhysicsSurfaceProps"
 LUALIB_API int (luaopen_IPhysicsSurfaceProps) (lua_State *L);
 
+#define LUA_PREDICTIONSYSTEMLIBNAME		"IPredictionSystem"
+LUALIB_API int (luaopen_IPredictionSystem) (lua_State *L);
+
 #define LUA_ISCHEMELIBNAME				"IScheme"
 LUALIB_API int (luaopen_IScheme) (lua_State *L);
 

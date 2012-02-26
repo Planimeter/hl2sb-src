@@ -10,6 +10,7 @@
 
 #include "cbase.h"
 #include "luamanager.h"
+#include "luasrclib.h"
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
 #include "linetchannelinfo.h"
@@ -340,8 +341,7 @@ static const luaL_Reg enginelib[] = {
 ** Open engine library
 */
 LUALIB_API int luaopen_engine (lua_State *L) {
-  luaL_register(L, "engine", enginelib);
-  lua_pop(L, 1);
+  luaL_register(L, LUA_ENGINELIBNAME, enginelib);
   return 1;
 }
 

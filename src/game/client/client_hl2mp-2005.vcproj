@@ -1422,6 +1422,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\lipredictionsystem.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\vgui\LIScheme.cpp"
 				>
 			</File>

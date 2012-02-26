@@ -23,7 +23,7 @@
 #include "tier0/memdbgon.h"
 
 ConVar sv_gamemode( "sv_gamemode", "sandbox", FCVAR_ARCHIVE | FCVAR_REPLICATED );
-char contentSearchPath[MAX_PATH];
+static char contentSearchPath[MAX_PATH];
 
 static void tag_error (lua_State *L, int narg, int tag) {
   luaL_typerror(L, narg, lua_typename(L, tag));
