@@ -771,7 +771,11 @@ void CWeaponGravityGun::SoundUpdate( void )
 			// go from pitch 90 to 150 over a height of 500
 			int pitch = 90 + (int)UTIL_LineFraction( height, 0, 500, 60 );
 
-			(CSoundEnvelopeController::GetController()).SoundChangePitch( m_sndLockedOn, pitch, 0.0f );
+			assert(m_sndLockedOn!=NULL);
+			if ( m_sndLockedOn != NULL )
+			{
+				(CSoundEnvelopeController::GetController()).SoundChangePitch( m_sndLockedOn, pitch, 0.0f );
+			}
 
 			// attenutate the movement sounds over 200 units of movement
 			float distance = UTIL_LineFraction( m_movementLength, 0, 200, 1.0 );

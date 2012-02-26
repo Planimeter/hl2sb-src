@@ -321,16 +321,12 @@ public:
 			switch ( keynum )
 			{
 			case MOUSE_WHEEL_UP:
-				{
-					gHUD.m_iKeyBits |= IN_WEAPON1;
-					return 0;
-				}
+				gHUD.m_iKeyBits |= IN_WEAPON1;
+				return 0;
 
 			case MOUSE_WHEEL_DOWN:
-				{
-					gHUD.m_iKeyBits |= IN_WEAPON2;
-					return 0;
-				}
+				gHUD.m_iKeyBits |= IN_WEAPON2;
+				return 0;
 			}
 		}
 
