@@ -870,6 +870,22 @@ static int CBaseCombatWeapon___index (lua_State *L) {
         }
       }
     }
+  } else {
+    lua_getmetatable(L, 1);
+    lua_pushvalue(L, 2);
+    lua_gettable(L, -2);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
+      luaL_getmetatable(L, "CBaseAnimating");
+      lua_pushvalue(L, 2);
+      lua_gettable(L, -2);
+      if (lua_isnil(L, -1)) {
+        lua_pop(L, 1);
+        luaL_getmetatable(L, "CBaseEntity");
+        lua_pushvalue(L, 2);
+        lua_gettable(L, -2);
+      }
+    }
   }
   return 1;
 }
