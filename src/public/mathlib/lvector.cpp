@@ -192,20 +192,18 @@ static int Vector___index (lua_State *L) {
 }
 
 static int Vector___newindex (lua_State *L) {
-  Vector v = luaL_checkvector(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (strcmp(field, "x") == 0)
-    v.x = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkvector(L, 1).x = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "y") == 0)
-    v.y = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkvector(L, 1).y = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "z") == 0)
-    v.z = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkvector(L, 1).z = (vec_t)luaL_checknumber(L, 3);
   return 0;
 }
 
 static int Vector___tostring (lua_State *L) {
-  Vector v = luaL_checkvector(L, 1);
-  lua_pushfstring(L, "Vector: %s", VecToString( v ));
+  lua_pushfstring(L, "Vector: %s", VecToString( luaL_checkvector(L, 1) ));
   return 1;
 }
 
@@ -350,20 +348,18 @@ static int QAngle___index (lua_State *L) {
 }
 
 static int QAngle___newindex (lua_State *L) {
-  QAngle v = luaL_checkangle(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (strcmp(field, "x") == 0)
-    v.x = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkangle(L, 1).x = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "y") == 0)
-    v.y = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkangle(L, 1).y = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "z") == 0)
-    v.z = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkangle(L, 1).z = (vec_t)luaL_checknumber(L, 3);
   return 0;
 }
 
 static int QAngle___tostring (lua_State *L) {
-  QAngle v = luaL_checkangle(L, 1);
-  lua_pushfstring(L, VecToString( v ));
+  lua_pushfstring(L, VecToString( luaL_checkangle(L, 1) ));
   return 1;
 }
 
