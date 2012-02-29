@@ -34,7 +34,7 @@ public:
 public:
 	void	Think();	
 
-	// void	Spawn( void );
+	void	Spawn( void );
 	void	Precache( void );
 	void	InitScriptedEntity( void );
 

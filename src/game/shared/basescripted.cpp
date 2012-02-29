@@ -199,11 +199,18 @@ const char *CBaseScripted::GetScriptedClassname( void )
 }
 #endif
 
+void CBaseScripted::Spawn( void )
+{
+	BaseClass::Spawn();
+
+	InitScriptedEntity();
+}
+
 void CBaseScripted::Precache( void )
 {
 	BaseClass::Precache();
 
-	InitScriptedEntity();
+	// InitScriptedEntity();
 }
 
 #ifdef CLIENT_DLL
