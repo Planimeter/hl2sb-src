@@ -123,6 +123,9 @@ static void base_open (lua_State *L) {
   /* open lib into global table */
   luaL_register(L, "_G", base_funcs);
   lua_pop(L, 1);
+  /* set global _E */
+  lua_newtable(L);
+  lua_setglobal(L, "_E");
 #ifdef CLIENT_DLL
   lua_pushboolean(L, 1);
   lua_setglobal(L, "_CLIENT");  /* set global _CLIENT */

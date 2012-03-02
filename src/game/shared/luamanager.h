@@ -40,7 +40,8 @@
 #pragma warning( disable: 4800 )	// forcing value to bool 'true' or 'false' (performance warning)
 
 #define BEGIN_LUA_SET_ENUM_LIB(L, libraryName) \
-  const char *lib = "_E."libraryName; \
+  const char *lib = libraryName; \
+  lua_getglobal(L, "_E"); \
   lua_newtable(L);
 
 #define lua_pushenum(L, enum, shortname) \
@@ -48,7 +49,8 @@
   lua_setfield(L, -2, shortname);
 
 #define END_LUA_SET_ENUM_LIB(L) \
-  lua_setglobal(L, lib);
+  lua_setfield(L, -2, lib); \
+  lua_pop(L, 1);
 
 #define BEGIN_LUA_CALL_HOOK(functionName) \
   lua_getglobal(L, "hook"); \
