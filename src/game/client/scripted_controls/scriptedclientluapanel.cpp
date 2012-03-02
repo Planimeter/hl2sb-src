@@ -35,6 +35,22 @@ CScriptedClientLuaPanel::CScriptedClientLuaPanel() : vgui::EditablePanel( NULL, 
 	SetProportional( true );
 }
 
+void CScriptedClientLuaPanel::CreateDefaultPanels( void )
+{
+	BEGIN_LUA_CALL_HOOK( "CreateDefaultPanels" );
+	END_LUA_CALL_HOOK( 0, 0 );
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: called when the VGUI subsystem starts up
+//			Creates the sub panels and initialises them
+//-----------------------------------------------------------------------------
+void CScriptedClientLuaPanel::Start( IGameUIFuncs *pGameUIFuncs, IGameEventManager2 * pGameEventManager )
+{
+	CreateDefaultPanels();
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: Sets the parent for each panel to use
 //-----------------------------------------------------------------------------
