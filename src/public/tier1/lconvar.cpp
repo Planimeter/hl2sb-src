@@ -243,10 +243,20 @@ static int luasrc_ConCommand (lua_State *L) {
   ConCommand *pConCommand;
 #ifdef CLIENT_DLL
   if (bIsGameUI)
+#if 0
     pConCommand = new ConCommand(strdup(pName), CC_GameUIConCommand, strdup(luaL_optstring(L, 2, 0)), luaL_optint(L, 3, 0), NULL);
-  else
+#else
+    pConCommand = new ConCommand(strdup(pName), CC_GameUIConCommand, strdup(luaL_optstring(L, 2, 0)), 0, NULL);
 #endif
+  else
+    pConCommand = new ConCommand(strdup(pName), CC_ConCommand, strdup(luaL_optstring(L, 2, 0)), FCVAR_CLIENTDLL | FCVAR_CLIENTCMD_CAN_EXECUTE | FCVAR_SERVER_CAN_EXECUTE, NULL);
+#else
+#if 0
     pConCommand = new ConCommand(strdup(pName), CC_ConCommand, strdup(luaL_optstring(L, 2, 0)), luaL_optint(L, 3, 0), NULL);
+#else
+    pConCommand = new ConCommand(strdup(pName), CC_ConCommand, strdup(luaL_optstring(L, 2, 0)), FCVAR_GAMEDLL | FCVAR_CLIENTCMD_CAN_EXECUTE, NULL);
+#endif
+#endif
 
 #ifdef CLIENT_DLL
   if (bIsGameUI) {
