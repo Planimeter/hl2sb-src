@@ -39,11 +39,15 @@
 
 #pragma warning( disable: 4800 )	// forcing value to bool 'true' or 'false' (performance warning)
 
-#define BEGIN_LUA_SET_LIBRARY(libraryName) \
-  const char *lib = libraryName; \
+#define BEGIN_LUA_SET_ENUM_LIB(L, libraryName) \
+  const char *lib = "_E."libraryName; \
   lua_newtable(L);
 
-#define END_LUA_SET_LIBRARY() \
+#define lua_pushenum(L, enum, shortname) \
+  lua_pushinteger(L, enum); \
+  lua_setfield(L, -2, shortname);
+
+#define END_LUA_SET_ENUM_LIB(L) \
   lua_setglobal(L, lib);
 
 #define BEGIN_LUA_CALL_HOOK(functionName) \

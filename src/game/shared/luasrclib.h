@@ -70,6 +70,9 @@ LUALIB_API int (luaopen_engine) (lua_State *L);
 #define LUA_ENGINEVGUILIBNAME			"enginevgui"
 LUALIB_API int (luaopen_enginevgui) (lua_State *L);
 
+#define LUA_FCVARLIBNAME				"FCVAR"
+LUALIB_API int (luaopen_FCVAR) (lua_State *L);
+
 #define LUA_FILESYSTEMLIBNAME			"filesystem"
 LUALIB_API int (luaopen_filesystem) (lua_State *L);
 

@@ -519,11 +519,11 @@ void CWorld::RegisterSharedActivities( void )
 	// as-needed basis, and store them as locals in their relative files, or
 	// simply use the raw value of that enumeration in scripts, which is the
 	// most performance efficient option.
-	// BEGIN_LUA_SET_LIBRARY( "Activity" );
+	// BEGIN_LUA_SET_ENUM_LIB( "Activity" );
 #endif
 	ActivityList_RegisterSharedActivities();
 #ifdef LUA_SDK
-	// END_LUA_SET_LIBRARY();
+	// END_LUA_SET_ENUM_LIB();
 #endif
 }
 

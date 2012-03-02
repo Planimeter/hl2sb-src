@@ -45,6 +45,7 @@ static const luaL_Reg luasrclibs[] = {
   // which always ends up being invalid (we can't access them by pointer)
   {LUA_ENGINEVGUILIBNAME, luaopen_enginevgui},
 #endif
+  {LUA_FCVARLIBNAME, luaopen_FCVAR},
   {LUA_FILESYSTEMLIBNAME, luaopen_filesystem},
   {LUA_GLOBALSLIBNAME, luaopen_gpGlobals},
 #ifdef CLIENT_DLL

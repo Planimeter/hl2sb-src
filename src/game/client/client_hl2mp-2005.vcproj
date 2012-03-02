@@ -1406,6 +1406,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\tier1\liconvar.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\licvar.cpp"
 				>
 			</File>
