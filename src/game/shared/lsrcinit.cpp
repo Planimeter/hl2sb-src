@@ -20,9 +20,7 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_BASECOMBATWEAPONLIBNAME, luaopen_CBaseCombatWeapon},
   {LUA_BASEENTITYLIBNAME, luaopen_CBaseEntity},
   {LUA_BASEENTITYLIBNAME, luaopen_CBaseEntity_shared},
-#ifndef CLIENT_DLL
   {LUA_BASEPLAYERLIBNAME, luaopen_CBasePlayer},
-#endif
   {LUA_BASEPLAYERLIBNAME, luaopen_CBasePlayer_shared},
   {LUA_EFFECTDATALIBNAME, luaopen_CEffectData},
   {LUA_GAMETRACELIBNAME, luaopen_CGameTrace},

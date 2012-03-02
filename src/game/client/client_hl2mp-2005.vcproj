@@ -1366,6 +1366,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lc_baseplayer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lcdll_int.cpp"
 				>
 			</File>
