@@ -107,6 +107,7 @@ ClientModeHL2MPNormal::ClientModeHL2MPNormal()
 	m_pViewport->Start( gameuifuncs, gameeventmanager );
 #ifdef LUA_SDK
 	m_pClientLuaPanel = new CScriptedClientLuaPanel();
+	m_pClientLuaPanel->Start( gameuifuncs, gameeventmanager );
 #endif
 }
 

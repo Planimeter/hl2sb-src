@@ -20,6 +20,9 @@ class CScriptedClientLuaPanel : public vgui::EditablePanel
 public: 
 	CScriptedClientLuaPanel();
 
+	virtual void CreateDefaultPanels( void );
+
+	virtual void Start( IGameUIFuncs *pGameUIFuncs, IGameEventManager2 *pGameEventManager );
 	virtual void SetParent(vgui::VPANEL parent);
 
 protected:
