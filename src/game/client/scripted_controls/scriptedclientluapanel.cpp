@@ -37,8 +37,11 @@ CScriptedClientLuaPanel::CScriptedClientLuaPanel() : vgui::EditablePanel( NULL, 
 
 void CScriptedClientLuaPanel::CreateDefaultPanels( void )
 {
+	// Was a nice idea, but is called on game init and not level init
+#if 0
 	BEGIN_LUA_CALL_HOOK( "CreateDefaultPanels" );
 	END_LUA_CALL_HOOK( 0, 0 );
+#endif
 }
 
 
