@@ -55,10 +55,8 @@ static int luasrc_NormalizeAngles (lua_State *L) {
 }
 
 static int luasrc_InterpolateAngles (lua_State *L) {
-  QAngle output;
-  InterpolateAngles(luaL_checkangle(L, 1), luaL_checkangle(L, 2), output, luaL_checknumber(L, 3));
-  lua_pushangle(L, output);
-  return 1;
+  InterpolateAngles(luaL_checkangle(L, 1), luaL_checkangle(L, 2), luaL_checkangle(L, 3), luaL_checknumber(L, 4));
+  return 0;
 }
 
 static int luasrc_ScreenHeight (lua_State *L) {
