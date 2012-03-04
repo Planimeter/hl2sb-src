@@ -153,10 +153,8 @@ static int luasrc_UTIL_SafeName (lua_State *L) {
 }
 
 static int luasrc_UTIL_BoundToWorldSize (lua_State *L) {
-  Vector pVecPos = luaL_checkvector(L, 1);
-  UTIL_BoundToWorldSize(&pVecPos);
-  lua_pushvector(L, pVecPos);
-  return 1;
+  UTIL_BoundToWorldSize(&luaL_checkvector(L, 1));
+  return 0;
 }
 
 
