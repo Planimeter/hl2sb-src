@@ -13,6 +13,7 @@
 #include "lbaseplayer_shared.h"
 #include "lbaseentity_shared.h"
 #include "mathlib/lvector.h"
+#include "vgui/lvgui.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -66,6 +67,11 @@ static int luasrc_ScreenHeight (lua_State *L) {
 
 static int luasrc_ScreenWidth (lua_State *L) {
   lua_pushinteger(L, ScreenWidth());
+  return 1;
+}
+
+static int luasrc_UTIL_ComputeStringWidth (lua_State *L) {
+  lua_pushinteger(L, UTIL_ComputeStringWidth(*(vgui::HFont *)luaL_checkfont(L, 1), luaL_checkstring(L, 2)));
   return 1;
 }
 
@@ -164,6 +170,8 @@ static const luaL_Reg util_funcs[] = {
   {"InterpolateAngles",  luasrc_InterpolateAngles},
   {"ScreenHeight",  luasrc_ScreenHeight},
   {"ScreenWidth",  luasrc_ScreenWidth},
+  // {"UTIL_ComputeStringWidth", luasrc_UTIL_ComputeStringWidth},
+  {"ComputeStringWidth", luasrc_UTIL_ComputeStringWidth},
   // {"UTIL_AngleDiff",  luasrc_UTIL_AngleDiff},
   {"AngleDiff",  luasrc_UTIL_AngleDiff},
   // {"UTIL_Bubbles",  luasrc_UTIL_Bubbles},
