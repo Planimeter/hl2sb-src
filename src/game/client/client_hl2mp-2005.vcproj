@@ -1422,6 +1422,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\vgui\LIInput.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\materialsystem\limaterial.cpp"
 				>
 			</File>

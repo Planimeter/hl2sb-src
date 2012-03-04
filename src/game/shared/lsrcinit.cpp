@@ -57,6 +57,9 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_NETCHANNELINFOLIBNAME, luaopen_INetChannelInfo},
 #endif
   {LUA_INETWORKSTRINGTABLELIBNAME, luaopen_INetworkStringTable},
+#ifdef CLIENT_DLL
+  {LUA_INPUTLIBNAME, luaopen_input},
+#endif
   {LUA_PHYSICSOBJECTLIBNAME, luaopen_IPhysicsObject},
   {LUA_PHYSICSSURFACEPROPSLIBNAME, luaopen_IPhysicsSurfaceProps},
   {LUA_PREDICTIONSYSTEMLIBNAME, luaopen_IPredictionSystem},

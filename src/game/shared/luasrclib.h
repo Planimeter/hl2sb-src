@@ -100,6 +100,9 @@ LUALIB_API int (luaopen_INetChannelInfo) (lua_State *L);
 #define LUA_INETWORKSTRINGTABLELIBNAME	"INetworkStringTable"
 LUALIB_API int (luaopen_INetworkStringTable) (lua_State *L);
 
+#define LUA_INPUTLIBNAME				"input"
+LUALIB_API int (luaopen_input) (lua_State *L);
+
 #define LUA_PHYSICSOBJECTLIBNAME		"IPhysicsObject"
 LUALIB_API int (luaopen_IPhysicsObject) (lua_State *L);
 
