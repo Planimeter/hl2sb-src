@@ -286,6 +286,7 @@ static const luaL_Reg inputlib[] = {
   {"GetCandidateListSelectedItem",   input_GetCandidateListSelectedItem},
   {"GetCurrentIMEHandle",   input_GetCurrentIMEHandle},
   {"GetCursorPos__USE_VCR_MODE",   input_GetCursorPos__USE_VCR_MODE},
+  {"GetCursorPos",   input_GetCursorPos__USE_VCR_MODE},
   {"GetCursorPosition",   input_GetCursorPosition},
   {"GetEnglishIMEHandle",   input_GetEnglishIMEHandle},
   {"GetFocus",   input_GetFocus},
