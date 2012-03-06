@@ -144,10 +144,8 @@ static int IMaterial_GetPropertyFlag (lua_State *L) {
 }
 
 static int IMaterial_GetReflectivity (lua_State *L) {
-  Vector reflect;
-  luaL_checkmaterial(L, 1)->GetReflectivity(reflect);
-  lua_pushvector(L, reflect);
-  return 1;
+  luaL_checkmaterial(L, 1)->GetReflectivity(luaL_checkvector(L, 2));
+  return 0;
 }
 
 static int IMaterial_GetShaderName (lua_State *L) {

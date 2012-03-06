@@ -153,25 +153,18 @@ static int CBaseEntity_CollisionRulesChanged (lua_State *L) {
 }
 
 static int CBaseEntity_ComputeAbsDirection (lua_State *L) {
-  Vector pAbsDirection;
-  luaL_checkentity(L, 1)->ComputeAbsDirection(luaL_checkvector(L, 2), &pAbsDirection);
-  lua_pushvector(L, pAbsDirection);
-  return 1;
+  luaL_checkentity(L, 1)->ComputeAbsDirection(luaL_checkvector(L, 2), &luaL_checkvector(L, 3));
+  return 0;
 }
 
 static int CBaseEntity_ComputeAbsPosition (lua_State *L) {
-  Vector pAbsDirection;
-  luaL_checkentity(L, 1)->ComputeAbsPosition(luaL_checkvector(L, 2), &pAbsDirection);
-  lua_pushvector(L, pAbsDirection);
-  return 1;
+  luaL_checkentity(L, 1)->ComputeAbsPosition(luaL_checkvector(L, 2), &luaL_checkvector(L, 3));
+  return 0;
 }
 
 static int CBaseEntity_ComputeWorldSpaceSurroundingBox (lua_State *L) {
-  Vector pVecWorldMins, pVecWorldMaxs;
-  luaL_checkentity(L, 1)->ComputeWorldSpaceSurroundingBox(&pVecWorldMins, &pVecWorldMaxs);
-  lua_pushvector(L, pVecWorldMins);
-  lua_pushvector(L, pVecWorldMaxs);
-  return 2;
+  luaL_checkentity(L, 1)->ComputeWorldSpaceSurroundingBox(&luaL_checkvector(L, 2), &luaL_checkvector(L, 3));
+  return 0;
 }
 
 static int CBaseEntity_CreateDataObject (lua_State *L) {
@@ -296,8 +289,7 @@ static int CBaseEntity_EyeAngles (lua_State *L) {
 }
 
 static int CBaseEntity_EyePosition (lua_State *L) {
-  Vector v = luaL_checkentity(L, 1)->EyePosition();
-  lua_pushvector(L, v);
+  lua_pushvector(L, luaL_checkentity(L, 1)->EyePosition());
   return 1;
 }
 
@@ -1354,10 +1346,8 @@ static int CBaseEntity_WorldSpaceCenter (lua_State *L) {
 }
 
 static int CBaseEntity_WorldToEntitySpace (lua_State *L) {
-  Vector pOut;
-  luaL_checkentity(L, 1)->WorldToEntitySpace(luaL_checkvector(L, 2), &pOut);
-  lua_pushvector(L, pOut);
-  return 1;
+  luaL_checkentity(L, 1)->WorldToEntitySpace(luaL_checkvector(L, 2), &luaL_checkvector(L, 3));
+  return 0;
 }
 
 static int CBaseEntity___index (lua_State *L) {
