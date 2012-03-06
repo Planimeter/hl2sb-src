@@ -98,8 +98,7 @@ void ResetWeaponFactoryDatabase( void )
 	GetClassMap().RemoveAllScripted();
 #endif
 #else
-	int c = m_WeaponFactoryDatabase.Count(); 
-	for ( int i = 0; i < c; ++i )
+	for ( int i=m_WeaponFactoryDatabase.First(); i != m_WeaponFactoryDatabase.InvalidIndex(); i=m_WeaponFactoryDatabase.Next( i ) )
 	{
 		delete m_WeaponFactoryDatabase[ i ];
 	}

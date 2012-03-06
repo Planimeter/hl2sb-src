@@ -276,8 +276,7 @@ static int luasrc_ConCommand (lua_State *L) {
 #ifdef CLIENT_DLL
 void ResetGameUIConCommandDatabase( void )
 {
-	int c = m_GameUIConCommandDatabase.Count(); 
-	for ( int i = 0; i < c; ++i )
+	for ( int i=m_GameUIConCommandDatabase.First(); i != m_GameUIConCommandDatabase.InvalidIndex(); i=m_GameUIConCommandDatabase.Next( i ) )
 	{
 		ConCommand *pConCommand = m_GameUIConCommandDatabase[ i ];
 		cvar->UnregisterConCommand(pConCommand);
@@ -289,8 +288,7 @@ void ResetGameUIConCommandDatabase( void )
 
 void ResetConCommandDatabase( void )
 {
-	int c = m_ConCommandDatabase.Count(); 
-	for ( int i = 0; i < c; ++i )
+	for ( int i=m_ConCommandDatabase.First(); i != m_ConCommandDatabase.InvalidIndex(); i=m_ConCommandDatabase.Next( i ) )
 	{
 		ConCommand *pConCommand = m_ConCommandDatabase[ i ];
 		cvar->UnregisterConCommand(pConCommand);
@@ -458,8 +456,7 @@ static int luasrc_ConVar (lua_State *L) {
 
 void ResetConVarDatabase( void )
 {
-	int c = m_ConVarDatabase.Count(); 
-	for ( int i = 0; i < c; ++i )
+	for ( int i=m_ConVarDatabase.First(); i != m_ConVarDatabase.InvalidIndex(); i=m_ConVarDatabase.Next( i ) )
 	{
 		ConVar *pConVar = m_ConVarDatabase[ i ];
 		cvar->UnregisterConCommand(pConVar);

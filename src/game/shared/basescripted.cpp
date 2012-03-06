@@ -80,8 +80,7 @@ void ResetEntityFactoryDatabase( void )
 	GetClassMap().RemoveAllScripted();
 #endif
 #else
-	int c = m_EntityFactoryDatabase.Count(); 
-	for ( int i = 0; i < c; ++i )
+	for ( int i=m_EntityFactoryDatabase.First(); i != m_EntityFactoryDatabase.InvalidIndex(); i=m_EntityFactoryDatabase.Next( i ) )
 	{
 		delete m_EntityFactoryDatabase[ i ];
 	}
