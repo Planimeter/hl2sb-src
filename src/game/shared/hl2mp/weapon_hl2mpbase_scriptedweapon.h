@@ -45,6 +45,9 @@ public:
 	void	PrimaryAttack( void );
 	void	SecondaryAttack( void );
 
+	// Firing animations
+	virtual Activity		GetDrawActivity( void );
+
 	// Default calls through to m_hOwner, but plasma weapons can override and shoot projectiles here.
 	virtual void	ItemPostFrame( void );
 	virtual void	ItemBusyFrame( void );

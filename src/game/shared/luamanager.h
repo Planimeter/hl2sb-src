@@ -180,6 +180,17 @@
 	  lua_pop(L, 1); \
   }
 
+#define RETURN_LUA_ACTIVITY() \
+  if (lua_gettop(L) == 1) { \
+    if (lua_isnumber(L, -1)) { \
+	  int res = luaL_checkint(L, -1); \
+	  lua_pop(L, 1); \
+	  return (Activity)res; \
+	} \
+    else \
+	  lua_pop(L, 1); \
+  }
+
 #define RETURN_LUA_STRING() \
   if (lua_gettop(L) == 1) { \
     if (lua_isstring(L, -1)) { \

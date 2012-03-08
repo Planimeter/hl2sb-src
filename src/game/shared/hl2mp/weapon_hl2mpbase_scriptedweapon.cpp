@@ -932,6 +932,19 @@ bool CHL2MPScriptedWeapon::Deploy( void )
 	return BaseClass::Deploy();
 }
 
+Activity CHL2MPScriptedWeapon::GetDrawActivity( void )
+{
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_WEAPON_METHOD( "GetDrawActivity" );
+	END_LUA_CALL_WEAPON_METHOD( 0, 1 );
+
+	// Kind of lame, but we're required to explicitly cast
+	RETURN_LUA_ACTIVITY();
+#endif
+
+	return BaseClass::GetDrawActivity();
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Output : Returns true on success, false on failure.
