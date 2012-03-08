@@ -116,6 +116,31 @@ LUA_API void luasrc_ExtractLcf ()
 
 static CUtlDict< char *, int > m_LcfDatabase;
 
+static const char *UTIL_StripAddonName( char *addonName )
+{
+	char *pc = addonName;
+	int i = 0;
+	while ( *pc )
+	{
+		char c = *pc;
+
+		if ( c == '/' || c == '\\' )
+		{
+			*pc = 0;
+			++i;
+			return addonName + i;
+		}
+		else
+		{
+			*pc = 0;
+			++i;
+		}
+		++pc;
+	}
+	Assert( false );
+	return addonName + i;
+}
+
 static int luasrc_sendfile (lua_State *L) {
   // Can only send files in multiplayer!!!
   if ( gpGlobals->maxClients == 1 )
@@ -133,10 +158,28 @@ static int luasrc_sendfile (lua_State *L) {
   Q_StripFilename( source );
   char filename[MAX_PATH];
   Q_snprintf( filename, sizeof( filename ), "%s\\%s", source, luaL_checkstring(L, 1) );
-  char gamePath[ 256 ];
-  engine->GetGameDir( gamePath, 256 );
-  DevMsg( "LCF: adding %s to the Lua cache file...\n", filename + Q_strlen( gamePath ) + 1 );
-  m_LcfDatabase.Insert( filename + Q_strlen( gamePath ) + 1, strdup( filename ) );
+  char relativePath[MAX_PATH];
+  if ( filesystem->FullPathToRelativePathEx( filename, "MOD", relativePath, MAX_PATH ) )
+  {
+	const char *zipPath = NULL;
+	if ( Q_strnicmp( relativePath, "addons/", 7 ) )
+	{
+		char *substring = strstr( relativePath, "addons\\" );
+		if ( substring )
+		{
+			*substring = 0;
+			zipPath = UTIL_StripAddonName( relativePath + 7 );
+		}
+	}
+	char gamePath[ 256 ];
+	engine->GetGameDir( gamePath, 256 );
+	DevMsg( "LCF: adding %s to the Lua cache file...\n", zipPath );
+	m_LcfDatabase.Insert( zipPath, strdup( filename ) );
+  }
+  else
+  {
+	DevMsg( "LCF: couldn't find relative path to %s!\n", filename );
+  }
   return 0;
 }
 
