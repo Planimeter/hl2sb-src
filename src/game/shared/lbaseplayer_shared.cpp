@@ -317,6 +317,12 @@ static int CBasePlayer_GetPreviouslyPredictedOrigin (lua_State *L) {
   return 1;
 }
 
+static int CBasePlayer_GetPunchAngle (lua_State *L) {
+  QAngle v = luaL_checkplayer(L, 1)->GetPunchAngle();
+  lua_pushangle(L, v);
+  return 1;
+}
+
 static int CBasePlayer_GetStepSoundCache (lua_State *L) {
   CBasePlayer *pPlayer = luaL_checkplayer(L, 1);
   lua_newtable(L);
@@ -507,7 +513,15 @@ static int CBasePlayer_RemoveAllAmmo (lua_State *L) {
 }
 
 static int CBasePlayer_RemoveAmmo (lua_State *L) {
-  luaL_checkplayer(L, 1)->RemoveAmmo(luaL_checkint(L, 2), luaL_checkstring(L, 3));
+  switch(lua_type(L, 3)) {
+	case LUA_TNUMBER:
+	default:
+	  luaL_checkplayer(L, 1)->RemoveAmmo(luaL_checkint(L, 2), luaL_checkint(L, 3));
+	  break;
+	case LUA_TSTRING:
+      luaL_checkplayer(L, 1)->RemoveAmmo(luaL_checkint(L, 2), luaL_checkstring(L, 3));
+	  break;
+  }
   return 0;
 }
 
@@ -636,6 +650,11 @@ static int CBasePlayer_SetPlayerUnderwater (lua_State *L) {
 
 static int CBasePlayer_SetPreviouslyPredictedOrigin (lua_State *L) {
   luaL_checkplayer(L, 1)->SetPreviouslyPredictedOrigin(luaL_checkvector(L, 2));
+  return 0;
+}
+
+static int CBasePlayer_SetPunchAngle (lua_State *L) {
+  luaL_checkplayer(L, 1)->SetPunchAngle(luaL_checkangle(L, 2));
   return 0;
 }
 
@@ -902,6 +921,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"GetPlayerMaxs", CBasePlayer_GetPlayerMaxs},
   {"GetPlayerMins", CBasePlayer_GetPlayerMins},
   {"GetPreviouslyPredictedOrigin", CBasePlayer_GetPreviouslyPredictedOrigin},
+  {"GetPunchAngle", CBasePlayer_GetPunchAngle},
   {"GetStepSoundCache", CBasePlayer_GetStepSoundCache},
   {"GetStepSoundVelocities", CBasePlayer_GetStepSoundVelocities},
   {"GetSwimSoundTime", CBasePlayer_GetSwimSoundTime},
@@ -953,6 +973,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"SetPlayerLocalData", CBasePlayer_SetPlayerLocalData},
   {"SetPlayerUnderwater", CBasePlayer_SetPlayerUnderwater},
   {"SetPreviouslyPredictedOrigin", CBasePlayer_SetPreviouslyPredictedOrigin},
+  {"SetPunchAngle", CBasePlayer_SetPunchAngle},
   {"SetStepSoundCache", CBasePlayer_SetStepSoundCache},
   {"SetSuitUpdate", CBasePlayer_SetSuitUpdate},
   {"SetSwimSoundTime", CBasePlayer_SetSwimSoundTime},

@@ -15,6 +15,16 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+static int mathlib_clamp (lua_State *L) {
+  lua_pushnumber(L, clamp(luaL_checknumber(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3)));
+  return 1;
+}
+
+static int mathlib_AngleVectors (lua_State *L) {
+  AngleVectors(luaL_checkangle(L, 1), &luaL_checkvector(L, 2));
+  return 0;
+}
+
 static int mathlib_VectorAngles (lua_State *L) {
   if (lua_gettop(L) > 2)
     VectorAngles(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkangle(L, 3));
@@ -25,6 +35,8 @@ static int mathlib_VectorAngles (lua_State *L) {
 
 
 static const luaL_Reg mathliblib[] = {
+  {"clamp",   mathlib_clamp},
+  {"AngleVectors",   mathlib_AngleVectors},
   {"VectorAngles",   mathlib_VectorAngles},
   {NULL, NULL}
 };

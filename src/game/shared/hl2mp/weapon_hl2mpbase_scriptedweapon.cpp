@@ -409,6 +409,79 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	}
 	lua_pop( L, 1 );
 	
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "showusagehint" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->bShowUsageHint = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+	}
+	else
+	{
+		m_pLuaWeaponInfo->bShowUsageHint = false;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "autoswitchto" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->bAutoSwitchTo = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+	}
+	else
+	{
+		m_pLuaWeaponInfo->bAutoSwitchTo = true;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "autoswitchfrom" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->bAutoSwitchFrom = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+	}
+	else
+	{
+		m_pLuaWeaponInfo->bAutoSwitchFrom = true;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "BuiltRightHanded" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->m_bBuiltRightHanded = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+	}
+	else
+	{
+		m_pLuaWeaponInfo->m_bBuiltRightHanded = true;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "AllowFlipping" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->m_bAllowFlipping = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+	}
+	else
+	{
+		m_pLuaWeaponInfo->m_bAllowFlipping = true;
+	}
+	lua_pop( L, 1 );
+	lua_getref( L, m_nTableReference );
+	lua_getfield( L, -1, "MeleeWeapon" );
+	lua_remove( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+	{
+		m_pLuaWeaponInfo->m_bMeleeWeapon = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+	}
+	else
+	{
+		m_pLuaWeaponInfo->m_bMeleeWeapon = false;
+	}
+	lua_pop( L, 1 );
+
 	// Primary ammo used
 	lua_getref( L, m_nTableReference );
 	lua_getfield( L, -1, "primary_ammo" );
