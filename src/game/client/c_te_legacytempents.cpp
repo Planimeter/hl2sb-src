@@ -33,6 +33,12 @@
 #include "engine/IVDebugOverlay.h"
 #include "effect_dispatch_data.h"
 #include "c_te_effect_dispatch.h"
+#ifdef LUA_SDK
+#include "weapon_hl2mpbase_scriptedweapon.h"
+#include "luamanager.h"
+#include "lbasecombatweapon_shared.h"
+#include "mathlib/lvector.h"
+#endif
 
 // NOTE: Always include this last!
 #include "tier0/memdbgon.h"
@@ -1792,6 +1798,29 @@ void CTempEnts::MuzzleFlash( const Vector& pos1, const QAngle& angles, int type,
 	return;
 
 #else
+
+#if defined ( LUA_SDK )
+	CBasePlayer *pPlayer = dynamic_cast<CBasePlayer *>((CBaseEntity*)hEntity.Get());
+	if ( pPlayer != NULL )
+	{
+		CBaseCombatWeapon *pWeapon = dynamic_cast<CHL2MPScriptedWeapon *>(pPlayer->GetActiveWeapon());
+
+		if ( pWeapon != NULL )
+		{
+			Vector pos = pos1;
+			QAngle ang = angles;
+
+			BEGIN_LUA_CALL_WEAPON_HOOK( "MuzzleFlash", pWeapon );
+				lua_pushvector( L, pos );
+				lua_pushangle( L, ang );
+				lua_pushinteger( L, type );
+				lua_pushboolean( L, firstPerson );
+			END_LUA_CALL_WEAPON_HOOK( 4, 1 );
+
+			RETURN_LUA_NONE();
+		}
+	}
+#endif
 
 	//NOTENOTE: This function is becoming obsolete as the muzzles are moved over to being local to attachments
 
