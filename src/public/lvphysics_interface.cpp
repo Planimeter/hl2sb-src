@@ -1186,6 +1186,8 @@ LUALIB_API int luaopen_IPhysicsSurfaceProps (lua_State *L) {
   lua_setfield(L, -2, "__index");  /* metatable.__index = metatable */
   lua_pushstring(L, "physicssurfaceprops");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "physicssurfaceprops" */
+  lua_pushphysicssurfaceprops(L, physprops);
+  lua_setglobal(L, "physprops");  /* set global physprops */
   return 1;
 }
 

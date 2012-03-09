@@ -10,6 +10,7 @@
 #include "luamanager.h"
 #include "luasrclib.h"
 #include "lgametrace.h"
+#include "lcmodel.h"
 #include "lbaseentity_shared.h"
 #include "mathlib/lvector.h"
 
@@ -120,6 +121,8 @@ static int CGameTrace___index (lua_State *L) {
     lua_pushvector(L, tr.startpos);
   else if (Q_strcmp(field, "startsolid") == 0)
     lua_pushboolean(L, tr.startsolid);
+  else if (Q_strcmp(field, "surface") == 0)
+    lua_pushcsurface(L, tr.surface);
   else {
     lua_getmetatable(L, 1);
     lua_pushvalue(L, 2);

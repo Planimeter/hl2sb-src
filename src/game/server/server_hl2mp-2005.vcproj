@@ -5254,6 +5254,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\lcmodel.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lColor.h"
 				>
 			</File>
