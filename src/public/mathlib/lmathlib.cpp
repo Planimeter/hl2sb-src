@@ -21,7 +21,10 @@ static int mathlib_clamp (lua_State *L) {
 }
 
 static int mathlib_AngleVectors (lua_State *L) {
-  AngleVectors(luaL_checkangle(L, 1), &luaL_checkvector(L, 2));
+  if (lua_gettop(L) > 2)
+    AngleVectors(luaL_checkangle(L, 1), &luaL_checkvector(L, 2), &luaL_checkvector(L, 3), &luaL_checkvector(L, 4));
+  else
+    AngleVectors(luaL_checkangle(L, 1), &luaL_checkvector(L, 2));
   return 0;
 }
 

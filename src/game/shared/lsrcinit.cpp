@@ -30,6 +30,7 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_HL2MPPLAYERLIBNAME, luaopen_CHL2MP_Player_shared},
   {LUA_COLORLIBNAME, luaopen_Color},
   {LUA_CONCOMMANDLIBNAME, luaopen_ConCommand},
+  {LUA_CONTENTSLIBNAME, luaopen_CONTENTS},
   {LUA_CONVARLIBNAME, luaopen_ConVar},
   {LUA_PASFILTERLIBNAME, luaopen_CPASFilter},
   {LUA_RECIPIENTFILTERLIBNAME, luaopen_CRecipientFilter},
@@ -82,6 +83,7 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_SCHEMELIBNAME, luaopen_scheme},
 #endif
   {LUA_STEAMAPICONTEXTLIBNAME, luaopen_steamapicontext},
+  {LUA_SURFLIBNAME, luaopen_SURF},
 #ifdef CLIENT_DLL
   {LUA_SURFACELIBNAME, luaopen_surface},
 #endif

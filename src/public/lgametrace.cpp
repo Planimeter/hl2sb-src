@@ -129,32 +129,31 @@ static int CGameTrace___index (lua_State *L) {
 }
 
 static int CGameTrace___newindex (lua_State *L) {
-  trace_t tr = luaL_checktrace(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (Q_strcmp(field, "allsolid") == 0)
-    tr.allsolid = luaL_checkboolean(L, 3);
+    luaL_checktrace(L, 1).allsolid = luaL_checkboolean(L, 3);
   else if (Q_strcmp(field, "contents") == 0)
-    tr.contents = luaL_checkint(L, 3);
+    luaL_checktrace(L, 1).contents = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "dispFlags") == 0)
-    tr.dispFlags = luaL_checkint(L, 3);
+    luaL_checktrace(L, 1).dispFlags = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "endpos") == 0)
-    tr.endpos = luaL_checkvector(L, 3);
+    luaL_checktrace(L, 1).endpos = luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "fraction") == 0)
-    tr.fraction = luaL_checknumber(L, 3);
+    luaL_checktrace(L, 1).fraction = luaL_checknumber(L, 3);
   else if (Q_strcmp(field, "fractionleftsolid") == 0)
-    tr.fractionleftsolid = luaL_checknumber(L, 3);
+    luaL_checktrace(L, 1).fractionleftsolid = luaL_checknumber(L, 3);
   else if (Q_strcmp(field, "hitbox") == 0)
-    tr.hitbox = luaL_checkint(L, 3);
+    luaL_checktrace(L, 1).hitbox = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "hitgroup") == 0)
-    tr.hitgroup = luaL_checkint(L, 3);
+    luaL_checktrace(L, 1).hitgroup = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_pEnt") == 0)
-    tr.m_pEnt = lua_toentity(L, 3);
+    luaL_checktrace(L, 1).m_pEnt = lua_toentity(L, 3);
   else if (Q_strcmp(field, "physicsbone") == 0)
-    tr.physicsbone = luaL_checkint(L, 3);
+    luaL_checktrace(L, 1).physicsbone = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "startpos") == 0)
-    tr.startpos = luaL_checkvector(L, 3);
+    luaL_checktrace(L, 1).startpos = luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "startsolid") == 0)
-    tr.startsolid = luaL_checkboolean(L, 3);
+    luaL_checktrace(L, 1).startsolid = luaL_checkboolean(L, 3);
   return 0;
 }
 
@@ -181,6 +180,20 @@ static const luaL_Reg CGameTracemeta[] = {
 };
 
 
+static int luasrc_trace_t (lua_State *L) {
+  trace_t tr;
+  memset( &tr, 0, sizeof( trace_t ) );
+  lua_pushtrace(L, tr);
+  return 1;
+}
+
+
+static const luaL_Reg CGameTrace_funcs[] = {
+  {"trace_t", luasrc_trace_t},
+  {NULL, NULL}
+};
+
+
 /*
 ** Open CGameTrace object
 */
@@ -189,6 +202,8 @@ LUALIB_API int luaopen_CGameTrace (lua_State *L) {
   luaL_register(L, NULL, CGameTracemeta);
   lua_pushstring(L, "trace");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "trace" */
+  luaL_register(L, "_G", CGameTrace_funcs);
+  lua_pop(L, 1);
   return 1;
 }
 
