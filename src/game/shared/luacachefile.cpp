@@ -173,7 +173,7 @@ static int luasrc_sendfile (lua_State *L) {
 	}
 	char gamePath[ 256 ];
 	engine->GetGameDir( gamePath, 256 );
-	DevMsg( "LCF: adding %s to the Lua cache file...\n", zipPath );
+	// DevMsg( "LCF: adding %s to the Lua cache file...\n", zipPath );
 	m_LcfDatabase.Insert( zipPath, strdup( filename ) );
   }
   else
