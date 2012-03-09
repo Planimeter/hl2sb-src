@@ -12,6 +12,7 @@
 #include "luamanager.h"
 #include "lbaseplayer_shared.h"
 #include "lbaseentity_shared.h"
+#include "lgametrace.h"
 #include "mathlib/lvector.h"
 #include "vgui/lvgui.h"
 
@@ -100,6 +101,11 @@ static int luasrc_UTIL_Smoke (lua_State *L) {
   return 0;
 }
 
+static int luasrc_UTIL_ImpactTrace (lua_State *L) {
+  UTIL_ImpactTrace(&luaL_checktrace(L, 1), luaL_checkint(L, 2), (char *)luaL_optstring(L, 3, 0));
+  return 0;
+}
+
 static int luasrc_UTIL_SetOrigin (lua_State *L) {
   UTIL_SetOrigin(luaL_checkentity(L, 1), luaL_checkvector(L, 2));
   return 0;
@@ -180,6 +186,8 @@ static const luaL_Reg util_funcs[] = {
   {"Tracer",  luasrc_UTIL_Tracer},
   // {"UTIL_Smoke",  luasrc_UTIL_Smoke},
   {"Smoke",  luasrc_UTIL_Smoke},
+  // {"UTIL_ImpactTrace",  luasrc_UTIL_ImpactTrace},
+  {"ImpactTrace",  luasrc_UTIL_ImpactTrace},
   // {"UTIL_SetOrigin",  luasrc_UTIL_SetOrigin},
   {"SetOrigin",  luasrc_UTIL_SetOrigin},
   // {"UTIL_PrecacheOther",  luasrc_UTIL_PrecacheOther},
