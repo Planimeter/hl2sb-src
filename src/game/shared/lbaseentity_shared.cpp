@@ -208,9 +208,7 @@ static int CBaseEntity_DispatchTraceAttack (lua_State *L) {
 }
 
 static int CBaseEntity_DoImpactEffect (lua_State *L) {
-  trace_t tr;
-  luaL_checkentity(L, 1)->DoImpactEffect(tr, luaL_checkint(L, 3));
-  lua_pushtrace(L, tr);
+  luaL_checkentity(L, 1)->DoImpactEffect(luaL_checktrace(L, 2), luaL_checkint(L, 3));
   return 1;
 }
 

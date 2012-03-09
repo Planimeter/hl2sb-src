@@ -35,24 +35,18 @@ static int luasrc_UTIL_YawToVector (lua_State *L) {
 }
 
 static int luasrc_UTIL_TraceLine (lua_State *L) {
-  trace_t tr;
-  UTIL_TraceLine(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkint(L, 3), lua_toentity(L, 4), luaL_checkint(L, 5), &tr);
-  lua_pushtrace(L, tr);
-  return 1;
+  UTIL_TraceLine(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkint(L, 3), lua_toentity(L, 4), luaL_checkint(L, 5), &luaL_checktrace(L, 6));
+  return 0;
 }
 
 static int luasrc_UTIL_TraceHull (lua_State *L) {
-  trace_t tr;
-  UTIL_TraceHull(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4), luaL_checkint(L, 5), luaL_checkentity(L, 6), luaL_checkint(L, 7), &tr);
-  lua_pushtrace(L, tr);
-  return 1;
+  UTIL_TraceHull(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4), luaL_checkint(L, 5), luaL_checkentity(L, 6), luaL_checkint(L, 7), &luaL_checktrace(L, 8));
+  return 0;
 }
 
 static int luasrc_UTIL_TraceEntity (lua_State *L) {
-  trace_t tr;
-  UTIL_TraceEntity(luaL_checkentity(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checkint(L, 4), luaL_checkentity(L, 5), luaL_checkint(L, 5), &tr);
-  lua_pushtrace(L, tr);
-  return 1;
+  UTIL_TraceEntity(luaL_checkentity(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checkint(L, 4), luaL_checkentity(L, 5), luaL_checkint(L, 5), &luaL_checktrace(L, 6));
+  return 0;
 }
 
 static int luasrc_UTIL_EntityHasMatchingRootParent (lua_State *L) {
@@ -66,10 +60,8 @@ static int luasrc_UTIL_PointContents (lua_State *L) {
 }
 
 static int luasrc_UTIL_TraceModel (lua_State *L) {
-  trace_t tr;
-  UTIL_TraceModel(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4), luaL_checkentity(L, 5), luaL_checkint(L, 6), &tr);
-  lua_pushtrace(L, tr);
-  return 1;
+  UTIL_TraceModel(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4), luaL_checkentity(L, 5), luaL_checkint(L, 6), &luaL_checktrace(L, 7));
+  return 0;
 }
 
 static int luasrc_UTIL_ParticleTracer (lua_State *L) {
