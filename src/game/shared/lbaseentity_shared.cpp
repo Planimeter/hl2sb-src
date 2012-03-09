@@ -537,6 +537,11 @@ static int CBaseEntity_GetSimulationTime (lua_State *L) {
   return 1;
 }
 
+static int CBaseEntity_GetSolid (lua_State *L) {
+  lua_pushinteger(L, luaL_checkentity(L, 1)->GetSolid());
+  return 1;
+}
+
 static int CBaseEntity_GetSolidFlags (lua_State *L) {
   lua_pushinteger(L, luaL_checkentity(L, 1)->GetSolidFlags());
   return 1;
@@ -1517,6 +1522,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"GetPredictionRandomSeed", CBaseEntity_GetPredictionRandomSeed},
   {"GetSimulatingPlayer", CBaseEntity_GetSimulatingPlayer},
   {"GetSimulationTime", CBaseEntity_GetSimulationTime},
+  {"GetSolid", CBaseEntity_GetSolid},
   {"GetSolidFlags", CBaseEntity_GetSolidFlags},
   {"GetSoundDuration", CBaseEntity_GetSoundDuration},
   {"GetSoundSourceIndex", CBaseEntity_GetSoundSourceIndex},
