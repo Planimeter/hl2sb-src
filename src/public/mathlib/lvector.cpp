@@ -223,7 +223,15 @@ static int Vector___sub (lua_State *L) {
 }
 
 static int Vector___mul (lua_State *L) {
-  lua_pushvector(L, luaL_checkvector(L, 1) * luaL_checknumber(L, 2));
+  switch(lua_type(L, 1)) {
+	case LUA_TNUMBER:
+      lua_pushvector(L, luaL_checknumber(L, 1) * luaL_checkvector(L, 2));
+	  break;
+	case LUA_TUSERDATA:
+	default:
+      lua_pushvector(L, luaL_checkvector(L, 1) * luaL_checknumber(L, 2));
+	  break;
+  }
   return 1;
 }
 

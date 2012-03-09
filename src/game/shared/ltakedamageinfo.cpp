@@ -284,9 +284,21 @@ static int luasrc_CTakeDamageInfo (lua_State *L) {
   return 1;
 }
 
+static int luasrc_ClearMultiDamage (lua_State *L) {
+  ClearMultiDamage();
+  return 0;
+}
+
+static int luasrc_ApplyMultiDamage (lua_State *L) {
+  ApplyMultiDamage();
+  return 0;
+}
+
 
 static const luaL_Reg CTakeDamageInfo_funcs[] = {
   {"CTakeDamageInfo", luasrc_CTakeDamageInfo},
+  {"ClearMultiDamage", luasrc_ClearMultiDamage},
+  {"ApplyMultiDamage", luasrc_ApplyMultiDamage},
   {NULL, NULL}
 };
 
