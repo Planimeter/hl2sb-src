@@ -282,31 +282,26 @@ LUA_API void luasrc_dofolder (lua_State *L, const char *path)
 	Q_snprintf( searchPath, sizeof( searchPath ), "%s\\*.lua", path );
 
 	char const *fn = g_pFullFileSystem->FindFirstEx( searchPath, "MOD", &fh );
-	if ( fn )
+	while ( fn )
 	{
-		do
+		if ( fn[0] != '.' )
 		{
-			if ( fn[0] != '.' )
+			char ext[ 10 ];
+			Q_ExtractFileExtension( fn, ext, sizeof( ext ) );
+
+			if ( !Q_stricmp( ext, "lua" ) )
 			{
-				char ext[ 10 ];
-				Q_ExtractFileExtension( fn, ext, sizeof( ext ) );
-
-				if ( !Q_stricmp( ext, "lua" ) )
-				{
-					char relative[ 512 ];
-					char loadname[ 512 ];
-					Q_snprintf( relative, sizeof( relative ), "%s\\%s", path, fn );
-					filesystem->RelativePathToFullPath( relative, "MOD", loadname, sizeof( loadname ) );
-					luasrc_dofile( L, loadname );
-				}
+				char relative[ 512 ];
+				char loadname[ 512 ];
+				Q_snprintf( relative, sizeof( relative ), "%s\\%s", path, fn );
+				filesystem->RelativePathToFullPath( relative, "MOD", loadname, sizeof( loadname ) );
+				luasrc_dofile( L, loadname );
 			}
+		}
 
-			fn = g_pFullFileSystem->FindNext( fh );
-
-		} while ( fn );
-
-		g_pFullFileSystem->FindClose( fh );
+		fn = g_pFullFileSystem->FindNext( fh );
 	}
+	g_pFullFileSystem->FindClose( fh );
 }
 
 LUA_API int luasrc_pcall (lua_State *L, int nargs, int nresults, int errfunc) {
@@ -364,69 +359,64 @@ void luasrc_LoadEntities (const char *path)
 	Q_snprintf( root, sizeof( root ), "%s" LUA_PATH_ENTITIES "\\*", path );
 
 	char const *fn = g_pFullFileSystem->FindFirstEx( root, "MOD", &fh );
-	if ( fn )
+	while ( fn )
 	{
-		do
+		Q_strcpy( className, fn );
+		Q_strlower( className );
+		if ( fn[0] != '.' )
 		{
-			Q_strcpy( className, fn );
-			Q_strlower( className );
-			if ( fn[0] != '.' )
+			if ( g_pFullFileSystem->FindIsDirectory( fh ) )
 			{
-				if ( g_pFullFileSystem->FindIsDirectory( fh ) )
-				{
 #ifdef CLIENT_DLL
-					Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_ENTITIES "\\%s\\cl_init.lua", path, className );
+				Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_ENTITIES "\\%s\\cl_init.lua", path, className );
 #else
-					Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_ENTITIES "\\%s\\init.lua", path, className );
+				Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_ENTITIES "\\%s\\init.lua", path, className );
 #endif
-					if ( filesystem->FileExists( filename, "MOD" ) )
+				if ( filesystem->FileExists( filename, "MOD" ) )
+				{
+					filesystem->RelativePathToFullPath( filename, "MOD", fullpath, sizeof( fullpath ) );
+					lua_newtable( L );
+					char entDir[ MAX_PATH ];
+					Q_snprintf( entDir, sizeof( entDir ), "entities\\%s", className );
+					lua_pushstring( L, entDir );
+					lua_setfield( L, -2, "__folder" );
+					lua_pushstring( L, LUA_BASE_ENTITY_CLASS );
+					lua_setfield( L, -2, "__base" );
+					lua_setglobal( L, "ENT" );
+					if ( luasrc_dofile( L, fullpath ) == 0 )
 					{
-						filesystem->RelativePathToFullPath( filename, "MOD", fullpath, sizeof( fullpath ) );
-						lua_newtable( L );
-						char entDir[ MAX_PATH ];
-						Q_snprintf( entDir, sizeof( entDir ), "entities\\%s", className );
-						lua_pushstring( L, entDir );
-						lua_setfield( L, -2, "__folder" );
-						lua_pushstring( L, LUA_BASE_ENTITY_CLASS );
-						lua_setfield( L, -2, "__base" );
-						lua_setglobal( L, "ENT" );
-						if ( luasrc_dofile( L, fullpath ) == 0 )
+						lua_getglobal( L, "entity" );
+						if ( lua_istable( L, -1 ) )
 						{
-							lua_getglobal( L, "entity" );
-							if ( lua_istable( L, -1 ) )
+							lua_getfield( L, -1, "register" );
+							if ( lua_isfunction( L, -1 ) )
 							{
-								lua_getfield( L, -1, "register" );
-								if ( lua_isfunction( L, -1 ) )
-								{
-									lua_remove( L, -2 );
-									lua_getglobal( L, "ENT" );
-									lua_pushstring( L, className );
-									luasrc_pcall( L, 2, 0, 0 );
-									// TODO: Create other types of entity classes
-									RegisterScriptedBaseEntity( className );
-								}
-								else
-								{
-									lua_pop( L, 2 );
-								}
+								lua_remove( L, -2 );
+								lua_getglobal( L, "ENT" );
+								lua_pushstring( L, className );
+								luasrc_pcall( L, 2, 0, 0 );
+								// TODO: Create other types of entity classes
+								RegisterScriptedBaseEntity( className );
 							}
 							else
 							{
-								lua_pop( L, 1 );
+								lua_pop( L, 2 );
 							}
 						}
-						lua_pushnil( L );
-						lua_setglobal( L, "ENT" );
+						else
+						{
+							lua_pop( L, 1 );
+						}
 					}
+					lua_pushnil( L );
+					lua_setglobal( L, "ENT" );
 				}
 			}
+		}
 
-			fn = g_pFullFileSystem->FindNext( fh );
-
-		} while ( fn );
-
-		g_pFullFileSystem->FindClose( fh );
+		fn = g_pFullFileSystem->FindNext( fh );
 	}
+	g_pFullFileSystem->FindClose( fh );
 }
 
 void luasrc_LoadWeapons (const char *path)
@@ -447,68 +437,63 @@ void luasrc_LoadWeapons (const char *path)
 	Q_snprintf( root, sizeof( root ), "%s" LUA_PATH_WEAPONS "\\*", path );
 
 	char const *fn = g_pFullFileSystem->FindFirstEx( root, "MOD", &fh );
-	if ( fn )
+	while ( fn )
 	{
-		do
+		Q_strcpy( className, fn );
+		Q_strlower( className );
+		if ( fn[0] != '.' )
 		{
-			Q_strcpy( className, fn );
-			Q_strlower( className );
-			if ( fn[0] != '.' )
+			if ( g_pFullFileSystem->FindIsDirectory( fh ) )
 			{
-				if ( g_pFullFileSystem->FindIsDirectory( fh ) )
-				{
 #ifdef CLIENT_DLL
-					Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_WEAPONS "\\%s\\cl_init.lua", path, className );
+				Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_WEAPONS "\\%s\\cl_init.lua", path, className );
 #else
-					Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_WEAPONS "\\%s\\init.lua", path, className );
+				Q_snprintf( filename, sizeof( filename ), "%s" LUA_PATH_WEAPONS "\\%s\\init.lua", path, className );
 #endif
-					if ( filesystem->FileExists( filename, "MOD" ) )
+				if ( filesystem->FileExists( filename, "MOD" ) )
+				{
+					filesystem->RelativePathToFullPath( filename, "MOD", fullpath, sizeof( fullpath ) );
+					lua_newtable( L );
+					char entDir[ MAX_PATH ];
+					Q_snprintf( entDir, sizeof( entDir ), "weapons\\%s", className );
+					lua_pushstring( L, entDir );
+					lua_setfield( L, -2, "__folder" );
+					lua_pushstring( L, LUA_BASE_WEAPON );
+					lua_setfield( L, -2, "__base" );
+					lua_setglobal( L, "SWEP" );
+					if ( luasrc_dofile( L, fullpath ) == 0 )
 					{
-						filesystem->RelativePathToFullPath( filename, "MOD", fullpath, sizeof( fullpath ) );
-						lua_newtable( L );
-						char entDir[ MAX_PATH ];
-						Q_snprintf( entDir, sizeof( entDir ), "weapons\\%s", className );
-						lua_pushstring( L, entDir );
-						lua_setfield( L, -2, "__folder" );
-						lua_pushstring( L, LUA_BASE_WEAPON );
-						lua_setfield( L, -2, "__base" );
-						lua_setglobal( L, "SWEP" );
-						if ( luasrc_dofile( L, fullpath ) == 0 )
+						lua_getglobal( L, "weapon" );
+						if ( lua_istable( L, -1 ) )
 						{
-							lua_getglobal( L, "weapon" );
-							if ( lua_istable( L, -1 ) )
+							lua_getfield( L, -1, "register" );
+							if ( lua_isfunction( L, -1 ) )
 							{
-								lua_getfield( L, -1, "register" );
-								if ( lua_isfunction( L, -1 ) )
-								{
-									lua_remove( L, -2 );
-									lua_getglobal( L, "SWEP" );
-									lua_pushstring( L, className );
-									luasrc_pcall( L, 2, 0, 0 );
-									RegisterScriptedWeapon( className );
-								}
-								else
-								{
-									lua_pop( L, 2 );
-								}
+								lua_remove( L, -2 );
+								lua_getglobal( L, "SWEP" );
+								lua_pushstring( L, className );
+								luasrc_pcall( L, 2, 0, 0 );
+								RegisterScriptedWeapon( className );
 							}
 							else
 							{
-								lua_pop( L, 1 );
+								lua_pop( L, 2 );
 							}
 						}
-						lua_pushnil( L );
-						lua_setglobal( L, "SWEP" );
+						else
+						{
+							lua_pop( L, 1 );
+						}
 					}
+					lua_pushnil( L );
+					lua_setglobal( L, "SWEP" );
 				}
 			}
+		}
 
-			fn = g_pFullFileSystem->FindNext( fh );
-
-		} while ( fn );
-
-		g_pFullFileSystem->FindClose( fh );
+		fn = g_pFullFileSystem->FindNext( fh );
 	}
+	g_pFullFileSystem->FindClose( fh );
 }
 
 bool luasrc_LoadGamemode (const char *gamemode) {
@@ -656,28 +641,23 @@ static int DoFileCompletion( const char *partial, char commands[ COMMAND_COMPLET
 	Q_snprintf( WildCard, sizeof( WildCard ), LUA_ROOT "\\%s*", substring );
 	Q_FixSlashes( WildCard );
 	char const *fn = g_pFullFileSystem->FindFirstEx( WildCard, "MOD", &fh );
-	if ( fn )
+	while ( fn && current < COMMAND_COMPLETION_MAXITEMS )
 	{
-		do
+		if ( fn[0] != '.' )
 		{
-			if ( fn[0] != '.' )
+			char filename[ MAX_PATH ] = { 0 };
+			Q_snprintf( filename, sizeof( filename ), LUA_ROOT "\\%s\\%s", substring, fn );
+			Q_FixSlashes( filename );
+			if ( filesystem->FileExists( filename, "MOD" ) )
 			{
-				char filename[ MAX_PATH ] = { 0 };
-				Q_snprintf( filename, sizeof( filename ), LUA_ROOT "\\%s\\%s", substring, fn );
-				Q_FixSlashes( filename );
-				if ( filesystem->FileExists( filename, "MOD" ) )
-				{
-					Q_snprintf( commands[ current ], sizeof( commands[ current ] ), "%s %s%s", cmdname, substring, fn );
-					current++;
-				}
+				Q_snprintf( commands[ current ], sizeof( commands[ current ] ), "%s %s%s", cmdname, substring, fn );
+				current++;
 			}
+		}
 
-			fn = g_pFullFileSystem->FindNext( fh );
-
-		} while ( fn && current < COMMAND_COMPLETION_MAXITEMS );
-
-		g_pFullFileSystem->FindClose( fh );
+		fn = g_pFullFileSystem->FindNext( fh );
 	}
+	g_pFullFileSystem->FindClose( fh );
 
 	return current;
 }

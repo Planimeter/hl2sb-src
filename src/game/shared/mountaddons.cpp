@@ -37,42 +37,37 @@ void MountAddons()
 	char addonName[ 255 ] = { 0 };
 
 	char const *fn = g_pFullFileSystem->FindFirstEx( LUA_PATH_ADDONS "\\*", "MOD", &fh );
-	if ( fn )
+	while ( fn )
 	{
-		do
+		Q_strcpy( addonName, fn );
+		if ( fn[0] != '.' )
 		{
-			Q_strcpy( addonName, fn );
-			if ( fn[0] != '.' )
+			if ( g_pFullFileSystem->FindIsDirectory( fh ) )
 			{
-				if ( g_pFullFileSystem->FindIsDirectory( fh ) )
-				{
 #ifdef GAME_DLL
-					Msg( "Mounting addon \"%s\"...\n", addonName );
+				Msg( "Mounting addon \"%s\"...\n", addonName );
 #endif
 
-					Q_snprintf( relativepath, sizeof( relativepath ), LUA_PATH_ADDONS "\\%s", addonName );
-					char fullpath[ 512 ] = { 0 };
-					bool bGetCurrentDirectory = V_GetCurrentDirectory( fullpath, sizeof( fullpath ) );
-					if ( bGetCurrentDirectory )
-					{
+				Q_snprintf( relativepath, sizeof( relativepath ), LUA_PATH_ADDONS "\\%s", addonName );
+				char fullpath[ 512 ] = { 0 };
+				bool bGetCurrentDirectory = V_GetCurrentDirectory( fullpath, sizeof( fullpath ) );
+				if ( bGetCurrentDirectory )
+				{
 #ifdef CLIENT_DLL
-						const char *gamePath = engine->GetGameDirectory();
+					const char *gamePath = engine->GetGameDirectory();
 #else
-						char gamePath[ 256 ];
-						engine->GetGameDir( gamePath, 256 );
+					char gamePath[ 256 ];
+					engine->GetGameDir( gamePath, 256 );
 #endif
-						V_SetCurrentDirectory( gamePath );
-					}
-					filesystem->AddSearchPath( relativepath, "MOD", PATH_ADD_TO_TAIL );
-					if ( bGetCurrentDirectory )
-						V_SetCurrentDirectory( fullpath );
+					V_SetCurrentDirectory( gamePath );
 				}
+				filesystem->AddSearchPath( relativepath, "MOD", PATH_ADD_TO_TAIL );
+				if ( bGetCurrentDirectory )
+					V_SetCurrentDirectory( fullpath );
 			}
+		}
 
-			fn = g_pFullFileSystem->FindNext( fh );
-
-		} while ( fn );
-
-		g_pFullFileSystem->FindClose( fh );
+		fn = g_pFullFileSystem->FindNext( fh );
 	}
+	g_pFullFileSystem->FindClose( fh );
 }

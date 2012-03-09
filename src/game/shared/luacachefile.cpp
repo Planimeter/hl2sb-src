@@ -96,9 +96,9 @@ LUA_API void luasrc_ExtractLcf ()
 					Q_StripFilename( path );
 					filesystem->CreateDirHierarchy( path, "MOD" );
 					Q_snprintf( fullpath, sizeof( fullpath ), "%s%s", cachePath, path + Q_strlen( LUA_PATH_CACHE ) );
-					DevMsg( "LCF: setting current directory to %s...\n", fullpath );
+					// DevMsg( "LCF: setting current directory to %s...\n", fullpath );
 					V_SetCurrentDirectory( fullpath );
-					DevMsg( "LCF: unpacking %s...\n", ze.name );
+					// DevMsg( "LCF: unpacking %s...\n", ze.name );
 					UnzipItem( hz, i, (void *)V_UnqualifiedFileName( ze.name ), 0, ZIP_FILENAME );
 				}
 			}
@@ -219,51 +219,46 @@ extern void lcf_recursivedeletefile( const char *current ) {
 	Q_FixSlashes( path );
 
 	char const *fn = g_pFullFileSystem->FindFirstEx( path, "MOD", &fh );
-	if ( fn )
+	while ( fn )
 	{
-		do
+		if ( fn[0] != '.' )
 		{
-			if ( fn[0] != '.' )
+			if ( g_pFullFileSystem->FindIsDirectory( fh ) )
 			{
-				if ( g_pFullFileSystem->FindIsDirectory( fh ) )
+				char nextdir[ 512 ];
+				if ( current[ 0 ] )
 				{
-					char nextdir[ 512 ];
-					if ( current[ 0 ] )
-					{
-						Q_snprintf( nextdir, sizeof( nextdir ), "%s/%s", current, fn );
-					}
-					else
-					{
-						Q_snprintf( nextdir, sizeof( nextdir ), "%s", fn );
-					}
-
-					lcf_recursivedeletefile( nextdir );
+					Q_snprintf( nextdir, sizeof( nextdir ), "%s/%s", current, fn );
 				}
 				else
 				{
-					char relative[ 512 ];
-					if ( current[ 0 ] )
-					{
-						Q_snprintf( relative, sizeof( relative ), "%s/%s", current, fn );
-					}
-					else
-					{
-						Q_snprintf( relative, sizeof( relative ), "%s", fn );
-					}
-					DevMsg( "Deleting '%s/%s'...\n", current, fn );
-
-					Q_FixSlashes( relative );
-					g_pFullFileSystem->SetFileWritable( relative, true, "MOD" );
-					g_pFullFileSystem->RemoveFile( relative, "MOD" );
+					Q_snprintf( nextdir, sizeof( nextdir ), "%s", fn );
 				}
+
+				lcf_recursivedeletefile( nextdir );
 			}
+			else
+			{
+				char relative[ 512 ];
+				if ( current[ 0 ] )
+				{
+					Q_snprintf( relative, sizeof( relative ), "%s/%s", current, fn );
+				}
+				else
+				{
+					Q_snprintf( relative, sizeof( relative ), "%s", fn );
+				}
+				DevMsg( "Deleting '%s/%s'...\n", current, fn );
 
-			fn = g_pFullFileSystem->FindNext( fh );
+				Q_FixSlashes( relative );
+				g_pFullFileSystem->SetFileWritable( relative, true, "MOD" );
+				g_pFullFileSystem->RemoveFile( relative, "MOD" );
+			}
+		}
 
-		} while ( fn );
-
-		g_pFullFileSystem->FindClose( fh );
+		fn = g_pFullFileSystem->FindNext( fh );
 	}
+	g_pFullFileSystem->FindClose( fh );
 }
 
 extern void lcf_close (lua_State *L) {
