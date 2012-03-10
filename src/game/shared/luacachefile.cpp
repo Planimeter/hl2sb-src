@@ -316,12 +316,13 @@ extern void lcf_preparecachefile (void) {
 	g_pFullFileSystem->Close( fh );
 
 	// Ensure null terminator
-	buffer[ size ] =0;
+	// buffer[ size ] =0;
 
 	CRC32_t crc;
 
 	CRC32_Init( &crc );
-	CRC32_ProcessBuffer( &crc, buffer, sizeof( buffer ) );
+	// CRC32_ProcessBuffer( &crc, buffer, sizeof( buffer ) );
+	CRC32_ProcessBuffer( &crc, buffer, size );
 	CRC32_Final( &crc );
 
 	delete[] buffer;
