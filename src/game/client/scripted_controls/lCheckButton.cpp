@@ -109,11 +109,10 @@ static int CheckButton_GetPanelClassName (lua_State *L) {
 static int CheckButton_GetRefTable (lua_State *L) {
   LCheckButton *plCheckButton = dynamic_cast<LCheckButton *>(luaL_checkcheckbutton(L, 1));
   if (plCheckButton) {
-    if (plCheckButton->m_nTableReference == LUA_NOREF) {
-      lua_newtable(L);
-      plCheckButton->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
-    }
-    lua_getref(L, plCheckButton->m_nTableReference);
+    if (plCheckButton->m_nTableReference == LUA_NOREF)
+      lua_pushnil(L);
+    else
+      lua_getref(L, plCheckButton->m_nTableReference);
   }
   else
     lua_pushnil(L);

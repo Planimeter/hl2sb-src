@@ -527,6 +527,15 @@ static int CBaseEntity_GetPredictionRandomSeed (lua_State *L) {
   return 1;
 }
 
+static int CBaseEntity_GetRefTable (lua_State *L) {
+  CBaseEntity *pEntity = luaL_checkentity(L, 1);
+  if (pEntity->m_nTableReference == LUA_NOREF)
+    lua_pushnil(L);
+  else
+    lua_getref(L, pEntity->m_nTableReference);
+  return 1;
+}
+
 static int CBaseEntity_GetSimulatingPlayer (lua_State *L) {
   lua_pushplayer(L, luaL_checkentity(L, 1)->GetSimulatingPlayer());
   return 1;

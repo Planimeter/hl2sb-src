@@ -339,11 +339,10 @@ static int Panel_GetPos (lua_State *L) {
 static int Panel_GetRefTable (lua_State *L) {
   LPanel *plPanel = dynamic_cast<LPanel *>(luaL_checkpanel(L, 1));
   if (plPanel) {
-    if (plPanel->m_nTableReference == LUA_NOREF) {
-      lua_newtable(L);
-      plPanel->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
-    }
-    lua_getref(L, plPanel->m_nTableReference);
+    if (plPanel->m_nTableReference == LUA_NOREF)
+      lua_pushnil(L);
+    else
+      lua_getref(L, plPanel->m_nTableReference);
   }
   else
     lua_pushnil(L);
