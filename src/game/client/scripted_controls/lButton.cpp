@@ -134,10 +134,11 @@ static int Button_GetPanelClassName (lua_State *L) {
 static int Button_GetRefTable (lua_State *L) {
   LButton *plButton = dynamic_cast<LButton *>(luaL_checkbutton(L, 1));
   if (plButton) {
-    if (plButton->m_nTableReference == LUA_NOREF)
-      lua_pushnil(L);
-    else
-      lua_getref(L, plButton->m_nTableReference);
+    if (plButton->m_nTableReference == LUA_NOREF) {
+      lua_newtable(L);
+      plButton->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, plButton->m_nTableReference);
   }
   else
     lua_pushnil(L);
