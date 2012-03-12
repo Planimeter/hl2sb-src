@@ -11,6 +11,11 @@
 #include "luamanager.h"
 #include "luasrclib.h"
 #include "lbaseplayer_shared.h"
+#ifdef CLIENT_DLL
+#include "lc_baseanimating.h"
+#else
+#include "lbaseanimating.h"
+#endif
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
 #include "SoundEmitterSystem/lisoundemittersystembase.h"
@@ -377,7 +382,7 @@ static int CBasePlayer_GetUserID (lua_State *L) {
 }
 
 static int CBasePlayer_GetViewModel (lua_State *L) {
-  lua_pushentity(L, luaL_checkplayer(L, 1)->GetViewModel(luaL_optint(L, 2, 0)));
+  lua_pushanimating(L, luaL_checkplayer(L, 1)->GetViewModel(luaL_optint(L, 2, 0)));
   return 1;
 }
 
