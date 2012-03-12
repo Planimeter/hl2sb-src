@@ -7,7 +7,7 @@
 #define lbaseanimating_cpp
 
 #include "cbase.h"
-#include "lua.hpp"
+#include "luamanager.h"
 #include "lbaseanimating.h"
 #include "mathlib/lvector.h"
 #include "lvphysics_interface.h"
@@ -414,6 +414,29 @@ static int CBaseAnimating___index (lua_State *L) {
   return 1;
 }
 
+static int CBaseAnimating___newindex (lua_State *L) {
+  CBaseAnimating *pEntity = lua_toanimating(L, 1);
+  if (pEntity == NULL) {  /* avoid extra test when d is not 0 */
+    lua_Debug ar1;
+    lua_getstack(L, 1, &ar1);
+    lua_getinfo(L, "fl", &ar1);
+    lua_Debug ar2;
+    lua_getinfo(L, ">S", &ar2);
+	lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
+	return lua_error(L);
+  }
+  const char *field = luaL_checkstring(L, 2);
+  if (Q_strcmp(field, "m_bClientSideAnimation") == 0)
+    pEntity->m_bClientSideAnimation = (bool)luaL_checkboolean(L, 3);
+  else if (Q_strcmp(field, "m_nBody") == 0)
+    pEntity->m_nBody = luaL_checkint(L, 3);
+  else if (Q_strcmp(field, "m_nHitboxSet") == 0)
+    pEntity->m_nHitboxSet = luaL_checkint(L, 3);
+  else if (Q_strcmp(field, "m_nSkin") == 0)
+    pEntity->m_nSkin = luaL_checkint(L, 3);
+  return 0;
+}
+
 static int CBaseAnimating___eq (lua_State *L) {
   lua_pushboolean(L, lua_toanimating(L, 1) == lua_toanimating(L, 2));
   return 1;
@@ -491,6 +514,7 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
   {"UseClientSideAnimation", CBaseAnimating_UseClientSideAnimation},
   {"VPhysicsUpdate", CBaseAnimating_VPhysicsUpdate},
   {"__index", CBaseAnimating___index},
+  {"__newindex", CBaseAnimating___newindex},
   {"__eq", CBaseAnimating___eq},
   {"__tostring", CBaseAnimating___tostring},
   {NULL, NULL}
