@@ -233,7 +233,7 @@ static int CBaseEntity_EmitSound (lua_State *L) {
     switch(lua_type(L, 3)) {
       case LUA_TSTRING:
         {
-          if (lua_gettop(L) < 3)
+          if (lua_gettop(L) <= 3)
             CBaseEntity::EmitSound(luaL_checkrecipientfilter(L, 1), luaL_checkint(L, 2), luaL_checkstring(L, 3));
           else {
             float duration;

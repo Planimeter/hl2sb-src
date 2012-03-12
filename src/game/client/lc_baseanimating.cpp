@@ -196,13 +196,32 @@ static int CBaseAnimating_GetAnimTimeInterval (lua_State *L) {
   return 1;
 }
 
+static int CBaseAnimating_GetAttachment (lua_State *L) {
+  switch(lua_type(L, 2)) {
+	case LUA_TNUMBER:
+      {
+        if (lua_gettop(L) <= 3)
+          lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachment(luaL_checkint(L, 2), luaL_checkvector(L, 3)));
+        else
+          lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachment(luaL_checkint(L, 2), luaL_checkvector(L, 3), luaL_checkangle(L, 4)));
+        break;
+      }
+	case LUA_TSTRING:
+	default:
+      {
+        if (lua_gettop(L) <= 3)
+          lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachment(luaL_checkstring(L, 2), luaL_checkvector(L, 3)));
+        else
+          lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachment(luaL_checkstring(L, 2), luaL_checkvector(L, 3), luaL_checkangle(L, 4)));
+        break;
+	  }
+  }
+  return 1;
+}
+
 static int CBaseAnimating_GetAttachmentLocal (lua_State *L) {
-  Vector origin;
-  QAngle angles;
-  lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachmentLocal(luaL_checkint(L, 2), origin, angles));
-  lua_pushvector(L, origin);
-  lua_pushangle(L, angles);
-  return 3;
+  lua_pushboolean(L, luaL_checkanimating(L, 1)->GetAttachmentLocal(luaL_checkint(L, 2), luaL_checkvector(L, 3), luaL_checkangle(L, 4)));
+  return 1;
 }
 
 static int CBaseAnimating_GetAttachmentVelocity (lua_State *L) {
@@ -853,6 +872,7 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
   {"FrameAdvance", CBaseAnimating_FrameAdvance},
   {"GetAimEntOrigin", CBaseAnimating_GetAimEntOrigin},
   {"GetAnimTimeInterval", CBaseAnimating_GetAnimTimeInterval},
+  {"GetAttachment", CBaseAnimating_GetAttachment},
   {"GetAttachmentLocal", CBaseAnimating_GetAttachmentLocal},
   {"GetAttachmentVelocity", CBaseAnimating_GetAttachmentVelocity},
   {"GetBaseAnimating", CBaseAnimating_GetBaseAnimating},
