@@ -536,12 +536,13 @@ void C_HL2MP_Player::UpdateFlashlight()
 		int nDistance = FLASHLIGHT_DISTANCE;
 
 		BEGIN_LUA_CALL_HOOK( "PlayerUpdateFlashlight" );
+			lua_pushhl2mpplayer( L, this );
 			lua_pushvector( L, position );
 			lua_pushvector( L, vecForward );
 			lua_pushvector( L, vecRight );
 			lua_pushvector( L, vecUp );
 			lua_pushinteger( L, nDistance );
-		END_LUA_CALL_HOOK( 5, 5 );
+		END_LUA_CALL_HOOK( 6, 5 );
 
 		if ( lua_isuserdata( L, -5 ) && luaL_checkudata( L, -5, "Vector" ) )
 			VectorCopy( luaL_checkvector( L, -5 ), position );
