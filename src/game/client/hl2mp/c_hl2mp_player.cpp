@@ -532,8 +532,37 @@ void C_HL2MP_Player::UpdateFlashlight()
 			EyeVectors( &vecForward, &vecRight, &vecUp );
 
 
+#ifdef LUA_SDK
+		int nDistance = FLASHLIGHT_DISTANCE;
+
+		BEGIN_LUA_CALL_HOOK( "PlayerUpdateFlashlight" );
+			lua_pushvector( L, position );
+			lua_pushvector( L, vecForward );
+			lua_pushvector( L, vecRight );
+			lua_pushvector( L, vecUp );
+			lua_pushinteger( L, nDistance );
+		END_LUA_CALL_HOOK( 5, 5 );
+
+		if ( lua_isuserdata( L, -5 ) && luaL_checkudata( L, -5, "Vector" ) )
+			VectorCopy( luaL_checkvector( L, -5 ), position );
+		if ( lua_isuserdata( L, -4 ) && luaL_checkudata( L, -4, "Vector" ) )
+			VectorCopy( luaL_checkvector( L, -4 ), vecForward );
+		if ( lua_isuserdata( L, -3 ) && luaL_checkudata( L, -3, "Vector" ) )
+			VectorCopy( luaL_checkvector( L, -3 ), vecRight );
+		if ( lua_isuserdata( L, -2 ) && luaL_checkudata( L, -2, "Vector" ) )
+			VectorCopy( luaL_checkvector( L, -2 ), vecUp );
+		if ( lua_isnumber( L, -1 ) )
+			nDistance = (int)lua_tointeger( L, -1 );
+
+		lua_pop( L, 5 );
+
+
+		// Update the light with the new position and direction.		
+		m_pHL2MPFlashLightEffect->UpdateLight( position, vecForward, vecRight, vecUp, nDistance );
+#else
 		// Update the light with the new position and direction.		
 		m_pHL2MPFlashLightEffect->UpdateLight( position, vecForward, vecRight, vecUp, FLASHLIGHT_DISTANCE );
+#endif
 	}
 	else if (m_pHL2MPFlashLightEffect)
 	{
