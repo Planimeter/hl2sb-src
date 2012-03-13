@@ -292,6 +292,9 @@ LUA_API lua_surfacegameprops_t lua_tosurfacegameprops (lua_State *L, int idx) {
 }
 
 
+#pragma warning (disable : 4701)
+
+
 LUA_API lua_surfacedata_t lua_tosurfacedata (lua_State *L, int idx) {
   luaL_checktype(L, idx, LUA_TTABLE);
   surfacedata_t surface;
