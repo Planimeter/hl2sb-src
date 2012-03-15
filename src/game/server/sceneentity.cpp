@@ -3892,7 +3892,14 @@ CBaseEntity *CSceneEntity::FindNamedEntity( const char *name, CBaseEntity *pActo
 #ifndef HL2SB
 		entity = ( gpGlobals->maxClients == 1 ) ? ( CBaseEntity * )UTIL_GetLocalPlayer() : NULL;
 #else
-		entity = ( CBaseEntity * )UTIL_GetNearestPlayer( pActor->GetAbsOrigin() );
+		if (pActor == NULL)
+		{
+			entity = ( gpGlobals->maxClients == 1 ) ? ( CBaseEntity * )UTIL_GetLocalPlayer() : NULL;
+		}
+		else
+		{
+			entity = ( CBaseEntity * )UTIL_GetNearestPlayer( pActor->GetAbsOrigin() );
+		}
 #endif
 	}
 	else if ( !stricmp( name, "!target1" ) )
