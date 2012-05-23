@@ -102,6 +102,13 @@
 
 #ifdef HL2SB
 #include "mountsteamcontent.h"
+#ifdef _WIN32
+// HACKHACK: this is dumb, and unsafe. Things that should be uninitialized at the
+// engine-level can kiss their deconstructors goodbye. See Shutdown for an
+// explanation.
+DLL_IMPORT BOOL STDCALL TerminateProcess(HANDLE hProcess, unsigned int uExitCode);
+DLL_IMPORT HANDLE STDCALL GetCurrentProcess(void);
+#endif
 #endif
 
 #ifdef PORTAL
@@ -979,6 +986,12 @@ void CHLClient::Shutdown( void )
 	DisconnectTier2Libraries( );
 	ConVar_Unregister();
 	DisconnectTier1Libraries( );
+
+	//Andrew; looks like we still need this fix to resolve that
+	//"CNet Encrypt:0" issue. At least this closes the game now.
+#if defined( _WIN32 ) && defined( HL2SB )
+	TerminateProcess(GetCurrentProcess(), EXIT_SUCCESS);
+#endif
 }
 
 
