@@ -189,6 +189,13 @@ CBaseViewport::CBaseViewport() : vgui::EditablePanel( NULL, "CBaseViewport")
 //-----------------------------------------------------------------------------
 void CBaseViewport::OnScreenSizeChanged(int iOldWide, int iOldTall)
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "OnScreenSizeChanged" );
+		lua_pushinteger( L, iOldWide );
+		lua_pushinteger( L, iOldTall );
+	END_LUA_CALL_HOOK( 2, 0 );
+#endif
+
 	BaseClass::OnScreenSizeChanged(iOldWide, iOldTall);
 
 	// reload the script file, so the screen positions in it are correct for the new resolution
