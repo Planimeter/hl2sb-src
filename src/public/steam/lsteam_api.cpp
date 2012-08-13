@@ -15,16 +15,6 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static int steamapicontext_Clear (lua_State *L) {
-  steamapicontext->Clear();
-  return 0;
-}
-
-static int steamapicontext_Init (lua_State *L) {
-  lua_pushboolean(L, steamapicontext->Init());
-  return 1;
-}
-
 static int steamapicontext_SteamFriends (lua_State *L) {
   lua_pushsteamfriends(L, steamapicontext->SteamFriends());
   return 1;
@@ -32,8 +22,6 @@ static int steamapicontext_SteamFriends (lua_State *L) {
 
 
 static const luaL_Reg steamapicontextlib[] = {
-  {"Clear",   steamapicontext_Clear},
-  {"Init",   steamapicontext_Init},
   {"SteamFriends",   steamapicontext_SteamFriends},
   {NULL, NULL}
 };
