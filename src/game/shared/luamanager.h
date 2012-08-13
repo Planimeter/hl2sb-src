@@ -257,7 +257,7 @@
 	  lua_pop(L, 1); \
   }
 
-extern ConVar sv_gamemode;
+extern ConVar gamemode;
 
 LUALIB_API int luaL_checkboolean (lua_State *L, int narg);
 LUALIB_API int luaL_optboolean (lua_State *L, int narg,

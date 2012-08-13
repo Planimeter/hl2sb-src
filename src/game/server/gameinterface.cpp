@@ -933,8 +933,8 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 	//Andrew; loadup base gamemode.
 	luasrc_LoadGamemode( LUA_BASE_GAMEMODE );
 
-	luasrc_LoadGamemode( sv_gamemode.GetString() );
-	luasrc_SetGamemode( sv_gamemode.GetString() );
+	luasrc_LoadGamemode( gamemode.GetString() );
+	luasrc_SetGamemode( gamemode.GetString() );
 
 	if ( gpGlobals->maxClients > 1 )
 	{

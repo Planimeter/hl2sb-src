@@ -1325,8 +1325,8 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 	//Andrew; loadup base gamemode.
 	luasrc_LoadGamemode( LUA_BASE_GAMEMODE );
 
-	luasrc_LoadGamemode( sv_gamemode.GetString() );
-	luasrc_SetGamemode( sv_gamemode.GetString() );
+	luasrc_LoadGamemode( gamemode.GetString() );
+	luasrc_SetGamemode( gamemode.GetString() );
 
 	BEGIN_LUA_CALL_HOOK( "LevelInitPreEntity" );
 		lua_pushstring( L, pMapName );
