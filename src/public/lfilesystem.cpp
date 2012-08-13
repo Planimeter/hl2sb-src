@@ -153,11 +153,6 @@ static int filesystem_HintResourceNeed (lua_State *L) {
   return 1;
 }
 
-static int filesystem_Init (lua_State *L) {
-  lua_pushinteger(L, filesystem->Init());
-  return 1;
-}
-
 static int filesystem_IsDirectory (lua_State *L) {
   lua_pushboolean(L, filesystem->IsDirectory(luaL_checkstring(L, 1), luaL_optstring(L, 2, 0)));
   return 1;
@@ -349,7 +344,6 @@ static const luaL_Reg filesystemlib[] = {
   {"GetLocalCopy",   filesystem_GetLocalCopy},
   {"GetWhitelistSpewFlags",   filesystem_GetWhitelistSpewFlags},
   {"HintResourceNeed",   filesystem_HintResourceNeed},
-  {"Init",   filesystem_Init},
   {"IsDirectory",   filesystem_IsDirectory},
   {"IsFileImmediatelyAvailable",   filesystem_IsFileImmediatelyAvailable},
   {"IsFileWritable",   filesystem_IsFileWritable},
@@ -373,7 +367,6 @@ static const luaL_Reg filesystemlib[] = {
   {"SetupPreloadData",   filesystem_SetupPreloadData},
   {"SetWarningLevel",   filesystem_SetWarningLevel},
   {"SetWhitelistSpewFlags",   filesystem_SetWhitelistSpewFlags},
-  {"Shutdown",   filesystem_Shutdown},
   {"Size",   filesystem_Size},
   {"UnzipFile",   filesystem_UnzipFile},
   {"WaitForResources",   filesystem_WaitForResources},

@@ -47,11 +47,6 @@ static int prediction_GetViewOrigin (lua_State *L) {
   return 1;
 }
 
-static int prediction_Init (lua_State *L) {
-  prediction->Init();
-  return 0;
-}
-
 static int prediction_InPrediction (lua_State *L) {
   lua_pushboolean(L, prediction->InPrediction());
   return 1;
@@ -97,11 +92,6 @@ static int prediction_SetViewOrigin (lua_State *L) {
   return 0;
 }
 
-static int prediction_Shutdown (lua_State *L) {
-  prediction->Shutdown();
-  return 0;
-}
-
 static int prediction_Update (lua_State *L) {
   prediction->Update(luaL_checkint(L, 1), luaL_checkboolean(L, 2), luaL_checkint(L, 3), luaL_checkint(L, 4));
   return 0;
@@ -114,7 +104,6 @@ static const luaL_Reg predictionlib[] = {
   {"GetLocalViewAngles",   prediction_GetLocalViewAngles},
   {"GetViewAngles",   prediction_GetViewAngles},
   {"GetViewOrigin",   prediction_GetViewOrigin},
-  {"Init",   prediction_Init},
   {"InPrediction",   prediction_InPrediction},
   {"IsFirstTimePredicted",   prediction_IsFirstTimePredicted},
   {"OnReceivedUncompressedPacket",   prediction_OnReceivedUncompressedPacket},
@@ -124,7 +113,6 @@ static const luaL_Reg predictionlib[] = {
   {"SetLocalViewAngles",   prediction_SetLocalViewAngles},
   {"SetViewAngles",   prediction_SetViewAngles},
   {"SetViewOrigin",   prediction_SetViewOrigin},
-  {"Shutdown",   prediction_Shutdown},
   {"Update",   prediction_Update},
   {NULL, NULL}
 };

@@ -463,11 +463,6 @@ static int surface_SetWorkspaceInsets (lua_State *L) {
   return 0;
 }
 
-static int surface_Shutdown (lua_State *L) {
-  surface()->Shutdown();
-  return 0;
-}
-
 static int surface_SupportsFeature (lua_State *L) {
   surface()->SupportsFeature((ISurface::SurfaceFeature_e)luaL_checkint(L, 1));
   return 0;
@@ -571,7 +566,6 @@ static const luaL_Reg surfacelib[] = {
   {"SetFontGlyphSet",   surface_SetFontGlyphSet},
   {"SetTranslateExtendedKeys",   surface_SetTranslateExtendedKeys},
   {"SetWorkspaceInsets",   surface_SetWorkspaceInsets},
-  {"Shutdown",   surface_Shutdown},
   {"SupportsFeature",   surface_SupportsFeature},
   {"SurfaceGetCursorPos",   surface_SurfaceGetCursorPos},
   {"SurfaceSetCursorPos",   surface_SurfaceSetCursorPos},
