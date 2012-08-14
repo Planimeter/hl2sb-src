@@ -220,20 +220,6 @@ void luasrc_init (void) {
   luasrc_openlibs(L);
 
   Msg( "Lua initialized (" LUA_VERSION ")\n" );
-  // Andrew; We currently support different Lua binaries, but as Henry has
-  // stated, this is a security concern, so we may end up baking LuaJIT into
-  // the released stable binaries.
-  lua_getglobal(L, "jit");
-  if (lua_istable(L, -1)) {
-    lua_getfield(L, -1, "version");
-	lua_remove(L, -2);
-	if (lua_isstring(L, -1)) {
-	  Msg( "LuaJIT detected (%s)\n", luaL_checkstring(L, -1) );
-	}
-	lua_pop(L, 1);
-  }
-  else
-	lua_pop(L, 1);
 }
 
 void luasrc_shutdown (void) {
