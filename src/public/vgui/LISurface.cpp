@@ -244,7 +244,7 @@ static int surface_GetEmbeddedPanel (lua_State *L) {
 
 static int surface_GetFontAscent (lua_State *L) {
   wchar_t wch[1];
-  g_pVGuiLocalize->ConvertANSIToUnicode(luaL_checkstring(L, 1), wch, sizeof(wch));
+  g_pVGuiLocalize->ConvertANSIToUnicode(luaL_checkstring(L, 2), wch, sizeof(wch));
   lua_pushinteger(L, surface()->GetFontAscent(luaL_checkfont(L, 1), wch[1]));
   return 1;
 }
