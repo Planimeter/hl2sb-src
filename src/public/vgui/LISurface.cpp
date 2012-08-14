@@ -296,7 +296,7 @@ static int surface_GetScreenSize (lua_State *L) {
 }
 
 static int surface_GetTextSize (lua_State *L) {
-  const char *sz = luaL_checkstring(L, 1);
+  const char *sz = luaL_checkstring(L, 2);
   int wide = 0;
   int tall = 0;
   int bufSize = (strlen( sz ) + 1 ) * sizeof(wchar_t);
