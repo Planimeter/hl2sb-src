@@ -120,20 +120,22 @@
     lua_pop(L, 1);
 
 #define BEGIN_LUA_CALL_PANEL_METHOD(functionName) \
-  lua_getref(m_lua_State, m_nTableReference); \
-  lua_getfield(m_lua_State, -1, functionName); \
-  lua_remove(m_lua_State, -2); \
-  if (lua_isfunction(m_lua_State, -1)) { \
-    int args = 0; \
-	lua_pushpanel(m_lua_State, this); \
-	++args;
+  if (m_nTableReference >= 0) { \
+    lua_getref(m_lua_State, m_nTableReference); \
+    lua_getfield(m_lua_State, -1, functionName); \
+    lua_remove(m_lua_State, -2); \
+    if (lua_isfunction(m_lua_State, -1)) { \
+      int args = 0; \
+	  lua_pushpanel(m_lua_State, this); \
+	  ++args;
 
 #define END_LUA_CALL_PANEL_METHOD(nArgs, nresults) \
-	args += nArgs; \
-	luasrc_pcall(m_lua_State, args, nresults, 0); \
-  } \
-  else \
-    lua_pop(m_lua_State, 1);
+	  args += nArgs; \
+	  luasrc_pcall(m_lua_State, args, nresults, 0); \
+    } \
+    else \
+      lua_pop(m_lua_State, 1); \
+  }
 
 #define RETURN_LUA_NONE() \
   if (lua_gettop(L) == 1) { \
