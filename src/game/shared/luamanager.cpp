@@ -556,14 +556,14 @@ bool luasrc_SetGamemode (const char *gamemode) {
 	else
 	{
 	  lua_pop(L, 2);
-	  Warning( "ERROR: Attempted to load an invalid gamemode!\n" );
+	  Warning( "ERROR: Failed to set gamemode!\n" );
 	  return false;
 	}
   }
   else
   {
     lua_pop(L, 1);
-	Warning( "ERROR: Attempted to load an invalid gamemode!\n" );
+	Warning( "ERROR: Failed to load gamemode module!\n" );
 	return false;
   }
 }
