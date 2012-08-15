@@ -582,3 +582,26 @@ LUALIB_API int luaopen_surface (lua_State *L) {
   return 1;
 }
 
+
+/*
+** Open FONTFLAG library
+*/
+LUALIB_API int luaopen_FONTFLAG (lua_State *L) {
+  BEGIN_LUA_SET_ENUM_LIB(L, LUA_FONTFLAGLIBNAME);
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_NONE, "NONE");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_ITALIC, "ITALIC");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_UNDERLINE, "UNDERLINE");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_STRIKEOUT, "STRIKEOUT");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_SYMBOL, "SYMBOL");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_ANTIALIAS, "ANTIALIAS");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_GAUSSIANBLUR, "GAUSSIANBLUR");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_ROTARY, "ROTARY");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_DROPSHADOW, "DROPSHADOW");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_ADDITIVE, "ADDITIVE");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_OUTLINE, "OUTLINE");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_CUSTOM, "CUSTOM");
+    lua_pushenum(L, vgui::ISurface::FONTFLAG_BITMAP, "BITMAP");
+  END_LUA_SET_ENUM_LIB(L);
+  return 0;
+}
+

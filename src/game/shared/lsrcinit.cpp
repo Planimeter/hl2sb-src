@@ -46,6 +46,9 @@ static const luaL_Reg luasrclibs[] = {
 #endif
   {LUA_FCVARLIBNAME, luaopen_FCVAR},
   {LUA_FILESYSTEMLIBNAME, luaopen_filesystem},
+#ifdef CLIENT_DLL
+  {LUA_FONTFLAGLIBNAME, luaopen_FONTFLAG},
+#endif
   {LUA_GLOBALSLIBNAME, luaopen_gpGlobals},
 #ifdef CLIENT_DLL
   {LUA_CLIENTSHADOWMGRLIBNAME, luaopen_g_pClientShadowMgr},
