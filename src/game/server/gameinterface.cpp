@@ -777,6 +777,11 @@ void CServerGameDLL::DLLShutdown( void )
 	}
 #endif
 
+#ifdef HL2SB
+	//Andrew; fixes the "CNet Encrypt:0" issue in 2007-based mods.
+	SteamAPI_Shutdown();
+#endif
+
 	DisconnectTier3Libraries();
 	DisconnectTier2Libraries();
 	ConVar_Unregister();

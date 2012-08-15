@@ -982,16 +982,15 @@ void CHLClient::Shutdown( void )
 	
 	ClearKeyValuesCache();
 
+#if defined( HL2SB )
+	//Andrew; fixes the "CNet Encrypt:0" issue in 2007-based mods.
+	SteamAPI_Shutdown();
+#endif
+
 	DisconnectTier3Libraries( );
 	DisconnectTier2Libraries( );
 	ConVar_Unregister();
 	DisconnectTier1Libraries( );
-
-	//Andrew; looks like we still need this fix to resolve that
-	//"CNet Encrypt:0" issue. At least this closes the game now.
-#if defined( _WIN32 ) && defined( HL2SB )
-	TerminateProcess(GetCurrentProcess(), EXIT_SUCCESS);
-#endif
 }
 
 
