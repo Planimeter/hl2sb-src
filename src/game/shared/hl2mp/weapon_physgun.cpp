@@ -42,8 +42,12 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+static int g_physgunBeam1;
 static int g_physgunBeam;
+static int g_physgunGlow;
+#define PHYSGUN_BEAM_SPRITE1	"sprites/physbeam1.vmt"
 #define PHYSGUN_BEAM_SPRITE		"sprites/physbeam.vmt"
+#define PHYSGUN_BEAM_GLOW		"sprites/physglow.vmt"
 
 #define	PHYSGUN_SKIN	1
 
@@ -51,7 +55,9 @@ class CWeaponGravityGun;
 
 #ifdef CLIENT_DLL
 CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffectGravityGun )
+CLIENTEFFECT_MATERIAL( "sprites/physbeam1" )
 CLIENTEFFECT_MATERIAL( "sprites/physbeam" )
+CLIENTEFFECT_MATERIAL( "sprites/physglow" )
 CLIENTEFFECT_REGISTER_END()
 
 
@@ -632,7 +638,9 @@ void CWeaponGravityGun::Precache( void )
 {
 	BaseClass::Precache();
 
+	g_physgunBeam1 = PrecacheModel(PHYSGUN_BEAM_SPRITE1);
 	g_physgunBeam = PrecacheModel(PHYSGUN_BEAM_SPRITE);
+	g_physgunGlow = PrecacheModel(PHYSGUN_BEAM_GLOW);
 
 	PrecacheScriptSound( "Weapon_Physgun.Scanning" );
 	PrecacheScriptSound( "Weapon_Physgun.LockedOn" );
@@ -1069,14 +1077,37 @@ int CWeaponGravityGun::DrawModel( int flags )
 			points[1] = vecSrc + 0.5f * (forward * points[2].DistTo(points[0]));
 		}
 		
-		IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
+		IMaterial *pMat = materials->FindMaterial( "sprites/physbeam1", TEXTURE_GROUP_CLIENT_EFFECTS );
+		if ( pObject )
+			pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
 		Vector color;
 		color.Init(1,1,1);
 
 		float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
 		CMatRenderContextPtr pRenderContext( materials );
 		pRenderContext->Bind( pMat );
-		DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
+		DrawBeamQuadratic( points[0], points[1], points[2], pObject ? 13/3.0f : 13/5.0f, color, scrollOffset );
+		DrawBeamQuadratic( points[0], points[1], points[2], pObject ? 13/3.0f : 13/5.0f, color, -scrollOffset );
+
+		IMaterial *pMaterial = materials->FindMaterial( "sprites/physglow", TEXTURE_GROUP_CLIENT_EFFECTS );
+
+		color32 clr={0,64,255,255};
+		if ( pObject )
+		{
+			clr.r = 186;
+			clr.g = 253;
+			clr.b = 247;
+			clr.a = 255;
+		}
+
+		float scale = random->RandomFloat( 3, 5 ) * ( pObject ? 3 : 2 );
+
+		// Draw the sprite
+		pRenderContext->Bind( pMaterial );
+		for ( int i = 0; i < 3; i++ )
+		{
+			DrawSprite( points[2], scale, scale, clr );
+		}
 		return 1;
 	}
 
@@ -1127,7 +1158,9 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	Vector vecSrc = pOwner->Weapon_ShootPosition( );
 	points[1] = vecSrc + 0.5f * (forward * points[2].DistTo(points[0]));
 	
-	IMaterial *pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
+	IMaterial *pMat = materials->FindMaterial( "sprites/physbeam1", TEXTURE_GROUP_CLIENT_EFFECTS );
+	if ( pObject )
+		pMat = materials->FindMaterial( "sprites/physbeam", TEXTURE_GROUP_CLIENT_EFFECTS );
 	Vector color;
 	color.Init(1,1,1);
 
@@ -1145,7 +1178,28 @@ void CWeaponGravityGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	// Force clipped down range
 	pRenderContext->DepthRange( 0.1f, 0.2f );
 #endif
-	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
+	DrawBeamQuadratic( points[0], points[1], points[2], pObject ? 13/3.0f : 13/5.0f, color, scrollOffset );
+	DrawBeamQuadratic( points[0], points[1], points[2], pObject ? 13/3.0f : 13/5.0f, color, -scrollOffset );
+
+	IMaterial *pMaterial = materials->FindMaterial( "sprites/physglow", TEXTURE_GROUP_CLIENT_EFFECTS );
+
+	color32 clr={0,64,255,255};
+	if ( pObject )
+	{
+		clr.r = 186;
+		clr.g = 253;
+		clr.b = 247;
+		clr.a = 255;
+	}
+
+	float scale = random->RandomFloat( 3, 5 ) * ( pObject ? 3 : 2 );
+
+	// Draw the sprite
+	pRenderContext->Bind( pMaterial );
+	for ( int i = 0; i < 3; i++ )
+	{
+		DrawSprite( points[2], scale, scale, clr );
+	}
 #if 1
 	pRenderContext->DepthRange( 0.0f, 1.0f );
 #endif

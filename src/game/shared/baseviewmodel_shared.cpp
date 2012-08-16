@@ -392,12 +392,19 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
 	}
 	// Add model-specific bob even if no weapon associated (for head bob for off hand models)
 	AddViewModelBob( owner, vmorigin, vmangles );
+#if !defined( HL2SB )
 	// Add lag
 	CalcViewModelLag( vmorigin, vmangles, vmangoriginal );
+#endif
 
 #if defined( CLIENT_DLL )
 	if ( !prediction->InPrediction() )
 	{
+#if defined( HL2SB )
+		//Andrew; See https://developer.valvesoftware.com/wiki/Viewmodel_Prediction_Fix
+		// Add lag
+		CalcViewModelLag( vmorigin, vmangles, vmangoriginal );
+#endif
 		// Let the viewmodel shake at about 10% of the amplitude of the player's view
 		vieweffects->ApplyShake( vmorigin, vmangles, 0.1 );	
 	}
