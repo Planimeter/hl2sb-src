@@ -359,6 +359,7 @@ public:
 	// end adnan
 #endif
 
+	virtual void	UpdateOnRemove(void);
 	void PrimaryAttack( void );
 	void SecondaryAttack( void );
 	void ItemPreFrame( void );
@@ -536,6 +537,16 @@ CWeaponGravityGun::CWeaponGravityGun()
 	m_bFiresUnderwater = true;
 }
 
+
+//-----------------------------------------------------------------------------
+// On Remove
+//-----------------------------------------------------------------------------
+void CWeaponGravityGun::UpdateOnRemove(void)
+{
+	EffectDestroy();
+	SoundDestroy();
+	BaseClass::UpdateOnRemove();
+}
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
