@@ -325,6 +325,13 @@ static int filesystem_WaitForResources (lua_State *L) {
   return 1;
 }
 
+static int filesystem_Write (lua_State *L) {
+  size_t l;
+  const char *pInput = luaL_checklstring(L, 1, &l);
+  lua_pushinteger(L, filesystem->Write(pInput, l, luaL_checkfilehandle(L, 2)));
+  return 1;
+}
+
 
 static const luaL_Reg filesystemlib[] = {
   {"AddPackFile",   filesystem_AddPackFile},
@@ -370,6 +377,7 @@ static const luaL_Reg filesystemlib[] = {
   {"Size",   filesystem_Size},
   {"UnzipFile",   filesystem_UnzipFile},
   {"WaitForResources",   filesystem_WaitForResources},
+  {"Write",   filesystem_Write},
   {NULL, NULL}
 };
 
