@@ -316,6 +316,11 @@ static int CBasePlayer_GetPlayerMins (lua_State *L) {
   return 1;
 }
 
+static int CBasePlayer_GetPlayerName (lua_State *L) {
+  lua_pushstring(L, luaL_checkplayer(L, 1)->GetPlayerName());
+  return 1;
+}
+
 static int CBasePlayer_GetPreviouslyPredictedOrigin (lua_State *L) {
   Vector v = luaL_checkplayer(L, 1)->GetPreviouslyPredictedOrigin();
   lua_pushvector(L, v);
@@ -925,6 +930,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"GetPlayerLocalData", CBasePlayer_GetPlayerLocalData},
   {"GetPlayerMaxs", CBasePlayer_GetPlayerMaxs},
   {"GetPlayerMins", CBasePlayer_GetPlayerMins},
+  {"GetPlayerName", CBasePlayer_GetPlayerName},
   {"GetPreviouslyPredictedOrigin", CBasePlayer_GetPreviouslyPredictedOrigin},
   {"GetPunchAngle", CBasePlayer_GetPunchAngle},
   {"GetStepSoundCache", CBasePlayer_GetStepSoundCache},
