@@ -66,6 +66,57 @@ CLIENTEFFECT_REGISTER_END()
 
 #endif
 
+IPhysicsObject *GetPhysObjFromPhysicsBone( CBaseEntity *pEntity, short physicsbone )
+{
+	CBaseAnimating *pModel = static_cast< CBaseAnimating * >( pEntity );
+	if ( pModel == NULL )
+	{
+		return pEntity->VPhysicsGetObject();
+	}
+	else
+	{
+		IPhysicsObject	*pPhysicsObject = NULL;
+		
+		//Find the real object we hit.
+		if( physicsbone >= 0 )
+		{
+#ifdef CLIENT_DLL
+			if ( pModel->m_pRagdoll )
+			{
+				CRagdoll *pCRagdoll = dynamic_cast < CRagdoll * > ( pModel->m_pRagdoll );
+#else
+				// Affect the object
+				CRagdollProp *pCRagdoll = dynamic_cast<CRagdollProp*>( pEntity );
+#endif
+				if ( pCRagdoll )
+				{
+					ragdoll_t *pRagdollT = pCRagdoll->GetRagdoll();
+
+					if ( physicsbone < pRagdollT->listCount )
+					{
+						pPhysicsObject = pRagdollT->list[physicsbone].pObject;
+					}
+					return pPhysicsObject;
+				}
+				else
+				{
+					return pEntity->VPhysicsGetObject();
+				}
+#ifdef CLIENT_DLL
+			}
+			else
+			{
+				return pEntity->VPhysicsGetObject();
+			}
+#endif
+		}
+		else
+		{
+			return pEntity->VPhysicsGetObject();
+		}
+	}
+}
+
 class CGravControllerPoint : public IMotionEvent
 {
 	DECLARE_SIMPLE_DATADESC();
@@ -73,7 +124,7 @@ class CGravControllerPoint : public IMotionEvent
 public:
 	CGravControllerPoint( void );
 	~CGravControllerPoint( void );
-	void AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEntity, IPhysicsObject *pPhys, const Vector &position );
+	void AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEntity, IPhysicsObject *pPhys, short physicsbone, const Vector &position );
 	void DetachEntity( void );
 
 	bool UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEntity );
@@ -88,7 +139,7 @@ public:
 		CBaseEntity *pAttached = m_attachedEntity;
 		if ( pAttached )
 		{
-			IPhysicsObject *pObj = pAttached->VPhysicsGetObject();
+			IPhysicsObject *pObj = GetPhysObjFromPhysicsBone( pAttached, m_attachedPhysicsBone );
 			
 			if ( pObj != NULL )
 			{
@@ -112,6 +163,7 @@ public:
 	float			m_maxAcceleration;
 	Vector			m_maxAngularAcceleration;
 	EHANDLE			m_attachedEntity;
+	short			m_attachedPhysicsBone;
 	QAngle			m_targetRotation;
 	float			m_timeToArrive;
 
@@ -140,6 +192,7 @@ BEGIN_SIMPLE_DATADESC( CGravControllerPoint )
 	DEFINE_FIELD( m_maxAcceleration,		FIELD_FLOAT ),
 	DEFINE_FIELD( m_maxAngularAcceleration,	FIELD_VECTOR ),
 	DEFINE_FIELD( m_attachedEntity,		FIELD_EHANDLE ),
+	DEFINE_FIELD( m_attachedPhysicsBone,		FIELD_SHORT ),
 	DEFINE_FIELD( m_targetRotation,		FIELD_VECTOR ),
 	DEFINE_FIELD( m_timeToArrive,			FIELD_FLOAT ),
 #ifdef ARGG
@@ -166,6 +219,7 @@ CGravControllerPoint::CGravControllerPoint( void )
 	m_shadow.maxDampSpeed = m_shadow.maxSpeed*2;
 	m_shadow.maxDampAngular = m_shadow.maxAngular*2;
 	m_attachedEntity = NULL;
+	m_attachedPhysicsBone = 0;
 
 #ifdef ARGG
 	// adnan
@@ -201,9 +255,10 @@ QAngle CGravControllerPoint::TransformAnglesFromPlayerSpace( const QAngle &angle
 }
 
 
-void CGravControllerPoint::AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEntity, IPhysicsObject *pPhys, const Vector &vGrabPosition )
+void CGravControllerPoint::AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEntity, IPhysicsObject *pPhys, short physicsbone, const Vector &vGrabPosition )
 {
 	m_attachedEntity = pEntity;
+	m_attachedPhysicsBone = physicsbone;
 	pPhys->WorldToLocal( &m_localPosition, vGrabPosition );
 	m_worldPosition = vGrabPosition;
 	pPhys->GetDamping( NULL, &m_saveDamping );
@@ -231,7 +286,7 @@ void CGravControllerPoint::DetachEntity( void )
 	CBaseEntity *pEntity = m_attachedEntity;
 	if ( pEntity )
 	{
-		IPhysicsObject *pPhys = pEntity->VPhysicsGetObject();
+		IPhysicsObject *pPhys = GetPhysObjFromPhysicsBone( pEntity, m_attachedPhysicsBone );
 		if ( pPhys )
 		{
 			// on the odd chance that it's gone to sleep while under anti-gravity
@@ -241,6 +296,7 @@ void CGravControllerPoint::DetachEntity( void )
 		}
 	}
 	m_attachedEntity = NULL;
+	m_attachedPhysicsBone = 0;
 	if ( physenv )
 	{
 		physenv->DestroyMotionController( m_controller );
@@ -387,7 +443,7 @@ public:
 
 	bool HasAnyAmmo( void );
 
-	void AttachObject( CBaseEntity *pEdict, IPhysicsObject *pPhysics, const Vector& start, const Vector &end, float distance );
+	void AttachObject( CBaseEntity *pEdict, IPhysicsObject *pPhysics, short physicsbone, const Vector& start, const Vector &end, float distance );
 	void UpdateObject( void );
 	void DetachObject( void );
 
@@ -419,6 +475,7 @@ private:
 	CNetworkVar( int, m_active );
 	bool		m_useDown;
 	CNetworkHandle( CBaseEntity, m_hObject );
+	CNetworkVar( int, m_physicsBone );
 	float		m_distance;
 	float		m_movementLength;
 	int			m_soundState;
@@ -448,6 +505,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( WeaponGravityGun, DT_WeaponGravityGun )
 BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 #ifdef CLIENT_DLL
 	RecvPropEHandle( RECVINFO( m_hObject ) ),
+	RecvPropInt( RECVINFO( m_physicsBone ) ),
 	RecvPropVector( RECVINFO( m_targetPosition ) ),
 	RecvPropVector( RECVINFO( m_worldPosition ) ),
 	RecvPropInt( RECVINFO(m_active) ),
@@ -459,6 +517,7 @@ BEGIN_NETWORK_TABLE( CWeaponGravityGun, DT_WeaponGravityGun )
 #endif
 #else
 	SendPropEHandle( SENDINFO( m_hObject ) ),
+	SendPropInt( SENDINFO( m_physicsBone ) ),
 	SendPropVector(SENDINFO( m_targetPosition ), -1, SPROP_COORD),
 	SendPropVector(SENDINFO( m_worldPosition ), -1, SPROP_COORD),
 	SendPropInt( SENDINFO(m_active), 1, SPROP_UNSIGNED ),
@@ -704,56 +763,13 @@ void CWeaponGravityGun::EffectUpdate( void )
 	Vector end = tr.endpos;
 	float distance = tr.fraction * 4096;
 
+	IPhysicsObject *pPhys = NULL;
+
 	if ( m_hObject == NULL && tr.DidHitNonWorldEntity() )
 	{
 		CBaseEntity *pEntity = tr.m_pEnt;
-		CBaseAnimating *pModel = static_cast< CBaseAnimating * >( pEntity );
-		if ( pModel == NULL )
-		{
-			AttachObject( pEntity, pEntity->VPhysicsGetObject(), start, tr.endpos, distance );
-		}
-		else
-		{
-			IPhysicsObject	*pPhysicsObject = NULL;
-			
-			//Find the real object we hit.
-			if( tr.physicsbone >= 0 )
-			{
-#ifdef CLIENT_DLL
-				if ( pModel->m_pRagdoll )
-				{
-					CRagdoll *pCRagdoll = dynamic_cast < CRagdoll * > ( pModel->m_pRagdoll );
-#else
-					// Affect the object
-					CRagdollProp *pCRagdoll = dynamic_cast<CRagdollProp*>( pEntity );
-#endif
-					if ( pCRagdoll )
-					{
-						ragdoll_t *pRagdollT = pCRagdoll->GetRagdoll();
-
-						if ( tr.physicsbone < pRagdollT->listCount )
-						{
-							pPhysicsObject = pRagdollT->list[tr.physicsbone].pObject;
-						}
-						AttachObject( pEntity, pPhysicsObject, start, tr.endpos, distance );
-					}
-					else
-					{
-						AttachObject( pEntity, pEntity->VPhysicsGetObject(), start, tr.endpos, distance );
-					}
-#ifdef CLIENT_DLL
-				}
-				else
-				{
-					AttachObject( pEntity, pEntity->VPhysicsGetObject(), start, tr.endpos, distance );
-				}
-#endif
-			}
-			else
-			{
-				AttachObject( pEntity, pEntity->VPhysicsGetObject(), start, tr.endpos, distance );
-			}
-		}
+		pPhys = GetPhysObjFromPhysicsBone( pEntity, tr.physicsbone );
+		AttachObject( pEntity, pPhys, tr.physicsbone, start, tr.endpos, distance );
 	}
 
 	// Add the incremental player yaw to the target transform
@@ -801,7 +817,6 @@ void CWeaponGravityGun::EffectUpdate( void )
 			m_distance = Approach( 40, m_distance, m_distance * 0.1 );
 		}
 
-		IPhysicsObject *pPhys = pObject->VPhysicsGetObject();
 		if ( pPhys && pPhys->IsAsleep() )
 		{
 			// on the odd chance that it's gone to sleep while under anti-gravity
@@ -1028,12 +1043,13 @@ void CWeaponGravityGun::DetachObject( void )
 	}
 }
 
-void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, IPhysicsObject *pPhysics, const Vector& start, const Vector &end, float distance )
+void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, IPhysicsObject *pPhysics, short physicsbone, const Vector& start, const Vector &end, float distance )
 {
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 	if( !pOwner )
 		return;
 	m_hObject = pObject;
+	m_physicsBone = physicsbone;
 	m_useDown = false;
 	if ( pPhysics && pObject->GetMoveType() == MOVETYPE_VPHYSICS )
 	{
@@ -1042,7 +1058,7 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, IPhysicsObject *pPhy
 		Vector worldPosition;
 		pObject->WorldToEntitySpace( end, &worldPosition );
 		m_worldPosition = worldPosition;
-		m_gravCallback.AttachEntity( pOwner, pObject, pPhysics, pObject->GetAbsOrigin() );
+		m_gravCallback.AttachEntity( pOwner, pObject, pPhysics, physicsbone, pObject->GetAbsOrigin() );
 
 		m_originalObjectPosition = pObject->GetAbsOrigin();
 
