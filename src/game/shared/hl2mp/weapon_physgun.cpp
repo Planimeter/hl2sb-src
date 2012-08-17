@@ -37,6 +37,9 @@
 #include "view_shared.h"
 #include "view.h"
 #include "iviewrender.h"
+#include "ragdoll.h"
+#else
+#include "physics_prop_ragdoll.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -384,7 +387,7 @@ public:
 
 	bool HasAnyAmmo( void );
 
-	void AttachObject( CBaseEntity *pEdict, const Vector& start, const Vector &end, float distance );
+	void AttachObject( CBaseEntity *pEdict, IPhysicsObject *pPhysics, const Vector& start, const Vector &end, float distance );
 	void UpdateObject( void );
 	void DetachObject( void );
 
@@ -704,7 +707,53 @@ void CWeaponGravityGun::EffectUpdate( void )
 	if ( m_hObject == NULL && tr.DidHitNonWorldEntity() )
 	{
 		CBaseEntity *pEntity = tr.m_pEnt;
-		AttachObject( pEntity, start, tr.endpos, distance );
+		CBaseAnimating *pModel = static_cast< CBaseAnimating * >( pEntity );
+		if ( pModel == NULL )
+		{
+			AttachObject( pEntity, pEntity->VPhysicsGetObject(), start, tr.endpos, distance );
+		}
+		else
+		{
+			IPhysicsObject	*pPhysicsObject = NULL;
+			
+			//Find the real object we hit.
+			if( tr.physicsbone >= 0 )
+			{
+#ifdef CLIENT_DLL
+				if ( pModel->m_pRagdoll )
+				{
+					CRagdoll *pCRagdoll = dynamic_cast < CRagdoll * > ( pModel->m_pRagdoll );
+#else
+					// Affect the object
+					CRagdollProp *pCRagdoll = dynamic_cast<CRagdollProp*>( pEntity );
+#endif
+					if ( pCRagdoll )
+					{
+						ragdoll_t *pRagdollT = pCRagdoll->GetRagdoll();
+
+						if ( tr.physicsbone < pRagdollT->listCount )
+						{
+							pPhysicsObject = pRagdollT->list[tr.physicsbone].pObject;
+						}
+						AttachObject( pEntity, pPhysicsObject, start, tr.endpos, distance );
+					}
+					else
+					{
+						AttachObject( pEntity, pEntity->VPhysicsGetObject(), start, tr.endpos, distance );
+					}
+#ifdef CLIENT_DLL
+				}
+				else
+				{
+					AttachObject( pEntity, pEntity->VPhysicsGetObject(), start, tr.endpos, distance );
+				}
+#endif
+			}
+			else
+			{
+				AttachObject( pEntity, pEntity->VPhysicsGetObject(), start, tr.endpos, distance );
+			}
+		}
 	}
 
 	// Add the incremental player yaw to the target transform
@@ -979,14 +1028,13 @@ void CWeaponGravityGun::DetachObject( void )
 	}
 }
 
-void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start, const Vector &end, float distance )
+void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, IPhysicsObject *pPhysics, const Vector& start, const Vector &end, float distance )
 {
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 	if( !pOwner )
 		return;
 	m_hObject = pObject;
 	m_useDown = false;
-	IPhysicsObject *pPhysics = pObject ? (pObject->VPhysicsGetObject()) : NULL;
 	if ( pPhysics && pObject->GetMoveType() == MOVETYPE_VPHYSICS )
 	{
 		m_distance = distance;
