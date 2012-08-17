@@ -617,7 +617,8 @@ void CWeaponGravityGun::UpdateOnRemove(void)
 // want to add an angles modifier key
 bool CGravControllerPoint::UpdateObject( CBasePlayer *pPlayer, CBaseEntity *pEntity )
 {
-	if ( !pEntity || !pEntity->VPhysicsGetObject() )
+	IPhysicsObject *pPhysics = GetPhysObjFromPhysicsBone( pEntity, m_attachedPhysicsBone );
+	if ( !pEntity || !pPhysics )
 	{
 		return false;
 	}
@@ -972,7 +973,7 @@ void CWeaponGravityGun::SoundUpdate( void )
 			float distance = UTIL_LineFraction( m_movementLength, 0, 200, 1.0 );
 
 			// blend the "mass" sounds between 50 and 500 kg
-			IPhysicsObject *pPhys = m_hObject->VPhysicsGetObject();
+			IPhysicsObject *pPhys = GetPhysObjFromPhysicsBone( m_hObject, m_physicsBone );
 			if ( pPhys == NULL )
 			{
 				// we no longer exist!
