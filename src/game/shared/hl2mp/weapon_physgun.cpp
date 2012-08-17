@@ -566,6 +566,7 @@ BEGIN_DATADESC( CWeaponGravityGun )
 	DEFINE_FIELD( m_active,				FIELD_INTEGER ),
 	DEFINE_FIELD( m_useDown,				FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_hObject,				FIELD_EHANDLE ),
+	DEFINE_FIELD( m_physicsBone,				FIELD_SHORT ),
 	DEFINE_FIELD( m_distance,			FIELD_FLOAT ),
 	DEFINE_FIELD( m_movementLength,		FIELD_FLOAT ),
 	DEFINE_FIELD( m_soundState,			FIELD_INTEGER ),
@@ -763,13 +764,10 @@ void CWeaponGravityGun::EffectUpdate( void )
 	Vector end = tr.endpos;
 	float distance = tr.fraction * 4096;
 
-	IPhysicsObject *pPhys = NULL;
-
 	if ( m_hObject == NULL && tr.DidHitNonWorldEntity() )
 	{
 		CBaseEntity *pEntity = tr.m_pEnt;
-		pPhys = GetPhysObjFromPhysicsBone( pEntity, tr.physicsbone );
-		AttachObject( pEntity, pPhys, tr.physicsbone, start, tr.endpos, distance );
+		AttachObject( pEntity, GetPhysObjFromPhysicsBone( pEntity, tr.physicsbone ), tr.physicsbone, start, tr.endpos, distance );
 	}
 
 	// Add the incremental player yaw to the target transform
@@ -817,18 +815,24 @@ void CWeaponGravityGun::EffectUpdate( void )
 			m_distance = Approach( 40, m_distance, m_distance * 0.1 );
 		}
 
-		if ( pPhys && pPhys->IsAsleep() )
+		IPhysicsObject *pPhys = GetPhysObjFromPhysicsBone( pObject, m_physicsBone );
+		if ( pPhys )
 		{
-			// on the odd chance that it's gone to sleep while under anti-gravity
-			pPhys->Wake();
-		}
+			if ( pPhys->IsAsleep() )
+			{
+				// on the odd chance that it's gone to sleep while under anti-gravity
+				pPhys->Wake();
+			}
 
-		Vector newPosition = start + forward * m_distance;
-		Vector offset;
-		pObject->EntityToWorldSpace( m_worldPosition, &offset );
-		m_gravCallback.SetTargetPosition( newPosition + (pObject->GetAbsOrigin() - offset), angles );
-		Vector dir = (newPosition - pObject->GetLocalOrigin());
-		m_movementLength = dir.Length();
+			Vector newPosition = start + forward * m_distance;
+			Vector offset;
+			pPhys->LocalToWorld( &offset, m_worldPosition );
+			Vector vecOrigin;
+			pPhys->GetPosition( &vecOrigin, NULL );
+			m_gravCallback.SetTargetPosition( newPosition + (vecOrigin - offset), angles );
+			Vector dir = (newPosition - pObject->GetLocalOrigin());
+			m_movementLength = dir.Length();
+		}
 	}
 	else
 	{
@@ -1033,13 +1037,15 @@ void CWeaponGravityGun::DetachObject( void )
 		Pickup_OnPhysGunDrop( m_hObject, pOwner, DROPPED_BY_CANNON );
 #endif
 
-		IPhysicsObject *pPhysics = m_hObject->VPhysicsGetObject();
-		if ( pPhysics )
+		IPhysicsObject *pList[VPHYSICS_MAX_OBJECT_LIST_COUNT];
+		int count = m_hObject->VPhysicsGetObjectList( pList, ARRAYSIZE(pList) );
+		for ( int i = 0; i < count; i++ )
 		{
-			PhysClearGameFlags( pPhysics, FVPHYSICS_PLAYER_HELD );
+			PhysClearGameFlags( pList[i], FVPHYSICS_PLAYER_HELD );
 		}
 		m_gravCallback.DetachEntity();
 		m_hObject = NULL;
+		m_physicsBone = 0;
 	}
 }
 
@@ -1056,14 +1062,21 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, IPhysicsObject *pPhy
 		m_distance = distance;
 
 		Vector worldPosition;
-		pObject->WorldToEntitySpace( end, &worldPosition );
+		pPhysics->WorldToLocal( &worldPosition, end );
 		m_worldPosition = worldPosition;
-		m_gravCallback.AttachEntity( pOwner, pObject, pPhysics, physicsbone, pObject->GetAbsOrigin() );
+		Vector vecOrigin;
+		pPhysics->GetPosition( &vecOrigin, NULL );
+		m_gravCallback.AttachEntity( pOwner, pObject, pPhysics, physicsbone, vecOrigin );
 
-		m_originalObjectPosition = pObject->GetAbsOrigin();
+		m_originalObjectPosition = vecOrigin;
 
 		pPhysics->Wake();
-		PhysSetGameFlags( pPhysics, FVPHYSICS_PLAYER_HELD );
+		IPhysicsObject *pList[VPHYSICS_MAX_OBJECT_LIST_COUNT];
+		int count = pObject->VPhysicsGetObjectList( pList, ARRAYSIZE(pList) );
+		for ( int i = 0; i < count; i++ )
+		{
+			PhysSetGameFlags( pList[i], FVPHYSICS_PLAYER_HELD );
+		}
 
 #ifndef CLIENT_DLL
 		Pickup_OnPhysGunPickup( pObject, pOwner );
@@ -1072,6 +1085,7 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, IPhysicsObject *pPhy
 	else
 	{
 		m_hObject = NULL;
+		m_physicsBone = 0;
 	}
 }
 
