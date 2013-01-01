@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\lua-5.1.4\src;..\..\lua-5.1.4\etc;..\..\open-steamworks\Open Steamworks;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;.\;..\..\game\shared;..\..\utils\common;..\..\game\shared\hl2;..\..\game\shared\episodic;.\hl2;.\hl2mp;.\episodic;..\..\game\shared\hl2mp;..\..\game\shared\Multiplayer"
+				AdditionalIncludeDirectories="..\..\lua-5.1.5\src;..\..\lua-5.1.5\etc;..\..\open-steamworks\Open Steamworks;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;.\;..\..\game\shared;..\..\utils\common;..\..\game\shared\hl2;..\..\game\shared\episodic;.\hl2;.\hl2mp;.\episodic;..\..\game\shared\hl2mp;..\..\game\shared\Multiplayer"
 				PreprocessorDefinitions="WIN32;_WIN32;_DEBUG;DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;GAME_DLL;VECTOR;PROTECTED_THINGS_ENABLE;fopen=dont_use_fopen;sprintf=use_Q_snprintf_instead_of_sprintf;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;HL2MP;HL2SB;MP_SDK;LUA_SDK;ARGG;HL2_DLL;HL2_EPISODIC;VERSION_SAFE_STEAM_API_INTERFACES"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -90,7 +90,7 @@
 				OutputFile="$(OutDir)/Server.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\lua-5.1.4\src;..\..\lib\common;..\..\lib\public"
+				AdditionalLibraryDirectories="..\..\lua-5.1.5\src;..\..\lib\common;..\..\lib\public"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc;libcd;libcmt"
 				GenerateDebugInformation="true"
@@ -168,7 +168,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..\..\lua-5.1.4\src;..\..\lua-5.1.4\etc;..\..\open-steamworks\Open Steamworks;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;.\;..\..\game\shared;..\..\utils\common;..\..\game\shared\hl2;..\..\game\shared\episodic;.\hl2;.\episodic;.\hl2mp;..\..\game\shared\hl2mp;..\..\game\shared\Multiplayer"
+				AdditionalIncludeDirectories="..\..\lua-5.1.5\src;..\..\lua-5.1.5\etc;..\..\open-steamworks\Open Steamworks;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;.\;..\..\game\shared;..\..\utils\common;..\..\game\shared\hl2;..\..\game\shared\episodic;.\hl2;.\episodic;.\hl2mp;..\..\game\shared\hl2mp;..\..\game\shared\Multiplayer"
 				PreprocessorDefinitions="WIN32;_WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;GAME_DLL;VECTOR;PROTECTED_THINGS_ENABLE;fopen=dont_use_fopen;sprintf=use_Q_snprintf_instead_of_sprintf;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;HL2MP;HL2SB;MP_SDK;LUA_SDK;ARGG;HL2_DLL;HL2_EPISODIC;VERSION_SAFE_STEAM_API_INTERFACES"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -212,7 +212,7 @@
 				OutputFile="$(OutDir)/Server.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\lua-5.1.4\src;..\..\lib\common;..\..\lib\public"
+				AdditionalLibraryDirectories="..\..\lua-5.1.5\src;..\..\lib\common;..\..\lib\public"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc;libcd;libcmtd"
 				GenerateDebugInformation="true"
@@ -4774,7 +4774,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\lua-5.1.4\src\lua51.lib"
+				RelativePath="..\..\lua-5.1.5\src\lua51.lib"
 				>
 			</File>
 			<File
