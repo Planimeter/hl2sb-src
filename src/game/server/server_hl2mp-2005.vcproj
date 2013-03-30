@@ -966,6 +966,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\basescriptedtrigger.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\basescriptedtrigger.h"
+				>
+			</File>
+			<File
 				RelativePath=".\basetoggle.h"
 				>
 			</File>

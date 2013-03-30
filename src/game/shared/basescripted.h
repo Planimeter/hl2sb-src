@@ -32,6 +32,8 @@ public:
 	
 	// CBaseEntity overrides.
 public:
+	void	UpdateOnRemove( void );
+
 	void	Think();	
 
 	void	Spawn( void );
@@ -65,7 +67,7 @@ private:
 	CNetworkString( m_iScriptedClassname, 255 );
 };
 
-void RegisterScriptedBaseEntity( const char *szClassname );
+void RegisterScriptedEntity( const char *szClassname );
 void ResetEntityFactoryDatabase( void );
 
 #endif

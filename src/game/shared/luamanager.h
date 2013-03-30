@@ -29,7 +29,8 @@
 #define LUA_PATH_WEAPONS			LUA_ROOT "\\weapons"
 
 
-#define LUA_BASE_ENTITY_CLASS		"CBaseAnimating"
+#define LUA_BASE_ENTITY_CLASS		"prop_scripted"
+#define LUA_BASE_ENTITY_FACTORY		"CBaseAnimating"
 #define LUA_BASE_WEAPON				"weapon_hl2mpbase_scriptedweapon"
 #define LUA_BASE_GAMEMODE			"deathmatch"
 
@@ -113,6 +114,22 @@
 	++args;
 
 #define END_LUA_CALL_ENTITY_METHOD(nArgs, nresults) \
+	args += nArgs; \
+	luasrc_pcall(L, args, nresults, 0); \
+  } \
+  else \
+    lua_pop(L, 1);
+
+#define BEGIN_LUA_CALL_TRIGGER_METHOD(functionName) \
+  lua_getref(L, m_nTableReference); \
+  lua_getfield(L, -1, functionName); \
+  lua_remove(L, -2); \
+  if (lua_isfunction(L, -1)) { \
+    int args = 0; \
+	lua_pushentity(L, this); \
+	++args;
+
+#define END_LUA_CALL_TRIGGER_METHOD(nArgs, nresults) \
 	args += nArgs; \
 	luasrc_pcall(L, args, nresults, 0); \
   } \

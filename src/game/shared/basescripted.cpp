@@ -44,7 +44,7 @@ static C_BaseEntity *CCBaseScriptedFactory( void )
 static CUtlDict< CEntityFactory<CBaseScripted>*, unsigned short > m_EntityFactoryDatabase;
 #endif
 
-void RegisterScriptedBaseEntity( const char *className )
+void RegisterScriptedEntity( const char *className )
 {
 #ifdef CLIENT_DLL
 	if ( GetClassMap().FindFactory( className ) )
@@ -221,6 +221,14 @@ void CBaseScripted::ClientThink()
 #endif
 }
 #endif
+
+void CBaseScripted::UpdateOnRemove()
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_ENTITY_METHOD( "UpdateOnRemove" );
+	END_LUA_CALL_ENTITY_METHOD( 0, 0 );
+#endif
+}
 
 void CBaseScripted::Think()
 {

@@ -11,6 +11,9 @@
 #endif
 #include "steam/isteamfriends.h"
 #include "networkstringtabledefs.h"
+#ifndef CLIENT_DLL
+#include "basescriptedtrigger.h"
+#endif
 #include "basescripted.h"
 #include "weapon_hl2mpbase_scriptedweapon.h"
 #include "luamanager.h"
@@ -235,6 +238,9 @@ void luasrc_shutdown (void) {
   RemoveGlobalChangeCallbacks();
   ResetConVarDatabase();
 
+#ifndef CLIENT_DLL
+  ResetTriggerFactoryDatabase();
+#endif
   ResetEntityFactoryDatabase();
   ResetWeaponFactoryDatabase();
 
@@ -368,6 +374,8 @@ void luasrc_LoadEntities (const char *path)
 					lua_setfield( L, -2, "__folder" );
 					lua_pushstring( L, LUA_BASE_ENTITY_CLASS );
 					lua_setfield( L, -2, "__base" );
+					lua_pushstring( L, LUA_BASE_ENTITY_FACTORY );
+					lua_setfield( L, -2, "__factory" );
 					lua_setglobal( L, "ENT" );
 					if ( luasrc_dofile( L, fullpath ) == 0 )
 					{
@@ -381,8 +389,26 @@ void luasrc_LoadEntities (const char *path)
 								lua_getglobal( L, "ENT" );
 								lua_pushstring( L, className );
 								luasrc_pcall( L, 2, 0, 0 );
-								// TODO: Create other types of entity classes
-								RegisterScriptedBaseEntity( className );
+								lua_getglobal( L, "ENT" );
+								if ( lua_istable( L, -1 ) )
+								{
+									lua_getfield( L, -1, "__factory" );
+									if ( lua_isstring( L, -1 ) )
+									{
+										const char *pszClassname = lua_tostring( L, -1 );
+										if (Q_strcmp(pszClassname, "CBaseAnimating") == 0)
+											RegisterScriptedEntity( className );
+#ifndef CLIENT_DLL
+										else if (Q_strcmp(pszClassname, "CBaseTrigger") == 0)
+											RegisterScriptedTrigger( className );
+#endif
+									}
+									lua_pop( L, 2 );
+								}
+								else
+								{
+									lua_pop( L, 1 );
+								}
 							}
 							else
 							{
