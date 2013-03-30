@@ -68,12 +68,13 @@ CLIENTEFFECT_REGISTER_END()
 
 IPhysicsObject *GetPhysObjFromPhysicsBone( CBaseEntity *pEntity, short physicsbone )
 {
-	CBaseAnimating *pModel = static_cast< CBaseAnimating * >( pEntity );
-	if ( pModel == NULL )
+	if( pEntity->IsNPC() )
 	{
 		return pEntity->VPhysicsGetObject();
 	}
-	else
+
+	CBaseAnimating *pModel = static_cast< CBaseAnimating * >( pEntity );
+	if ( pModel != NULL )
 	{
 		IPhysicsObject	*pPhysicsObject = NULL;
 		
@@ -98,23 +99,13 @@ IPhysicsObject *GetPhysObjFromPhysicsBone( CBaseEntity *pEntity, short physicsbo
 					}
 					return pPhysicsObject;
 				}
-				else
-				{
-					return pEntity->VPhysicsGetObject();
-				}
 #ifdef CLIENT_DLL
-			}
-			else
-			{
-				return pEntity->VPhysicsGetObject();
 			}
 #endif
 		}
-		else
-		{
-			return pEntity->VPhysicsGetObject();
-		}
 	}
+
+	return pEntity->VPhysicsGetObject();
 }
 
 class CGravControllerPoint : public IMotionEvent
@@ -746,7 +737,8 @@ void CWeaponGravityGun::TraceLine( trace_t *ptr )
 	start = pOwner->Weapon_ShootPosition();
 	Vector end = start + forward * 4096;
 
-	UTIL_TraceLine( start, end, MASK_SHOT, pOwner, COLLISION_GROUP_NONE, ptr );
+	// UTIL_TraceLine( start, end, MASK_SHOT, pOwner, COLLISION_GROUP_NONE, ptr );
+	UTIL_TraceLine( start, end, MASK_SHOT|CONTENTS_GRATE, pOwner, COLLISION_GROUP_NONE, ptr );
 }
 
 
