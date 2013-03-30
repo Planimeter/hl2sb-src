@@ -387,10 +387,12 @@ public:
 			{
 			case MOUSE_WHEEL_UP:
 				gHUD.m_iKeyBits |= IN_WEAPON1;
+				gHUD.m_bSkipClear = true;
 				return 0;
 
 			case MOUSE_WHEEL_DOWN:
 				gHUD.m_iKeyBits |= IN_WEAPON2;
+				gHUD.m_bSkipClear = true;
 				return 0;
 			}
 		}
@@ -566,7 +568,7 @@ BEGIN_DATADESC( CWeaponGravityGun )
 	DEFINE_FIELD( m_active,				FIELD_INTEGER ),
 	DEFINE_FIELD( m_useDown,				FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_hObject,				FIELD_EHANDLE ),
-	DEFINE_FIELD( m_physicsBone,				FIELD_SHORT ),
+	DEFINE_FIELD( m_physicsBone,				FIELD_INTEGER ),
 	DEFINE_FIELD( m_distance,			FIELD_FLOAT ),
 	DEFINE_FIELD( m_movementLength,		FIELD_FLOAT ),
 	DEFINE_FIELD( m_soundState,			FIELD_INTEGER ),
@@ -810,10 +812,16 @@ void CWeaponGravityGun::EffectUpdate( void )
 		if ( pOwner->m_nButtons & IN_WEAPON1 )
 		{
 			m_distance = Approach( 1024, m_distance, m_distance * 0.1 );
+#ifdef CLIENT_DLL
+			gHUD.m_bSkipClear = false;
+#endif
 		}
 		if ( pOwner->m_nButtons & IN_WEAPON2 )
 		{
 			m_distance = Approach( 40, m_distance, m_distance * 0.1 );
+#ifdef CLIENT_DLL
+			gHUD.m_bSkipClear = false;
+#endif
 		}
 
 		IPhysicsObject *pPhys = GetPhysObjFromPhysicsBone( pObject, m_physicsBone );
@@ -1007,6 +1015,9 @@ CBaseEntity *CWeaponGravityGun::GetBeamEntity()
 
 void CWeaponGravityGun::EffectDestroy( void )
 {
+#ifdef CLIENT_DLL
+	gHUD.m_bSkipClear = false;
+#endif
 	m_active = false;
 	SoundStop();
 
