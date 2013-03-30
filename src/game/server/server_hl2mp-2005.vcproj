@@ -2078,6 +2078,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\lentitylist.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lfilesystem.cpp"
 				>
 			</File>

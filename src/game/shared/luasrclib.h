@@ -82,6 +82,9 @@ LUALIB_API int (luaopen_filesystem) (lua_State *L);
 #define LUA_FONTFLAGLIBNAME				"FONTFLAG"
 LUALIB_API int (luaopen_FONTFLAG) (lua_State *L);
 
+#define LUA_ENTLISTLIBNAME				"gEntList"
+LUALIB_API int (luaopen_gEntList) (lua_State *L);
+
 #define LUA_GLOBALSLIBNAME				"gpGlobals"
 LUALIB_API int (luaopen_gpGlobals) (lua_State *L);
 
