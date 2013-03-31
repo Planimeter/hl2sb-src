@@ -175,7 +175,7 @@ static int Vector_Zero (lua_State *L) {
 }
 
 static int Vector___index (lua_State *L) {
-  Vector &v = luaL_checkvector(L, 1);
+  Vector v = luaL_checkvector(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (strcmp(field, "x") == 0)
     lua_pushnumber(L, v.x);
@@ -183,41 +183,22 @@ static int Vector___index (lua_State *L) {
     lua_pushnumber(L, v.y);
   else if (strcmp(field, "z") == 0)
     lua_pushnumber(L, v.z);
-  else if (v.m_nTableReference != LUA_NOREF) {
-    lua_getref(L, v.m_nTableReference);
-    lua_getfield(L, -1, field);
-    if (lua_isnil(L, -1)) {
-      lua_pop(L, 2);
-      lua_getmetatable(L, 1);
-      lua_getfield(L, -1, field);
-    }
-  }
   else {
     lua_getmetatable(L, 1);
-    lua_getfield(L, -1, field);
+    lua_pushvalue(L, 2);
+    lua_gettable(L, -2);
   }
   return 1;
 }
 
 static int Vector___newindex (lua_State *L) {
-  Vector &v = luaL_checkvector(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (strcmp(field, "x") == 0)
-    v.x = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkvector(L, 1).x = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "y") == 0)
-    v.y = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkvector(L, 1).y = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "z") == 0)
-    v.z = (vec_t)luaL_checknumber(L, 3);
-  else {
-    if (v.m_nTableReference == LUA_NOREF) {
-      lua_newtable(L);
-      v.m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
-    }
-    lua_getref(L, v.m_nTableReference);
-    lua_pushvalue(L, 3);
-    lua_setfield(L, -2, field);
-	lua_pop(L, 1);
-  }
+    luaL_checkvector(L, 1).z = (vec_t)luaL_checknumber(L, 3);
   return 0;
 }
 
@@ -358,7 +339,7 @@ static int QAngle_LengthSqr (lua_State *L) {
 }
 
 static int QAngle___index (lua_State *L) {
-  QAngle &v = luaL_checkangle(L, 1);
+  QAngle v = luaL_checkangle(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (strcmp(field, "x") == 0)
     lua_pushnumber(L, v.x);
@@ -366,41 +347,22 @@ static int QAngle___index (lua_State *L) {
     lua_pushnumber(L, v.y);
   else if (strcmp(field, "z") == 0)
     lua_pushnumber(L, v.z);
-  else if (v.m_nTableReference != LUA_NOREF) {
-    lua_getref(L, v.m_nTableReference);
-    lua_getfield(L, -1, field);
-    if (lua_isnil(L, -1)) {
-      lua_pop(L, 2);
-      lua_getmetatable(L, 1);
-      lua_getfield(L, -1, field);
-    }
-  }
   else {
     lua_getmetatable(L, 1);
-    lua_getfield(L, -1, field);
+    lua_pushvalue(L, 2);
+    lua_gettable(L, -2);
   }
   return 1;
 }
 
 static int QAngle___newindex (lua_State *L) {
-  QAngle &v = luaL_checkangle(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (strcmp(field, "x") == 0)
-    v.x = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkangle(L, 1).x = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "y") == 0)
-    v.y = (vec_t)luaL_checknumber(L, 3);
+    luaL_checkangle(L, 1).y = (vec_t)luaL_checknumber(L, 3);
   else if (strcmp(field, "z") == 0)
-    v.z = (vec_t)luaL_checknumber(L, 3);
-  else {
-    if (v.m_nTableReference == LUA_NOREF) {
-      lua_newtable(L);
-      v.m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
-    }
-    lua_getref(L, v.m_nTableReference);
-    lua_pushvalue(L, 3);
-    lua_setfield(L, -2, field);
-	lua_pop(L, 1);
-  }
+    luaL_checkangle(L, 1).z = (vec_t)luaL_checknumber(L, 3);
   return 0;
 }
 
