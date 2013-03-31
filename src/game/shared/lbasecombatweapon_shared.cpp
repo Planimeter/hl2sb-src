@@ -850,40 +850,34 @@ static int CBaseCombatWeapon___index (lua_State *L) {
     lua_pushinteger(L, pWeapon->m_nViewModelIndex);
   else if (pWeapon->m_nTableReference != LUA_NOREF) {
     lua_getref(L, pWeapon->m_nTableReference);
-    lua_pushvalue(L, 2);
-    lua_gettable(L, -2);
+    lua_getfield(L, -1, field);
     if (lua_isnil(L, -1)) {
-      lua_pop(L, 1);
+      lua_pop(L, 2);
       lua_getmetatable(L, 1);
-      lua_pushvalue(L, 2);
-      lua_gettable(L, -2);
+      lua_getfield(L, -1, field);
       if (lua_isnil(L, -1)) {
-        lua_pop(L, 1);
+        lua_pop(L, 2);
         luaL_getmetatable(L, "CBaseAnimating");
-        lua_pushvalue(L, 2);
-        lua_gettable(L, -2);
+        lua_getfield(L, -1, field);
         if (lua_isnil(L, -1)) {
-          lua_pop(L, 1);
+          lua_pop(L, 2);
           luaL_getmetatable(L, "CBaseEntity");
-          lua_pushvalue(L, 2);
-          lua_gettable(L, -2);
+          lua_getfield(L, -1, field);
         }
       }
     }
-  } else {
+  }
+  else {
     lua_getmetatable(L, 1);
-    lua_pushvalue(L, 2);
-    lua_gettable(L, -2);
+    lua_getfield(L, -1, field);
     if (lua_isnil(L, -1)) {
-      lua_pop(L, 1);
+      lua_pop(L, 2);
       luaL_getmetatable(L, "CBaseAnimating");
-      lua_pushvalue(L, 2);
-      lua_gettable(L, -2);
+      lua_getfield(L, -1, field);
       if (lua_isnil(L, -1)) {
-        lua_pop(L, 1);
+        lua_pop(L, 2);
         luaL_getmetatable(L, "CBaseEntity");
-        lua_pushvalue(L, 2);
-        lua_gettable(L, -2);
+        lua_getfield(L, -1, field);
       }
     }
   }
@@ -950,13 +944,16 @@ static int CBaseCombatWeapon___newindex (lua_State *L) {
     pWeapon->m_iWorldModelIndex.GetForModify() = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nViewModelIndex") == 0)
     pWeapon->m_nViewModelIndex.GetForModify() = luaL_checkint(L, 3);
-  else if (pWeapon->m_nTableReference == LUA_NOREF) {
-    lua_newtable(L);
-    pWeapon->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+  else {
+    if (pWeapon->m_nTableReference == LUA_NOREF) {
+      lua_newtable(L);
+      pWeapon->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, pWeapon->m_nTableReference);
+    lua_pushvalue(L, 3);
+    lua_setfield(L, -2, field);
+	lua_pop(L, 1);
   }
-  lua_getref(L, pWeapon->m_nTableReference);
-  lua_pushvalue(L, 3);
-  lua_setfield(L, -2, field);
   return 0;
 }
 

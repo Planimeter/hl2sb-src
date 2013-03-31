@@ -825,20 +825,36 @@ static int CBasePlayer___index (lua_State *L) {
     lua_pushinteger(L, pPlayer->m_StuckLast);
   else if (Q_strcmp(field, "m_szAnimExtension") == 0)
     lua_pushstring(L, pPlayer->m_szAnimExtension);
+  else if (pPlayer->m_nTableReference != LUA_NOREF) {
+    lua_getref(L, pPlayer->m_nTableReference);
+    lua_getfield(L, -1, field);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 2);
+      lua_getmetatable(L, 1);
+      lua_getfield(L, -1, field);
+      if (lua_isnil(L, -1)) {
+        lua_pop(L, 2);
+        luaL_getmetatable(L, "CBaseAnimating");
+        lua_getfield(L, -1, field);
+        if (lua_isnil(L, -1)) {
+          lua_pop(L, 2);
+          luaL_getmetatable(L, "CBaseEntity");
+          lua_getfield(L, -1, field);
+        }
+      }
+    }
+  }
   else {
     lua_getmetatable(L, 1);
-    lua_pushvalue(L, 2);
-    lua_gettable(L, -2);
+    lua_getfield(L, -1, field);
     if (lua_isnil(L, -1)) {
-      lua_pop(L, 1);
+      lua_pop(L, 2);
       luaL_getmetatable(L, "CBaseAnimating");
-      lua_pushvalue(L, 2);
-      lua_gettable(L, -2);
+      lua_getfield(L, -1, field);
       if (lua_isnil(L, -1)) {
-        lua_pop(L, 1);
+        lua_pop(L, 2);
         luaL_getmetatable(L, "CBaseEntity");
-        lua_pushvalue(L, 2);
-        lua_gettable(L, -2);
+        lua_getfield(L, -1, field);
       }
     }
   }
@@ -878,6 +894,16 @@ static int CBasePlayer___newindex (lua_State *L) {
     pPlayer->m_StuckLast = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_szAnimExtension") == 0)
     Q_strcpy(pPlayer->m_szAnimExtension, luaL_checkstring(L, 3));
+  else {
+    if (pPlayer->m_nTableReference == LUA_NOREF) {
+      lua_newtable(L);
+      pPlayer->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, pPlayer->m_nTableReference);
+    lua_pushvalue(L, 3);
+    lua_setfield(L, -2, field);
+	lua_pop(L, 1);
+  }
   return 0;
 }
 

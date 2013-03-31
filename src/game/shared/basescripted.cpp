@@ -222,14 +222,6 @@ void CBaseScripted::ClientThink()
 }
 #endif
 
-void CBaseScripted::UpdateOnRemove()
-{
-#ifdef LUA_SDK
-	BEGIN_LUA_CALL_ENTITY_METHOD( "UpdateOnRemove" );
-	END_LUA_CALL_ENTITY_METHOD( 0, 0 );
-#endif
-}
-
 void CBaseScripted::Think()
 {
 #ifdef LUA_SDK

@@ -74,7 +74,7 @@ static int CEffectData_GetEffectNameIndex (lua_State *L) {
 #endif
 
 static int CEffectData___index (lua_State *L) {
-  CEffectData data = luaL_checkeffect(L, 1);
+  CEffectData &data = luaL_checkeffect(L, 1);
   const char *field = luaL_checkstring(L, 2);
   if (Q_strcmp(field, "m_fFlags") == 0)
     lua_pushinteger(L, data.m_fFlags);
@@ -109,10 +109,18 @@ static int CEffectData___index (lua_State *L) {
     lua_pushvector(L, data.m_vOrigin);
   else if (Q_strcmp(field, "m_vStart") == 0)
     lua_pushvector(L, data.m_vStart);
+  else if (data.m_nTableReference != LUA_NOREF) {
+    lua_getref(L, data.m_nTableReference);
+    lua_getfield(L, -1, field);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 2);
+      lua_getmetatable(L, 1);
+      lua_getfield(L, -1, field);
+    }
+  }
   else {
     lua_getmetatable(L, 1);
-    lua_pushvalue(L, 2);
-    lua_gettable(L, -2);
+    lua_getfield(L, -1, field);
   }
   return 1;
 }
@@ -153,6 +161,16 @@ static int CEffectData___newindex (lua_State *L) {
     data.m_vOrigin = luaL_checkvector(L, 3);
   else if (Q_strcmp(field, "m_vStart") == 0)
     data.m_vStart = luaL_checkvector(L, 3);
+  else {
+    if (data.m_nTableReference == LUA_NOREF) {
+      lua_newtable(L);
+      data.m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, data.m_nTableReference);
+    lua_pushvalue(L, 3);
+    lua_setfield(L, -2, field);
+	lua_pop(L, 1);
+  }
   return 0;
 }
 

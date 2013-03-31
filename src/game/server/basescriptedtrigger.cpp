@@ -17,8 +17,6 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-bool IsTriggerClass( CBaseEntity *pEntity );
-
 // Global Savedata for base trigger
 BEGIN_DATADESC( CBaseScriptedTrigger )
 
@@ -136,19 +134,6 @@ void CBaseScriptedTrigger::Spawn()
 	InitScriptedTrigger();
 }
 
-
-//------------------------------------------------------------------------------
-// Cleanup
-//------------------------------------------------------------------------------
-void CBaseScriptedTrigger::UpdateOnRemove( void )
-{
-#ifdef LUA_SDK
-	BEGIN_LUA_CALL_TRIGGER_METHOD( "UpdateOnRemove" );
-	END_LUA_CALL_TRIGGER_METHOD( 0, 0 );
-#endif
-
-	BaseClass::UpdateOnRemove();
-}
 
 //-----------------------------------------------------------------------------
 // Purpose: Returns true if this entity passes the filter criteria, false if not.

@@ -1392,10 +1392,18 @@ static int CBaseEntity___index (lua_State *L) {
     lua_pushinteger(L, pEntity->m_nModelIndex);
   else if (Q_strcmp(field, "touchStamp") == 0)
     lua_pushinteger(L, pEntity->touchStamp);
+  else if (pEntity->m_nTableReference != LUA_NOREF) {
+    lua_getref(L, pEntity->m_nTableReference);
+    lua_getfield(L, -1, field);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 2);
+      lua_getmetatable(L, 1);
+      lua_getfield(L, -1, field);
+    }
+  }
   else {
     lua_getmetatable(L, 1);
-    lua_pushvalue(L, 2);
-    lua_gettable(L, -2);
+    lua_getfield(L, -1, field);
   }
   return 1;
 }
@@ -1430,6 +1438,16 @@ static int CBaseEntity___newindex (lua_State *L) {
     pEntity->m_nModelIndex = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "touchStamp") == 0)
     pEntity->touchStamp = luaL_checkint(L, 3);
+  else {
+    if (pEntity->m_nTableReference == LUA_NOREF) {
+      lua_newtable(L);
+      pEntity->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, pEntity->m_nTableReference);
+    lua_pushvalue(L, 3);
+    lua_setfield(L, -2, field);
+	lua_pop(L, 1);
+  }
   return 0;
 }
 

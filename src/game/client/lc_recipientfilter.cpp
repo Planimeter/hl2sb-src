@@ -220,7 +220,7 @@ static int CPASFilter___index (lua_State *L) {
   lua_pushvalue(L, 2);
   lua_gettable(L, -2);
   if (lua_isnil(L, -1)) {
-    lua_pop(L, 1);
+    lua_pop(L, 2);
     luaL_getmetatable(L, "CRecipientFilter");
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);

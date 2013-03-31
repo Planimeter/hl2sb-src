@@ -27,7 +27,6 @@ public:
 	void Think();	
 
 	void Spawn( void );
-	void UpdateOnRemove( void );
 
 	virtual bool PassesTriggerFilters(CBaseEntity *pOther);
 	virtual void StartTouch(CBaseEntity *pOther);

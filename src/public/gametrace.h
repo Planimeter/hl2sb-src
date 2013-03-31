@@ -80,6 +80,8 @@ public:
 private:
 	// No copy constructors allowed
 	CGameTrace(const CGameTrace& vOther);
+#else
+	int			m_nTableReference;
 #endif
 };
 

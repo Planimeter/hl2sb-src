@@ -28,6 +28,12 @@
 
 #endif
 
+#ifdef LUA_SDK
+
+	#include "lua.hpp"
+
+#endif
+
 // NOTE: These flags are specifically *not* networked; so it's placed above the max effect flag bits
 #define EFFECTDATA_NO_RECORD 0x80000000
 
@@ -60,6 +66,10 @@ public:
 	
 	unsigned char	m_nColor;
 
+#ifdef LUA_SDK
+	int		m_nTableReference;
+#endif
+
 // Don't mess with stuff below here. DispatchEffect handles all of this.
 public:
 	CEffectData()
@@ -87,6 +97,10 @@ public:
 		m_nHitBox = 0;
 
 		m_nColor = 0;
+
+#ifdef LUA_SDK
+		m_nTableReference = LUA_NOREF;
+#endif
 	}
 
 	int GetEffectNameIndex() { return m_iEffectName; }

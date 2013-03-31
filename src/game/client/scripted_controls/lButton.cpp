@@ -337,12 +337,12 @@ static int Button___index (lua_State *L) {
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
-      lua_pop(L, 1);
+      lua_pop(L, 2);
       lua_getmetatable(L, 1);
       lua_pushvalue(L, 2);
       lua_gettable(L, -2);
       if (lua_isnil(L, -1)) {
-        lua_pop(L, 1);
+        lua_pop(L, 2);
         luaL_getmetatable(L, "Panel");
         lua_pushvalue(L, 2);
         lua_gettable(L, -2);
@@ -353,7 +353,7 @@ static int Button___index (lua_State *L) {
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
-      lua_pop(L, 1);
+      lua_pop(L, 2);
       luaL_getmetatable(L, "Panel");
       lua_pushvalue(L, 2);
       lua_gettable(L, -2);
@@ -382,6 +382,7 @@ static int Button___newindex (lua_State *L) {
     lua_getref(L, plButton->m_nTableReference);
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, luaL_checkstring(L, 2));
+	lua_pop(L, 1);
     return 0;
   } else {
     lua_Debug ar1;

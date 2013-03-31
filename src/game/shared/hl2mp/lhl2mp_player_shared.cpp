@@ -113,30 +113,52 @@ static int CHL2MP_Player___index (lua_State *L) {
 	lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
 	return lua_error(L);
   }
-#ifdef CLIENT_DLL
   const char *field = luaL_checkstring(L, 2);
+#ifdef CLIENT_DLL
   if (Q_strcmp(field, "m_fNextThinkPushAway") == 0)
     lua_pushnumber(L, pPlayer->m_fNextThinkPushAway);
   else {
 #endif
-    lua_getmetatable(L, 1);
-    lua_pushvalue(L, 2);
-    lua_gettable(L, -2);
-    if (lua_isnil(L, -1)) {
-      lua_pop(L, 1);
-      luaL_getmetatable(L, "CBasePlayer");
-      lua_pushvalue(L, 2);
-      lua_gettable(L, -2);
+    if (pPlayer->m_nTableReference != LUA_NOREF) {
+      lua_getref(L, pPlayer->m_nTableReference);
+      lua_getfield(L, -1, field);
       if (lua_isnil(L, -1)) {
-        lua_pop(L, 1);
-        luaL_getmetatable(L, "CBaseAnimating");
-        lua_pushvalue(L, 2);
-        lua_gettable(L, -2);
+        lua_pop(L, 2);
+        lua_getmetatable(L, 1);
+        lua_getfield(L, -1, field);
         if (lua_isnil(L, -1)) {
-          lua_pop(L, 1);
-          luaL_getmetatable(L, "CBaseEntity");
-          lua_pushvalue(L, 2);
-          lua_gettable(L, -2);
+          lua_pop(L, 2);
+          luaL_getmetatable(L, "CBasePlayer");
+          lua_getfield(L, -1, field);
+          if (lua_isnil(L, -1)) {
+            lua_pop(L, 2);
+            luaL_getmetatable(L, "CBaseAnimating");
+            lua_getfield(L, -1, field);
+            if (lua_isnil(L, -1)) {
+              lua_pop(L, 2);
+              luaL_getmetatable(L, "CBaseEntity");
+              lua_getfield(L, -1, field);
+            }
+          }
+        }
+      }
+    }
+    else {
+      lua_getmetatable(L, 1);
+      lua_getfield(L, -1, field);
+      if (lua_isnil(L, -1)) {
+        lua_pop(L, 2);
+        luaL_getmetatable(L, "CBasePlayer");
+        lua_getfield(L, -1, field);
+        if (lua_isnil(L, -1)) {
+          lua_pop(L, 2);
+          luaL_getmetatable(L, "CBaseAnimating");
+          lua_getfield(L, -1, field);
+          if (lua_isnil(L, -1)) {
+            lua_pop(L, 2);
+            luaL_getmetatable(L, "CBaseEntity");
+            lua_getfield(L, -1, field);
+          }
         }
       }
     }
@@ -157,10 +179,22 @@ static int CHL2MP_Player___newindex (lua_State *L) {
 	lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
 	return lua_error(L);
   }
-#ifdef CLIENT_DLL
   const char *field = luaL_checkstring(L, 2);
+#ifdef CLIENT_DLL
   if (Q_strcmp(field, "m_fNextThinkPushAway") == 0)
     pPlayer->m_fNextThinkPushAway = luaL_checknumber(L, 3);
+  else {
+#endif
+    if (pPlayer->m_nTableReference == LUA_NOREF) {
+      lua_newtable(L);
+      pPlayer->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, pPlayer->m_nTableReference);
+    lua_pushvalue(L, 3);
+    lua_setfield(L, -2, field);
+	lua_pop(L, 1);
+#ifdef CLIENT_DLL
+  }
 #endif
   return 0;
 }

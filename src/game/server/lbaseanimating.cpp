@@ -402,14 +402,33 @@ static int CBaseAnimating___index (lua_State *L) {
 	lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
 	return lua_error(L);
   }
-  lua_getmetatable(L, 1);
-  lua_pushvalue(L, 2);
-  lua_gettable(L, -2);
-  if (lua_isnil(L, -1)) {
-    lua_pop(L, 1);
-    luaL_getmetatable(L, "CBaseEntity");
+  if (pEntity->m_nTableReference != LUA_NOREF) {
+    lua_getref(L, pEntity->m_nTableReference);
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 2);
+      lua_getmetatable(L, 1);
+      lua_pushvalue(L, 2);
+      lua_gettable(L, -2);
+      if (lua_isnil(L, -1)) {
+        lua_pop(L, 2);
+        luaL_getmetatable(L, "CBaseEntity");
+        lua_pushvalue(L, 2);
+        lua_gettable(L, -2);
+      }
+    }
+  }
+  else {
+    lua_getmetatable(L, 1);
+    lua_pushvalue(L, 2);
+    lua_gettable(L, -2);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 2);
+      luaL_getmetatable(L, "CBaseEntity");
+      lua_pushvalue(L, 2);
+      lua_gettable(L, -2);
+    }
   }
   return 1;
 }
@@ -434,6 +453,16 @@ static int CBaseAnimating___newindex (lua_State *L) {
     pEntity->m_nHitboxSet = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nSkin") == 0)
     pEntity->m_nSkin = luaL_checkint(L, 3);
+  else {
+    if (pEntity->m_nTableReference == LUA_NOREF) {
+      lua_newtable(L);
+      pEntity->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    lua_getref(L, pEntity->m_nTableReference);
+    lua_pushvalue(L, 3);
+    lua_setfield(L, -2, field);
+	lua_pop(L, 1);
+  }
   return 0;
 }
 

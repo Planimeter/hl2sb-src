@@ -32,8 +32,6 @@ public:
 	
 	// CBaseEntity overrides.
 public:
-	void	UpdateOnRemove( void );
-
 	void	Think();	
 
 	void	Spawn( void );

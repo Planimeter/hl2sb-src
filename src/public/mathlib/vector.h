@@ -33,6 +33,10 @@
 #include "mathlib/math_pfns.h"
 #include "minmax.h"
 
+#ifdef LUA_SDK
+#include "lua.hpp"
+#endif
+
 // Uncomment this to add extra Asserts to check for NANs, uninitialized vecs, etc.
 //#define VECTOR_PARANOIA	1
 
@@ -173,6 +177,10 @@ public:
 
 	operator VectorByValue &()				{ return *((VectorByValue *)(this)); }
 	operator const VectorByValue &() const	{ return *((const VectorByValue *)(this)); }
+
+#ifdef LUA_SDK
+	int		m_nTableReference;
+#endif
 
 #ifndef VECTOR_NO_SLOW_OPERATIONS
 	// copy constructors
@@ -1763,6 +1771,10 @@ public:
 	// No assignment operators either...
 	QAngle& operator=( const QAngle& src );
 
+#ifdef LUA_SDK
+	int		m_nTableReference;
+#endif
+
 #ifndef VECTOR_NO_SLOW_OPERATIONS
 	// copy constructors
 
@@ -1825,12 +1837,18 @@ inline QAngle::QAngle(void)
 	x = y = z = VEC_T_NAN;
 #endif
 #endif
+#ifdef LUA_SDK
+	m_nTableReference = LUA_NOREF;
+#endif
 }
 
 inline QAngle::QAngle(vec_t X, vec_t Y, vec_t Z)						
 { 
 	x = X; y = Y; z = Z;
 	CHECK_VALID(*this);
+#ifdef LUA_SDK
+	m_nTableReference = LUA_NOREF;
+#endif
 }
 
 
