@@ -22,6 +22,9 @@
 	class CBaseEntity;
 #endif
 
+#if defined( LUA_SDK )
+	#include "lua.hpp"
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: A trace is returned when a box is swept through the world
@@ -72,7 +75,14 @@ public:
 	// Otherwise, this is the hitbox index.
 	int			hitbox;					// box hit by trace in studio
 
+#if !defined ( LUA_SDK )
 	CGameTrace() {}
+#else
+	CGameTrace()
+	{
+		m_nTableReference = LUA_NOREF;
+	}
+#endif
 
 #if !defined ( LUA_SDK )
 	// HACKHACK: We only do this for Lua, but Lua classes which use traces will

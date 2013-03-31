@@ -480,18 +480,27 @@ inline Vector::Vector(void)
 	x = y = z = VEC_T_NAN;
 #endif
 #endif
+#ifdef LUA_SDK
+	m_nTableReference = LUA_NOREF;
+#endif
 }
 
 inline Vector::Vector(vec_t X, vec_t Y, vec_t Z)						
 { 
 	x = X; y = Y; z = Z;
 	CHECK_VALID(*this);
+#ifdef LUA_SDK
+	m_nTableReference = LUA_NOREF;
+#endif
 }
 
 inline Vector::Vector(vec_t XYZ)						
 { 
 	x = y = z = XYZ;
 	CHECK_VALID(*this);
+#ifdef LUA_SDK
+	m_nTableReference = LUA_NOREF;
+#endif
 }
 
 //inline Vector::Vector(const float *pFloat)					
@@ -499,6 +508,9 @@ inline Vector::Vector(vec_t XYZ)
 //	Assert( pFloat );
 //	x = pFloat[0]; y = pFloat[1]; z = pFloat[2];	
 //	CHECK_VALID(*this);
+//#ifdef LUA_SDK
+//	m_nTableReference = LUA_NOREF;
+//#endif
 //} 
 
 #if 0
@@ -510,6 +522,9 @@ inline Vector::Vector(const Vector &vOther)
 { 
 	CHECK_VALID(vOther);
 	x = vOther.x; y = vOther.y; z = vOther.z;
+#ifdef LUA_SDK
+	m_nTableReference = LUA_NOREF;
+#endif
 }
 #endif
 
