@@ -84,9 +84,11 @@ CBaseScriptedTrigger::CBaseScriptedTrigger()
 void CBaseScriptedTrigger::InitScriptedTrigger( void )
 {
 #if defined ( LUA_SDK )
+#if 0
 	// Let the instance reinitialize itself for the client.
 	if ( m_nTableReference != LUA_NOREF )
 		return;
+#endif
 
 	SetThink( &CBaseScriptedTrigger::Think );
 	SetNextThink( gpGlobals->curtime );
@@ -118,7 +120,8 @@ void CBaseScriptedTrigger::InitScriptedTrigger( void )
 		lua_pop( L, 1 );
 	}
 
-	m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
+	if ( m_nTableReference == LUA_NOREF )
+		m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
 
 	BEGIN_LUA_CALL_TRIGGER_METHOD( "Initialize" );
 	END_LUA_CALL_TRIGGER_METHOD( 0, 0 );

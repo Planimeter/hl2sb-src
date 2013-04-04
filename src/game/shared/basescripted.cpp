@@ -108,10 +108,12 @@ CBaseScripted::~CBaseScripted( void )
 void CBaseScripted::InitScriptedEntity( void )
 {
 #if defined ( LUA_SDK )
+#if 0
 #ifndef CLIENT_DLL
 	// Let the instance reinitialize itself for the client.
 	if ( m_nTableReference != LUA_NOREF )
 		return;
+#endif
 #endif
 
 	SetThink( &CBaseScripted::Think );
@@ -155,7 +157,8 @@ void CBaseScripted::InitScriptedEntity( void )
 		lua_pop( L, 1 );
 	}
 
-	m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
+	if ( m_nTableReference == LUA_NOREF )
+		m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
 
 	BEGIN_LUA_CALL_ENTITY_METHOD( "Initialize" );
 	END_LUA_CALL_ENTITY_METHOD( 0, 0 );
