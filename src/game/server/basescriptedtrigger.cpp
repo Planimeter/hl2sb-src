@@ -77,8 +77,41 @@ void ResetTriggerFactoryDatabase( void )
 }
 
 
-CBaseScriptedTrigger::CBaseScriptedTrigger()
+CBaseScriptedTrigger::CBaseScriptedTrigger( void )
 {
+#ifdef LUA_SDK
+	m_nTableReference = LUA_NOREF;
+#endif
+}
+
+CBaseScriptedTrigger::~CBaseScriptedTrigger( void )
+{
+#ifdef LUA_SDK
+	lua_unref( L, m_nTableReference );
+#endif
+}
+
+void CBaseScriptedTrigger::LoadScriptedTrigger( void )
+{
+	lua_getglobal( L, "entity" );
+	if ( lua_istable( L, -1 ) )
+	{
+		lua_getfield( L, -1, "get" );
+		if ( lua_isfunction( L, -1 ) )
+		{
+			lua_remove( L, -2 );
+			lua_pushstring( L, GetClassname() );
+			luasrc_pcall( L, 1, 1, 0 );
+		}
+		else
+		{
+			lua_pop( L, 2 );
+		}
+	}
+	else
+	{
+		lua_pop( L, 1 );
+	}
 }
 
 void CBaseScriptedTrigger::InitScriptedTrigger( void )
@@ -121,7 +154,33 @@ void CBaseScriptedTrigger::InitScriptedTrigger( void )
 	}
 
 	if ( m_nTableReference == LUA_NOREF )
+	{
+		LoadScriptedTrigger();
 		m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
+	}
+	else
+	{
+		lua_getglobal( L, "table" );
+		if ( lua_istable( L, -1 ) )
+		{
+			lua_getfield( L, -1, "merge" );
+			if ( lua_isfunction( L, -1 ) )
+			{
+				lua_remove( L, -2 );
+				lua_getref( L, m_nTableReference );
+				LoadScriptedTrigger();
+				luasrc_pcall( L, 2, 0, 0 );
+			}
+			else
+			{
+				lua_pop( L, 2 );
+			}
+		}
+		else
+		{
+			lua_pop( L, 1 );
+		}
+	}
 
 	BEGIN_LUA_CALL_TRIGGER_METHOD( "Initialize" );
 	END_LUA_CALL_TRIGGER_METHOD( 0, 0 );

@@ -22,7 +22,9 @@ class CBaseScriptedTrigger : public CBaseTrigger
 	DECLARE_CLASS( CBaseScriptedTrigger, CBaseTrigger );
 public:
 	CBaseScriptedTrigger();
+	~CBaseScriptedTrigger();
 	
+	void LoadScriptedTrigger( void );
 	void InitScriptedTrigger( void );
 	void Think();	
 

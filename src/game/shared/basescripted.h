@@ -36,6 +36,7 @@ public:
 
 	void	Spawn( void );
 	void	Precache( void );
+	void	LoadScriptedEntity( void );
 	void	InitScriptedEntity( void );
 
 	void	StartTouch( CBaseEntity *pOther );

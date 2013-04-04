@@ -91,8 +91,8 @@ void ResetEntityFactoryDatabase( void )
 CBaseScripted::CBaseScripted( void )
 {
 #ifdef LUA_SDK
-	// We're done in CBaseEntity
-	// m_nTableReference = LUA_NOREF;
+	// UNDONE: We're done in CBaseEntity
+	m_nTableReference = LUA_NOREF;
 #endif
 }
 
@@ -103,6 +103,29 @@ CBaseScripted::~CBaseScripted( void )
 #ifdef LUA_SDK
 	lua_unref( L, m_nTableReference );
 #endif
+}
+
+void CBaseScripted::LoadScriptedEntity( void )
+{
+	lua_getglobal( L, "entity" );
+	if ( lua_istable( L, -1 ) )
+	{
+		lua_getfield( L, -1, "get" );
+		if ( lua_isfunction( L, -1 ) )
+		{
+			lua_remove( L, -2 );
+			lua_pushstring( L, GetClassname() );
+			luasrc_pcall( L, 1, 1, 0 );
+		}
+		else
+		{
+			lua_pop( L, 2 );
+		}
+	}
+	else
+	{
+		lua_pop( L, 1 );
+	}
 }
 
 void CBaseScripted::InitScriptedEntity( void )
@@ -137,28 +160,34 @@ void CBaseScripted::InitScriptedEntity( void )
  	Q_strlower( className );
 	SetClassname( className );
 
-	lua_getglobal( L, "entity" );
-	if ( lua_istable( L, -1 ) )
+	if ( m_nTableReference == LUA_NOREF )
 	{
-		lua_getfield( L, -1, "get" );
-		if ( lua_isfunction( L, -1 ) )
-		{
-			lua_remove( L, -2 );
-			lua_pushstring( L, className );
-			luasrc_pcall( L, 1, 1, 0 );
-		}
-		else
-		{
-			lua_pop( L, 2 );
-		}
+		LoadScriptedEntity();
+		m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
 	}
 	else
 	{
-		lua_pop( L, 1 );
+		lua_getglobal( L, "table" );
+		if ( lua_istable( L, -1 ) )
+		{
+			lua_getfield( L, -1, "merge" );
+			if ( lua_isfunction( L, -1 ) )
+			{
+				lua_remove( L, -2 );
+				lua_getref( L, m_nTableReference );
+				LoadScriptedEntity();
+				luasrc_pcall( L, 2, 0, 0 );
+			}
+			else
+			{
+				lua_pop( L, 2 );
+			}
+		}
+		else
+		{
+			lua_pop( L, 1 );
+		}
 	}
-
-	if ( m_nTableReference == LUA_NOREF )
-		m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
 
 	BEGIN_LUA_CALL_ENTITY_METHOD( "Initialize" );
 	END_LUA_CALL_ENTITY_METHOD( 0, 0 );
