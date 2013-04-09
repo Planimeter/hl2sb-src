@@ -438,7 +438,8 @@ static int CBaseEntity_GetHealth (lua_State *L) {
 }
 
 static int CBaseEntity_GetKeyValue (lua_State *L) {
-  char * szValue = "";
+  char szValue[256];
+  szValue[0] = '\0';
   lua_pushboolean(L, luaL_checkentity(L, 1)->GetKeyValue(luaL_checkstring(L, 2), szValue, sizeof( szValue )));
   lua_pushstring(L, szValue);
   return 2;
@@ -777,19 +778,19 @@ static int CBaseEntity_IsTransparent (lua_State *L) {
   return 1;
 }
 
-//Andrew; this is silly.
-#ifdef LUA_SDK
 static int CBaseEntity_IsWeapon (lua_State *L) {
   lua_pushboolean(L, luaL_checkentity(L, 1)->IsWeapon());
   return 1;
 }
-#endif
 
 static int CBaseEntity_KeyValue (lua_State *L) {
   switch(lua_type(L, 3)) {
 	case LUA_TNUMBER:
-	default:
 	  lua_pushboolean(L, luaL_checkentity(L, 1)->KeyValue(luaL_checkstring(L, 2), luaL_checknumber(L, 3)));
+	  break;
+	case LUA_TSTRING:
+	default:
+	  lua_pushboolean(L, luaL_checkentity(L, 1)->KeyValue(luaL_checkstring(L, 2), luaL_checkstring(L, 3)));
 	  break;
 	case LUA_TUSERDATA:
       if (luaL_checkudata(L, 3, "Vector"))
@@ -1594,9 +1595,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"IsSolidFlagSet", CBaseEntity_IsSolidFlagSet},
   {"IsStandable", CBaseEntity_IsStandable},
   {"IsTransparent", CBaseEntity_IsTransparent},
-#ifdef LUA_SDK
   {"IsWeapon", CBaseEntity_IsWeapon},
-#endif
   {"KeyValue", CBaseEntity_KeyValue},
   {"LocalEyeAngles", CBaseEntity_LocalEyeAngles},
   {"NextMovePeer", CBaseEntity_NextMovePeer},

@@ -11,6 +11,7 @@
 #include "lbaseentity_shared.h"
 #include "ltakedamageinfo.h"
 #include "mathlib/lvector.h"
+#include "items.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -621,6 +622,20 @@ static int CBaseEntity_GetSoundEmissionOrigin (lua_State *L) {
   return 1;
 }
 
+static int CBaseEntity_IsItem (lua_State *L) {
+  CItem *pItem = dynamic_cast<CItem *>(luaL_checkentity(L, 1));
+
+  if( pItem )
+  {
+    lua_pushboolean(L, true);
+  }
+  else
+  {
+    lua_pushboolean(L, false);
+  }
+  return 1;
+}
+
 
 static const luaL_Reg CBaseEntitymeta[] = {
   {"RecalcHasPlayerChildBit", CBaseEntity_RecalcHasPlayerChildBit},
@@ -741,6 +756,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"GetMoveDoneTime", CBaseEntity_GetMoveDoneTime},
   {"SetMoveDoneTime", CBaseEntity_SetMoveDoneTime},
   {"GetSoundEmissionOrigin", CBaseEntity_GetSoundEmissionOrigin},
+  {"IsItem", CBaseEntity_IsItem},
   {NULL, NULL}
 };
 

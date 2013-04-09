@@ -27,7 +27,7 @@ static int engine_AllowImmediateEdictReuse (lua_State *L) {
 }
 
 static int engine_ChangeLevel (lua_State *L) {
-  engine->ChangeLevel(luaL_checkstring(L, 1), luaL_checkstring(L, 2));
+  engine->ChangeLevel(luaL_checkstring(L, 1), luaL_optstring(L, 2, NULL));
   return 0;
 }
 

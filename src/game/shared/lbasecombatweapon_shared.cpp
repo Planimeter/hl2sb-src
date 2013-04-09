@@ -540,13 +540,10 @@ static int CBaseCombatWeapon_IsPredicted (lua_State *L) {
   return 1;
 }
 
-//Andrew; well, yeah.
-#ifdef LUA_SDK
 static int CBaseCombatWeapon_IsScripted (lua_State *L) {
   lua_pushboolean(L, luaL_checkweapon(L, 1)->IsScripted());
   return 1;
 }
-#endif
 
 static int CBaseCombatWeapon_IsViewModelSequenceFinished (lua_State *L) {
   lua_pushboolean(L, luaL_checkweapon(L, 1)->IsViewModelSequenceFinished());
@@ -1050,9 +1047,7 @@ static const luaL_Reg CBaseCombatWeaponmeta[] = {
   {"IsLocked", CBaseCombatWeapon_IsLocked},
   {"IsMeleeWeapon", CBaseCombatWeapon_IsMeleeWeapon},
   {"IsPredicted", CBaseCombatWeapon_IsPredicted},
-#ifdef LUA_SDK
   {"IsScripted", CBaseCombatWeapon_IsScripted},
-#endif
   {"IsViewModelSequenceFinished", CBaseCombatWeapon_IsViewModelSequenceFinished},
   {"IsWeaponVisible", CBaseCombatWeapon_IsWeaponVisible},
   {"IsWeaponZoomed", CBaseCombatWeapon_IsWeaponZoomed},
