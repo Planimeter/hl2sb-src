@@ -2146,6 +2146,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\tier1\LKeyValues.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\mathlib\lmathlib.cpp"
 				>
 			</File>
