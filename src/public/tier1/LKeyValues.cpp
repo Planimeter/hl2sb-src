@@ -276,6 +276,11 @@ static int KeyValues_UsesEscapeSequences (lua_State *L) {
   return 0;
 }
 
+static int KeyValues___eq (lua_State *L) {
+  lua_pushboolean(L, lua_tokeyvalues(L, 1) == lua_tokeyvalues(L, 2));
+  return 1;
+}
+
 static int KeyValues___tostring (lua_State *L) {
   KeyValues *pKV = lua_tokeyvalues(L, 1);
   if (pKV == NULL)
@@ -321,6 +326,7 @@ static const luaL_Reg KeyValuesmeta[] = {
   {"SetString", KeyValues_SetString},
   {"SetStringValue", KeyValues_SetStringValue},
   {"UsesEscapeSequences", KeyValues_UsesEscapeSequences},
+  {"__eq", KeyValues___eq},
   {"__tostring", KeyValues___tostring},
   {NULL, NULL}
 };
