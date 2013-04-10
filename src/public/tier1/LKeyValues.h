@@ -21,17 +21,17 @@ typedef KeyValues lua_KeyValues;
 ** access functions (stack -> C)
 */
 
-LUA_API lua_KeyValues     &(lua_tokeyvalues) (lua_State *L, int idx);
+LUA_API lua_KeyValues     *(lua_tokeyvalues) (lua_State *L, int idx);
 
 
 /*
 ** push functions (C -> stack)
 */
-LUA_API void  (lua_pushkeyvalues) (lua_State *L, lua_KeyValues &kv);
+LUA_API void  (lua_pushkeyvalues) (lua_State *L, lua_KeyValues *pKV);
 
 
 
-LUALIB_API lua_KeyValues &(luaL_checkkeyvalues) (lua_State *L, int narg);
+LUALIB_API lua_KeyValues *(luaL_checkkeyvalues) (lua_State *L, int narg);
 
 
 #endif // LKEYVALUES_H
