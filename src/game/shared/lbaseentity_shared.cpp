@@ -307,7 +307,8 @@ static int CBaseEntity_FollowEntity (lua_State *L) {
 }
 
 static int CBaseEntity_GenderExpandString (lua_State *L) {
-  char * out = "";
+  char out[128];
+  out[0] = '\0';
   luaL_checkentity(L, 1)->GenderExpandString(luaL_checkstring(L, 2), out, sizeof( out ));
   lua_pushstring(L, out);
   return 1;
