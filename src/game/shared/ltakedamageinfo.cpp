@@ -79,8 +79,9 @@ static int CTakeDamageInfo_CopyDamageToBaseDamage (lua_State *L) {
 }
 
 static int CTakeDamageInfo_DebugGetDamageTypeString (lua_State *L) {
-  char * outbuf = 0;
-  luaL_checkdamageinfo(L, 1).DebugGetDamageTypeString(luaL_checkint(L, 2), outbuf, luaL_checkint(L, 3));
+  char outbuf[256];
+  outbuf[0] = '\0';
+  luaL_checkdamageinfo(L, 1).DebugGetDamageTypeString(luaL_checkint(L, 2), outbuf, sizeof( outbuf ));
   lua_pushstring(L, outbuf);
   return 1;
 }

@@ -5322,6 +5322,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\tier1\LKeyValues.h"
+				>
+			</File>
+			<File
 				RelativePath=".\logicrelay.h"
 				>
 			</File>

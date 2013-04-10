@@ -127,6 +127,9 @@ LUALIB_API int (luaopen_IScheme) (lua_State *L);
 #define LUA_STEAMFRIENDSLIBNAME			"ISteamFriends"
 LUALIB_API int (luaopen_ISteamFriends) (lua_State *L);
 
+#define LUA_KEYVALUESLIBNAME			"KeyValues"
+LUALIB_API int (luaopen_KeyValues) (lua_State *L);
+
 #define LUA_MASKLIBNAME					"MASK"
 LUALIB_API int (luaopen_MASK) (lua_State *L);
 
