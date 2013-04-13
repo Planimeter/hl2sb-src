@@ -17,9 +17,9 @@ local tFnCommandCallbacks = {}
 -------------------------------------------------------------------------------
 -- Purpose: Creates a ConCommand
 -- Input  : pName - Name of the ConCommand
---			callback - Callback function for the ConCommand
---			pHelpString - Help string to be displayed
---			flags - Flags of the ConCommand
+--          callback - Callback function for the ConCommand
+--          pHelpString - Help string to be displayed
+--          flags - Flags of the ConCommand
 -- Output :
 -------------------------------------------------------------------------------
 function Create( pName, callback, pHelpString, flags )
@@ -30,8 +30,8 @@ end
 -------------------------------------------------------------------------------
 -- Purpose: Called by the engine to dispatch a ConCommand
 -- Input  : pPlayer - Player who ran the ConCommand
---			pCmd - Name of the ConCommand
---			ArgS - All args that occur after the 0th arg, in string form
+--          pCmd - Name of the ConCommand
+--          ArgS - All args that occur after the 0th arg, in string form
 -- Output : boolean
 -------------------------------------------------------------------------------
 function Dispatch( pPlayer, pCmd, ArgS )
@@ -40,10 +40,10 @@ function Dispatch( pPlayer, pCmd, ArgS )
     return false
   else
     bError, strError = pcall( fnCommandCallback, pPlayer, pCmd, ArgS )
-	if ( bError == false ) then
-	  Warning( "ConCommand '" .. tostring( pCmd ) .. "' Failed: " .. tostring( strError ) .. "\n" )
-	end
-	return true
+    if ( bError == false ) then
+      Warning( "ConCommand '" .. tostring( pCmd ) .. "' Failed: " .. tostring( strError ) .. "\n" )
+    end
+    return true
   end
 end
 
