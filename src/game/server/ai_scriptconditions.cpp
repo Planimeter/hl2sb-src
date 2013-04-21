@@ -356,7 +356,11 @@ bool CAI_ScriptConditions::EvalPlayerTargetLOS( const EvalArgs_t &args )
 		return true;
 	}
 
+#ifndef HL2SB
 	return ( !args.pTarget || PlayerHasLineOfSight( args.pPlayer, args.pTarget, m_fPlayerTargetLOS == TRS_FALSE ) );
+#else
+	return ( !args.pTarget || !args.pPlayer || PlayerHasLineOfSight( args.pPlayer, args.pTarget, m_fPlayerTargetLOS == TRS_FALSE ) );
+#endif
 }
 
 bool CAI_ScriptConditions::EvalActorInPVS( const EvalArgs_t &args )
