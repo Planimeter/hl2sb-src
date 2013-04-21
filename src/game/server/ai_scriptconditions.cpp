@@ -290,7 +290,11 @@ bool CAI_ScriptConditions::EvalActorSeeTarget( const EvalArgs_t &args )
 
 bool CAI_ScriptConditions::EvalPlayerActorProximity( const EvalArgs_t &args )
 {
+#ifndef HL2SB
 	return ( !args.pActor || m_PlayerActorProxTester.Check( args.pPlayer, args.pActor ) );
+#else
+	return ( !args.pActor || !args.pPlayer || m_PlayerActorProxTester.Check( args.pPlayer, args.pActor ) );
+#endif
 }
 
 //-----------------------------------------------------------------------------
