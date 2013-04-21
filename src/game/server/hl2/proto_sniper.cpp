@@ -1372,7 +1372,11 @@ void CProtoSniper::Event_KilledOther( CBaseEntity *pVictim, const CTakeDamageInf
 {
 	if( pVictim && pVictim->IsPlayer() )
 	{
+		// Andrew; In HL2SB, we're never satisfied by killing just a single
+		// player.
+#ifndef HL2SB
 		m_bKilledPlayer = true;
+#endif
 	}
 }
 
@@ -1400,6 +1404,14 @@ int CProtoSniper::SelectSchedule ( void )
 	}
 
 #ifdef HL2SB
+	// Andrew; check to see if a player even exists first!
+	if( !AI_GetSinglePlayer() )
+	{
+		// Look for an enemy.
+		SetEnemy( NULL );
+		return SCHED_PSNIPER_SCAN;
+	}
+
 	if( !AI_GetNearestPlayer( GetAbsOrigin() )->IsAlive() && m_bKilledPlayer )
 #else
 	if( !AI_GetSinglePlayer()->IsAlive() && m_bKilledPlayer )
