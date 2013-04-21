@@ -335,7 +335,11 @@ bool CAI_ScriptConditions::EvalPlayerActorLOS( const EvalArgs_t &args )
 		return true;
 	}
 
+#ifndef HL2SB
 	return ( !args.pActor || PlayerHasLineOfSight( args.pPlayer, args.pActor, m_fPlayerActorLOS == TRS_FALSE ) );
+#else
+	return ( !args.pActor || !args.pPlayer || PlayerHasLineOfSight( args.pPlayer, args.pActor, m_fPlayerActorLOS == TRS_FALSE ) );
+#endif
 }
 
 //-----------------------------------------------------------------------------

@@ -151,6 +151,12 @@ static int CBaseEntity_RemoveDeferred (lua_State *L) {
   return 0;
 }
 
+static int CBaseEntity_AcceptInput (lua_State *L) {
+  variant_t emptyVariant;
+  lua_pushboolean(L, luaL_checkentity(L, 1)->AcceptInput(luaL_checkstring(L, 2), lua_toentity(L, 3), lua_toentity(L, 4), emptyVariant, luaL_checkint(L, 5)));
+  return 1;
+}
+
 static int CBaseEntity_GetInputDispatchEffectPosition (lua_State *L) {
   Vector pVector;
   QAngle pAngle;
@@ -665,6 +671,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"HasSpawnFlags", CBaseEntity_HasSpawnFlags},
   {"MakeDormant", CBaseEntity_MakeDormant},
   {"RemoveDeferred", CBaseEntity_RemoveDeferred},
+  {"AcceptInput", CBaseEntity_AcceptInput},
   {"GetInputDispatchEffectPosition", CBaseEntity_GetInputDispatchEffectPosition},
   {"EntityText", CBaseEntity_EntityText},
   {"DrawDebugGeometryOverlays", CBaseEntity_DrawDebugGeometryOverlays},

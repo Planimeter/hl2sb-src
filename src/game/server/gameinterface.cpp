@@ -946,15 +946,6 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 		// load LCF into stringtable
 		lcf_preparecachefile();
 	}
-
-	BEGIN_LUA_CALL_HOOK( "LevelInit" );
-		lua_pushstring( L, pMapName );
-		lua_pushstring( L, pMapEntities );
-		lua_pushstring( L, pOldLevel );
-		lua_pushstring( L, pLandmarkName );
-		lua_pushboolean( L, loadGame );
-		lua_pushboolean( L, background );
-	END_LUA_CALL_HOOK( 6, 0 );
 #endif
 	ResetWindspeed();
 	UpdateChapterRestrictions( pMapName );
@@ -1060,6 +1051,17 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 	// clear any pending autosavedangerous
 	m_fAutoSaveDangerousTime = 0.0f;
 	m_fAutoSaveDangerousMinHealthToCommit = 0.0f;
+
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_HOOK( "LevelInit" );
+		lua_pushstring( L, pMapName );
+		lua_pushstring( L, pMapEntities );
+		lua_pushstring( L, pOldLevel );
+		lua_pushstring( L, pLandmarkName );
+		lua_pushboolean( L, loadGame );
+		lua_pushboolean( L, background );
+	END_LUA_CALL_HOOK( 6, 0 );
+#endif
 	return true;
 }
 
@@ -1134,6 +1136,14 @@ void CServerGameDLL::ServerActivate( edict_t *pEdictList, int edictCount, int cl
 //Tony; call activate on the gamerules
 #if defined ( SDK_DLL )
 	SDKGameRules()->ServerActivate();
+#endif
+
+//Andrew; call activate on the gamemode
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_HOOK( "ServerActivate" );
+		lua_pushinteger( L, edictCount );
+		lua_pushinteger( L, clientMax );
+	END_LUA_CALL_HOOK( 2, 0 );
 #endif
 }
 
