@@ -114,6 +114,9 @@ private:
 	void ActivateWeaponHighlight( C_BaseCombatWeapon *pWeapon );
 	float GetWeaponBoxAlpha( bool bSelected );
 	int GetLastPosInSlot( int iSlot ) const;
+#ifdef LUA_SDK
+	int GetNumberOfWeaponsInSlotPos( int iSlot, int iPos ) const;
+#endif
     
 	void FastWeaponSwitch( int iWeaponSlot );
 	void PlusTypeFastWeaponSwitch( int iWeaponSlot );
@@ -665,6 +668,7 @@ void CHudWeaponSelection::Paint()
 
 					for (int slotpos = 0; slotpos <= iLastPos; slotpos++)
 					{
+#if !defined ( LUA_SDK )
 						C_BaseCombatWeapon *pWeapon = GetWeaponInSlot( i, slotpos );
 						if ( !pWeapon )
 						{
@@ -689,6 +693,53 @@ void CHudWeaponSelection::Paint()
 						// move down to the next bucket
 						ypos += (largeBoxTall + m_flBoxGap);
 						bDrawBucketNumber = false;
+#else
+						int iWeaponsInSlotPos = GetNumberOfWeaponsInSlotPos( i, slotpos );
+
+						if ( iWeaponsInSlotPos == 0 )
+						{
+							if ( !hud_showemptyweaponslots.GetBool() )
+								continue;
+							DrawBox( xpos, ypos, largeBoxWide, largeBoxTall, m_EmptyBoxColor, m_flAlphaOverride, bDrawBucketNumber ? i + 1 : -1 );
+
+							// move down to the next bucket
+							ypos += (largeBoxTall + m_flBoxGap);
+							bDrawBucketNumber = false;
+						}
+						else
+						{
+							for ( int j = 0; j < MAX_WEAPONS; j++ )
+							{
+								C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
+
+								if ( !player )
+									continue;
+
+								C_BaseCombatWeapon *pWeapon = player->GetWeapon(j);
+								
+								if ( pWeapon == NULL )
+									continue;
+
+								if ( pWeapon->GetSlot() == i && pWeapon->GetPosition() == slotpos )
+								{
+									bool bSelected = (pWeapon == pSelectedWeapon);
+									DrawLargeWeaponBox( pWeapon, 
+														bSelected, 
+														xpos, 
+														ypos, 
+														largeBoxWide, 
+														largeBoxTall, 
+														bSelected ? selectedColor : m_BoxColor, 
+														GetWeaponBoxAlpha( bSelected ), 
+														bDrawBucketNumber ? i + 1 : -1 );
+
+									// move down to the next bucket
+									ypos += (largeBoxTall + m_flBoxGap);
+									bDrawBucketNumber = false;
+								}
+							}
+						}
+#endif
 					}
 
 					xpos += largeBoxWide;
@@ -1278,6 +1329,34 @@ int CHudWeaponSelection::GetLastPosInSlot( int iSlot ) const
 
 	return iMaxSlotPos;
 }
+
+#ifdef LUA_SDK
+//-----------------------------------------------------------------------------
+// Purpose: returns the # of the weapons in the specified position
+//-----------------------------------------------------------------------------
+int CHudWeaponSelection::GetNumberOfWeaponsInSlotPos( int iSlot, int iPos ) const
+{
+	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
+	int iWeaponsInSlotPos;
+
+	if ( !player )
+		return -1;
+
+	iWeaponsInSlotPos = 0;
+	for ( int i = 0; i < MAX_WEAPONS; i++ )
+	{
+		C_BaseCombatWeapon *pWeapon = player->GetWeapon(i);
+		
+		if ( pWeapon == NULL )
+			continue;
+
+		if ( pWeapon->GetSlot() == iSlot && pWeapon->GetPosition() == iPos )
+			iWeaponsInSlotPos++;
+	}
+
+	return iWeaponsInSlotPos;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: returns the weapon in the specified slot
