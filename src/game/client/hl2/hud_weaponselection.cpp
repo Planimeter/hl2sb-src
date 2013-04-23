@@ -1125,7 +1125,42 @@ C_BaseCombatWeapon *CHudWeaponSelection::FindNextWeaponInWeaponSelection(int iCu
 	if ( !pPlayer )
 		return NULL;
 
+#if defined ( LUA_SDK )
+	C_BaseCombatWeapon *pCurWeapon = IsInSelectionMode() ? GetSelectedWeapon() : GetActiveWeapon();
+#endif
 	C_BaseCombatWeapon *pNextWeapon = NULL;
+
+#if defined ( LUA_SDK )
+	int iWeaponsInSlotPos = GetNumberOfWeaponsInSlotPos( iCurrentSlot, iCurrentPosition );
+	if ( iWeaponsInSlotPos > 1 )
+	{
+		bool bCurrentWeaponFound = false;
+
+		for ( int i = 0; i < MAX_WEAPONS; i++ )
+		{
+			C_BaseCombatWeapon *pWeapon = pPlayer->GetWeapon(i);
+			if ( !pWeapon )
+				continue;
+
+			if ( CanBeSelectedInHUD( pWeapon ) )
+			{
+				int weaponSlot = pWeapon->GetSlot(), weaponPosition = pWeapon->GetPosition();
+
+				if ( weaponSlot == iCurrentSlot && weaponPosition == iCurrentPosition )
+				{
+					if ( pWeapon == pCurWeapon )
+					{
+						bCurrentWeaponFound = true;
+					}
+					else if ( bCurrentWeaponFound )
+					{
+						return pWeapon;
+					}
+				}
+			}
+		}
+	}
+#endif
 
 	// search all the weapons looking for the closest next
 	int iLowestNextSlot = MAX_WEAPON_SLOTS;
@@ -1166,7 +1201,42 @@ C_BaseCombatWeapon *CHudWeaponSelection::FindPrevWeaponInWeaponSelection(int iCu
 	if ( !pPlayer )
 		return NULL;
 
+#if defined ( LUA_SDK )
+	C_BaseCombatWeapon *pCurWeapon = IsInSelectionMode() ? GetSelectedWeapon() : GetActiveWeapon();
+#endif
 	C_BaseCombatWeapon *pPrevWeapon = NULL;
+
+#if defined ( LUA_SDK )
+	int iWeaponsInSlotPos = GetNumberOfWeaponsInSlotPos( iCurrentSlot, iCurrentPosition );
+	if ( iWeaponsInSlotPos > 1 )
+	{
+		bool bCurrentWeaponFound = false;
+
+		for ( int i = MAX_WEAPONS - 1; i >= 0; i-- )
+		{
+			C_BaseCombatWeapon *pWeapon = pPlayer->GetWeapon(i);
+			if ( !pWeapon )
+				continue;
+
+			if ( CanBeSelectedInHUD( pWeapon ) )
+			{
+				int weaponSlot = pWeapon->GetSlot(), weaponPosition = pWeapon->GetPosition();
+
+				if ( weaponSlot == iCurrentSlot && weaponPosition == iCurrentPosition )
+				{
+					if ( pWeapon == pCurWeapon )
+					{
+						bCurrentWeaponFound = true;
+					}
+					else if ( bCurrentWeaponFound )
+					{
+						return pWeapon;
+					}
+				}
+			}
+		}
+	}
+#endif
 
 	// search all the weapons looking for the closest next
 	int iLowestPrevSlot = -1;
@@ -1194,6 +1264,29 @@ C_BaseCombatWeapon *CHudWeaponSelection::FindPrevWeaponInWeaponSelection(int iCu
 			}
 		}
 	}
+
+#if defined ( LUA_SDK )
+	iWeaponsInSlotPos = GetNumberOfWeaponsInSlotPos( iLowestPrevSlot, iLowestPrevPosition );
+	if ( iWeaponsInSlotPos > 1 )
+	{
+		for ( int i = MAX_WEAPONS - 1; i >= 0; i-- )
+		{
+			C_BaseCombatWeapon *pWeapon = pPlayer->GetWeapon(i);
+			if ( !pWeapon )
+				continue;
+
+			if ( CanBeSelectedInHUD( pWeapon ) )
+			{
+				int weaponSlot = pWeapon->GetSlot(), weaponPosition = pWeapon->GetPosition();
+
+				if ( weaponSlot == iLowestPrevSlot && weaponPosition == iLowestPrevPosition )
+				{
+					return pWeapon;
+				}
+			}
+		}
+	}
+#endif
 
 	return pPrevWeapon;
 }
