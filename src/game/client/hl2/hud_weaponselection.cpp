@@ -62,6 +62,9 @@ public:
 
 	virtual C_BaseCombatWeapon *GetWeaponInSlot( int iSlot, int iSlotPos );
 	virtual void SelectWeaponSlot( int iSlot );
+#ifdef LUA_SDK
+	virtual C_BaseCombatWeapon	*GetNextActivePos( int iSlot, int iSlotPos );
+#endif
 
 	virtual C_BaseCombatWeapon	*GetSelectedWeapon( void )
 	{ 
@@ -116,6 +119,7 @@ private:
 	int GetLastPosInSlot( int iSlot ) const;
 #ifdef LUA_SDK
 	int GetNumberOfWeaponsInSlotPos( int iSlot, int iPos ) const;
+	C_BaseCombatWeapon *GetLastWeaponInSlotPos( int iSlot, int iPos );
 #endif
     
 	void FastWeaponSwitch( int iWeaponSlot );
@@ -1474,6 +1478,107 @@ C_BaseCombatWeapon *CHudWeaponSelection::GetWeaponInSlot( int iSlot, int iSlotPo
 	return NULL;
 }
 
+#ifdef LUA_SDK
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+C_BaseCombatWeapon *CHudWeaponSelection::GetNextActivePos( int iSlot, int iSlotPos )
+{
+	if ( iSlotPos >= MAX_WEAPON_POSITIONS || iSlot >= MAX_WEAPON_SLOTS )
+		return NULL;
+
+	int iLowestPosition = MAX_WEAPON_POSITIONS;
+	C_BaseCombatWeapon *pNextWeapon = NULL;
+
+	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
+	if ( !player )
+		return NULL;
+	C_BaseCombatWeapon *pCurWeapon = IsInSelectionMode() ? GetSelectedWeapon() : NULL;
+	if ( pCurWeapon && ( pCurWeapon->GetSlot() != iSlot || pCurWeapon->GetPosition() != iSlotPos ) )
+		pCurWeapon = NULL;
+
+	int iWeaponsInSlotPos = GetNumberOfWeaponsInSlotPos( iSlot, iSlotPos );
+	if ( iWeaponsInSlotPos > 1 )
+	{
+		bool bCurrentWeaponFound = false;
+
+		for ( int i = 0; i < MAX_WEAPONS; i++ )
+		{
+			C_BaseCombatWeapon *pWeapon = player->GetWeapon(i);
+			if ( !pWeapon )
+				continue;
+
+			if ( CanBeSelectedInHUD( pWeapon ) )
+			{
+				int weaponSlot = pWeapon->GetSlot(), weaponPosition = pWeapon->GetPosition();
+
+				if ( weaponSlot == iSlot && weaponPosition == iSlotPos )
+				{
+					if ( !pCurWeapon )
+						return pWeapon;
+
+					if ( pWeapon == pCurWeapon )
+					{
+						bCurrentWeaponFound = true;
+					}
+					else if ( bCurrentWeaponFound )
+					{
+						return pWeapon;
+					}
+				}
+			}
+		}
+	}
+	for ( int i = 0; i < MAX_WEAPONS; i++ )
+	{
+		C_BaseCombatWeapon *pWeapon = player->GetWeapon( i );
+		if ( !pWeapon )
+			continue;
+
+		if ( CanBeSelectedInHUD( pWeapon ) && pWeapon->GetSlot() == iSlot )
+		{
+			// If this weapon is lower in the slot than the current lowest, and above our desired position, it's our new winner
+			if ( pWeapon->GetPosition() <= iLowestPosition && pWeapon->GetPosition() >= iSlotPos )
+			{
+				iLowestPosition = pWeapon->GetPosition();
+				pNextWeapon = pWeapon;
+			}
+		}
+	}
+
+	return pNextWeapon;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: returns the last weapon in the specified position
+//-----------------------------------------------------------------------------
+C_BaseCombatWeapon *CHudWeaponSelection::GetLastWeaponInSlotPos( int iSlot, int iPos )
+{
+	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
+	int iWeaponsInSlotPos = GetNumberOfWeaponsInSlotPos( iSlot, iPos );
+
+	if ( !player )
+		return NULL;
+
+	int iWeaponsInSlotPosFound = 0;
+	for ( int i = 0; i < MAX_WEAPONS; i++ )
+	{
+		C_BaseCombatWeapon *pWeapon = player->GetWeapon(i);
+		
+		if ( pWeapon == NULL )
+			continue;
+
+		if ( pWeapon->GetSlot() == iSlot && pWeapon->GetPosition() == iPos )
+			iWeaponsInSlotPosFound++;
+
+		if ( iWeaponsInSlotPosFound == iWeaponsInSlotPos )
+			return pWeapon;
+	}
+
+	return NULL;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: Opens the next weapon in the slot
 //-----------------------------------------------------------------------------
@@ -1661,7 +1766,15 @@ void CHudWeaponSelection::SelectWeaponSlot( int iSlot )
 			// start later in the list
 			if ( IsInSelectionMode() && pActiveWeapon && pActiveWeapon->GetSlot() == iSlot )
 			{
+#if !defined ( LUA_SDK )
 				slotPos = pActiveWeapon->GetPosition() + 1;
+#else
+				int weaponSlot = pActiveWeapon->GetSlot(), weaponPosition = pActiveWeapon->GetPosition();
+				int iWeaponsInSlotPos = GetNumberOfWeaponsInSlotPos( weaponSlot, weaponPosition );
+				bool bLastWeaponInSlotPos = pActiveWeapon == GetLastWeaponInSlotPos( weaponSlot, weaponPosition );
+
+				slotPos = pActiveWeapon->GetPosition() + ( ( iWeaponsInSlotPos > 1 && !bLastWeaponInSlotPos ) ? 0 : 1 );
+#endif
 			}
 
 			// find the weapon in this slot
