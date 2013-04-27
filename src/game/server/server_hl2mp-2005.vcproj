@@ -4465,6 +4465,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\hl2\weapon_alyxgun.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\hl2\weapon_alyxgun.h"
 					>
 				</File>
