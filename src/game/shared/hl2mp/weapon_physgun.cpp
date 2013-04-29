@@ -377,13 +377,15 @@ public:
 			switch ( keynum )
 			{
 			case MOUSE_WHEEL_UP:
-				gHUD.m_iKeyBits |= IN_WEAPON1;
+				m_bInWeapon1 = true;
+				// gHUD.m_iKeyBits |= IN_WEAPON1;
 				if ( gpGlobals->maxClients > 1 )
 					gHUD.m_bSkipClear = true;
 				return 0;
 
 			case MOUSE_WHEEL_DOWN:
-				gHUD.m_iKeyBits |= IN_WEAPON2;
+				m_bInWeapon2 = true;
+				// gHUD.m_iKeyBits |= IN_WEAPON2;
 				if ( gpGlobals->maxClients > 1 )
 					gHUD.m_bSkipClear = true;
 				return 0;
@@ -392,6 +394,21 @@ public:
 
 		// Allow engine to process
 		return BaseClass::KeyInput( down, keynum, pszCurrentBinding );
+	}
+
+	void HandleInput()
+	{
+		if ( m_bInWeapon1 )
+		{
+			gHUD.m_iKeyBits |= IN_WEAPON1;
+			m_bInWeapon1 = false;
+		}
+
+		if ( m_bInWeapon2 )
+		{
+			gHUD.m_iKeyBits |= IN_WEAPON2;
+			m_bInWeapon2 = false;
+		}
 	}
 
 	int	 DrawModel( int flags );
@@ -491,6 +508,9 @@ private:
 	CSoundPatch					*m_sndHeavyObject;
 
 	CGravControllerPoint		m_gravCallback;
+
+	bool		m_bInWeapon1;
+	bool		m_bInWeapon2;
 
 	DECLARE_ACTTABLE();
 };
@@ -593,6 +613,8 @@ CWeaponGravityGun::CWeaponGravityGun()
 {
 	m_active = false;
 	m_bFiresUnderwater = true;
+	m_bInWeapon1 = false;
+	m_bInWeapon2 = false;
 }
 
 
