@@ -804,7 +804,9 @@ void CHL2MPRules::AddLevelDesignerPlacedObject( CBaseEntity *pEntity )
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_HOOK( "AddLevelDesignerPlacedObject" );
 		lua_pushentity( L, pEntity );
-	END_LUA_CALL_HOOK( 1, 0 );
+	END_LUA_CALL_HOOK( 1, 1 );
+
+	RETURN_LUA_NONE();
 #endif
 
 	if ( m_hRespawnableItemsAndWeapons.Find( pEntity ) == -1 )
@@ -821,7 +823,9 @@ void CHL2MPRules::RemoveLevelDesignerPlacedObject( CBaseEntity *pEntity )
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_HOOK( "RemoveLevelDesignerPlacedObject" );
 		lua_pushentity( L, pEntity );
-	END_LUA_CALL_HOOK( 1, 0 );
+	END_LUA_CALL_HOOK( 1, 1 );
+
+	RETURN_LUA_NONE();
 #endif
 
 	if ( m_hRespawnableItemsAndWeapons.Find( pEntity ) != -1 )
@@ -881,6 +885,16 @@ float CHL2MPRules::FlItemRespawnTime( CItem *pItem )
 
 
 #if defined ( LUA_SDK )
+//=========================================================
+//=========================================================
+void CHL2MPRules::PlayerGotItem( CBasePlayer *pPlayer, CItem *pItem )
+{
+	BEGIN_LUA_CALL_HOOK( "PlayerGotItem" );
+		lua_pushentity( L, pPlayer );
+		lua_pushentity( L, pItem );
+	END_LUA_CALL_HOOK( 2, 0 );
+}
+
 //=========================================================
 //=========================================================
 int CHL2MPRules::ItemShouldRespawn( CItem *pItem )

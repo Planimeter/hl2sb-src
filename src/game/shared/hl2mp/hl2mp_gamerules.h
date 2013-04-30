@@ -141,6 +141,7 @@ public:
 	virtual QAngle VecItemRespawnAngles( CItem *pItem );
 	virtual float	FlItemRespawnTime( CItem *pItem );
 #ifdef LUA_SDK
+	virtual void PlayerGotItem( CBasePlayer *pPlayer, CItem *pItem );
 	virtual int ItemShouldRespawn( CItem *pItem );
 #endif
 	virtual bool	CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem );
