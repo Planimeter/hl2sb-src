@@ -1014,7 +1014,7 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
   {"SetPoseParameter", CBaseAnimating_SetPoseParameter},
   {"SetPredictable", CBaseAnimating_SetPredictable},
   {"SetPredictionEligible", CBaseAnimating_SetPredictionEligible},
-  {"SetPredictionEligible", CBaseAnimating_SetPredictionPlayer},
+  {"SetPredictionPlayer", CBaseAnimating_SetPredictionPlayer},
   {"SetReceivedSequence", CBaseAnimating_SetReceivedSequence},
   {"SetSequence", CBaseAnimating_SetSequence},
   {"SetServerIntendedCycle", CBaseAnimating_SetServerIntendedCycle},

@@ -103,6 +103,9 @@ LUALIB_API int (luaopen_IMaterial) (lua_State *L);
 #define LUA_MOVEHELPERLIBNAME			"IMoveHelper"
 LUALIB_API int (luaopen_IMoveHelper) (lua_State *L);
 
+#define LUA_INLIBNAME					"IN"
+LUALIB_API int (luaopen_IN) (lua_State *L);
+
 #define LUA_NETCHANNELINFOLIBNAME		"INetChannelInfo"
 LUALIB_API int (luaopen_INetChannelInfo) (lua_State *L);
 

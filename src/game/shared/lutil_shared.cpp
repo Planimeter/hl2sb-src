@@ -34,6 +34,26 @@ static int luasrc_UTIL_YawToVector (lua_State *L) {
   return 1;
 }
 
+static int luasrc_SharedRandomFloat (lua_State *L) {
+  lua_pushnumber(L, SharedRandomFloat(luaL_checkstring(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_optint(L, 4, 0)));
+  return 1;
+}
+
+static int luasrc_SharedRandomInt (lua_State *L) {
+  lua_pushinteger(L, SharedRandomInt(luaL_checkstring(L, 1), luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_optint(L, 4, 0)));
+  return 1;
+}
+
+static int luasrc_SharedRandomVector (lua_State *L) {
+  lua_pushvector(L, SharedRandomVector(luaL_checkstring(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_optint(L, 4, 0)));
+  return 1;
+}
+
+static int luasrc_SharedRandomAngle (lua_State *L) {
+  lua_pushangle(L, SharedRandomAngle(luaL_checkstring(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_optint(L, 4, 0)));
+  return 1;
+}
+
 static int luasrc_UTIL_TraceLine (lua_State *L) {
   UTIL_TraceLine(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkint(L, 3), lua_toentity(L, 4), luaL_checkint(L, 5), &luaL_checktrace(L, 6));
   return 0;
@@ -122,6 +142,10 @@ static const luaL_Reg util_funcs[] = {
   {"VecToPitch",  luasrc_UTIL_VecToPitch},
   // {"UTIL_YawToVector",  luasrc_UTIL_YawToVector},
   {"YawToVector",  luasrc_UTIL_YawToVector},
+  {"SharedRandomFloat",  luasrc_SharedRandomFloat},
+  {"SharedRandomInt",  luasrc_SharedRandomInt},
+  {"SharedRandomVector",  luasrc_SharedRandomVector},
+  {"SharedRandomAngle",  luasrc_SharedRandomAngle},
   // {"UTIL_TraceLine",  luasrc_UTIL_TraceLine},
   {"TraceLine",  luasrc_UTIL_TraceLine},
   // {"UTIL_TraceHull",  luasrc_UTIL_TraceHull},

@@ -2122,6 +2122,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\lin_buttons.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\linetchannelinfo.cpp"
 				>
 			</File>

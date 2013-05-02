@@ -645,8 +645,15 @@ LUALIB_API int luaopen_physenv (lua_State *L) {
 }
 
 
+static int IPhysicsObject_AddVelocity (lua_State *L) {
+  Vector velocity = luaL_checkvector(L, 2);
+  AngularImpulse angularVelocity = luaL_checkvector(L, 3);
+  luaL_checkphysicsobject(L, 1)->AddVelocity(&velocity, &angularVelocity);
+  return 0;
+}
+
 static int IPhysicsObject_ApplyForceCenter (lua_State *L) {
-  luaL_checkphysicsobject(L, 1)->ApplyForceCenter(luaL_checkvector(L, 1));
+  luaL_checkphysicsobject(L, 1)->ApplyForceCenter(luaL_checkvector(L, 2));
   return 0;
 }
 
@@ -1026,6 +1033,7 @@ static int IPhysicsObject___tostring (lua_State *L) {
 
 
 static const luaL_Reg IPhysicsObjectmeta[] = {
+  {"AddVelocity", IPhysicsObject_AddVelocity},
   {"ApplyForceCenter", IPhysicsObject_ApplyForceCenter},
   {"ApplyForceOffset", IPhysicsObject_ApplyForceOffset},
   {"ApplyTorqueCenter", IPhysicsObject_ApplyTorqueCenter},

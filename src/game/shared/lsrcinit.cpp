@@ -60,6 +60,7 @@ static const luaL_Reg luasrclibs[] = {
 #endif
   {LUA_MATERIALLIBNAME, luaopen_IMaterial},
   {LUA_MOVEHELPERLIBNAME, luaopen_IMoveHelper},
+  {LUA_INLIBNAME, luaopen_IN},
 #ifndef CLIENT_DLL
   {LUA_NETCHANNELINFOLIBNAME, luaopen_INetChannelInfo},
 #endif

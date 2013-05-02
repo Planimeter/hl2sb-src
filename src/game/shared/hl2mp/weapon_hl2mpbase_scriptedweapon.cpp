@@ -969,7 +969,9 @@ void CHL2MPScriptedWeapon::ItemPostFrame( void )
 {
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_WEAPON_METHOD( "ItemPostFrame" );
-	END_LUA_CALL_WEAPON_METHOD( 0, 0 );
+	END_LUA_CALL_WEAPON_METHOD( 0, 1 );
+
+	RETURN_LUA_NONE();
 #endif
 
 	BaseClass::ItemPostFrame();
@@ -982,7 +984,9 @@ void CHL2MPScriptedWeapon::ItemBusyFrame( void )
 {
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_WEAPON_METHOD( "ItemBusyFrame" );
-	END_LUA_CALL_WEAPON_METHOD( 0, 0 );
+	END_LUA_CALL_WEAPON_METHOD( 0, 1 );
+
+	RETURN_LUA_NONE();
 #endif
 
 	BaseClass::ItemBusyFrame();

@@ -1438,6 +1438,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\shared\lin_buttons.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\shared\lipredictionsystem.cpp"
 				>
 			</File>
