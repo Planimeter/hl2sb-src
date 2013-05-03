@@ -215,6 +215,14 @@ public:
 	float	GetMinRestTime() { return 4.0; }
 	float	GetMaxRestTime() { return 4.0; }
 
+#ifdef HL2SB
+#ifndef CLIENT_DLL
+	bool	WeaponLOSCondition( const Vector &ownerPos, const Vector &targetPos, bool bSetConditions );
+	int		WeaponRangeAttack1Condition( float flDot, float flDist );
+
+	void	Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
+#endif
+#endif
 	void	StartGuiding( void );
 	void	StopGuiding( void );
 	void	ToggleGuiding( void );
@@ -235,6 +243,18 @@ public:
 	void	SetNPCLaserPosition( const Vector &vecTarget );
 	const Vector &GetNPCLaserPosition( void );
 	
+#ifdef HL2SB
+#ifndef CLIENT_DLL
+	int		CapabilitiesGet( void ) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
+
+	virtual const Vector& GetBulletSpread( void )
+	{
+		static Vector cone = VECTOR_CONE_3DEGREES;
+		return cone;
+	}
+#endif
+#endif
+
 #ifdef CLIENT_DLL
 
 	// We need to render opaque and translucent pieces
@@ -273,6 +293,9 @@ protected:
 	CNetworkVar(	Vector,			m_vecLaserDot );
 
 #ifndef CLIENT_DLL
+#ifdef HL2SB
+	Vector				m_vecNPCLaserDot;
+#endif
 	CHandle<CLaserDot>	m_hLaserDot;
 #endif
 
