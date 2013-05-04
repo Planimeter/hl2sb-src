@@ -59,6 +59,8 @@ $includemodel "humans/male_shared.mdl"
 $includemodel "humans/male_ss.mdl"
 $includemodel "humans/male_gestures.mdl"
 $includemodel "humans/male_postures.mdl"
+$includemodel "player/cs_player_shared.mdl"
+$includemodel "player/ak_anims_t.mdl"
 $surfaceprop "flesh"
 $keyvalues  { physgun_interactions { "onpickup" "boogie" "onlaunch" "spin_zaxis" "onfirstimpact" "bloodsplat"  } } 
 $eyeposition -0.000 0.000 73.000
