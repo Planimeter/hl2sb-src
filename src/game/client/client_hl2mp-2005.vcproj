@@ -3287,6 +3287,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\scripted_controls\lPropertyDialog.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\scripted_controls\scriptedclientluapanel.cpp"
 					>
 				</File>
@@ -5733,6 +5737,10 @@
 			</File>
 			<File
 				RelativePath=".\scripted_controls\lPanel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripted_controls\lPropertyDialog.h"
 				>
 			</File>
 			<File

@@ -166,6 +166,18 @@
 	  lua_pop(L, 1); \
   }
 
+#define RETURN_LUA_PANEL_NONE() \
+  if (lua_gettop(m_lua_State) == 1) { \
+    if (lua_isboolean(m_lua_State, -1)) { \
+	  bool res = (bool)luaL_checkboolean(m_lua_State, -1); \
+	  lua_pop(m_lua_State, 1); \
+	  if (!res) \
+	    return; \
+	} \
+    else \
+	  lua_pop(m_lua_State, 1); \
+  }
+
 #define RETURN_LUA_BOOLEAN() \
   if (lua_gettop(L) == 1) { \
     if (lua_isboolean(L, -1)) { \
@@ -175,6 +187,17 @@
 	} \
     else \
 	  lua_pop(L, 1); \
+  }
+
+#define RETURN_LUA_PANEL_BOOLEAN() \
+  if (lua_gettop(m_lua_State) == 1) { \
+    if (lua_isboolean(m_lua_State, -1)) { \
+	  bool res = (bool)luaL_checkboolean(m_lua_State, -1); \
+	  lua_pop(m_lua_State, 1); \
+	  return res; \
+	} \
+    else \
+	  lua_pop(m_lua_State, 1); \
   }
 
 #define RETURN_LUA_NUMBER() \

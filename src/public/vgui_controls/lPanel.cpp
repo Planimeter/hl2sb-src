@@ -376,6 +376,16 @@ static int Panel_GetTall (lua_State *L) {
   return 1;
 }
 
+static int Panel_GetVPanel (lua_State *L) {
+  lua_pushpanel(L, luaL_checkpanel(L, 1)->GetVPanel());
+  return 1;
+}
+
+static int Panel_GetVParent (lua_State *L) {
+  lua_pushpanel(L, luaL_checkpanel(L, 1)->GetVParent());
+  return 1;
+}
+
 static int Panel_GetWide (lua_State *L) {
   lua_pushinteger(L, luaL_checkpanel(L, 1)->GetWide());
   return 1;
@@ -1138,6 +1148,8 @@ static const luaL_Reg Panelmeta[] = {
   {"GetSize", Panel_GetSize},
   {"GetTabPosition", Panel_GetTabPosition},
   {"GetTall", Panel_GetTall},
+  {"GetVPanel", Panel_GetVPanel},
+  {"GetVParent", Panel_GetVParent},
   {"GetWide", Panel_GetWide},
   {"GetZPos", Panel_GetZPos},
   {"HasFocus", Panel_HasFocus},

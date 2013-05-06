@@ -18,7 +18,7 @@ namespace vgui
 {
 
 //-----------------------------------------------------------------------------
-// Purpose: Lua wrapper for a Windowed frame
+// Purpose: Lua wrapper for a windowed frame
 //-----------------------------------------------------------------------------
 class LFrame : public Frame
 {

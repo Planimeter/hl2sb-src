@@ -113,7 +113,7 @@ void LPanel::PaintBuildOverlay()
 	BEGIN_LUA_CALL_PANEL_METHOD( "PaintBuildOverlay" );
 	END_LUA_CALL_PANEL_METHOD( 0, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::PaintBuildOverlay();
@@ -129,7 +129,7 @@ void LPanel::OnChildAdded(VPANEL child)
 		lua_pushpanel( m_lua_State, child );
 	END_LUA_CALL_PANEL_METHOD( 0, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnChildAdded(child);
@@ -146,7 +146,7 @@ void LPanel::OnSizeChanged(int newWide, int newTall)
 		lua_pushinteger( m_lua_State, newTall );
 	END_LUA_CALL_PANEL_METHOD( 2, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnSizeChanged(newWide, newTall);
@@ -233,7 +233,7 @@ void LPanel::OnMouseWheeled(int delta)
 		lua_pushinteger( m_lua_State, delta );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnMouseWheeled(delta);
@@ -247,7 +247,7 @@ void LPanel::OnKeyCodePressed(KeyCode code)
 		lua_pushinteger( m_lua_State, code );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnKeyCodePressed(code);
@@ -260,7 +260,7 @@ void LPanel::OnKeyCodeTyped(KeyCode code)
 		lua_pushinteger( m_lua_State, code );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnKeyCodeTyped(code);
@@ -273,7 +273,7 @@ void LPanel::OnKeyCodeReleased(KeyCode code)
 		lua_pushinteger( m_lua_State, code );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnKeyCodeReleased(code);
@@ -285,7 +285,7 @@ void LPanel::OnKeyFocusTicked()
 	BEGIN_LUA_CALL_PANEL_METHOD( "OnKeyFocusTicked" );
 	END_LUA_CALL_PANEL_METHOD( 0, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnKeyFocusTicked();
@@ -297,7 +297,7 @@ void LPanel::OnMouseFocusTicked()
 	BEGIN_LUA_CALL_PANEL_METHOD( "OnMouseFocusTicked" );
 	END_LUA_CALL_PANEL_METHOD( 0, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnMouseFocusTicked();
@@ -314,7 +314,7 @@ void LPanel::OnRequestFocus(VPANEL subFocus, VPANEL defaultPanel)
 		lua_pushpanel( m_lua_State, defaultPanel );
 	END_LUA_CALL_PANEL_METHOD( 2, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnRequestFocus(subFocus, defaultPanel);
@@ -329,7 +329,7 @@ void LPanel::OnMouseCaptureLost()
 	BEGIN_LUA_CALL_PANEL_METHOD( "OnMouseCaptureLost" );
 	END_LUA_CALL_PANEL_METHOD( 0, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnMouseCaptureLost();
@@ -353,7 +353,7 @@ void LPanel::OnCommand(const char *command)
 		lua_pushstring( m_lua_State, command );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 	BaseClass::OnCommand( command );
 }
@@ -367,7 +367,7 @@ void LPanel::OnSetFocus()
 	BEGIN_LUA_CALL_PANEL_METHOD( "OnSetFocus" );
 	END_LUA_CALL_PANEL_METHOD( 0, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnSetFocus();
@@ -382,7 +382,7 @@ void LPanel::OnKillFocus()
 	BEGIN_LUA_CALL_PANEL_METHOD( "OnKillFocus" );
 	END_LUA_CALL_PANEL_METHOD( 0, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnKillFocus();
@@ -448,7 +448,7 @@ void LPanel::OnMessage(const KeyValues *params, VPANEL ifromPanel)
 		lua_pushpanel( m_lua_State, ifromPanel );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
-	RETURN_LUA_NONE();
+	RETURN_LUA_PANEL_NONE();
 #endif
 
 	BaseClass::OnMessage( params, ifromPanel );
