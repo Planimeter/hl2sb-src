@@ -13,7 +13,7 @@
 
 #include "filesystem.h"
 #include "eiface.h"
-#include "LuaManager.h"
+#include "luamanager.h"
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
@@ -143,7 +143,7 @@ void lua_init (void) {
   luaopen_Vector(L);
   luaopen_QAngle(L);
 
-  Msg( LUA_RELEASE "  " LUA_COPYRIGHT "\n" );
+  Msg( "Lua initialized (" LUA_VERSION ")\n" );
 }
 
 void lua_shutdown (void) {
@@ -218,7 +218,16 @@ CON_COMMAND( lua_dostring, "Run a Lua string" )
 		return;
 	}
 
-	lua_dostring( args.ArgS() );
+	int status = luasrc_dostring( L, args.ArgS() );
+	if (status == 0 && lua_gettop(L) > 0) {  /* any result to print? */
+	  lua_getglobal(L, "print");
+	  lua_insert(L, 1);
+	  if (lua_pcall(L, lua_gettop(L)-1, 0, 0) != 0)
+		Warning("%s", lua_pushfstring(L,
+						  "error calling " LUA_QL("print") " (%s)",
+						  lua_tostring(L, -1)));
+	}
+	lua_settop(L, 0);  /* clear stack */
 }
 
 CON_COMMAND( lua_dofile, "Load and run a Lua file" )

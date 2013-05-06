@@ -342,11 +342,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LuaManager.cpp"
+				RelativePath=".\luamanager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\LuaManager.h"
+				RelativePath=".\luamanager.h"
 				>
 			</File>
 			<File

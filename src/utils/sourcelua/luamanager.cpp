@@ -286,7 +286,16 @@ CON_COMMAND( lua_dostring, "Run a Lua string" )
 		return;
 	}
 
-	luasrc_dostring( args.ArgS() );
+	int status = luasrc_dostring( L, args.ArgS() );
+	if (status == 0 && lua_gettop(L) > 0) {  /* any result to print? */
+	  lua_getglobal(L, "print");
+	  lua_insert(L, 1);
+	  if (lua_pcall(L, lua_gettop(L)-1, 0, 0) != 0)
+		Warning("%s", lua_pushfstring(L,
+						  "error calling " LUA_QL("print") " (%s)",
+						  lua_tostring(L, -1)));
+	}
+	lua_settop(L, 0);  /* clear stack */
 }
 
 static int DoFileCompletion( const char *partial, char commands[ COMMAND_COMPLETION_MAXITEMS ][ COMMAND_COMPLETION_ITEM_LENGTH ] )
@@ -366,7 +375,7 @@ CON_COMMAND_F_COMPLETION( lua_dofile, "Load and run a Lua file", 0, DoFileComple
 	luasrc_dofile( fullpath );
 }
 
-#if DEBUG_LUA_STACK
+#if DEBUG
 CON_COMMAND( lua_dumpstack, "Prints the Lua stack" )
 {
   if (!g_bLuaInitialized)
