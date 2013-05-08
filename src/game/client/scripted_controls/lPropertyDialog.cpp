@@ -9,9 +9,9 @@
 #include <vgui/KeyCode.h>
 #include <vgui_int.h>
 #include <luamanager.h>
-#include <scripted_controls/lPropertyDialog.h>
-
 #include <vgui_controls/lPanel.h>
+
+#include <scripted_controls/lPropertyDialog.h>
 #include <vgui_controls/PropertySheet.h>
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -28,7 +28,7 @@ LPropertyDialog::LPropertyDialog(Panel *parent, const char *panelName, lua_State
 	m_lua_State = L;
 	m_nTableReference = LUA_NOREF;
 	m_nRefCount = 0;
-#endif
+#endif // LUA_SDK
 }
 
 //-----------------------------------------------------------------------------
@@ -36,9 +36,9 @@ LPropertyDialog::LPropertyDialog(Panel *parent, const char *panelName, lua_State
 //-----------------------------------------------------------------------------
 LPropertyDialog::~LPropertyDialog()
 {
-#ifdef LUA_SDK
-	lua_unref( L, m_nTableReference );
-#endif
+#if defined( LUA_SDK )
+	lua_unref( m_lua_State, m_nTableReference );
+#endif // LUA_SDK
 }
 
 //-----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ void LPropertyDialog::PerformLayout()
 	BaseClass::PerformLayout();
 
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_PANEL_METHOD( "PerformLayout" );
+	BEGIN_LUA_CALL_PROPERTYDIALOG_METHOD( "PerformLayout" );
 	END_LUA_CALL_PANEL_METHOD( 0, 0 );
 #endif
 }
@@ -60,7 +60,7 @@ void LPropertyDialog::PerformLayout()
 void LPropertyDialog::OnCommand(const char *command)
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_PANEL_METHOD( "OnCommand" );
+	BEGIN_LUA_CALL_PROPERTYDIALOG_METHOD( "OnCommand" );
 		lua_pushstring( m_lua_State, command );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
@@ -76,7 +76,7 @@ void LPropertyDialog::OnCommand(const char *command)
 void LPropertyDialog::OnCancel()
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_PANEL_METHOD( "OnCancel" );
+	BEGIN_LUA_CALL_PROPERTYDIALOG_METHOD( "OnCancel" );
 	END_LUA_CALL_PANEL_METHOD( 0, 0 );
 #endif
 }
@@ -89,7 +89,7 @@ void LPropertyDialog::OnCancel()
 void LPropertyDialog::OnKeyCodeTyped(KeyCode code)
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_PANEL_METHOD( "OnKeyCodeTyped" );
+	BEGIN_LUA_CALL_PROPERTYDIALOG_METHOD( "OnKeyCodeTyped" );
 		lua_pushinteger( m_lua_State, code );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
@@ -106,7 +106,7 @@ void LPropertyDialog::OnKeyCodeTyped(KeyCode code)
 bool LPropertyDialog::OnOK(bool applyOnly)
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_PANEL_METHOD( "OnOK" );
+	BEGIN_LUA_CALL_PROPERTYDIALOG_METHOD( "OnOK" );
 		lua_pushboolean( m_lua_State, applyOnly );
 	END_LUA_CALL_PANEL_METHOD( 1, 1 );
 
@@ -143,6 +143,9 @@ LUA_API lua_PropertyDialog *lua_topropertydialog (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushpropertydialog (lua_State *L, PropertyDialog *pDialog) {
+  LPropertyDialog *plDialog = dynamic_cast<LPropertyDialog *>(pDialog);
+  if (plDialog)
+    ++plDialog->m_nRefCount;
   PHandle *phPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
   phPanel->Set(pDialog);
   luaL_getmetatable(L, "PropertyDialog");
@@ -280,9 +283,15 @@ static int PropertyDialog___index (lua_State *L) {
         lua_gettable(L, -2);
         if (lua_isnil(L, -1)) {
           lua_pop(L, 2);
-          luaL_getmetatable(L, "Panel");
+          luaL_getmetatable(L, "EditablePanel");
           lua_pushvalue(L, 2);
           lua_gettable(L, -2);
+          if (lua_isnil(L, -1)) {
+            lua_pop(L, 2);
+            luaL_getmetatable(L, "Panel");
+            lua_pushvalue(L, 2);
+            lua_gettable(L, -2);
+          }
         }
       }
     }
@@ -295,12 +304,18 @@ static int PropertyDialog___index (lua_State *L) {
       luaL_getmetatable(L, "Frame");
       lua_pushvalue(L, 2);
       lua_gettable(L, -2);
+      if (lua_isnil(L, -1)) {
+        lua_pop(L, 2);
+        luaL_getmetatable(L, "EditablePanel");
+        lua_pushvalue(L, 2);
+        lua_gettable(L, -2);
         if (lua_isnil(L, -1)) {
           lua_pop(L, 2);
           luaL_getmetatable(L, "Panel");
           lua_pushvalue(L, 2);
           lua_gettable(L, -2);
         }
+      }
     }
   }
   return 1;
@@ -351,13 +366,7 @@ static int PropertyDialog___gc (lua_State *L) {
 }
 
 static int PropertyDialog___eq (lua_State *L) {
-  Msg( "PropertyDialog.__eq() called!\n" );
-  PropertyDialog *pDialog = lua_topropertydialog(L, 1);
-  PropertyDialog *pOther = lua_topropertydialog(L, 2);
-  if (pDialog == NULL && pOther == NULL)
-    lua_pushboolean(L, 1);
-  else
-    lua_pushboolean(L, pDialog == pOther ? 1 : 0);
+  lua_pushboolean(L, lua_topropertydialog(L, 1) == lua_topropertydialog(L, 2));
   return 1;
 }
 
@@ -379,8 +388,8 @@ static const luaL_Reg PropertyDialogmeta[] = {
   {"AddPage", PropertyDialog_AddPage},
   {"ApplyChanges", PropertyDialog_ApplyChanges},
   {"ChainToAnimationMap", PropertyDialog_ChainToAnimationMap},
-  {"GetActivePage", PropertyDialog_GetActivePage},
   {"ChainToMap", PropertyDialog_ChainToMap},
+  {"GetActivePage", PropertyDialog_GetActivePage},
   {"GetPanelBaseClassName", PropertyDialog_GetPanelBaseClassName},
   {"GetPanelClassName", PropertyDialog_GetPanelClassName},
   {"GetRefTable", PropertyDialog_GetRefTable},

@@ -26,11 +26,12 @@ class LButton : public Button
 
 public:
 	// You can optionally pass in the panel to send the click message to and the name of the command to send to that panel.
-	LButton(Panel *parent, const char *panelName, const char *text, Panel *pActionSignalTarget=NULL, const char *pCmd=NULL);
+	LButton(Panel *parent, const char *panelName, const char *text, Panel *pActionSignalTarget=NULL, const char *pCmd=NULL, lua_State *L=NULL);
 	~LButton();
 
 public:
 #if defined( LUA_SDK )
+	lua_State          *m_lua_State;
 	int                m_nTableReference;
 	int                m_nRefCount;
 #endif

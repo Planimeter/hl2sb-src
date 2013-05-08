@@ -50,6 +50,16 @@ public:
 
 }; // vgui
 
+#define BEGIN_LUA_CALL_PROPERTYDIALOG_METHOD(functionName) \
+  if (m_nTableReference >= 0) { \
+    lua_getref(m_lua_State, m_nTableReference); \
+    lua_getfield(m_lua_State, -1, functionName); \
+    lua_remove(m_lua_State, -2); \
+    if (lua_isfunction(m_lua_State, -1)) { \
+      int args = 0; \
+	  lua_pushpropertydialog(m_lua_State, this); \
+	  ++args;
+
 /* type for PropertyDialog functions */
 typedef vgui::PropertyDialog lua_PropertyDialog;
 

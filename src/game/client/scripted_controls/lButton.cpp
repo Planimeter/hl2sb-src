@@ -9,11 +9,10 @@
 
 #include <vgui_int.h>
 #include <luamanager.h>
-#include <scripted_controls/lButton.h>
+#include <vgui_controls/lPanel.h>
 #include <lColor.h>
 
-#include <vgui_controls/lPanel.h>
-#include <vgui_controls/Button.h>
+#include <scripted_controls/lButton.h>
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
@@ -23,12 +22,13 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-LButton::LButton(Panel *parent, const char *panelName, const char *text, Panel *pActionSignalTarget, const char *pCmd ) : Button(parent, panelName, text, pActionSignalTarget, pCmd)
+LButton::LButton(Panel *parent, const char *panelName, const char *text, Panel *pActionSignalTarget, const char *pCmd, lua_State *L ) : Button(parent, panelName, text, pActionSignalTarget, pCmd)
 {
 #if defined( LUA_SDK )
+	m_lua_State = L;
 	m_nTableReference = LUA_NOREF;
 	m_nRefCount = 0;
-#endif
+#endif // LUA_SDK
 }
 
 //-----------------------------------------------------------------------------
@@ -36,9 +36,9 @@ LButton::LButton(Panel *parent, const char *panelName, const char *text, Panel *
 //-----------------------------------------------------------------------------
 LButton::~LButton()
 {
-#ifdef LUA_SDK
-	lua_unref( L, m_nTableReference );
-#endif
+#if defined( LUA_SDK )
+	lua_unref( m_lua_State, m_nTableReference );
+#endif // LUA_SDK
 }
 
 /*
@@ -61,6 +61,9 @@ LUA_API lua_Button *lua_tobutton (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushbutton (lua_State *L, Button *pButton) {
+  LButton *plButton = dynamic_cast<LButton *>(pButton);
+  if (plButton)
+    ++plButton->m_nRefCount;
   PHandle *phPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
   phPanel->Set(pButton);
   luaL_getmetatable(L, "Button");
@@ -483,7 +486,7 @@ static const luaL_Reg Buttonmeta[] = {
 
 
 static int luasrc_Button (lua_State *L) {
-  Button *pButton = new LButton(luaL_optpanel(L, 1, VGui_GetClientLuaRootPanel()), luaL_checkstring(L, 2), luaL_checkstring(L, 3), luaL_optpanel(L, 4, 0), luaL_optstring(L, 5, 0));
+  Button *pButton = new LButton(luaL_optpanel(L, 1, VGui_GetClientLuaRootPanel()), luaL_checkstring(L, 2), luaL_checkstring(L, 3), luaL_optpanel(L, 4, 0), luaL_optstring(L, 5, 0), L);
   lua_pushbutton(L, pButton);
   return 1;
 }

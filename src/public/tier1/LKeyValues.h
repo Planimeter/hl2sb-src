@@ -32,6 +32,8 @@ LUA_API void  (lua_pushkeyvalues) (lua_State *L, lua_KeyValues *pKV);
 
 
 LUALIB_API lua_KeyValues *(luaL_checkkeyvalues) (lua_State *L, int narg);
+LUALIB_API lua_KeyValues *(luaL_optkeyvalues) (lua_State *L, int narg,
+                                                             lua_KeyValues *def);
 
 
 #endif // LKEYVALUES_H

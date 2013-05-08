@@ -11,6 +11,7 @@
 #include <ienginevgui.h>
 #include <luamanager.h>
 #include <vgui_controls/lPanel.h>
+#include <LKeyValues.h>
 
 #include <scripted_controls/lFrame.h>
 
@@ -22,12 +23,13 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-LFrame::LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon) : Frame(parent, panelName, showTaskbarIcon)
+LFrame::LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon, lua_State *L) : Frame(parent, panelName, showTaskbarIcon)
 {
 #if defined( LUA_SDK )
+	m_lua_State = L;
 	m_nTableReference = LUA_NOREF;
 	m_nRefCount = 0;
-#endif
+#endif // LUA_SDK
 }
 
 //-----------------------------------------------------------------------------
@@ -35,9 +37,9 @@ LFrame::LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon) : Fra
 //-----------------------------------------------------------------------------
 LFrame::~LFrame()
 {
-#ifdef LUA_SDK
-	lua_unref( L, m_nTableReference );
-#endif
+#if defined( LUA_SDK )
+	lua_unref( m_lua_State, m_nTableReference );
+#endif // LUA_SDK
 }
 
 /*
@@ -60,6 +62,9 @@ LUA_API lua_Frame *lua_toframe (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushframe (lua_State *L, Frame *pFrame) {
+  LFrame *plFrame = dynamic_cast<LFrame *>(pFrame);
+  if (plFrame)
+    ++plFrame->m_nRefCount;
   PHandle *phPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
   phPanel->Set(pFrame);
   luaL_getmetatable(L, "Frame");
@@ -219,6 +224,11 @@ static int Frame_KB_ChainToMap (lua_State *L) {
   return 0;
 }
 
+static int Frame_LoadControlSettings (lua_State *L) {
+  luaL_checkframe(L, 1)->LoadControlSettings(luaL_checkstring(L, 2), luaL_optstring(L, 3, NULL), luaL_optkeyvalues(L, 4, NULL));
+  return 0;
+}
+
 static int Frame_MoveToCenterOfScreen (lua_State *L) {
   luaL_checkframe(L, 1)->MoveToCenterOfScreen();
   return 0;
@@ -332,9 +342,15 @@ static int Frame___index (lua_State *L) {
       lua_gettable(L, -2);
       if (lua_isnil(L, -1)) {
         lua_pop(L, 2);
-        luaL_getmetatable(L, "Panel");
+        luaL_getmetatable(L, "EditablePanel");
         lua_pushvalue(L, 2);
         lua_gettable(L, -2);
+        if (lua_isnil(L, -1)) {
+          lua_pop(L, 2);
+          luaL_getmetatable(L, "Panel");
+          lua_pushvalue(L, 2);
+          lua_gettable(L, -2);
+        }
       }
     }
   } else {
@@ -343,9 +359,15 @@ static int Frame___index (lua_State *L) {
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
       lua_pop(L, 2);
-      luaL_getmetatable(L, "Panel");
+      luaL_getmetatable(L, "EditablePanel");
       lua_pushvalue(L, 2);
       lua_gettable(L, -2);
+      if (lua_isnil(L, -1)) {
+        lua_pop(L, 2);
+        luaL_getmetatable(L, "Panel");
+        lua_pushvalue(L, 2);
+        lua_gettable(L, -2);
+      }
     }
   }
   return 1;
@@ -442,6 +464,7 @@ static const luaL_Reg Framemeta[] = {
   {"IsSmallCaption", Frame_IsSmallCaption},
   {"KB_AddBoundKey", Frame_KB_AddBoundKey},
   {"KB_ChainToMap", Frame_KB_ChainToMap},
+  {"LoadControlSettings", Frame_LoadControlSettings},
   {"MoveToCenterOfScreen", Frame_MoveToCenterOfScreen},
   {"OnCommand", Frame_OnCommand},
   {"PlaceUnderCursor", Frame_PlaceUnderCursor},
@@ -470,7 +493,7 @@ static const luaL_Reg Framemeta[] = {
 
 
 static int luasrc_Frame (lua_State *L) {
-  Frame *pFrame = new LFrame(luaL_optpanel(L, 1, VGui_GetClientLuaRootPanel()), luaL_optstring(L, 2, NULL), luaL_optboolean(L, 3, true));
+  Frame *pFrame = new LFrame(luaL_optpanel(L, 1, VGui_GetClientLuaRootPanel()), luaL_optstring(L, 2, NULL), luaL_optboolean(L, 3, true), L);
   lua_pushframe(L, pFrame);
   return 1;
 }

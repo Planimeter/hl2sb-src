@@ -49,6 +49,12 @@ LUALIB_API lua_KeyValues *luaL_checkkeyvalues (lua_State *L, int narg) {
 }
 
 
+LUALIB_API lua_KeyValues *luaL_optkeyvalues (lua_State *L, int narg,
+                                                           KeyValues *def) {
+  return luaL_opt(L, luaL_checkkeyvalues, narg, def);
+}
+
+
 static int KeyValues_AddSubKey (lua_State *L) {
   luaL_checkkeyvalues(L, 1)->AddSubKey(luaL_checkkeyvalues(L, 2));
   return 0;

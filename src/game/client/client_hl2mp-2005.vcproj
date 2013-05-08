@@ -1394,6 +1394,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\vgui_controls\lEditablePanel.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\shared\leffect_dispatch_data.cpp"
 				>
 			</File>
@@ -3291,6 +3295,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\scripted_controls\lPropertyPage.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\scripted_controls\scriptedclientluapanel.cpp"
 					>
 				</File>
@@ -4756,6 +4764,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\vgui_controls\lEditablePanel.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lfilesystem.h"
 				>
 			</File>
@@ -5741,6 +5753,10 @@
 			</File>
 			<File
 				RelativePath=".\scripted_controls\lPropertyDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\scripted_controls\lPropertyPage.h"
 				>
 			</File>
 			<File

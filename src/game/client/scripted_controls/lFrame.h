@@ -25,11 +25,12 @@ class LFrame : public Frame
 	DECLARE_CLASS_SIMPLE( LFrame, Frame );
 
 public:
-	LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon = true);
+	LFrame(Panel *parent, const char *panelName, bool showTaskbarIcon = true, lua_State *L = NULL);
 	virtual ~LFrame();
 
 public:
 #if defined( LUA_SDK )
+	lua_State *m_lua_State;
 	int m_nTableReference;
 	int m_nRefCount;
 #endif

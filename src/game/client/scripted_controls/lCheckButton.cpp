@@ -22,12 +22,13 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-LCheckButton::LCheckButton(Panel *parent, const char *panelName, const char *text) : CheckButton(parent, panelName, text)
+LCheckButton::LCheckButton(Panel *parent, const char *panelName, const char *text, lua_State *L) : CheckButton(parent, panelName, text)
 {
 #if defined( LUA_SDK )
+	m_lua_State = L;
 	m_nTableReference = LUA_NOREF;
 	m_nRefCount = 0;
-#endif
+#endif // LUA_SDK
 }
 
 
@@ -36,9 +37,9 @@ LCheckButton::LCheckButton(Panel *parent, const char *panelName, const char *tex
 //-----------------------------------------------------------------------------
 LCheckButton::~LCheckButton()
 {
-#ifdef LUA_SDK
-	lua_unref( L, m_nTableReference );
-#endif
+#if defined( LUA_SDK )
+	lua_unref( m_lua_State, m_nTableReference );
+#endif // LUA_SDK
 }
 
 /*
@@ -61,6 +62,9 @@ LUA_API lua_CheckButton *lua_tocheckbutton (lua_State *L, int idx) {
 
 
 LUA_API void lua_pushcheckbutton (lua_State *L, CheckButton *pCheckButton) {
+  LCheckButton *plCheckButton = dynamic_cast<LCheckButton *>(pCheckButton);
+  if (plCheckButton)
+    ++plCheckButton->m_nRefCount;
   PHandle *phPanel = (PHandle *)lua_newuserdata(L, sizeof(PHandle));
   phPanel->Set(pCheckButton);
   luaL_getmetatable(L, "CheckButton");
@@ -267,7 +271,7 @@ static const luaL_Reg CheckButtonmeta[] = {
 
 
 static int luasrc_CheckButton (lua_State *L) {
-  CheckButton *pCheckButton = new LCheckButton(luaL_optpanel(L, 1, VGui_GetClientLuaRootPanel()), luaL_optstring(L, 2, NULL), luaL_optstring(L, 3, NULL));
+  CheckButton *pCheckButton = new LCheckButton(luaL_optpanel(L, 1, VGui_GetClientLuaRootPanel()), luaL_optstring(L, 2, NULL), luaL_optstring(L, 3, NULL), L);
   lua_pushcheckbutton(L, pCheckButton);
   return 1;
 }
