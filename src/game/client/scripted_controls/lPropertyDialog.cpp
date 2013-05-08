@@ -13,6 +13,7 @@
 
 #include <scripted_controls/lPropertyDialog.h>
 #include <vgui_controls/PropertySheet.h>
+#include <vgui_controls/Button.h>
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
@@ -123,6 +124,15 @@ bool LPropertyDialog::OnOK(bool applyOnly)
 	return true;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: enable/disable the apply button
+//-----------------------------------------------------------------------------
+void LPropertyDialog::EnableApplyButton(bool bEnable)
+{
+	_applyButton->SetEnabled(bEnable);
+	InvalidateLayout();
+}
+
 /*
 ** access functions (stack -> C)
 */
@@ -178,6 +188,13 @@ static int PropertyDialog_ChainToAnimationMap (lua_State *L) {
 
 static int PropertyDialog_ChainToMap (lua_State *L) {
   luaL_checkpropertydialog(L, 1)->ChainToMap();
+  return 0;
+}
+
+static int PropertyDialog_EnableApplyButton (lua_State *L) {
+  LPropertyDialog *plDialog = dynamic_cast<LPropertyDialog *>(luaL_checkpropertydialog(L, 1));
+  if (plDialog)
+    plDialog->EnableApplyButton(luaL_checkboolean(L, 2));
   return 0;
 }
 
@@ -389,6 +406,7 @@ static const luaL_Reg PropertyDialogmeta[] = {
   {"ApplyChanges", PropertyDialog_ApplyChanges},
   {"ChainToAnimationMap", PropertyDialog_ChainToAnimationMap},
   {"ChainToMap", PropertyDialog_ChainToMap},
+  {"EnableApplyButton", PropertyDialog_EnableApplyButton},
   {"GetActivePage", PropertyDialog_GetActivePage},
   {"GetPanelBaseClassName", PropertyDialog_GetPanelBaseClassName},
   {"GetPanelClassName", PropertyDialog_GetPanelClassName},

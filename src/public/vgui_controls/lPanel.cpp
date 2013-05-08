@@ -91,6 +91,11 @@ static int Panel_AddKeyBinding (lua_State *L) {
   return 0;
 }
 
+static int Panel_AddActionSignalTarget (lua_State *L) {
+  luaL_checkpanel(L, 1)->AddActionSignalTarget(luaL_checkpanel(L, 2));
+  return 0;
+}
+
 static int Panel_CanStartDragging (lua_State *L) {
   lua_pushboolean(L, luaL_checkpanel(L, 1)->CanStartDragging(luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_checkint(L, 4), luaL_checkint(L, 5)));
   return 1;
@@ -1100,6 +1105,7 @@ static int Panel___tostring (lua_State *L) {
 
 static const luaL_Reg Panelmeta[] = {
   {"AddKeyBinding", Panel_AddKeyBinding},
+  {"AddActionSignalTarget", Panel_AddActionSignalTarget},
   {"CanStartDragging", Panel_CanStartDragging},
   {"ChainToAnimationMap", Panel_ChainToAnimationMap},
   {"ChainToMap", Panel_ChainToMap},

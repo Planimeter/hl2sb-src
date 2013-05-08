@@ -192,8 +192,10 @@ void luasrc_init_gameui (void) {
 
   luaopen_ConCommand(LGameUI);
   luaopen_dbg(LGameUI);
+  luaopen_engine(LGameUI);
   luaopen_enginevgui(LGameUI);
   luaopen_FCVAR(LGameUI);
+  luaopen_KeyValues(LGameUI);
   luaopen_Panel(LGameUI);
   luaopen_surface(LGameUI);
   luaopen_vgui(LGameUI);

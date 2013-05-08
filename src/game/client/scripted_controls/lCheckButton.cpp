@@ -42,6 +42,17 @@ LCheckButton::~LCheckButton()
 #endif // LUA_SDK
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void LCheckButton::OnCheckButtonChecked()
+{
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_CHECKBUTTON_METHOD( "OnCheckButtonChecked" );
+	END_LUA_CALL_PANEL_METHOD( 0, 0 );
+#endif
+}
+
 /*
 ** access functions (stack -> C)
 */
@@ -167,9 +178,15 @@ static int CheckButton___index (lua_State *L) {
       lua_gettable(L, -2);
       if (lua_isnil(L, -1)) {
         lua_pop(L, 2);
-        luaL_getmetatable(L, "Panel");
+        luaL_getmetatable(L, "Button");
         lua_pushvalue(L, 2);
         lua_gettable(L, -2);
+        if (lua_isnil(L, -1)) {
+          lua_pop(L, 2);
+          luaL_getmetatable(L, "Panel");
+          lua_pushvalue(L, 2);
+          lua_gettable(L, -2);
+        }
       }
     }
   } else {
@@ -178,9 +195,15 @@ static int CheckButton___index (lua_State *L) {
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
       lua_pop(L, 2);
-      luaL_getmetatable(L, "Panel");
+      luaL_getmetatable(L, "Button");
       lua_pushvalue(L, 2);
       lua_gettable(L, -2);
+      if (lua_isnil(L, -1)) {
+        lua_pop(L, 2);
+        luaL_getmetatable(L, "Panel");
+        lua_pushvalue(L, 2);
+        lua_gettable(L, -2);
+      }
     }
   }
   return 1;

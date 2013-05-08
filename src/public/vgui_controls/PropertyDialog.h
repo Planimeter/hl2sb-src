@@ -72,6 +72,8 @@ protected:
 	
 #ifndef LUA_SDK
 private:
+#else
+protected:
 #endif
 	PropertySheet *_propertySheet;
 	Button *_okButton;

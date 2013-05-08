@@ -41,6 +41,9 @@ protected:
 	virtual void OnKeyCodeTyped(KeyCode code);
 
 public:
+	void EnableApplyButton(bool bEnable);
+
+public:
 #if defined( LUA_SDK )
 	lua_State *m_lua_State;
 	int m_nTableReference;
