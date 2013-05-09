@@ -35,6 +35,11 @@
 #if defined( _X360 )
 #include "xbox/xbox_console.h"
 #endif
+#if defined( LUA_SDK )
+#include "luamanager.h"
+#include "lbaseentity_shared.h"
+#include "lbaseplayer_shared.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -320,11 +325,26 @@ void ClientModeShared::OverrideView( CViewSetup *pSetup )
 //-----------------------------------------------------------------------------
 bool ClientModeShared::ShouldDrawEntity(C_BaseEntity *pEnt)
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "ShouldDrawEntity" );
+		lua_pushentity( L, pEnt );
+	END_LUA_CALL_HOOK( 1, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	return true;
 }
 
 bool ClientModeShared::ShouldDrawParticles( )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "ShouldDrawParticles" );
+	END_LUA_CALL_HOOK( 0, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	return true;
 }
 
@@ -365,11 +385,25 @@ bool ClientModeShared::OverrideViewAngles( void )
 //-----------------------------------------------------------------------------
 bool ClientModeShared::ShouldDrawViewModel()
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "ShouldDrawViewModel" );
+	END_LUA_CALL_HOOK( 0, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	return true;
 }
 
 bool ClientModeShared::ShouldDrawDetailObjects( )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "ShouldDrawDetailObjects" );
+	END_LUA_CALL_HOOK( 0, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	return true;
 }
 
@@ -379,6 +413,13 @@ bool ClientModeShared::ShouldDrawDetailObjects( )
 //-----------------------------------------------------------------------------
 bool ClientModeShared::ShouldDrawCrosshair( void )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "ShouldDrawCrosshair" );
+	END_LUA_CALL_HOOK( 0, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	return true;
 }
 
@@ -387,6 +428,14 @@ bool ClientModeShared::ShouldDrawCrosshair( void )
 //-----------------------------------------------------------------------------
 bool ClientModeShared::ShouldDrawLocalPlayer( C_BasePlayer *pPlayer )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "ShouldDrawLocalPlayer" );
+		lua_pushplayer( L, pPlayer );
+	END_LUA_CALL_HOOK( 1, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	if ( ( pPlayer->index == render->GetViewEntity() ) && !C_BasePlayer::ShouldDrawLocalPlayer() )
 		return false;
 
@@ -399,6 +448,13 @@ bool ClientModeShared::ShouldDrawLocalPlayer( C_BasePlayer *pPlayer )
 //-----------------------------------------------------------------------------
 bool ClientModeShared::ShouldDrawFog( void )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK( "ShouldDrawFog" );
+	END_LUA_CALL_HOOK( 0, 1 );
+
+	RETURN_LUA_BOOLEAN();
+#endif
+
 	return true;
 }
 

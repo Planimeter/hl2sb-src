@@ -1644,13 +1644,6 @@ void C_BasePlayer::ThirdPersonSwitch( bool bThirdperson )
 //-----------------------------------------------------------------------------
 bool C_BasePlayer::ShouldDrawLocalPlayer()
 {
-#if defined ( LUA_SDK )
-	BEGIN_LUA_CALL_HOOK( "ShouldDrawLocalPlayer" );
-	END_LUA_CALL_HOOK( 0, 1 );
-
-	RETURN_LUA_BOOLEAN();
-#endif
-
 	return input->CAM_IsThirdPerson() || ( ToolsEnabled() && ToolFramework_IsThirdPersonCamera() );
 }
 
