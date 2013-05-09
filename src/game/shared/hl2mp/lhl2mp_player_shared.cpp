@@ -229,7 +229,7 @@ static const luaL_Reg CHL2MP_Playermeta[] = {
 
 
 static int luasrc_ToHL2MPPlayer (lua_State *L) {
-  lua_pushhl2mpplayer(L, ToHL2MPPlayer(luaL_checkentity(L, 1)));
+  lua_pushhl2mpplayer(L, ToHL2MPPlayer(lua_toentity(L, 1)));
   return 1;
 }
 
