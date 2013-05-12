@@ -225,7 +225,7 @@ static int CBaseEntity_EmitAmbientSound (lua_State *L) {
 
 static int CBaseEntity_EmitSound (lua_State *L) {
   if (lua_isuserdata(L, 1) && lua_toentity(L, 1)) {
-    float duration;
+    float duration = 0;
 	luaL_checkentity(L, 1)->EmitSound(luaL_checkstring(L, 2), luaL_optnumber(L, 3, 0.0f), &duration);
 	lua_pushnumber(L, duration);
 	return 1;
@@ -236,7 +236,7 @@ static int CBaseEntity_EmitSound (lua_State *L) {
           if (lua_gettop(L) <= 3)
             CBaseEntity::EmitSound(luaL_checkrecipientfilter(L, 1), luaL_checkint(L, 2), luaL_checkstring(L, 3));
           else {
-            float duration;
+            float duration = 0;
             CBaseEntity::EmitSound(luaL_checkrecipientfilter(L, 1), luaL_checkint(L, 2), luaL_checkstring(L, 3), &luaL_checkvector(L, 4), luaL_optnumber(L, 5, 0.0f), &duration);
             lua_pushnumber(L, duration);
             return 1;
