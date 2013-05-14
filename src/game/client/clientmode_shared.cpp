@@ -463,6 +463,25 @@ bool ClientModeShared::ShouldDrawFog( void )
 //-----------------------------------------------------------------------------
 void ClientModeShared::AdjustEngineViewport( int& x, int& y, int& width, int& height )
 {
+#if defined( LUA_SDK )
+	BEGIN_LUA_CALL_HOOK( "AdjustEngineViewport" );
+		lua_pushinteger( L, x );
+		lua_pushinteger( L, y );
+		lua_pushinteger( L, width );
+		lua_pushinteger( L, height );
+	END_LUA_CALL_HOOK( 4, 4 );
+
+	if ( lua_isnumber( L, -4 ) )
+		x = luaL_checkint( L, -4 );
+	if ( lua_isnumber( L, -3 ) )
+		y = luaL_checkint( L, -3 );
+	if ( lua_isnumber( L, -2 ) )
+		width = luaL_checkint( L, -2 );
+	if ( lua_isnumber( L, -1 ) )
+		height = luaL_checkint( L, -1 );
+
+	lua_pop( L, 4 );
+#endif
 }
 
 //-----------------------------------------------------------------------------
