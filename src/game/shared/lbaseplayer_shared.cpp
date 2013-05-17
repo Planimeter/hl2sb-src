@@ -386,6 +386,7 @@ static int CBasePlayer_GetUserID (lua_State *L) {
   return 1;
 }
 
+// FIXME: push CBaseViewModel instead
 static int CBasePlayer_GetViewModel (lua_State *L) {
   lua_pushanimating(L, luaL_checkplayer(L, 1)->GetViewModel(luaL_optint(L, 2, 0)));
   return 1;
