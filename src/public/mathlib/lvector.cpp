@@ -69,6 +69,18 @@ LUALIB_API lua_QAngle &luaL_checkangle (lua_State *L, int narg) {
 }
 
 
+LUALIB_API lua_Vector &luaL_optvector (lua_State *L, int narg,
+                                                     Vector *def) {
+  return luaL_opt(L, luaL_checkvector, narg, *def);
+}
+
+
+LUALIB_API lua_QAngle &luaL_optangle (lua_State *L, int narg,
+                                                     QAngle *def) {
+  return luaL_opt(L, luaL_checkangle, narg, *def);
+}
+
+
 static int Vector_Cross (lua_State *L) {
   lua_pushvector(L, luaL_checkvector(L, 1).Cross(luaL_checkvector(L, 2)));
   return 1;

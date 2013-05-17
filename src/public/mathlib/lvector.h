@@ -40,6 +40,10 @@ LUA_API void  (lua_pushangle) (lua_State *L, lua_QAngle &v);
 
 LUALIB_API lua_Vector &(luaL_checkvector) (lua_State *L, int narg);
 LUALIB_API lua_QAngle &(luaL_checkangle) (lua_State *L, int narg);
+LUALIB_API lua_Vector &(luaL_optvector) (lua_State *L, int narg,
+                                                       lua_Vector *def);
+LUALIB_API lua_QAngle &(luaL_optangle) (lua_State *L, int narg,
+                                                      lua_QAngle *def);
 
 
 #endif

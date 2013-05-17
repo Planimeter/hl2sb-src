@@ -119,22 +119,13 @@ static int CBasePlayer_EyePosition (lua_State *L) {
 }
 
 static int CBasePlayer_EyePositionAndVectors (lua_State *L) {
-  Vector pPosition, pForward, pRight, pUp;
-  luaL_checkplayer(L, 1)->EyePositionAndVectors(&pPosition, &pForward, &pRight, &pUp);
-  lua_pushvector(L, pPosition);
-  lua_pushvector(L, pForward);
-  lua_pushvector(L, pRight);
-  lua_pushvector(L, pUp);
-  return 4;
+  luaL_checkplayer(L, 1)->EyePositionAndVectors(&luaL_checkvector(L, 2), &luaL_checkvector(L, 3), &luaL_checkvector(L, 4), &luaL_checkvector(L, 5));
+  return 0;
 }
 
 static int CBasePlayer_EyeVectors (lua_State *L) {
-  Vector pForward, pRight, pUp;
-  luaL_checkplayer(L, 1)->EyeVectors(&pForward, &pRight, &pUp);
-  lua_pushvector(L, pForward);
-  lua_pushvector(L, pRight);
-  lua_pushvector(L, pUp);
-  return 3;
+  luaL_checkplayer(L, 1)->EyeVectors(&luaL_checkvector(L, 2), &luaL_optvector(L, 3, NULL), &luaL_optvector(L, 4, NULL));
+  return 0;
 }
 
 static int CBasePlayer_FindUseEntity (lua_State *L) {
