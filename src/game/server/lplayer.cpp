@@ -253,7 +253,7 @@ static int CBasePlayer_Weapon_Equip (lua_State *L) {
 }
 
 static int CBasePlayer_Weapon_Drop (lua_State *L) {
-  luaL_checkplayer(L, 1)->Weapon_Drop(luaL_checkweapon(L, 2), &luaL_checkvector(L, 3), &luaL_checkvector(L, 4));
+  luaL_checkplayer(L, 1)->Weapon_Drop(luaL_checkweapon(L, 2), &luaL_optvector(L, 3, NULL), &luaL_optvector(L, 4, NULL));
   return 0;
 }
 
