@@ -278,12 +278,8 @@ static int CBaseAnimating_GetBoneControllers (lua_State *L) {
 }
 
 static int CBaseAnimating_GetBonePosition (lua_State *L) {
-  Vector origin;
-  QAngle angles;
-  luaL_checkanimating(L, 1)->GetBonePosition(luaL_checkint(L, 2), origin, angles);
-  lua_pushvector(L, origin);
-  lua_pushangle(L, angles);
-  return 2;
+  luaL_checkanimating(L, 1)->GetBonePosition(luaL_checkint(L, 2), luaL_checkvector(L, 3), luaL_checkangle(L, 4));
+  return 0;
 }
 
 static int CBaseAnimating_GetClientSideFade (lua_State *L) {
