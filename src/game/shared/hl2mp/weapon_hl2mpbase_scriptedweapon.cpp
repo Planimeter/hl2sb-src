@@ -1004,6 +1004,19 @@ int CHL2MPScriptedWeapon::CapabilitiesGet( void )
 
 	return BaseClass::CapabilitiesGet();
 }
+#else
+int CHL2MPScriptedWeapon::DrawModel( int flags )
+{
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_WEAPON_METHOD( "DrawModel" );
+		lua_pushinteger( L, flags );
+	END_LUA_CALL_WEAPON_METHOD( 1, 1 );
+
+	RETURN_LUA_INTEGER();
+#endif
+
+	return BaseClass::DrawModel( flags );
+}
 #endif
 
 

@@ -88,8 +88,16 @@ public:
 public:
 // Server Only Methods
 #if !defined( CLIENT_DLL )
+
 	virtual int				CapabilitiesGet( void );
-#endif
+
+// Client only methods
+#else
+
+	// Returns the aiment render origin + angles
+	virtual int				DrawModel( int flags );
+
+#endif // End client-only methods
 
 private:
 	
