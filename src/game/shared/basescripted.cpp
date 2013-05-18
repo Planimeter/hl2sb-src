@@ -234,7 +234,9 @@ void CBaseScripted::Spawn( void )
 {
 	BaseClass::Spawn();
 
+#ifndef CLIENT_DLL
 	InitScriptedEntity();
+#endif
 }
 
 void CBaseScripted::Precache( void )
