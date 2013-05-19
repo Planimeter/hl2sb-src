@@ -281,20 +281,20 @@ static const luaL_Reg CTakeDamageInfometa[] = {
 
 static int luasrc_CTakeDamageInfo (lua_State *L) {
   if (lua_gettop(L) < 4) {
-	  CTakeDamageInfo info = CTakeDamageInfo();
-	  lua_pushdamageinfo(L, info);
+    CTakeDamageInfo info = CTakeDamageInfo();
+    lua_pushdamageinfo(L, info);
   } else if (lua_gettop(L) <= 5) {
-	  CTakeDamageInfo info = CTakeDamageInfo(luaL_checkentity(L, 1), luaL_checkentity(L, 2), luaL_checknumber(L, 3), luaL_checkint(L, 4), luaL_optint(L, 5, 0));
-	  lua_pushdamageinfo(L, info);
+    CTakeDamageInfo info = CTakeDamageInfo(luaL_checkentity(L, 1), luaL_checkentity(L, 2), luaL_checknumber(L, 3), luaL_checkint(L, 4), luaL_optint(L, 5, 0));
+    lua_pushdamageinfo(L, info);
   } else if (lua_gettop(L) <= 6) {
-	  CTakeDamageInfo info = CTakeDamageInfo(luaL_checkentity(L, 1), luaL_checkentity(L, 2), luaL_checkentity(L, 3), luaL_checknumber(L, 4), luaL_checkint(L, 5), luaL_optint(L, 6, 0));
-	  lua_pushdamageinfo(L, info);
+    CTakeDamageInfo info = CTakeDamageInfo(luaL_checkentity(L, 1), luaL_checkentity(L, 2), luaL_checkentity(L, 3), luaL_checknumber(L, 4), luaL_checkint(L, 5), luaL_optint(L, 6, 0));
+    lua_pushdamageinfo(L, info);
   } else if (lua_gettop(L) < 9) {
-	  CTakeDamageInfo info = CTakeDamageInfo(luaL_checkentity(L, 1), luaL_checkentity(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4), luaL_checknumber(L, 5), luaL_checkint(L, 6), luaL_optint(L, 7, 0), &luaL_optvector(L, 8, NULL));
-	  lua_pushdamageinfo(L, info);
-  } else if (lua_gettop(L) < 10) {
-	  CTakeDamageInfo info = CTakeDamageInfo(luaL_checkentity(L, 1), luaL_checkentity(L, 2), luaL_checkentity(L, 3), luaL_checkvector(L, 4), luaL_checkvector(L, 5), luaL_checknumber(L, 6), luaL_checkint(L, 7), luaL_optint(L, 8, 0), &luaL_optvector(L, 9, NULL));
-	  lua_pushdamageinfo(L, info);
+    CTakeDamageInfo info = CTakeDamageInfo(luaL_checkentity(L, 1), luaL_checkentity(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4), luaL_checknumber(L, 5), luaL_checkint(L, 6), luaL_optint(L, 7, 0), &luaL_optvector(L, 8, NULL));
+    lua_pushdamageinfo(L, info);
+  } else {
+    CTakeDamageInfo info = CTakeDamageInfo(luaL_checkentity(L, 1), luaL_checkentity(L, 2), luaL_checkentity(L, 3), luaL_checkvector(L, 4), luaL_checkvector(L, 5), luaL_checknumber(L, 6), luaL_checkint(L, 7), luaL_optint(L, 8, 0), &luaL_optvector(L, 9, NULL));
+    lua_pushdamageinfo(L, info);
   }
   return 1;
 }
