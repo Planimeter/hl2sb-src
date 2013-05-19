@@ -1554,6 +1554,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\public\mathlib\lvmatrix.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\public\lvphysics_interface.cpp"
 				>
 			</File>
@@ -4817,6 +4821,10 @@
 			</File>
 			<File
 				RelativePath="..\..\public\vgui\LVGUI.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\public\mathlib\lvmatrix.h"
 				>
 			</File>
 			<File

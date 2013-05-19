@@ -182,6 +182,9 @@ LUALIB_API int (luaopen_Vector) (lua_State *L);
 #define LUA_VGUILIBNAME					"vgui"
 LUALIB_API int (luaopen_vgui) (lua_State *L);
 
+#define LUA_VMATRIXLIBNAME				"VMatrix"
+LUALIB_API int (luaopen_VMatrix) (lua_State *L);
+
 
 /* open all Source Engine libraries */
 LUALIB_API void (luasrc_openlibs) (lua_State *L); 

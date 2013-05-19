@@ -103,6 +103,7 @@ static const luaL_Reg luasrclibs[] = {
 #ifdef CLIENT_DLL
   {LUA_VGUILIBNAME, luaopen_vgui},
 #endif
+  {LUA_VMATRIXLIBNAME, luaopen_VMatrix},
   {NULL, NULL}
 };
 

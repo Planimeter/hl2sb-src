@@ -129,7 +129,7 @@ static int luasrc_matrix3x4_t (lua_State *L) {
     matrix3x4_t matrix;
     memset( &matrix, 0, sizeof( matrix3x4_t ) );
     lua_pushmatrix(L, matrix);
-  } else if (lua_gettop(L) <= 5) {
+  } else if (lua_gettop(L) < 12) {
     matrix3x4_t matrix = matrix3x4_t(luaL_checkvector(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3), luaL_checkvector(L, 4));
     lua_pushmatrix(L, matrix);
   } else {
