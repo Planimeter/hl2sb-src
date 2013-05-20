@@ -515,6 +515,16 @@ static int vmatrix_MatrixBuildRotationAboutAxis (lua_State *L) {
   return 0;
 }
 
+static int vmatrix_MatrixBuildRotateZ (lua_State *L) {
+  MatrixBuildRotateZ(luaL_checkvmatrix(L, 1), luaL_checknumber(L, 2));
+  return 0;
+}
+
+static int vmatrix_MatrixRotate (lua_State *L) {
+  MatrixRotate(luaL_checkvmatrix(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3));
+  return 0;
+}
+
 static int vmatrix_MatrixBuildRotation (lua_State *L) {
   MatrixBuildRotation(luaL_checkvmatrix(L, 1), luaL_checkvector(L, 2), luaL_checkvector(L, 3));
   return 0;
@@ -602,6 +612,8 @@ static const luaL_Reg VMatrix_funcs[] = {
   {"MatrixBuildTranslation", vmatrix_MatrixBuildTranslation},
   {"MatrixTranslate", vmatrix_MatrixTranslate},
   {"MatrixBuildRotationAboutAxis", vmatrix_MatrixBuildRotationAboutAxis},
+  {"MatrixBuildRotateZ", vmatrix_MatrixBuildRotateZ},
+  {"MatrixRotate", vmatrix_MatrixRotate},
   {"MatrixBuildRotation", vmatrix_MatrixBuildRotation},
   {"MatrixBuildScale", vmatrix_MatrixBuildScale},
   {"MatrixBuildPerspective", vmatrix_MatrixBuildPerspective},
