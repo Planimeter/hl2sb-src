@@ -119,7 +119,9 @@ private:
 	int GetLastPosInSlot( int iSlot ) const;
 #ifdef LUA_SDK
 	int GetNumberOfWeaponsInSlotPos( int iSlot, int iPos ) const;
+	int GetNumberOfSelectableWeaponsInSlotPos( int iSlot, int iPos );
 	C_BaseCombatWeapon *GetLastWeaponInSlotPos( int iSlot, int iPos );
+	C_BaseCombatWeapon *GetLastSelectableWeaponInSlotPos( int iSlot, int iPos );
 #endif
     
 	void FastWeaponSwitch( int iWeaponSlot );
@@ -1146,17 +1148,17 @@ C_BaseCombatWeapon *CHudWeaponSelection::FindNextWeaponInWeaponSelection(int iCu
 			if ( !pWeapon )
 				continue;
 
-			if ( CanBeSelectedInHUD( pWeapon ) )
-			{
-				int weaponSlot = pWeapon->GetSlot(), weaponPosition = pWeapon->GetPosition();
+			int weaponSlot = pWeapon->GetSlot(), weaponPosition = pWeapon->GetPosition();
 
-				if ( weaponSlot == iCurrentSlot && weaponPosition == iCurrentPosition )
+			if ( weaponSlot == iCurrentSlot && weaponPosition == iCurrentPosition )
+			{
+				if ( pWeapon == pCurWeapon )
 				{
-					if ( pWeapon == pCurWeapon )
-					{
-						bCurrentWeaponFound = true;
-					}
-					else if ( bCurrentWeaponFound )
+					bCurrentWeaponFound = true;
+				}
+				else if ( bCurrentWeaponFound )
+				{
+					if ( CanBeSelectedInHUD( pWeapon ) )
 					{
 						return pWeapon;
 					}
@@ -1222,17 +1224,17 @@ C_BaseCombatWeapon *CHudWeaponSelection::FindPrevWeaponInWeaponSelection(int iCu
 			if ( !pWeapon )
 				continue;
 
-			if ( CanBeSelectedInHUD( pWeapon ) )
-			{
-				int weaponSlot = pWeapon->GetSlot(), weaponPosition = pWeapon->GetPosition();
+			int weaponSlot = pWeapon->GetSlot(), weaponPosition = pWeapon->GetPosition();
 
-				if ( weaponSlot == iCurrentSlot && weaponPosition == iCurrentPosition )
+			if ( weaponSlot == iCurrentSlot && weaponPosition == iCurrentPosition )
+			{
+				if ( pWeapon == pCurWeapon )
 				{
-					if ( pWeapon == pCurWeapon )
-					{
-						bCurrentWeaponFound = true;
-					}
-					else if ( bCurrentWeaponFound )
+					bCurrentWeaponFound = true;
+				}
+				else if ( bCurrentWeaponFound )
+				{
+					if ( CanBeSelectedInHUD( pWeapon ) )
 					{
 						return pWeapon;
 					}
@@ -1453,6 +1455,35 @@ int CHudWeaponSelection::GetNumberOfWeaponsInSlotPos( int iSlot, int iPos ) cons
 
 	return iWeaponsInSlotPos;
 }
+
+//-----------------------------------------------------------------------------
+// Purpose: returns the # of the selectable weapons in the specified position
+//-----------------------------------------------------------------------------
+int CHudWeaponSelection::GetNumberOfSelectableWeaponsInSlotPos( int iSlot, int iPos )
+{
+	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
+	int iSelectableWeaponsInSlotPos;
+
+	if ( !player )
+		return -1;
+
+	iSelectableWeaponsInSlotPos = 0;
+	for ( int i = 0; i < MAX_WEAPONS; i++ )
+	{
+		C_BaseCombatWeapon *pWeapon = player->GetWeapon(i);
+		
+		if ( pWeapon == NULL )
+			continue;
+
+		if ( CanBeSelectedInHUD( pWeapon ) )
+		{
+			if ( pWeapon->GetSlot() == iSlot && pWeapon->GetPosition() == iPos )
+				iSelectableWeaponsInSlotPos++;
+		}
+	}
+
+	return iSelectableWeaponsInSlotPos;
+}
 #endif
 
 //-----------------------------------------------------------------------------
@@ -1573,6 +1604,38 @@ C_BaseCombatWeapon *CHudWeaponSelection::GetLastWeaponInSlotPos( int iSlot, int 
 
 		if ( iWeaponsInSlotPosFound == iWeaponsInSlotPos )
 			return pWeapon;
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: returns the last selectable weapon in the specified position
+//-----------------------------------------------------------------------------
+C_BaseCombatWeapon *CHudWeaponSelection::GetLastSelectableWeaponInSlotPos( int iSlot, int iPos )
+{
+	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
+	int iSelectableWeaponsInSlotPos = GetNumberOfSelectableWeaponsInSlotPos( iSlot, iPos );
+
+	if ( !player )
+		return NULL;
+
+	int iSelectableWeaponsInSlotPosFound = 0;
+	for ( int i = 0; i < MAX_WEAPONS; i++ )
+	{
+		C_BaseCombatWeapon *pWeapon = player->GetWeapon(i);
+		
+		if ( pWeapon == NULL )
+			continue;
+
+		if ( CanBeSelectedInHUD( pWeapon ) )
+		{
+			if ( pWeapon->GetSlot() == iSlot && pWeapon->GetPosition() == iPos )
+				iSelectableWeaponsInSlotPosFound++;
+
+			if ( iSelectableWeaponsInSlotPosFound == iSelectableWeaponsInSlotPos )
+				return pWeapon;
+		}
 	}
 
 	return NULL;
@@ -1771,9 +1834,12 @@ void CHudWeaponSelection::SelectWeaponSlot( int iSlot )
 #else
 				int weaponSlot = pActiveWeapon->GetSlot(), weaponPosition = pActiveWeapon->GetPosition();
 				int iWeaponsInSlotPos = GetNumberOfWeaponsInSlotPos( weaponSlot, weaponPosition );
-				bool bLastWeaponInSlotPos = pActiveWeapon == GetLastWeaponInSlotPos( weaponSlot, weaponPosition );
+				// bool bLastWeaponInSlotPos = pActiveWeapon == GetLastWeaponInSlotPos( weaponSlot, weaponPosition );
+				bool bLastSelectableWeaponInSlotPos = pActiveWeapon == GetLastSelectableWeaponInSlotPos( weaponSlot, weaponPosition );
 
-				slotPos = pActiveWeapon->GetPosition() + ( ( iWeaponsInSlotPos > 1 && !bLastWeaponInSlotPos ) ? 0 : 1 );
+				slotPos = pActiveWeapon->GetPosition() + ( ( iWeaponsInSlotPos > 1 &&
+															 // !bLastWeaponInSlotPos &&
+															 !bLastSelectableWeaponInSlotPos ) ? 0 : 1 );
 #endif
 			}
 
