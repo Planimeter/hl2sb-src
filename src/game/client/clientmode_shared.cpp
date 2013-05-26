@@ -539,13 +539,16 @@ void ClientModeShared::ProcessInput(bool bActive)
 int	ClientModeShared::KeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding )
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_HOOK( "KeyInput" );
-		lua_pushinteger( L, down );
-		lua_pushinteger( L, keynum );
-		lua_pushstring( L, pszCurrentBinding );
-	END_LUA_CALL_HOOK( 3, 1 );
+	if ( g_bLuaInitialized )
+	{
+		BEGIN_LUA_CALL_HOOK( "KeyInput" );
+			lua_pushinteger( L, down );
+			lua_pushinteger( L, keynum );
+			lua_pushstring( L, pszCurrentBinding );
+		END_LUA_CALL_HOOK( 3, 1 );
 
-	RETURN_LUA_INTEGER();
+		RETURN_LUA_INTEGER();
+	}
 #endif
 
 	if ( engine->Con_IsVisible() )
