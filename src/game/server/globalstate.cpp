@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -131,6 +131,7 @@ public:
 		entity.name = m_nameList.AddString( pGlobalname );
 		entity.levelName = m_nameList.AddString( pMapName );
 		entity.state = state;
+		entity.counter = 0;
 
 		int index = GetIndex( m_nameList.String( entity.name ) );
 		if ( index >= 0 )
@@ -227,6 +228,9 @@ int GlobalEntity_GetNumGlobals( void )
 
 CON_COMMAND(dump_globals, "Dump all global entities/states")
 {
+	if ( !UTIL_IsCommandIssuedByServerAdmin() )
+		return;
+
 	gGlobalState.DumpGlobals();
 }
 
@@ -234,7 +238,7 @@ CON_COMMAND(dump_globals, "Dump all global entities/states")
 //#ifdef _DEBUG
 void CGlobalState::DumpGlobals( void )
 {
-	static char *estates[] = { "Off", "On", "Dead" };
+	static const char *estates[] = { "Off", "On", "Dead" };
 
 	Msg( "-- Globals --\n" );
 	for ( int i = 0; i < m_list.Count(); i++ )
@@ -315,5 +319,8 @@ void ShowServerGameTime()
 
 CON_COMMAND(server_game_time, "Gives the game time in seconds (server's curtime)")
 {
+	if ( !UTIL_IsCommandIssuedByServerAdmin() )
+		return;
+
 	ShowServerGameTime();
 }

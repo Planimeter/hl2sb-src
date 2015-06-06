@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -46,9 +46,10 @@ template< class T, class Functor=CDefaultCalcDistance<T> >
 class CApparentVelocity
 {
 public:
-	CApparentVelocity()
+	CApparentVelocity(const T& t0)
 	{
 		m_LastTime = -1;
+		m_LastValue = t0;
 	}
 
 	float AddSample( float time, T value )

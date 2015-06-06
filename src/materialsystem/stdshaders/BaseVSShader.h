@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -14,8 +14,8 @@
 #endif
 
 #include "shaderlib/cshader.h"
-#include "shaderlib/baseshader.h"
-#include "ConVar.h"
+#include "shaderlib/BaseShader.h"
+#include "convar.h"
 #include <renderparm.h>
 
 #ifdef _X360
@@ -130,6 +130,9 @@ public:
 	// Loads the model->view matrix into vertex shader constants
 	void LoadModelViewMatrixIntoVertexShaderConstant( int vertexReg );
 
+	// Loads a scale/offset version of the viewport transform into the specified constant.
+	void LoadViewportTransformScaledIntoVertexShaderConstant( int vertexReg );
+
 	// Sets up ambient light cube...
 	void SetAmbientCubeDynamicStateVertexShader( );
 	float GetAmbientLightCubeLuminance( );
@@ -150,6 +153,8 @@ public:
 	void SetColorVertexShaderConstant( int nVertexReg, int colorVar, int alphaVar );
 	void SetColorPixelShaderConstant( int nPixelReg, int colorVar, int alphaVar );
 
+
+#ifndef GAME_SHADER_DLL
 	//
 	// Standard shader passes!
 	//
@@ -255,8 +260,6 @@ public:
 	// Computes the shader index for vertex lit materials
 	int ComputeVertexLitShaderIndex( bool bVertexLitGeneric, bool hasBump, bool hasEnvmap, bool hasVertexColor, bool bHasNormal ) const;
 
-	BlendType_t EvaluateBlendRequirements( int textureVar, bool isBaseTexture, int detailTextureVar = -1 );
-
 	// Helper for setting up flashlight constants
 	void SetFlashlightVertexShaderConstants( bool bBump, int bumpTransformVar, bool bDetail, int detailScaleVar, bool bSetTextureTransforms );
 
@@ -309,6 +312,9 @@ public:
 	};
 	void DrawFlashlight_dx90( IMaterialVar** params, 
 		IShaderDynamicAPI *pShaderAPI, IShaderShadow* pShaderShadow, DrawFlashlight_dx90_Vars_t &vars );
+#endif // GAME_SHADER_DLL
+
+	BlendType_t EvaluateBlendRequirements( int textureVar, bool isBaseTexture, int detailTextureVar = -1 );
 
 	void HashShadow2DJitter( const float fJitterSeed, float *fU, float* fV );
 

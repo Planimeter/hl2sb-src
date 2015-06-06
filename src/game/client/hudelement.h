@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 #include "hud.h"
 #include "hud_element_helper.h"
 #include "networkvar.h"
-#include "gameeventlistener.h"
+#include "GameEventListener.h"
 #include "tier0/memdbgon.h"
 #undef new
 
@@ -36,9 +36,9 @@ public:
 	// called whenever the video mode changes, and whenever Init() would be called, so the hud can vid init itself
 	virtual void				VidInit( void ) { return; }
 
-	// LevelInit's called whenever a new level's starting
+	// LevelInit's called whenever a new level is starting
 	virtual void				LevelInit( void ) { return; };
-	// LevelShutdown's called whenever a level's finishing
+	// LevelShutdown's called whenever a level is finishing
 	virtual void				LevelShutdown( void ) { return; };
 
 	// called whenever the hud receives "reset" message, which is (usually) every time the client respawns after getting killed
@@ -74,7 +74,7 @@ public:
 	void* operator new( size_t stAllocateBlock, int nBlockUse, const char *pFileName, int nLine )  
 	{ 
 		Assert( stAllocateBlock != 0 );
-		void *pMem = g_pMemAlloc->Alloc( stAllocateBlock, pFileName, nLine );
+		void *pMem = MemAlloc_Alloc( stAllocateBlock, pFileName, nLine );
 		memset( pMem, 0, stAllocateBlock );
 		return pMem;												
 	}

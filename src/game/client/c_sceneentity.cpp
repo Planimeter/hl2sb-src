@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -10,13 +10,13 @@
 #include "choreoevent.h"
 #include "choreoactor.h"
 #include "choreochannel.h"
-#include "choreoscene.h"
 #include "filesystem.h"
 #include "ichoreoeventcallback.h"
 #include "scenefilecache/ISceneFileCache.h"
 #include "materialsystem/imaterialsystemhardwareconfig.h"
 #include "tier2/tier2.h"
 #include "hud_closecaption.h"
+#include "tier0/icommandline.h"
 
 #include "c_sceneentity.h"
 
@@ -69,7 +69,10 @@ C_SceneEntity::~C_SceneEntity( void )
 
 void C_SceneEntity::OnResetClientTime()
 {
+	// In TF2 we ignore this as the scene is played entirely client-side.
+#ifndef TF_CLIENT_DLL
 	m_flCurrentTime = m_flForceClientTime;
+#endif
 }
 
 char const *C_SceneEntity::GetSceneFileName()
@@ -80,9 +83,10 @@ char const *C_SceneEntity::GetSceneFileName()
 ConVar mp_usehwmvcds( "mp_usehwmvcds", "0", NULL, "Enable the use of the hw morph vcd(s). (-1 = never, 1 = always, 0 = based upon GPU)" ); // -1 = never, 0 = if hasfastvertextextures, 1 = always
 bool UseHWMorphVCDs()
 {
-	if ( mp_usehwmvcds.GetInt() == 0 )
-		return g_pMaterialSystemHardwareConfig->HasFastVertexTextures();
-	return mp_usehwmvcds.GetInt() > 0;
+// 	if ( mp_usehwmvcds.GetInt() == 0 )
+// 		return g_pMaterialSystemHardwareConfig->HasFastVertexTextures();
+// 	return mp_usehwmvcds.GetInt() > 0;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -210,11 +214,15 @@ void C_SceneEntity::SetupClientOnlyScene( const char *pszFilename, C_BaseFlex *p
 		V_strcpy( szFilename, szSceneHWM );
 	}
 
-	Assert( szFilename && szFilename[ 0 ] );
-	if (  szFilename && szFilename[ 0 ] )
+	Assert(  szFilename[ 0 ] );
+	if ( szFilename[ 0 ] )
 	{
 		LoadSceneFromFile( szFilename );
-		Assert( m_pScene );
+
+		if (!CommandLine()->FindParm("-hushasserts"))
+		{
+			Assert( m_pScene );
+		}
 
 		// Should handle gestures and sequences client side.
 		if ( m_bMultiplayer )
@@ -249,7 +257,10 @@ void C_SceneEntity::SetupClientOnlyScene( const char *pszFilename, C_BaseFlex *p
 
 	if ( m_hOwner.Get() )
 	{
-		Assert( m_pScene );
+		if (!CommandLine()->FindParm("-hushasserts"))
+		{
+			Assert( m_pScene );
+		}
 
 		if ( m_pScene )
 		{
@@ -306,8 +317,15 @@ void C_SceneEntity::PostDataUpdate( DataUpdateType_t updateType )
 
 	char const *str = GetSceneFileName();
 	char szFilename[MAX_PATH];
-	Assert( V_strlen( str ) < MAX_PATH );
-	V_strcpy( szFilename, str );
+	if ( str )
+	{
+		Assert( V_strlen( str ) < MAX_PATH );
+		V_strcpy( szFilename, str );
+	}
+	else
+	{
+		szFilename[0] = '\0';
+	}
 
 	char szSceneHWM[MAX_PATH];
 	if ( GetHWMorphSceneFileName( szFilename, szSceneHWM ) )
@@ -317,8 +335,8 @@ void C_SceneEntity::PostDataUpdate( DataUpdateType_t updateType )
 
 	if ( updateType == DATA_UPDATE_CREATED )
 	{
-		Assert( szFilename && szFilename[ 0 ] );
-		if (  szFilename && szFilename[ 0 ] )
+		Assert( szFilename[ 0 ] );
+		if ( szFilename[ 0 ] )
 		{
 			LoadSceneFromFile( szFilename );
 
@@ -355,6 +373,8 @@ void C_SceneEntity::PostDataUpdate( DataUpdateType_t updateType )
 
 			SetNextClientThink( CLIENT_THINK_ALWAYS );
 		}
+
+		m_bWasPlaying = !m_bIsPlayingBack; // force it to be "changed"
 	}
 
 	// Playback state changed...
@@ -402,10 +422,61 @@ void C_SceneEntity::PreDataUpdate( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 void C_SceneEntity::ProcessEvent( float currenttime, CChoreoScene *scene, CChoreoEvent *event )
 {
-	return;
+	// For now we only need to process events if we go back in time.
+	if ( currenttime < event->m_flPrevTime )
+	{
+		//if ( !V_strstr( scene->GetFilename(), "idleloop" ) )
+		//{
+		//	Msg( "ProcessEvent( %6.4f, %32s %6.4f )    %6.4f\n", currenttime, event->GetName(), event->m_flPrevTime, m_flCurrentTime );
+		//}
+
+		C_BaseFlex *pActor = NULL;
+		CChoreoActor *actor = event->GetActor();
+		if ( actor )
+		{
+			pActor = FindNamedActor( actor );
+			if ( NULL == pActor )
+			{
+				// TODO: QueueProcessEvent
+				// This can occur if we haven't been networked an actor yet... we need to queue it so that we can 
+				//  fire off the process event as soon as we have the actor resident on the client.
+				return;
+			}
+		}
+
+		switch ( event->GetType() )
+		{
+		case CChoreoEvent::GESTURE:
+			{
+				// Verify data.
+				Assert( m_bMultiplayer );
+				Assert( scene != NULL );
+				Assert( event != NULL );
+
+				if ( pActor )
+				{
+					DispatchProcessGesture( scene, pActor, event );
+				}
+			}
+			break;
+		case CChoreoEvent::SEQUENCE:
+			{
+				// Verify data.
+				Assert( m_bMultiplayer );
+				Assert( scene != NULL );
+				Assert( event != NULL );
+
+				if ( pActor )
+				{
+					DispatchProcessSequence( scene, pActor, event );
+				}
+			}
+			break;
+		}
+	}
+
+	event->m_flPrevTime = currenttime;
 }
-
-
 
 //-----------------------------------------------------------------------------
 // Purpose: Called for events that are part of a pause condition
@@ -541,6 +612,8 @@ void C_SceneEntity::StartEvent( float currenttime, CChoreoScene *scene, CChoreoE
 	default:
 		break;
 	}
+
+	event->m_flPrevTime = currenttime;
 }
 
 //-----------------------------------------------------------------------------
@@ -625,7 +698,7 @@ void C_SceneEntity::DispatchStartSpeak( CChoreoScene *scene, C_BaseFlex *actor, 
 				float endtime = event->GetLastSlaveEndTime();
 				float durationShort = event->GetDuration();
 				float durationLong = endtime - event->GetStartTime();
-				float duration = max( durationShort, durationLong );
+				float duration = MAX( durationShort, durationLong );
 
 				CHudCloseCaption *hudCloseCaption = GET_HUDELEMENT( CHudCloseCaption );
 				if ( hudCloseCaption )
@@ -716,89 +789,21 @@ void C_SceneEntity::EndEvent( float currenttime, CChoreoScene *scene, CChoreoEve
 	}
 }
 
-//-----------------------------------------------------------------------------
-// Binary compiled VCDs get their strings from a pool
-//-----------------------------------------------------------------------------
-class CChoreoStringPool : public IChoreoStringPool
+bool CChoreoStringPool::GetString( short stringId, char *buff, int buffSize )
 {
-public:
-	short FindOrAddString( const char *pString )
+	// fetch from compiled pool
+	const char *pString = scenefilecache->GetSceneString( stringId );
+	if ( !pString )
 	{
-		// huh?, no compilation at run time, only fetches
-		Assert( 0 );
-		return -1;
+		V_strncpy( buff, "", buffSize );
+		return false;
 	}
+	V_strncpy( buff, pString, buffSize );
+	return true;
+} 	
 
-	bool GetString( short stringId, char *buff, int buffSize )
-	{
-		// fetch from compiled pool
-		const char *pString = scenefilecache->GetSceneString( stringId );
-		if ( !pString )
-		{
-			V_strncpy( buff, "", buffSize );
-			return false;
-		}
-		V_strncpy( buff, pString, buffSize );
-		return true;
-	} 	
-};
 CChoreoStringPool g_ChoreoStringPool;
 
-#ifdef HL2SB
-//Andrew; See https://developer.valvesoftware.com/wiki/Scenes.image
-CChoreoScene *C_SceneEntity::LoadScene( const char *filename )
-{
-	char loadfile[MAX_PATH];
-	Q_strncpy( loadfile, filename, sizeof( loadfile ) );
-	Q_SetExtension( loadfile, ".vcd", sizeof( loadfile ) );
-	Q_FixSlashes( loadfile );
- 
-	void *pBuffer = 0;
-	CChoreoScene *pScene = NULL;
- 
-	int fileSize = filesystem->ReadFileEx( loadfile, "GAME", &pBuffer, true );
-	if (fileSize)
-	{
-		g_TokenProcessor.SetBuffer((char*)pBuffer);
-		pScene = ChoreoLoadScene( loadfile, this, &g_TokenProcessor, Scene_Printf );
-	}
-	else
-	{
-		fileSize = scenefilecache->GetSceneBufferSize( loadfile );
-		if ( fileSize <= 0 )
-			return NULL;
- 
-		pBuffer = new char[ fileSize ];
-		if ( !scenefilecache->GetSceneData( filename, (byte *)pBuffer, fileSize ) )
-		{
-			delete[] pBuffer;
-			return NULL;
-		}
- 
- 
-		if ( IsBufferBinaryVCD( (char*)pBuffer, fileSize ) )
-		{
-			pScene = new CChoreoScene( this );
-			CUtlBuffer buf( pBuffer, fileSize, CUtlBuffer::READ_ONLY );
-			if ( !pScene->RestoreFromBinaryBuffer( buf, loadfile, &g_ChoreoStringPool ) )
-			{
-				Warning( "Unable to restore scene '%s'\n", loadfile );
-				delete pScene;
-				pScene = NULL;
-			}
-		}
-	}
- 
-	if(pScene)
-	{
-		pScene->SetPrintFunc( Scene_Printf );
-		pScene->SetEventCallbackInterface( this );
-	}
- 
-	delete[] pBuffer;
-	return pScene;
-}
-#else
 CChoreoScene *C_SceneEntity::LoadScene( const char *filename )
 {
 	char loadfile[ 512 ];
@@ -844,7 +849,6 @@ CChoreoScene *C_SceneEntity::LoadScene( const char *filename )
 	delete[] pBuffer;
 	return pScene;
 }
-#endif
 
 
 //-----------------------------------------------------------------------------
@@ -959,19 +963,16 @@ void C_SceneEntity::DispatchStartGesture( CChoreoScene *scene, C_BaseFlex *actor
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : *actor - 
+//			*parameters - 
 //-----------------------------------------------------------------------------
-void C_SceneEntity::DispatchStartSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
+void C_SceneEntity::DispatchProcessGesture( CChoreoScene *scene, C_BaseFlex *actor, CChoreoEvent *event )
 {
-	actor->AddSceneEvent( scene, event, NULL, IsClientOnly() );
-}
+	// Ingore null gestures
+	if ( !Q_stricmp( event->GetName(), "NULL" ) )
+		return;
 
-//-----------------------------------------------------------------------------
-// Purpose: 
-// Input  : *actor - 
-//-----------------------------------------------------------------------------
-void C_SceneEntity::DispatchEndSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
-{
 	actor->RemoveSceneEvent( scene, event, false );
+	actor->AddSceneEvent( scene, event, NULL, IsClientOnly() ); 
 }
 
 //-----------------------------------------------------------------------------
@@ -985,6 +986,34 @@ void C_SceneEntity::DispatchEndGesture( CChoreoScene *scene, C_BaseFlex *actor, 
 	if ( !Q_stricmp( event->GetName(), "NULL" ) )
 		return;
 
+	actor->RemoveSceneEvent( scene, event, false );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *actor - 
+//-----------------------------------------------------------------------------
+void C_SceneEntity::DispatchStartSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
+{
+	actor->AddSceneEvent( scene, event, NULL, IsClientOnly() );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *actor - 
+//-----------------------------------------------------------------------------
+void C_SceneEntity::DispatchProcessSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
+{
+	actor->RemoveSceneEvent( scene, event, false );
+	actor->AddSceneEvent( scene, event, NULL, IsClientOnly() );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *actor - 
+//-----------------------------------------------------------------------------
+void C_SceneEntity::DispatchEndSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
+{
 	actor->RemoveSceneEvent( scene, event, false );
 }
 
@@ -1079,7 +1108,10 @@ void C_SceneEntity::SetCurrentTime( float t, bool forceClientSync )
 //-----------------------------------------------------------------------------
 void C_SceneEntity::PrefetchAnimBlocks( CChoreoScene *pScene )
 {
-	Assert( pScene && m_bMultiplayer );
+	if (!CommandLine()->FindParm("-hushasserts"))
+	{
+		Assert( pScene && m_bMultiplayer );
+	}
 	if ( !pScene || !m_bMultiplayer )
 		return;
 

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implements visual effects entities: sprites, beams, bubbles, etc.
 //
@@ -95,7 +95,7 @@ void CEnvFade::InputFade( inputdata_t &inputdata )
 
 	if ( m_spawnflags & SF_FADE_ONLYONE )
 	{
-		if ( inputdata.pActivator->IsNetClient() )
+		if ( inputdata.pActivator && inputdata.pActivator->IsNetClient() )
 		{
 			UTIL_ScreenFade( inputdata.pActivator, m_clrRender, Duration(), HoldTime(), fadeFlags );
 		}

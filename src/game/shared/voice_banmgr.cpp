@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "voice_banmgr.h"
-#include "FileSystem.h"
+#include "filesystem.h"
 #include "cdll_client_int.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -54,11 +54,9 @@ bool CVoiceBanMgr::Init(const char *pGameDir)
 	{
 		int version;
 		filesystem->Read(&version, sizeof(version), fh);
-		if(version == BANMGR_FILEVERSION)
+		if(version == BANMGR_FILEVERSION && filesystem->Size(fh) > 4 )
 		{
-			filesystem->Seek(fh, 0, FILESYSTEM_SEEK_TAIL);
-			int nIDs = (filesystem->Tell(fh) - sizeof(version)) / SIGNED_GUID_LEN;
-			filesystem->Seek(fh, sizeof(version), FILESYSTEM_SEEK_CURRENT);
+			int nIDs = ( filesystem->Size( fh ) - sizeof(version)) / SIGNED_GUID_LEN;
 
 			for(int i=0; i < nIDs; i++)
 			{

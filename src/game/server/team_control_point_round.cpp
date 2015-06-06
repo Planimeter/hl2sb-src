@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2006, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -9,6 +9,10 @@
 #include "team_control_point_master.h"
 #include "teamplayroundbased_gamerules.h"
 #include "team_control_point_round.h"
+
+#if defined ( TF_DLL )
+#include "tf_gamerules.h"
+#endif
 
 BEGIN_DATADESC( CTeamControlPointRound )
 	DEFINE_KEYFIELD( m_bDisabled,			FIELD_BOOLEAN,	"StartDisabled" ),
@@ -108,11 +112,39 @@ void CTeamControlPointRound::FindControlPoints( void )
 int CTeamControlPointRound::CheckWinConditions( void )
 {
 	int iWinners = TeamOwnsAllPoints();
-	if ( ( iWinners >= FIRST_GAME_TEAM ) && 
+	if ( ( m_iInvalidCapWinner != 1 ) &&
+		 ( iWinners >= FIRST_GAME_TEAM ) && 
 		 ( iWinners != m_iInvalidCapWinner ) )
 	{
-		FireTeamWinOutput( iWinners );
-		return iWinners;
+		bool bWinner = true;
+
+#if defined( TF_DLL)
+		if ( TFGameRules() && TFGameRules()->IsInKothMode() )
+		{
+			CTeamRoundTimer *pTimer = NULL;
+			if ( iWinners == TF_TEAM_RED )
+			{
+				pTimer = TFGameRules()->GetRedKothRoundTimer();
+			}
+			else if ( iWinners == TF_TEAM_BLUE )
+			{
+				pTimer = TFGameRules()->GetBlueKothRoundTimer();
+			}
+
+			if ( pTimer )
+			{
+				if ( pTimer->GetTimeRemaining() > 0 || TFGameRules()->TimerMayExpire() == false )
+				{
+					bWinner = false;
+				}
+			}
+		}
+#endif
+		if ( bWinner )
+		{
+			FireTeamWinOutput( iWinners );
+			return iWinners;
+		}
 	}
 
 	return -1;
@@ -164,14 +196,22 @@ int CTeamControlPointRound::GetPointOwner( int point )
 //-----------------------------------------------------------------------------
 int CTeamControlPointRound::TeamOwnsAllPoints( CTeamControlPoint *pOverridePoint /* = NULL */, int iOverrideNewTeam /* = TEAM_UNASSIGNED */ )
 {
-	int iWinningTeam = TEAM_INVALID;
+	int i;
 
-	// if TEAM_INVALID, haven't found a flag yet
-	// if TEAM_UNASSIGNED, it's still being contested 
+	int iWinningTeam[MAX_CONTROL_POINT_GROUPS];
+
+	for( i = 0 ; i < MAX_CONTROL_POINT_GROUPS ; i++ )
+	{
+		iWinningTeam[i] = TEAM_INVALID;
+	}
+
+	// if TEAM_INVALID, haven't found a flag for this group yet
+	// if TEAM_UNASSIGNED, the group is still being contested 
 
 	// for each control point
-	for( int i = 0 ; i < m_ControlPoints.Count() ; i++ )
+	for( i = 0 ; i < m_ControlPoints.Count() ; i++ )
 	{
+		int group = m_ControlPoints[i]->GetCPGroup();
 		int owner = m_ControlPoints[i]->GetOwner();
 
 		if ( pOverridePoint == m_ControlPoints[i] )
@@ -179,27 +219,28 @@ int CTeamControlPointRound::TeamOwnsAllPoints( CTeamControlPoint *pOverridePoint
 			owner = iOverrideNewTeam;
 		}
 
-		// the first one we find, set the win to true
-		if ( iWinningTeam == TEAM_INVALID )
+		// the first one we find in this group, set the win to true
+		if ( iWinningTeam[group] == TEAM_INVALID )
 		{
-			iWinningTeam = owner;
+			iWinningTeam[group] = owner;
 		}
-		// unassigned means this is being contested, move on
-		else if ( iWinningTeam == TEAM_UNASSIGNED )
+		// unassigned means this group is already contested, move on
+		else if ( iWinningTeam[group] == TEAM_UNASSIGNED )
 		{
 			continue;
 		}
 		// if we find another one in the group that isn't the same owner, set the win to false
-		else if ( owner != iWinningTeam )
+		else if ( owner != iWinningTeam[group] )
 		{
-			iWinningTeam = TEAM_UNASSIGNED;
+			iWinningTeam[group] = TEAM_UNASSIGNED;
 		}		
 	}
 
 	// report the first win we find as the winner
-	if ( iWinningTeam >= FIRST_GAME_TEAM )
+	for ( i = 0 ; i < MAX_CONTROL_POINT_GROUPS ; i++ )
 	{
-		return iWinningTeam;
+		if ( iWinningTeam[i] >= FIRST_GAME_TEAM )
+			return iWinningTeam[i];
 	}
 
 	// no wins yet
@@ -299,6 +340,11 @@ bool CTeamControlPointRound::IsPlayable( void )
 {
 	int iWinners = TeamOwnsAllPoints();
 
+	if (  m_iInvalidCapWinner == 1 ) // neither team can win this round by capping
+	{
+		return true;
+	}
+
 	if ( ( iWinners >= FIRST_GAME_TEAM ) && 
 		 ( iWinners != m_iInvalidCapWinner ) )
 	{
@@ -319,33 +365,27 @@ bool CTeamControlPointRound::MakePlayable( void )
 		if ( !IsPlayable() )
 		{
 			// we need to try switching the owners of the teams to make this round playable
-			for ( int i = FIRST_GAME_TEAM ; i < GetNumberOfTeams() ; i++ )
+			for ( int iTeam = FIRST_GAME_TEAM ; iTeam < GetNumberOfTeams() ; iTeam++ )
 			{
-				for ( int j = 0 ; j < m_ControlPoints.Count() ; j++ )
+				for ( int iControlPoint = 0 ; iControlPoint < m_ControlPoints.Count() ; iControlPoint++ )
 				{
-					if ( ( !pMaster->IsBaseControlPoint( m_ControlPoints[j]->GetPointIndex() ) ) && // this is NOT the base point for one of the teams (we don't want to assign the base to the wrong team)
-						 ( !WouldNewCPOwnerWinGame( m_ControlPoints[j], i ) ) ) // making this change would make this round playable
+					if ( ( !pMaster->IsBaseControlPoint( m_ControlPoints[iControlPoint]->GetPointIndex() ) ) && // this is NOT the base point for one of the teams (we don't want to assign the base to the wrong team)
+						 ( !WouldNewCPOwnerWinGame( m_ControlPoints[iControlPoint], iTeam ) ) ) // making this change would make this round playable
 					{
 						// need to find the trigger area associated with this point
-						CBaseEntity *pEnt = gEntList.FindEntityByClassname( NULL, pMaster->GetTriggerAreaCaptureName() );
-						while( pEnt )
+						for ( int iObj=0; iObj<ITriggerAreaCaptureAutoList::AutoList().Count(); ++iObj )
 						{
-							CTriggerAreaCapture *pArea = assert_cast<CTriggerAreaCapture*>( pEnt );
-							if ( pArea )
-							{	
-								if ( pArea->TeamCanCap( i ) )
+							CTriggerAreaCapture *pArea = static_cast< CTriggerAreaCapture * >( ITriggerAreaCaptureAutoList::AutoList()[iObj] );	
+							if ( pArea->TeamCanCap( iTeam ) )
+							{
+								CHandle<CTeamControlPoint> hPoint = pArea->GetControlPoint();
+								if ( hPoint == m_ControlPoints[iControlPoint] )
 								{
-									CHandle<CTeamControlPoint> hPoint = pArea->GetControlPoint();
-									if ( hPoint == m_ControlPoints[j] )
-									{
-										// found! 
-										pArea->ForceOwner( i ); // this updates the trigger_area *and* the control_point
-										return true;
-									}
+									// found! 
+									pArea->ForceOwner( iTeam ); // this updates the trigger_area *and* the control_point
+									return true;
 								}
 							}
-
-							pEnt = gEntList.FindEntityByClassname( pEnt, pMaster->GetTriggerAreaCaptureName() );
 						}
 					}
 				}

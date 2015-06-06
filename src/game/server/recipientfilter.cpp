@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -98,9 +98,12 @@ void CRecipientFilter::AddAllPlayers( void )
 	}
 }
 
-void CRecipientFilter::AddRecipient( CBasePlayer *player )
+void CRecipientFilter::AddRecipient( const CBasePlayer *player )
 {
 	Assert( player );
+
+	if ( !player )
+		return;
 
 	int index = player->entindex();
 
@@ -396,8 +399,8 @@ void CPASAttenuationFilter::Filter( const Vector& origin, float attenuation /*= 
 		}
 
 #ifndef _XBOX
-		// never remove the HLTV bot
-		if ( player->IsHLTV() )
+		// never remove the HLTV or Replay bot
+		if ( player->IsHLTV() || player->IsReplay() )
 			continue;
 #endif
 

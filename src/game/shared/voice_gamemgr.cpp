@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -48,6 +48,7 @@ CVoiceGameMgr g_VoiceGameMgr;
 // ------------------------------------------------------------------------ //
 
 // Find a player with a case-insensitive name search.
+#if 0
 static CBasePlayer* FindPlayerByName(const char *pTestName)
 {
 	for(int i=1; i <= gpGlobals->maxClients; i++)
@@ -69,6 +70,7 @@ static CBasePlayer* FindPlayerByName(const char *pTestName)
 
 	return NULL;
 }
+#endif
 
 static void VoiceServerDebug( const char *pFmt, ... )
 {
@@ -162,7 +164,7 @@ bool CVoiceGameMgr::ClientCommand( CBasePlayer *pPlayer, const CCommand &args )
 	{
 		for(int i=1; i < args.ArgC(); i++)
 		{
-			unsigned long mask = 0;
+			uint32 mask = 0;
 			sscanf( args[i], "%x", &mask);
 
 			if( i <= VOICE_MAX_PLAYERS_DW )

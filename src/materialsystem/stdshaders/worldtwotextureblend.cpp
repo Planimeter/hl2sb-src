@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2007, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -8,11 +8,11 @@
 
 #include "BaseVSShader.h"
 
-#include "ConVar.h"
+#include "convar.h"
 
-#include "SDK_lightmappedgeneric_vs20.inc"
-#include "SDK_worldtwotextureblend_ps20.inc"
-#include "SDK_worldtwotextureblend_ps20b.inc"
+#include "lightmappedgeneric_vs20.inc"
+#include "WorldTwoTextureBlend_ps20.inc"
+#include "WorldTwoTextureBlend_ps20b.inc"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -20,8 +20,8 @@
 extern ConVar r_flashlight_version2;
 
 // FIXME: Need to make a dx9 version so that "CENTROID" works.
-BEGIN_VS_SHADER( SDK_WorldTwoTextureBlend, 
-			  "Help for SDK_WorldTwoTextureBlend" )
+BEGIN_VS_SHADER( WorldTwoTextureBlend, 
+			  "Help for WorldTwoTextureBlend" )
 
 BEGIN_SHADER_PARAMS
     SHADER_PARAM_OVERRIDE( BASETEXTURE, SHADER_PARAM_TYPE_TEXTURE, "shadertest/WorldTwoTextureBlend", "iris texture", 0 )
@@ -130,7 +130,7 @@ END_SHADER_PARAMS
 		
 		if (params[BASETEXTURE]->IsDefined())
 		{
-			LoadTexture( BASETEXTURE );
+			LoadTexture( BASETEXTURE, TEXTUREFLAGS_SRGB );
 
 			if (!params[BASETEXTURE]->GetTextureValue()->IsTranslucent())
 			{
@@ -144,7 +144,7 @@ END_SHADER_PARAMS
 			LoadTexture( DETAIL );
 		}
 
-		LoadTexture( FLASHLIGHTTEXTURE );
+		LoadTexture( FLASHLIGHTTEXTURE, TEXTUREFLAGS_SRGB );
 		
 		// Don't alpha test if the alpha channel is used for other purposes
 		if (IS_FLAG_SET(MATERIAL_VAR_SELFILLUM) || IS_FLAG_SET(MATERIAL_VAR_BASEALPHAENVMAPMASK) )
@@ -205,7 +205,7 @@ END_SHADER_PARAMS
 			//			if( hasLightmap )
 			{
 				pShaderShadow->EnableTexture( SHADER_SAMPLER1, true );
-				pShaderShadow->EnableSRGBRead( SHADER_SAMPLER1, true );
+				pShaderShadow->EnableSRGBRead( SHADER_SAMPLER1, g_pHardwareConfig->GetHDRType() == HDR_TYPE_NONE );
 			}
 			if( hasFlashlight )
 			{
@@ -246,7 +246,7 @@ END_SHADER_PARAMS
 
 			pShaderShadow->EnableSRGBWrite( true );
 
-			DECLARE_STATIC_VERTEX_SHADER( sdk_lightmappedgeneric_vs20 );
+			DECLARE_STATIC_VERTEX_SHADER( lightmappedgeneric_vs20 );
 			SET_STATIC_VERTEX_SHADER_COMBO( ENVMAP_MASK,  false );
 			SET_STATIC_VERTEX_SHADER_COMBO( BUMPMASK,  false );
 			SET_STATIC_VERTEX_SHADER_COMBO( TANGENTSPACE,  hasFlashlight );
@@ -259,11 +259,11 @@ END_SHADER_PARAMS
 #ifdef _X360
 			SET_STATIC_VERTEX_SHADER_COMBO( FLASHLIGHT, hasFlashlight );
 #endif
-			SET_STATIC_VERTEX_SHADER( sdk_lightmappedgeneric_vs20 );
+			SET_STATIC_VERTEX_SHADER( lightmappedgeneric_vs20 );
 
 			if ( g_pHardwareConfig->SupportsPixelShaders_2_b() )
 			{
-				DECLARE_STATIC_PIXEL_SHADER( sdk_worldtwotextureblend_ps20b );
+				DECLARE_STATIC_PIXEL_SHADER( worldtwotextureblend_ps20b );
 				SET_STATIC_PIXEL_SHADER_COMBO( DETAILTEXTURE,  hasDetailTexture );
 				SET_STATIC_PIXEL_SHADER_COMBO( BUMPMAP,  hasBump );
 				SET_STATIC_PIXEL_SHADER_COMBO( DIFFUSEBUMPMAP,  hasDiffuseBumpmap );
@@ -273,11 +273,11 @@ END_SHADER_PARAMS
 				SET_STATIC_PIXEL_SHADER_COMBO( FLASHLIGHT,  hasFlashlight );
 				SET_STATIC_PIXEL_SHADER_COMBO( SEAMLESS,  bSeamlessMapping );
 				SET_STATIC_PIXEL_SHADER_COMBO( FLASHLIGHTDEPTHFILTERMODE, nShadowFilterMode );
-				SET_STATIC_PIXEL_SHADER( sdk_worldtwotextureblend_ps20b );
+				SET_STATIC_PIXEL_SHADER( worldtwotextureblend_ps20b );
 			}
 			else
 			{
-				DECLARE_STATIC_PIXEL_SHADER( sdk_worldtwotextureblend_ps20 );
+				DECLARE_STATIC_PIXEL_SHADER( worldtwotextureblend_ps20 );
 				SET_STATIC_PIXEL_SHADER_COMBO( DETAILTEXTURE,  hasDetailTexture );
 				SET_STATIC_PIXEL_SHADER_COMBO( BUMPMAP,  hasBump );
 				SET_STATIC_PIXEL_SHADER_COMBO( DIFFUSEBUMPMAP,  hasDiffuseBumpmap );
@@ -286,7 +286,7 @@ END_SHADER_PARAMS
 				SET_STATIC_PIXEL_SHADER_COMBO( DETAIL_ALPHA_MASK_BASE_TEXTURE,  bHasDetailAlpha );
 				SET_STATIC_PIXEL_SHADER_COMBO( FLASHLIGHT,  hasFlashlight );
 				SET_STATIC_PIXEL_SHADER_COMBO( SEAMLESS,  bSeamlessMapping );
-				SET_STATIC_PIXEL_SHADER( sdk_worldtwotextureblend_ps20 );
+				SET_STATIC_PIXEL_SHADER( worldtwotextureblend_ps20 );
 			}
 
 			// HACK HACK HACK - enable alpha writes all the time so that we have them for
@@ -326,7 +326,7 @@ END_SHADER_PARAMS
 				VMatrix worldToTexture;
 				ITexture *pFlashlightDepthTexture;
 				FlashlightState_t state = pShaderAPI->GetFlashlightStateEx( worldToTexture, &pFlashlightDepthTexture );
-				bFlashlightShadows = state.m_bEnableShadows;
+				bFlashlightShadows = state.m_bEnableShadows && ( pFlashlightDepthTexture != NULL );
 
 				SetFlashLightColorFromState( state, pShaderAPI );
 
@@ -387,12 +387,12 @@ END_SHADER_PARAMS
 			}
 
 			MaterialFogMode_t fogType = pShaderAPI->GetSceneFogMode();
-			DECLARE_DYNAMIC_VERTEX_SHADER( sdk_lightmappedgeneric_vs20 );
+			DECLARE_DYNAMIC_VERTEX_SHADER( lightmappedgeneric_vs20 );
 			SET_DYNAMIC_VERTEX_SHADER_COMBO( DOWATERFOG,  fogType == MATERIAL_FOG_LINEAR_BELOW_FOG_Z );
 			SET_DYNAMIC_VERTEX_SHADER_COMBO( FASTPATH,  bVertexShaderFastPath );
 			SET_DYNAMIC_VERTEX_SHADER_COMBO(
 				LIGHTING_PREVIEW, pShaderAPI->GetIntRenderingParameter(INT_RENDERPARM_ENABLE_FIXED_LIGHTING)!=0);
-			SET_DYNAMIC_VERTEX_SHADER( sdk_lightmappedgeneric_vs20 );
+			SET_DYNAMIC_VERTEX_SHADER( lightmappedgeneric_vs20 );
 
 			bool bWriteDepthToAlpha;
 			bool bWriteWaterFogToAlpha;
@@ -412,24 +412,24 @@ END_SHADER_PARAMS
 
 			if ( g_pHardwareConfig->SupportsPixelShaders_2_b() )
 			{
-				DECLARE_DYNAMIC_PIXEL_SHADER( sdk_worldtwotextureblend_ps20b );
+				DECLARE_DYNAMIC_PIXEL_SHADER( worldtwotextureblend_ps20b );
 
 				// Don't write fog to alpha if we're using translucency
 				SET_DYNAMIC_PIXEL_SHADER_COMBO( WRITEWATERFOGTODESTALPHA, bWriteWaterFogToAlpha );
 				SET_DYNAMIC_PIXEL_SHADER_COMBO( WRITE_DEPTH_TO_DESTALPHA, bWriteDepthToAlpha );
 				SET_DYNAMIC_PIXEL_SHADER_COMBO( PIXELFOGTYPE, pShaderAPI->GetPixelFogCombo() );
 				SET_DYNAMIC_PIXEL_SHADER_COMBO( FLASHLIGHTSHADOWS, bFlashlightShadows );
-				SET_DYNAMIC_PIXEL_SHADER( sdk_worldtwotextureblend_ps20b );
+				SET_DYNAMIC_PIXEL_SHADER( worldtwotextureblend_ps20b );
 			}
 			else
 			{
-				DECLARE_DYNAMIC_PIXEL_SHADER( sdk_worldtwotextureblend_ps20 );
+				DECLARE_DYNAMIC_PIXEL_SHADER( worldtwotextureblend_ps20 );
 
 				// Don't write fog to alpha if we're using translucency
 				SET_DYNAMIC_PIXEL_SHADER_COMBO( WRITEWATERFOGTODESTALPHA, (fogType == MATERIAL_FOG_LINEAR_BELOW_FOG_Z) && 
 					(nBlendType != BT_BLENDADD) && (nBlendType != BT_BLEND) && !bIsAlphaTested );
 				SET_DYNAMIC_PIXEL_SHADER_COMBO( PIXELFOGTYPE, pShaderAPI->GetPixelFogCombo() );
-				SET_DYNAMIC_PIXEL_SHADER( sdk_worldtwotextureblend_ps20 );
+				SET_DYNAMIC_PIXEL_SHADER( worldtwotextureblend_ps20 );
 			}
 
 

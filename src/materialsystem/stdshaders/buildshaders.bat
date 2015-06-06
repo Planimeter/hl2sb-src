@@ -9,7 +9,7 @@ set TTEXE=time /t
 :no_ttexe_end
 
 echo.
-rem echo ==================== buildshaders %* ==================
+echo ==================== buildshaders %* ==================
 %TTEXE% -cur-Q
 set tt_start=%ERRORLEVEL%
 set tt_chkpt=%tt_start%
@@ -70,7 +70,7 @@ REM MOD ARGS - look for -game or the vproject environment variable
 REM ****************
 :set_mod_args
 
-if not exist %SDKBINDIR%\shadercompile.exe goto NoShaderCompile
+if not exist "%SDKBINDIR%\shadercompile.exe" goto NoShaderCompile
 set ChangeToDir=%SDKBINDIR%
 
 if /i "%4" NEQ "-source" goto NoSourceDirSpecified
@@ -181,6 +181,7 @@ if exist "filelist.txt" if exist "uniquefilestocopy.txt" if not "%dynamic_shader
 	echo Running distributed shader compilation...
 
 	cd /D %ChangeToDir%
+	echo %shadercompilecommand% %SDKArgs% -shaderpath "%shader_path_cd:/=\%" -allowdebug
 	%shadercompilecommand% %SDKArgs% -shaderpath "%shader_path_cd:/=\%" -allowdebug
 	cd /D %shader_path_cd%
 )

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implements the headcrab, a tiny, jumpy alien parasite.
 //
@@ -522,7 +522,7 @@ void CBaseHeadcrab::JumpAttack( bool bRandomJump, const Vector &vecPos, bool bTh
 	Vector vecJumpVel;
 	if ( !bRandomJump )
 	{
-		float gravity = sv_gravity.GetFloat();
+		float gravity = GetCurrentGravity();
 		if ( gravity <= 1 )
 		{
 			gravity = 1;
@@ -1071,7 +1071,7 @@ void CBaseHeadcrab::PrescheduleThink( void )
 	// Are we fading in after being hidden?
 	if ( !m_bHidden && (m_nRenderMode != kRenderNormal) )
 	{
-		int iNewAlpha = min( 255, GetRenderColor().a + 120 );
+		int iNewAlpha = MIN( 255, GetRenderColor().a + 120 );
 		if ( iNewAlpha >= 255 )
 		{
 			m_nRenderMode = kRenderNormal;
@@ -1262,7 +1262,7 @@ void CBaseHeadcrab::JumpFromCanister()
 	StudioFrameAdvanceManual( 0.0 );
 	SetParent( NULL );
 	RemoveFlag( FL_FLY );
-	AddEffects( EF_NOINTERP );
+	IncrementInterpolationFrame();
 
 	GetMotor()->SetIdealYaw( headCrabAngles.y );
 	
@@ -1308,6 +1308,7 @@ void CBaseHeadcrab::JumpFromCanister()
 
 void CBaseHeadcrab::DropFromCeiling( void )
 {
+#ifdef HL2_EPISODIC
 #ifndef HL2SB
 	if ( HL2GameRules()->IsAlyxInDarknessMode() )
 #else
@@ -1343,6 +1344,7 @@ void CBaseHeadcrab::DropFromCeiling( void )
 			}
 		}
 	}
+#endif // HL2_EPISODIC
 }
 
 //-----------------------------------------------------------------------------
@@ -1881,7 +1883,7 @@ int CBaseHeadcrab::SelectSchedule( void )
 			return SCHED_HEADCRAB_UNHIDE;
 		}
 
-		return m_bBurrowed ? SCHED_HEADCRAB_BURROW_WAIT : SCHED_IDLE_STAND;
+		return m_bBurrowed ? ( int )SCHED_HEADCRAB_BURROW_WAIT : ( int )SCHED_IDLE_STAND;
 	}
 
 	if ( GetSpawnFlags() & SF_HEADCRAB_START_HANGING && IsHangingFromCeiling() == false )
@@ -1891,11 +1893,16 @@ int CBaseHeadcrab::SelectSchedule( void )
 
 	if ( IsHangingFromCeiling() )
 	{
+		bool bIsAlyxInDarknessMode = false;
+#ifdef HL2_EPISODIC
 #ifndef HL2SB
-		if ( HL2GameRules()->IsAlyxInDarknessMode() == false && ( HasCondition( COND_CAN_RANGE_ATTACK1 ) || HasCondition( COND_NEW_ENEMY ) ) )
+		bIsAlyxInDarknessMode = HL2GameRules()->IsAlyxInDarknessMode();
 #else
-		if ( HL2MPRules()->IsAlyxInDarknessMode() == false && ( HasCondition( COND_CAN_RANGE_ATTACK1 ) || HasCondition( COND_NEW_ENEMY ) ) )
+		bIsAlyxInDarknessMode = HL2MPRules()->IsAlyxInDarknessMode();
 #endif
+#endif // HL2_EPISODIC
+
+		if ( bIsAlyxInDarknessMode == false && ( HasCondition( COND_CAN_RANGE_ATTACK1 ) || HasCondition( COND_NEW_ENEMY ) ) )
 			return SCHED_HEADCRAB_CEILING_DROP;
 
 		if ( HasCondition( COND_LIGHT_DAMAGE ) || HasCondition( COND_HEAVY_DAMAGE ) )
@@ -2022,7 +2029,7 @@ int CBaseHeadcrab::SelectFailSchedule( int failedSchedule, int failedTask, AI_Ta
 //			&vecDir - 
 //			*ptr - 
 //-----------------------------------------------------------------------------
-void CBaseHeadcrab::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
+void CBaseHeadcrab::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
 	CTakeDamageInfo	newInfo = info;
 
@@ -2046,7 +2053,7 @@ void CBaseHeadcrab::TraceAttack( const CTakeDamageInfo &info, const Vector &vecD
 		ApplyAbsVelocityImpulse( puntDir );
 	}
 
-	BaseClass::TraceAttack( newInfo, vecDir, ptr );
+	BaseClass::TraceAttack( newInfo, vecDir, ptr, pAccumulator );
 }
 
 
@@ -2129,7 +2136,7 @@ bool CBaseHeadcrab::HandleInteraction(int interactionType, void *data, CBaseComb
 		pEntity->m_NPCState = NPC_STATE_DEAD;
 		return true;
 	}
-	else if (	(interactionType ==	g_interactionVortigauntKick)
+	else if (	interactionType ==	g_interactionVortigauntKick
 				/* || (interactionType ==	g_interactionBullsquidThrow) */
 				)
 	{
@@ -2845,7 +2852,7 @@ void CFastHeadcrab::StartTask( const Task_t *pTask )
 
 				if( !IsMoveBlocked( moveTrace ) )
 				{
-					SetAbsVelocity( m_vecJumpVel );// + 0.5f * Vector(0,0,sv_gravity.GetFloat()) * flInterval;
+					SetAbsVelocity( m_vecJumpVel );// + 0.5f * Vector(0,0,GetCurrentGravity()) * flInterval;
 					SetGravity( UTIL_ScaleForGravity( 1600 ) );
 					SetGroundEntity( NULL );
 					SetNavType( NAV_JUMP );

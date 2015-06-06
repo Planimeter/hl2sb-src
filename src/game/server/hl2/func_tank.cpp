@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ====
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -37,6 +37,8 @@
 #include "props.h"
 #include "rumble_shared.h"
 #include "particle_parse.h"
+// NVNT turret recoil
+#include "haptics/haptic_utils.h"
 
 #ifdef HL2_DLL
 #include "hl2_player.h"
@@ -75,14 +77,14 @@ BEGIN_DATADESC( CFuncTank )
 	DEFINE_KEYFIELD( m_iBulletDamageVsPlayer, FIELD_INTEGER, "bullet_damage_vs_player" ),
 	DEFINE_KEYFIELD( m_iszMaster, FIELD_STRING, "master" ),
 	
-// #ifdef HL2_EPISODIC	
+#ifdef HL2_EPISODIC	
 	DEFINE_KEYFIELD( m_iszAmmoType, FIELD_STRING, "ammotype" ),
 	DEFINE_FIELD( m_iAmmoType, FIELD_INTEGER ),
-// #else
+#else
 	DEFINE_FIELD( m_iSmallAmmoType, FIELD_INTEGER ),
 	DEFINE_FIELD( m_iMediumAmmoType, FIELD_INTEGER ),
 	DEFINE_FIELD( m_iLargeAmmoType, FIELD_INTEGER ),
-// #endif // HL2_EPISODIC
+#endif // HL2_EPISODIC
 
 	DEFINE_KEYFIELD( m_soundStartRotate, FIELD_SOUNDNAME, "rotatestartsound" ),
 	DEFINE_KEYFIELD( m_soundStopRotate, FIELD_SOUNDNAME, "rotatestopsound" ),
@@ -733,13 +735,13 @@ void CFuncTank::Spawn( void )
 {
 	Precache();
 
-// #ifdef HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	m_iAmmoType = GetAmmoDef()->Index( STRING( m_iszAmmoType ) );
-// #else
+#else
 	m_iSmallAmmoType	= GetAmmoDef()->Index("Pistol");
 	m_iMediumAmmoType	= GetAmmoDef()->Index("SMG1");
 	m_iLargeAmmoType	= GetAmmoDef()->Index("AR2");
-// #endif // HL2_EPISODIC
+#endif // HL2_EPISODIC
 
 	SetMoveType( MOVETYPE_PUSH );  // so it doesn't get pushed by anything
 	SetSolid( SOLID_VPHYSICS );
@@ -1129,6 +1131,10 @@ void CFuncTank::StopControl()
 // Purpose:
 // Called each frame by the player's ItemPostFrame
 //-----------------------------------------------------------------------------
+
+// NVNT turret recoil
+ConVar hap_turret_mag("hap_turret_mag", "5", 0);
+
 void CFuncTank::ControllerPostFrame( void )
 {
 	// Make sure we have a contoller.
@@ -1168,7 +1174,11 @@ void CFuncTank::ControllerPostFrame( void )
 	}
 	
 	Fire( bulletCount, WorldBarrelPosition(), forward, pPlayer, false );
-	
+ 
+#if defined( WIN32 ) && !defined( _X360 ) 
+	// NVNT apply a punch on the player each time fired
+	HapticPunch(pPlayer,0,0,hap_turret_mag.GetFloat());
+#endif	
 	// HACKHACK -- make some noise (that the AI can hear)
 	CSoundEnt::InsertSound( SOUND_COMBAT, WorldSpaceCenter(), FUNCTANK_FIREVOLUME, 0.2 );
 	
@@ -2021,7 +2031,7 @@ void CFuncTank::AimFuncTankAtTarget( void )
 
 	SetMoveDoneTime( 0.1 );
 
-	if ( CanFire() && ( (fabs(distX) <= m_pitchTolerance) && (fabs(distY) <= m_yawTolerance) || (m_spawnflags & SF_TANK_LINEOFSIGHT) ) )
+	if ( CanFire() && ( ( (fabs(distX) <= m_pitchTolerance) && (fabs(distY) <= m_yawTolerance) ) || (m_spawnflags & SF_TANK_LINEOFSIGHT) ) )
 	{
 		bool fire = false;
 		Vector forward;
@@ -2457,7 +2467,7 @@ void CFuncTankGun::Fire( int bulletCount, const Vector &barrelEnd, const Vector 
 
 	info.m_flDistance = MAX_TRACE_LENGTH;
 	info.m_iTracerFreq = 1;
-	info.m_iDamage = m_iBulletDamage;
+	info.m_flDamage = m_iBulletDamage;
 	info.m_iPlayerDamage = m_iBulletDamageVsPlayer;
 	info.m_pAttacker = pAttacker;
 	info.m_pAdditionalIgnoreEnt = GetParent();

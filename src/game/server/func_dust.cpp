@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Volumetric dust motes.
 //
@@ -162,7 +162,7 @@ void CFunc_Dust::Spawn()
 
 	//Since keyvalues can arrive in any order, and UTIL_StringToColor32 stomps alpha,
 	//install the alpha value here.
-	color32 clr = { m_Color.m_Value.r, m_Color.m_Value.g, m_Color.m_Value.b, m_iAlpha };
+	color32 clr = { m_Color.m_Value.r, m_Color.m_Value.g, m_Color.m_Value.b, (byte)m_iAlpha };
 	m_Color.Set( clr );
 
 	BaseClass::Spawn();

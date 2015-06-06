@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2007, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: VGUI panel which can play back video, in-engine
 //
@@ -12,7 +12,11 @@
 
 #include <vgui_controls/Panel.h>
 #include <vgui_controls/EditablePanel.h>
-#include "avi/ibik.h"
+
+//#define QUICKTIME_VIDEO
+//#define BINK_VIDEO
+
+#include "video/ivideoservices.h"
 
 
 class VideoPanel : public vgui::EditablePanel
@@ -20,9 +24,9 @@ class VideoPanel : public vgui::EditablePanel
 	DECLARE_CLASS_SIMPLE( VideoPanel, vgui::EditablePanel );
 public:
 
-	VideoPanel( unsigned int nXPos, unsigned int nYPos, unsigned int nHeight, unsigned int nWidth );
+	VideoPanel( unsigned int nXPos, unsigned int nYPos, unsigned int nHeight, unsigned int nWidth, bool allowAlternateMedia = true );
 
-	~VideoPanel( void );
+	virtual ~VideoPanel( void );
 
 	virtual void Activate( void );
 	virtual void Paint( void );
@@ -40,7 +44,7 @@ public:
 		}
 	}
 
-	virtual bool BeginPlayback( const char *pFilename ); //Tony; allow overriding
+	bool BeginPlayback( const char *pFilename );
 
 	void SetBlackBackground( bool bBlack ){ m_bBlackBackground = bBlack; }
 
@@ -51,7 +55,8 @@ protected:
 	virtual void OnVideoOver(){}
 
 protected:
-	BIKMaterial_t	m_BIKHandle;
+	IVideoMaterial *m_VideoMaterial;
+	
 	IMaterial		*m_pMaterial;
 	int				m_nPlaybackHeight;			// Calculated to address ratio changes
 	int				m_nPlaybackWidth;
@@ -61,6 +66,7 @@ protected:
 	float			m_flV;
 
 	bool			m_bBlackBackground;
+	bool			m_bAllowAlternateMedia;
 };
 
 

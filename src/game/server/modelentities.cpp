@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -191,7 +191,7 @@ void CFuncBrush::TurnOn( void )
 }
 
 
-bool CFuncBrush::IsOn( void )
+bool CFuncBrush::IsOn( void ) const
 {
 	return !IsEffectActive( EF_NODRAW );
 }

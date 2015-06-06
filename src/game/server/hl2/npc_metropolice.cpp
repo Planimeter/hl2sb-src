@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -1152,7 +1152,7 @@ CBaseEntity *CNPC_MetroPolice::GetEnemyAirboat() const
 {
 	// Should this be a condition??
 	if ( !GetEnemy() || !GetEnemy()->IsPlayer() )
-		return false;
+		return NULL;
 
 	return static_cast<CBasePlayer*>( GetEnemy() )->GetVehicleEntity(); 
 }
@@ -1679,7 +1679,7 @@ float CNPC_MetroPolice::AimBurstAtReactionTime( float flReactionTime, float flDi
 #define AIM_AT_SHOT_SPEED_COUNT 6
 #define AIM_AT_SHOT_DIST_COUNT 6
 
-static int s_pShotCountFraction[AIM_AT_TIME_DIST_COUNT][AIM_AT_TIME_SPEED_COUNT] =
+static float s_pShotCountFraction[AIM_AT_TIME_DIST_COUNT][AIM_AT_TIME_SPEED_COUNT] =
 {
 	{  3.0f, 3.0f,  2.5f,  1.5f,  1.0f, 0.0f },
 	{  3.0f, 3.0f,  2.5f,  1.25f, 0.5f, 0.0f },
@@ -1823,7 +1823,7 @@ void CNPC_MetroPolice::AimBurstAtEnemy( float flReactionTime )
 
 	// Compute the distance along the stitch direction to the cop. we don't want to cross that line
 	Vector vecStitchStart, vecStitchEnd;
-	VectorMA( vecShootAt, -min( flStitchLength * flReactionFraction, flMaxStitchDistance ), vecDelta, vecStitchStart );
+	VectorMA( vecShootAt, -MIN( flStitchLength * flReactionFraction, flMaxStitchDistance ), vecDelta, vecStitchStart );
 	VectorMA( vecShootAt, flStitchLength * (1.0f - flReactionFraction), vecDelta, vecStitchEnd );
 	
 	// Trace down a bit to hit the ground if we're above the ground...
@@ -2002,7 +2002,7 @@ void CNPC_MetroPolice::AimBurstAlongSideOfEnemy( float flFollowTime )
 
 	vecShootAtVel.z = 0.0f;
 	float flTargetSpeed = VectorNormalize( vecShootAtVel );
-	float flStitchLength = max( AIM_IN_FRONT_OF_DEFAULT_STITCH_LENGTH, flTargetSpeed * flFollowTime * 0.9 );
+	float flStitchLength = MAX( AIM_IN_FRONT_OF_DEFAULT_STITCH_LENGTH, flTargetSpeed * flFollowTime * 0.9 );
 
 	// This defines the line of death, which, when crossed, results in damage
 	m_vecBurstLineOfDeathOrigin = vecSidePoint;
@@ -3833,7 +3833,7 @@ bool CNPC_MetroPolice::IsHeavyDamage( const CTakeDamageInfo &info )
 //-----------------------------------------------------------------------------
 // TraceAttack
 //-----------------------------------------------------------------------------
-void CNPC_MetroPolice::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
+void CNPC_MetroPolice::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
 	// This is needed so we can keep track of the direction of the shot
 	// because we're going to use it to choose the flinch animation
@@ -3853,7 +3853,7 @@ void CNPC_MetroPolice::TraceAttack( const CTakeDamageInfo &info, const Vector &v
 		}
 	}
 
-	BaseClass::TraceAttack( info, vecDir, ptr );
+	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
 }
 
 //-----------------------------------------------------------------------------
@@ -4813,8 +4813,8 @@ void CNPC_MetroPolice::RunTask( const Task_t *pTask )
 						float flMinRange = 0;
 						if ( GetActiveWeapon() )
 						{
-							flMaxRange = max( GetActiveWeapon()->m_fMaxRange1, GetActiveWeapon()->m_fMaxRange2 );
-							flMinRange = min( GetActiveWeapon()->m_fMinRange1, GetActiveWeapon()->m_fMinRange2 );
+							flMaxRange = MAX( GetActiveWeapon()->m_fMaxRange1, GetActiveWeapon()->m_fMaxRange2 );
+							flMinRange = MIN( GetActiveWeapon()->m_fMinRange1, GetActiveWeapon()->m_fMinRange2 );
 						}
 
 						// Check against NPC's max range

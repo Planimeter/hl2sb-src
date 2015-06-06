@@ -1,3 +1,4 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //  SKIP: $BUMPMAP2 && $WARPLIGHTING
 //  SKIP: $WARPLIGHTING && $DETAILTEXTURE
 //	SKIP: $ENVMAPMASK && $BUMPMAP
@@ -315,16 +316,19 @@ HALF4 main( PS_INPUT i ) : COLOR
 
 	if( bBaseTexture2 )
 	{
-#if (SELFILLUM == 0) && (NORMALMAPALPHAENVMAPMASK==0) && (PIXELFOGTYPE != PIXEL_FOG_TYPE_HEIGHT) && (FANCY_BLENDING)
+#if (SELFILLUM == 0) && (PIXELFOGTYPE != PIXEL_FOG_TYPE_HEIGHT) && (FANCY_BLENDING)
 		float4 modt=tex2D(BlendModulationSampler,i.lightmapTexCoord3.zw);
 #if MASKEDBLENDING
-		float minb=modt.g-modt.r;
-		float maxb=modt.g+modt.r;
+		// FXC is unable to optimize this, despite blendfactor=0.5 above
+		//float minb=modt.g-modt.r;
+		//float maxb=modt.g+modt.r;
+		//blendfactor=smoothstep(minb,maxb,blendfactor);
+		blendfactor=modt.g;
 #else
-		float minb=max(0,modt.g-modt.r);
-		float maxb=min(1,modt.g+modt.r);
-#endif
+		float minb=saturate(modt.g-modt.r);
+		float maxb=saturate(modt.g+modt.r);
 		blendfactor=smoothstep(minb,maxb,blendfactor);
+#endif
 #endif
 		baseColor.rgb = lerp( baseColor, baseColor2.rgb, blendfactor );
 		blendedAlpha = lerp( baseColor.a, baseColor2.a, blendfactor );
@@ -369,7 +373,15 @@ HALF4 main( PS_INPUT i ) : COLOR
 			vNormal.xyz = lerp( vNormalMask.xyz, vNormal.xyz, vNormalMask.a );		// Mask out normals from vNormal
 			specularFactor = vNormalMask.a;
 	#else // BUMPMASK == 0
-			vNormal.xyz = lerp( vNormal.xyz, vNormal2.xyz, blendfactor);
+			if ( FANCY_BLENDING && bNormalMapAlphaEnvmapMask )
+			{
+				vNormal = lerp( vNormal, vNormal2, blendfactor);
+			}
+			else
+			{
+				vNormal.xyz = lerp( vNormal.xyz, vNormal2.xyz, blendfactor);
+			}
+
 	#endif
 
 		}
@@ -397,7 +409,6 @@ HALF4 main( PS_INPUT i ) : COLOR
 	{
 		specularFactor *= 1.0 - blendedAlpha; // Reversing alpha blows!
 	}
-
 	float4 albedo = float4( 1.0f, 1.0f, 1.0f, 1.0f );
 	float alpha = 1.0f;
 	albedo *= baseColor;

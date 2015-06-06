@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -572,4 +572,23 @@ void virtualmodel_t::AppendIKLocks( int group, const studiohdr_t *pStudioHdr )
 	}
 
 	m_iklock = iklock;
+
+	// copy knee directions for uninitialized knees
+	if ( group != 0 )
+	{
+		studiohdr_t *pBaseHdr = (studiohdr_t *)m_group[ 0 ].GetStudioHdr();
+		if ( pStudioHdr->numikchains == pBaseHdr->numikchains )
+		{
+			for (j = 0; j < pStudioHdr->numikchains; j++)
+			{
+				if ( pBaseHdr->pIKChain( j )->pLink(0)->kneeDir.LengthSqr() == 0.0f )
+				{
+					if ( pStudioHdr->pIKChain( j )->pLink(0)->kneeDir.LengthSqr() > 0.0f )
+					{
+						pBaseHdr->pIKChain( j )->pLink(0)->kneeDir = pStudioHdr->pIKChain( j )->pLink(0)->kneeDir;
+					}
+				}
+			}
+		}
+	}
 }

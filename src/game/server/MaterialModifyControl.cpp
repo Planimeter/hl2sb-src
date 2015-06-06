@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Material modify control entity.
 //
@@ -271,7 +271,7 @@ void CMaterialModifyControl::InputStartFloatLerp( inputdata_t &inputdata )
 				{
 					bool bWrap = atoi(pszParam) != 0;
 					// We don't implement wrap currently.
-					bWrap = bWrap;
+					NOTE_UNUSED( bWrap );
 
 					// Got all the parameters. Save 'em and return;
 					m_flFloatLerpStartValue = flStartValue;

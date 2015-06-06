@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -129,6 +129,7 @@ public:
 			void			OnClientActive( CBasePlayer *player );
 			
 			void			RemoveActorFromScenes( CBaseFlex *pActor, bool bInstancedOnly, bool bNonIdleOnly, const char *pszThisSceneOnly );
+			void			RemoveScenesInvolvingActor( CBaseFlex *pActor );
 			void			PauseActorsScenes( CBaseFlex *pActor, bool bInstancedOnly  );
 			bool			IsInInterruptableScenes( CBaseFlex *pActor );
 			void			ResumeActorsScenes( CBaseFlex *pActor, bool bInstancedOnly  );
@@ -221,7 +222,7 @@ bool CopySceneFileIntoMemory( char const *pFilename, void **pBuffer, int *pSize 
 //-----------------------------------------------------------------------------
 void FreeSceneFileMemory( void *buffer )
 {
-	delete[] buffer;
+	delete[] (byte*) buffer;
 }
 
 //-----------------------------------------------------------------------------
@@ -405,7 +406,7 @@ public:
 
 	static bool SpeakEventSoundLessFunc( const SpeakEventSound_t& lhs, const SpeakEventSound_t& rhs );
 
-	bool					GetSoundNameForPlayer( CChoreoEvent *event, CBasePlayer *player, char *buf, size_t buflen );
+	bool					GetSoundNameForPlayer( CChoreoEvent *event, CBasePlayer *player, char *buf, size_t buflen, CBaseEntity *pActor );
 
 	void					BuildSortedSpeakEventSoundsPrefetchList( 
 								CChoreoScene *scene, 
@@ -557,7 +558,7 @@ private:
 	CChoreoScene			*m_pScene;
 	CNetworkVar( int, m_nSceneStringIndex );
 
-	const ConVar			*m_pcvSndMixahead;
+	static const ConVar		*m_pcvSndMixahead;
 
 	COutputEvent			m_OnStart;
 	COutputEvent			m_OnCompletion;
@@ -734,6 +735,8 @@ BEGIN_DATADESC( CSceneEntity )
 	DEFINE_OUTPUT( m_OnTrigger16, "OnTrigger16"),
 END_DATADESC()
 
+const ConVar	*CSceneEntity::m_pcvSndMixahead = NULL;
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -765,7 +768,8 @@ CSceneEntity::CSceneEntity( void )
 
 	m_bCompletedEarly	= false;
 
-	m_pcvSndMixahead	= cvar->FindVar( "snd_mixahead" );
+	if ( !m_pcvSndMixahead )
+		m_pcvSndMixahead	= cvar->FindVar( "snd_mixahead" );
 
 	m_BusyActor			= SCENE_BUSYACTOR_DEFAULT;
 }
@@ -1640,7 +1644,7 @@ bool AttenuateCaption( const char *token, const Vector& listener, CUtlVector< Ve
 //			buf, buflen:  where to put the data 
 // Output : Returns true if the sound should be played/prefetched
 //-----------------------------------------------------------------------------
-bool CSceneEntity::GetSoundNameForPlayer( CChoreoEvent *event, CBasePlayer *player, char *buf, size_t buflen )
+bool CSceneEntity::GetSoundNameForPlayer( CChoreoEvent *event, CBasePlayer *player, char *buf, size_t buflen, CBaseEntity *pActor )
 {
 	Assert( event );
 	Assert( player );
@@ -1663,8 +1667,15 @@ bool CSceneEntity::GetSoundNameForPlayer( CChoreoEvent *event, CBasePlayer *play
 		validtoken = event->GetPlaybackCloseCaptionToken( tok, sizeof( tok ) );
 	}
 
-	// For english users, assume we emit the sound normally
-	Q_strncpy( buf, event->GetParameters(), buflen );
+	const char* pchToken = "";
+
+	if ( pActor && pActor->IsPlayer() )
+	{
+		pchToken = dynamic_cast< CBasePlayer* >( pActor )->GetSceneSoundToken();
+	}
+
+	// Copy the sound name
+	CopySoundNameWithModifierToken( buf, event->GetParameters(), buflen, pchToken );
 
 	bool usingEnglish = true;
 	if ( !IsXbox() )
@@ -1781,6 +1792,11 @@ void CSceneEntity::DispatchStartSpeak( CChoreoScene *scene, CBaseFlex *actor, CC
 			es.m_nFlags |= SND_IGNORE_PHONEMES;
 		}
 
+		if ( actor->GetSpecialDSP() != 0 )
+		{
+			es.m_nSpecialDSP = actor->GetSpecialDSP();
+		}
+
 		// No CC since we do it manually
 		// FIXME:  This will  change
 		es.m_bEmitCloseCaption = false;
@@ -1796,7 +1812,7 @@ void CSceneEntity::DispatchStartSpeak( CChoreoScene *scene, CBaseFlex *actor, CC
 			CSingleUserRecipientFilter filter2( player );
 
 			char soundname[ 512 ];
-			if ( !GetSoundNameForPlayer( event, player, soundname, sizeof( soundname ) ) )
+			if ( !GetSoundNameForPlayer( event, player, soundname, sizeof( soundname ), actor ) )
 			{
 				continue;
 			}
@@ -1875,7 +1891,7 @@ void CSceneEntity::DispatchStartSpeak( CChoreoScene *scene, CBaseFlex *actor, CC
 					float durationShort = event->GetDuration();
 					float durationLong = endtime - event->GetStartTime();
 
-					float duration = max( durationShort, durationLong );
+					float duration = MAX( durationShort, durationLong );
 
 
 					byte byteflags = CLOSE_CAPTION_WARNIFMISSING; // warnifmissing
@@ -1901,7 +1917,7 @@ void CSceneEntity::DispatchStartSpeak( CChoreoScene *scene, CBaseFlex *actor, CC
 					// Send caption and duration hint down to client
 					UserMessageBegin( filter, "CloseCaption" );
 						WRITE_STRING( lowercase );
-						WRITE_SHORT( min( 255, (int)( duration * 10.0f ) ) );
+						WRITE_SHORT( MIN( 255, (int)( duration * 10.0f ) ) );
 						WRITE_BYTE( byteflags ); // warn on missing
 					MessageEnd();
 				}
@@ -2245,11 +2261,6 @@ void CSceneEntity::InputTriggerEvent( inputdata_t &inputdata )
 	}
 }
 
-struct NPCInterjection
-{
-	AI_Response *response;
-	CAI_BaseActor *npc;
-};
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : &inputdata - 
@@ -2258,93 +2269,62 @@ void CSceneEntity::InputInterjectResponse( inputdata_t &inputdata )
 {
 	// Not currently playing a scene
 	if ( !m_pScene )
-	{
 		return;
-	}
 
-	CUtlVector< CAI_BaseActor * >	candidates;
-	int i;
-	for ( i = 0 ; i < m_pScene->GetNumActors(); i++ )
+	CUtlVector<CAI_BaseActor *> candidates;
+
+	for ( int i = 0 ; i < m_pScene->GetNumActors(); i++ )
 	{
 		CBaseFlex *pTestActor = FindNamedActor( i );
 		if ( !pTestActor )
 			continue;
 
-		CAI_BaseActor *pBaseActor = dynamic_cast<CAI_BaseActor*>(pTestActor);
-		if ( !pBaseActor )
-			continue;
-
-		if ( !pBaseActor->IsAlive() )
+		CAI_BaseActor *pBaseActor = dynamic_cast<CAI_BaseActor *>(pTestActor);
+		if ( !pBaseActor || !pBaseActor->IsAlive() )
 			continue;
 
 		candidates.AddToTail( pBaseActor );
 	}
 
 	int c = candidates.Count();
-
 	if ( !c )
-	{
 		return;
-	}
-	
-	int useIndex = 0;
+
 	if ( !m_bIsPlayingBack )
 	{
 		// Use any actor if not playing a scene
-		useIndex = RandomInt( 0, c - 1 );
+		// int useIndex = RandomInt( 0, c - 1 );
+		Assert( !"m_bIsPlayBack is false and this code does nothing. Should it?");
 	}
 	else
 	{
-		CUtlVector< NPCInterjection > validResponses;
+		CUtlString modifiers("scene:");
+		modifiers += STRING( GetEntityName() );
 
-		char modifiers[ 512 ];
-		Q_snprintf( modifiers, sizeof( modifiers ), "scene:%s", STRING( GetEntityName() ) );
-
-		for ( int i = 0; i < c; i++ )
+		while (candidates.Count() > 0)
 		{
-			CAI_BaseActor *npc = candidates[ i ];
-			Assert( npc );
+			// Pick a random slot in the candidates array.
+			int slot = RandomInt( 0, candidates.Count() - 1 );
 
-			AI_Response *response = npc->SpeakFindResponse( inputdata.value.String(), modifiers );
-			if ( !response )
-				continue;
+			CAI_BaseActor *npc = candidates[ slot ];
 
-			float duration = npc->GetResponseDuration( response );
-			// Couldn't look it up
-			if ( duration <= 0.0f )
-				continue;
-
-			if ( !npc->PermitResponse( duration ) )
+			// Try to find the response for this slot.
+			AI_Response response;
+			bool result = npc->SpeakFindResponse( response, inputdata.value.String(), modifiers.Get() );
+			if ( result )
 			{
-				delete response;
-				continue;
-			}
+				float duration = npc->GetResponseDuration( response );
 
-			// 
-			NPCInterjection inter;
-			inter.response = response;
-			inter.npc = npc;
-
-			validResponses.AddToTail( inter );
-		}
-
-		int rcount = validResponses.Count();
-		if ( rcount >= 1 )
-		{
-			int slot = RandomInt( 0, rcount - 1 );
-
-			for ( int i = 0; i < rcount; i++ )
-			{
-				NPCInterjection *pInterjection = &validResponses[ i ];
-				if ( i == slot )
+				if ( ( duration > 0.0f ) && npc->PermitResponse( duration ) )
 				{
-					pInterjection->npc->SpeakDispatchResponse( inputdata.value.String(), pInterjection->response );
-				}
-				else
-				{
-					delete pInterjection->response;
+					// If we could look it up, dispatch it and bail.
+					npc->SpeakDispatchResponse( inputdata.value.String(), response );
+					return;
 				}
 			}
+
+			// Remove this entry and look for another one.
+			candidates.FastRemove(slot);
 		}
 	}
 }
@@ -2711,7 +2691,7 @@ void CSceneEntity::BuildSortedSpeakEventSoundsPrefetchList(
 				if ( gpGlobals->maxClients == 1 )
 				{
 					CBasePlayer *player = UTIL_GetLocalPlayer();
-					if ( player && !GetSoundNameForPlayer( event, player, soundname, sizeof( soundname ) ) )
+					if ( player && !GetSoundNameForPlayer( event, player, soundname, sizeof( soundname ), player ) )
 					{
 						// Skip to next event
 						continue;
@@ -2869,12 +2849,12 @@ void CSceneEntity::QueueResumePlayback( void )
 				CAI_BaseActor *pBaseActor = dynamic_cast<CAI_BaseActor*>(pActor);
 				if ( pBaseActor )
 				{
-					AI_Response *result = pBaseActor->SpeakFindResponse( STRING(m_iszResumeSceneFile), NULL );
+					AI_Response response;
+					bool result = pBaseActor->SpeakFindResponse( response, STRING(m_iszResumeSceneFile), NULL );
 					if ( result )
 					{
-						char response[ 256 ];
-						result->GetResponse( response, sizeof( response ) );
-						bStartedScene = InstancedScriptedScene( NULL, response, &m_hWaitingForThisResumeScene, 0, false ) != 0;
+						const char *szResponse = response.GetResponsePtr();
+						bStartedScene = InstancedScriptedScene( NULL, szResponse, &m_hWaitingForThisResumeScene, 0, false ) != 0;
 					}
 				}
 			}
@@ -3809,11 +3789,11 @@ public:
 		if (pActor)
 		{
 			m_vecPos1 = pActor->GetAbsOrigin();
-			m_flMaxSegmentDistance = min( flMaxRadius, (m_vecPos1 - m_vecPos2).Length() + 1.0 );
+			m_flMaxSegmentDistance = MIN( flMaxRadius, (m_vecPos1 - m_vecPos2).Length() + 1.0 );
 			if (m_flMaxSegmentDistance <= 1.0)
 			{
 				// must be closest to self
-				m_flMaxSegmentDistance = min( flMaxRadius, MAX_TRACE_LENGTH );
+				m_flMaxSegmentDistance = MIN( flMaxRadius, MAX_TRACE_LENGTH );
 			}
 		}
 	}
@@ -4591,8 +4571,20 @@ public:
 								if (PassThrough( actor )) BaseClass::DispatchEndFace( scene, actor, event ); 
 							};
 
-	virtual void			DispatchStartSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )  { /* suppress */ };
-	virtual void			DispatchEndSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event ) { /* suppress */ };
+	virtual void			DispatchStartSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )  
+							{ 
+								if ( IsMultiplayer() )
+								{
+									BaseClass::DispatchStartSequence( scene, actor, event );
+								}
+							};
+	virtual void			DispatchEndSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
+							{						
+								if ( IsMultiplayer() )
+								{
+									BaseClass::DispatchEndSequence( scene, actor, event );
+								}
+							};
 	virtual void			DispatchPauseScene( CChoreoScene *scene, const char *parameters ) { /* suppress */ };
 
 	void OnRestore();
@@ -4618,7 +4610,6 @@ BEGIN_DATADESC( CInstancedSceneEntity )
 	DEFINE_FIELD( m_bIsBackground,		FIELD_BOOLEAN ),
 
 END_DATADESC()
-
 
 //-----------------------------------------------------------------------------
 // Purpose: create a one-shot scene, no movement, sequences, etc.
@@ -4832,7 +4823,7 @@ void CInstancedSceneEntity::DoThink( float frametime )
 
 	if ( m_flPreDelay > 0 )
 	{
-		m_flPreDelay = max( 0, m_flPreDelay - frametime );
+		m_flPreDelay = MAX( 0, m_flPreDelay - frametime );
 		StartPlayback();
 		if ( !m_bIsPlayingBack )
 			return;
@@ -5010,7 +5001,7 @@ void CSceneManager::Think()
 	// The manager is always thinking at 20 hz
 	SetNextThink( gpGlobals->curtime + SCENE_THINK_INTERVAL );
 	float frameTime = ( gpGlobals->curtime - GetLastThink() );
-	frameTime = min( 0.1, frameTime );
+	frameTime = MIN( 0.1, frameTime );
 
 	// stop if AI is diabled
 	if (CAI_BaseNPC::m_nDebugBits & bits_debugDisableAI)
@@ -5125,6 +5116,48 @@ void CSceneManager::OnClientActive( CBasePlayer *player )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: Deletes scenes involving the specified actor
+//-----------------------------------------------------------------------------
+void CSceneManager::RemoveScenesInvolvingActor( CBaseFlex *pActor )
+{
+	if ( !pActor )
+		return;
+
+	int c = m_ActiveScenes.Count();
+	for ( int i = 0; i < c; i++ )
+	{
+		CSceneEntity *pScene = m_ActiveScenes[ i ].Get();
+		if ( !pScene )
+		{
+			continue;
+		}
+
+		if ( pScene->InvolvesActor( pActor ) ) // NOTE: returns false if scene hasn't loaded yet
+		{
+			LocalScene_Printf( "%s : removed for '%s'\n", STRING( pScene->m_iszSceneFile ), pActor ? pActor->GetDebugName() : "NULL" );
+			pScene->CancelPlayback();
+		}
+		else
+		{
+			CInstancedSceneEntity *pInstancedScene = dynamic_cast< CInstancedSceneEntity * >( pScene );
+			if ( pInstancedScene && pInstancedScene->m_hOwner )
+			{
+				if ( pInstancedScene->m_hOwner == pActor )
+				{
+					if ( pInstancedScene->m_bIsPlayingBack )
+					{
+						pInstancedScene->OnSceneFinished( true, false );
+					}
+
+					LocalScene_Printf( "%s : removed for '%s'\n", STRING( pInstancedScene->m_iszSceneFile ), pActor ? pActor->GetDebugName() : "NULL" );
+					UTIL_Remove( pInstancedScene );
+				}
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: Stops scenes involving the specified actor
 //-----------------------------------------------------------------------------
 void CSceneManager::RemoveActorFromScenes( CBaseFlex *pActor, bool bInstancedOnly, bool bNonIdleOnly, const char *pszThisSceneOnly )
@@ -5186,7 +5219,7 @@ void CSceneManager::PauseActorsScenes( CBaseFlex *pActor, bool bInstancedOnly  )
 
 		if ( pScene->InvolvesActor( pActor ) && pScene->IsPlayingBack() )
 		{
-			LocalScene_Printf( "Pausing actor %s scripted scene: %s\n", pActor->GetDebugName(), pScene->m_iszSceneFile );
+			LocalScene_Printf( "Pausing actor %s scripted scene: %s\n", pActor->GetDebugName(), STRING(pScene->m_iszSceneFile) );
 
 			variant_t emptyVariant;
 			pScene->AcceptInput( "Pause", pScene, pScene, emptyVariant, 0 );
@@ -5243,7 +5276,7 @@ void CSceneManager::ResumeActorsScenes( CBaseFlex *pActor, bool bInstancedOnly  
 
 		if ( pScene->InvolvesActor( pActor ) && pScene->IsPlayingBack() )
 		{
-			LocalScene_Printf( "Resuming actor %s scripted scene: %s\n", pActor->GetDebugName(), pScene->m_iszSceneFile );
+			LocalScene_Printf( "Resuming actor %s scripted scene: %s\n", pActor->GetDebugName(), STRING(pScene->m_iszSceneFile) );
 
 			variant_t emptyVariant;
 			pScene->AcceptInput( "Resume", pScene, pScene, emptyVariant, 0 );
@@ -5405,6 +5438,13 @@ void CSceneManager::QueueRestoredSound( CBaseFlex *actor, char const *soundname,
 void RemoveActorFromScriptedScenes( CBaseFlex *pActor, bool instancedscenesonly, bool nonidlescenesonly, const char *pszThisSceneOnly )
 {
 	GetSceneManager()->RemoveActorFromScenes( pActor, instancedscenesonly, nonidlescenesonly, pszThisSceneOnly );
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void RemoveAllScenesInvolvingActor( CBaseFlex *pActor )
+{
+	GetSceneManager()->RemoveScenesInvolvingActor( pActor );
 }
 
 //-----------------------------------------------------------------------------
@@ -5722,6 +5762,9 @@ int GetRecentNPCSpeech( recentNPCSpeech_t speech[ SPEECH_LIST_MAX_SOUNDS ] )
 
 static void ListRecentNPCSpeech( void )
 {
+	if ( !UTIL_IsCommandIssuedByServerAdmin() )
+		return;
+
 	recentNPCSpeech_t speech[ SPEECH_LIST_MAX_SOUNDS ];
 	int  num;
 	int  i;
@@ -5740,6 +5783,9 @@ static ConCommand ListRecentNPCSpeechCmd( "listRecentNPCSpeech", ListRecentNPCSp
 
 CON_COMMAND( scene_flush, "Flush all .vcds from the cache and reload from disk." )
 {
+	if ( !UTIL_IsCommandIssuedByServerAdmin() )
+		return;
+
 	Msg( "Reloading\n" );
 	scenefilecache->Reload();
 	Msg( "   done\n" );

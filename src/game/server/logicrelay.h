@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -36,6 +36,8 @@ public:
 	// Outputs
 	COutputEvent m_OnTrigger;
 	COutputEvent m_OnSpawn;
+
+	bool IsDisabled( void ){ return m_bDisabled; }
 	
 private:
 

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -8,12 +8,12 @@
 
 #include "BaseVSShader.h"
 
-#include "SDK_worldvertexalpha.inc"
-#include "SDK_worldvertexalpha_ps20.inc"
-#include "SDK_worldvertexalpha_ps20b.inc"
+#include "WorldVertexAlpha.inc"
+#include "worldvertexalpha_ps20.inc"
+#include "worldvertexalpha_ps20b.inc"
 
-BEGIN_VS_SHADER( SDK_WorldVertexAlpha, 
-			  "Help for SDK_WorldVertexAlpha" )
+BEGIN_VS_SHADER( WorldVertexAlpha, 
+			  "Help for WorldVertexAlpha" )
 
 	BEGIN_SHADER_PARAMS
 	END_SHADER_PARAMS
@@ -33,7 +33,7 @@ BEGIN_VS_SHADER( SDK_WorldVertexAlpha,
 	{
 //		if( g_pHardwareConfig->GetDXSupportLevel() < 90 || g_pHardwareConfig->GetHDRType() == HDR_TYPE_NONE )
 		{
-			return "WorldVertexAlpha";
+			return "WorldVertexAlpha_DX8";
 		}
 		return 0;
 	}
@@ -61,10 +61,10 @@ BEGIN_VS_SHADER( SDK_WorldVertexAlpha,
 					// using 1 texture (needed for translucent displacements).
 					pShaderShadow->BlendFunc( SHADER_BLEND_ONE_MINUS_SRC_ALPHA, SHADER_BLEND_SRC_ALPHA );
 					
-					sdk_worldvertexalpha_Static_Index vshIndex;
-					pShaderShadow->SetVertexShader( "SDK_WorldVertexAlpha", vshIndex.GetIndex() );
+					worldvertexalpha_Static_Index vshIndex;
+					pShaderShadow->SetVertexShader( "WorldVertexAlpha", vshIndex.GetIndex() );
 
-					pShaderShadow->SetPixelShader( "SDK_WorldVertexAlpha" );
+					pShaderShadow->SetPixelShader( "WorldVertexAlpha" );
 					FogToFogColor();
 				}
 
@@ -76,7 +76,7 @@ BEGIN_VS_SHADER( SDK_WorldVertexAlpha,
 
 					EnablePixelShaderOverbright( 0, true, true );
 
-					sdk_worldvertexalpha_Dynamic_Index vshIndex;
+					worldvertexalpha_Dynamic_Index vshIndex;
 					vshIndex.SetDOWATERFOG( pShaderAPI->GetSceneFogMode() == MATERIAL_FOG_LINEAR_BELOW_FOG_Z );
 					pShaderAPI->SetVertexShaderIndex( vshIndex.GetIndex() );
 				}
@@ -110,20 +110,20 @@ BEGIN_VS_SHADER( SDK_WorldVertexAlpha,
 					pShaderShadow->EnableBlendingSeparateAlpha( true );
 					pShaderShadow->BlendFuncSeparateAlpha( SHADER_BLEND_ZERO, SHADER_BLEND_SRC_ALPHA );
 
-					sdk_worldvertexalpha_Static_Index vshIndex;
-					pShaderShadow->SetVertexShader( "SDK_WorldVertexAlpha", vshIndex.GetIndex() );
+					worldvertexalpha_Static_Index vshIndex;
+					pShaderShadow->SetVertexShader( "WorldVertexAlpha", vshIndex.GetIndex() );
 
 					if( g_pHardwareConfig->SupportsPixelShaders_2_b() )
 					{
-						DECLARE_STATIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20b );
+						DECLARE_STATIC_PIXEL_SHADER( worldvertexalpha_ps20b );
 						SET_STATIC_PIXEL_SHADER_COMBO( PASS, 0 );
-						SET_STATIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20b );
+						SET_STATIC_PIXEL_SHADER( worldvertexalpha_ps20b );
 					}
 					else
 					{
-						DECLARE_STATIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20 );
+						DECLARE_STATIC_PIXEL_SHADER( worldvertexalpha_ps20 );
 						SET_STATIC_PIXEL_SHADER_COMBO( PASS, 0 );
-						SET_STATIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20 );
+						SET_STATIC_PIXEL_SHADER( worldvertexalpha_ps20 );
 					}
 
 
@@ -136,19 +136,19 @@ BEGIN_VS_SHADER( SDK_WorldVertexAlpha,
 					BindTexture( SHADER_SAMPLER0, BASETEXTURE );
 					pShaderAPI->BindStandardTexture( SHADER_SAMPLER1, TEXTURE_LIGHTMAP );
 
-					sdk_worldvertexalpha_Dynamic_Index vshIndex;
+					worldvertexalpha_Dynamic_Index vshIndex;
 					vshIndex.SetDOWATERFOG( pShaderAPI->GetSceneFogMode() == MATERIAL_FOG_LINEAR_BELOW_FOG_Z );
 					pShaderAPI->SetVertexShaderIndex( vshIndex.GetIndex() );
 
 					if( g_pHardwareConfig->SupportsPixelShaders_2_b() )
 					{
-						DECLARE_DYNAMIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20b );
-						SET_DYNAMIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20b );
+						DECLARE_DYNAMIC_PIXEL_SHADER( worldvertexalpha_ps20b );
+						SET_DYNAMIC_PIXEL_SHADER( worldvertexalpha_ps20b );
 					}
 					else
 					{
-						DECLARE_DYNAMIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20 );
-						SET_DYNAMIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20 );
+						DECLARE_DYNAMIC_PIXEL_SHADER( worldvertexalpha_ps20 );
+						SET_DYNAMIC_PIXEL_SHADER( worldvertexalpha_ps20 );
 					}
 				}
 				Draw();
@@ -177,20 +177,20 @@ BEGIN_VS_SHADER( SDK_WorldVertexAlpha,
 					pShaderShadow->EnableBlendingSeparateAlpha( true );
 					pShaderShadow->BlendFuncSeparateAlpha( SHADER_BLEND_ONE, SHADER_BLEND_ONE );
 
-					sdk_worldvertexalpha_Static_Index vshIndex;
-					pShaderShadow->SetVertexShader( "SDK_WorldVertexAlpha", vshIndex.GetIndex() );
+					worldvertexalpha_Static_Index vshIndex;
+					pShaderShadow->SetVertexShader( "WorldVertexAlpha", vshIndex.GetIndex() );
 
 					if( g_pHardwareConfig->SupportsPixelShaders_2_b() )
 					{
-						DECLARE_STATIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20b );
+						DECLARE_STATIC_PIXEL_SHADER( worldvertexalpha_ps20b );
 						SET_STATIC_PIXEL_SHADER_COMBO( PASS, 1 );
-						SET_STATIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20b );
+						SET_STATIC_PIXEL_SHADER( worldvertexalpha_ps20b );
 					}
 					else
 					{
-						DECLARE_STATIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20 );
+						DECLARE_STATIC_PIXEL_SHADER( worldvertexalpha_ps20 );
 						SET_STATIC_PIXEL_SHADER_COMBO( PASS, 1 );
-						SET_STATIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20 );
+						SET_STATIC_PIXEL_SHADER( worldvertexalpha_ps20 );
 					}
 
 					FogToFogColor();
@@ -202,19 +202,19 @@ BEGIN_VS_SHADER( SDK_WorldVertexAlpha,
 					BindTexture( SHADER_SAMPLER0, BASETEXTURE );
 					pShaderAPI->BindStandardTexture( SHADER_SAMPLER1, TEXTURE_LIGHTMAP );
 
-					sdk_worldvertexalpha_Dynamic_Index vshIndex;
+					worldvertexalpha_Dynamic_Index vshIndex;
 					vshIndex.SetDOWATERFOG( pShaderAPI->GetSceneFogMode() == MATERIAL_FOG_LINEAR_BELOW_FOG_Z );
 					pShaderAPI->SetVertexShaderIndex( vshIndex.GetIndex() );
 
 					if( g_pHardwareConfig->SupportsPixelShaders_2_b() )
 					{
-						DECLARE_DYNAMIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20b );
-						SET_DYNAMIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20b );
+						DECLARE_DYNAMIC_PIXEL_SHADER( worldvertexalpha_ps20b );
+						SET_DYNAMIC_PIXEL_SHADER( worldvertexalpha_ps20b );
 					}
 					else
 					{
-						DECLARE_DYNAMIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20 );
-						SET_DYNAMIC_PIXEL_SHADER( sdk_worldvertexalpha_ps20 );
+						DECLARE_DYNAMIC_PIXEL_SHADER( worldvertexalpha_ps20 );
+						SET_DYNAMIC_PIXEL_SHADER( worldvertexalpha_ps20 );
 					}
 				}
 				Draw();
@@ -223,7 +223,6 @@ BEGIN_VS_SHADER( SDK_WorldVertexAlpha,
 		else
 		{
 			// NOTE: This is the DX7, Hammer version.
-
 			SHADOW_STATE
 			{
 				SET_FLAGS2( MATERIAL_VAR2_LIGHTING_LIGHTMAP );

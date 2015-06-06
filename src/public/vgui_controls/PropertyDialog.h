@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -70,11 +70,7 @@ protected:
 	MESSAGE_FUNC( OnApplyButtonEnable, "ApplyButtonEnable" );
 	void EnableApplyButton(bool bEnable);
 	
-#ifndef LUA_SDK
 private:
-#else
-protected:
-#endif
 	PropertySheet *_propertySheet;
 	Button *_okButton;
 	Button *_cancelButton;

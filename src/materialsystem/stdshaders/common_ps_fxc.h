@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2007, Valve Corporation, All rights reserved. =======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Common pixel shader code
 //
@@ -222,16 +222,16 @@ float CalcWaterFogAlpha( const float flWaterZ, const float flEyePosZ, const floa
 	// Calculate the ratio of water fog to regular fog (ie. how much of the distance from the viewer
 	// to the vert is actually underwater.
 	float flDepthFromEye = flEyePosZ - flWorldPosZ;
-	float f = (flDepthFromWater / flDepthFromEye) * flProjPosZ;
+	float f = saturate(flDepthFromWater * (1.0/flDepthFromEye));
 
 	// $tmp.w is now the distance that we see through water.
-	return saturate( f * flFogOORange );
+	return saturate(f * flProjPosZ * flFogOORange);
 }
 
-float CalcRangeFog( const float flProjPosZ, const float flFogEndOverRange, const float flFogMaxDensity, const float flFogOORange )
+float CalcRangeFog( const float flProjPosZ, const float flFogStartOverRange, const float flFogMaxDensity, const float flFogOORange )
 {
 #if !(defined(SHADER_MODEL_PS_1_1) || defined(SHADER_MODEL_PS_1_4) || defined(SHADER_MODEL_PS_2_0)) //Minimum requirement of ps2b
-	return min( flFogMaxDensity, ( saturate( 1.0 - (flFogEndOverRange - (flProjPosZ * flFogOORange)) ) ) );
+	return saturate( min( flFogMaxDensity, (flProjPosZ * flFogOORange) - flFogStartOverRange ) );
 #else
 	return 0.0f; //ps20 shaders will never have range fog enabled because too many ran out of slots.
 #endif
@@ -733,10 +733,15 @@ float3 TextureCombinePostLighting( float3 lit_baseColor, float4 detailColor, int
 	{
  		// fade in an unusual way - instead of fading out color, remap an increasing band of it from
  		// 0..1
-		if ( fBlendFactor > 0.5)
-			lit_baseColor += min(1, (1.0/fBlendFactor)*max(0, detailColor.rgb-(1-fBlendFactor) ) );
-		else
-			lit_baseColor += 2*fBlendFactor*2*max(0, detailColor.rgb-.5);
+		//if (fBlendFactor > 0.5)
+		//	lit_baseColor += min(1, (1.0/fBlendFactor)*max(0, detailColor.rgb-(1-fBlendFactor) ) );
+		//else
+		//	lit_baseColor += 2*fBlendFactor*2*max(0, detailColor.rgb-.5);
+
+		float f = fBlendFactor - 0.5;
+		float fMult = (f >= 0) ? 1.0/fBlendFactor : 4*fBlendFactor;
+		float fAdd = (f >= 0) ? 1.0-fMult : -0.5*fMult;
+		lit_baseColor += saturate(fMult * detailColor.rgb + fAdd);
 	}
 	return lit_baseColor;
 }

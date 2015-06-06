@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: eye renderer
 //
@@ -12,9 +12,9 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-DEFINE_FALLBACK_SHADER( SDK_eyes, SDK_Eyes_dx9 )
+DEFINE_FALLBACK_SHADER( eyes, Eyes_dx9 )
 
-BEGIN_VS_SHADER( SDK_Eyes_dx9, "Help for Eyes" )
+BEGIN_VS_SHADER( Eyes_dx9, "Help for Eyes" )
 			  
 	BEGIN_SHADER_PARAMS
 		SHADER_PARAM( IRIS, SHADER_PARAM_TYPE_TEXTURE, "shadertest/BaseTexture", "iris texture" )

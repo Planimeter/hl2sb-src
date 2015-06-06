@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -54,6 +54,7 @@ struct VertexLitGeneric_DX9_Vars_t
 	int m_nFlashlightNoLambert;
 	int m_nFlashlightTexture;
 	int m_nFlashlightTextureFrame;
+	int m_nLightmap;
 
 	int m_nSelfIllumTint;
 	int m_nSelfIllumFresnel;
@@ -126,6 +127,11 @@ struct VertexLitGeneric_DX9_Vars_t
 
 	int m_nSelfIllumMask;
 	int m_nReceiveFlashlight;
+
+	int m_nBlendTintByBaseAlpha;
+
+	int m_nTintReplacesBaseColor;
+
 };
 
 void InitParamsVertexLitGeneric_DX9( CBaseVSShader *pShader, IMaterialVar** params, const char *pMaterialName, bool bVertexLitGeneric, VertexLitGeneric_DX9_Vars_t &info );

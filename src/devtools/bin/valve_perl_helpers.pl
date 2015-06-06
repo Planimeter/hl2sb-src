@@ -213,6 +213,18 @@ sub PerforceWriteFile
 {
 	my $filename = shift;
 	my $filecontents = shift;
+#	my $changelistname = shift;
+	
+	# Get the changelist number for the Shader Auto Checkout changelist. Will create the changelist if it doesn't exist.
+#	my $changelistnumber = `valve_p4_create_changelist.cmd . \"$changelistname\"`;
+	# Get rid of the newline
+#	$changelistnumber =~ s/\n//g;
+
+#	my $changelistarg = "";
+#	if( $changelistnumber != 0 )
+#	{
+#		$changelistarg = "-c $changelistnumber"
+#	}
 
 	# Make the target vcs writable if it exists
 	MakeFileWritable( $filename );
@@ -222,6 +234,9 @@ sub PerforceWriteFile
 	open FP, ">$filename";
 	print FP $filecontents;
 	close FP;
+
+	# Do whatever needs to happen with perforce for this file.
+#	&PerforceEditOrAdd( $filename, $changelistarg );
 }
 
 sub WriteFile

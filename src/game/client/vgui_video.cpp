@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2007, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: VGUI panel which can play back video, in-engine
 //
@@ -11,17 +11,18 @@
 #include "ienginevgui.h"
 #include "iclientmode.h"
 #include "vgui_video.h"
-#include "engine/ienginesound.h"
+#include "engine/IEngineSound.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 
-VideoPanel::VideoPanel( unsigned int nXPos, unsigned int nYPos, unsigned int nHeight, unsigned int nWidth ) : 
+VideoPanel::VideoPanel( unsigned int nXPos, unsigned int nYPos, unsigned int nHeight, unsigned int nWidth, bool allowAlternateMedia ) : 
 	BaseClass( NULL, "VideoPanel" ),
-	m_BIKHandle( BIKHANDLE_INVALID ),
+	m_VideoMaterial( NULL ),
 	m_nPlaybackWidth( 0 ),
-	m_nPlaybackHeight( 0 )
+	m_nPlaybackHeight( 0 ),
+	m_bAllowAlternateMedia( allowAlternateMedia )
 {
 	vgui::VPANEL pParent = enginevgui->GetPanel( PANEL_GAMEUIDLL );
 	SetParent( pParent );
@@ -56,11 +57,11 @@ VideoPanel::~VideoPanel( void )
 {
 	SetParent( (vgui::Panel *) NULL );
 
-	// Shut down this video
-	if ( m_BIKHandle != BIKHANDLE_INVALID )
+	// Shut down this video, destroy the video material
+	if ( g_pVideo != NULL && m_VideoMaterial != NULL )
 	{
-		bik->DestroyMaterial( m_BIKHandle );
-		m_BIKHandle = BIKHANDLE_INVALID;
+		g_pVideo->DestroyVideoMaterial( m_VideoMaterial );
+		m_VideoMaterial = NULL;
 	}
 }
 
@@ -70,6 +71,7 @@ VideoPanel::~VideoPanel( void )
 //-----------------------------------------------------------------------------
 bool VideoPanel::BeginPlayback( const char *pFilename )
 {
+	// Who the heck hacked this in?
 #ifdef _X360
 	XVIDEO_MODE videoMode;
 	XGetVideoMode( &videoMode );
@@ -81,16 +83,22 @@ bool VideoPanel::BeginPlayback( const char *pFilename )
 	}
 #endif
 
-	// Destroy any previously allocated video
-	if ( m_BIKHandle != BIKHANDLE_INVALID )
+	// need working video services
+	if ( g_pVideo == NULL )
+		return false;
+
+	// Create a new video material
+	if ( m_VideoMaterial != NULL )
 	{
-		bik->DestroyMaterial( m_BIKHandle );
-		m_BIKHandle = BIKHANDLE_INVALID;
+		g_pVideo->DestroyVideoMaterial( m_VideoMaterial );
+		m_VideoMaterial = NULL;
 	}
 
-	// Load and create our BINK video
-	m_BIKHandle = bik->CreateMaterial( "VideoBIKMaterial", pFilename, "GAME" );
-	if ( m_BIKHandle == BIKHANDLE_INVALID )
+	m_VideoMaterial = g_pVideo->CreateVideoMaterial( "VideoMaterial", pFilename, "GAME",
+													VideoPlaybackFlags::DEFAULT_MATERIAL_OPTIONS,
+													VideoSystem::DETERMINE_FROM_FILE_EXTENSION, m_bAllowAlternateMedia );
+	
+	if ( m_VideoMaterial == NULL )
 		return false;
 
 	// We want to be the sole audio source
@@ -98,9 +106,10 @@ bool VideoPanel::BeginPlayback( const char *pFilename )
 	enginesound->NotifyBeginMoviePlayback();
 
 	int nWidth, nHeight;
-	bik->GetFrameSize( m_BIKHandle, &nWidth, &nHeight );
-	bik->GetTexCoordRange( m_BIKHandle, &m_flU, &m_flV );
-	m_pMaterial = bik->GetMaterial( m_BIKHandle );
+	m_VideoMaterial->GetVideoImageSize( &nWidth, &nHeight );
+	m_VideoMaterial->GetVideoTexCoordRange( &m_flU, &m_flV );
+	m_pMaterial = m_VideoMaterial->GetMaterial();
+
 
 	float flFrameRatio = ( (float) GetWide() / (float) GetTall() );
 	float flVideoRatio = ( (float) nWidth / (float) nHeight );
@@ -230,12 +239,10 @@ void VideoPanel::Paint( void )
 {
 	BaseClass::Paint();
 
-	// No video to play, so do nothing
-	if ( m_BIKHandle == BIKHANDLE_INVALID )
+	if ( m_VideoMaterial == NULL )
 		return;
 
-	// Update our frame
-	if ( bik->Update( m_BIKHandle ) == false )
+	if ( m_VideoMaterial->Update() == false )
 	{
 		// Issue a close command
 		OnVideoOver();
@@ -331,7 +338,7 @@ bool VideoPanel_Create( unsigned int nXPos, unsigned int nYPos,
 						const char *pExitCommand /*= NULL*/)
 {
 	// Create the base video panel
-	VideoPanel *pVideoPanel = new VideoPanel( nXPos, nYPos, nHeight, nWidth  );
+	VideoPanel *pVideoPanel = new VideoPanel( nXPos, nYPos, nHeight, nWidth, false  );
 	if ( pVideoPanel == NULL )
 		return false;
 
@@ -352,7 +359,8 @@ bool VideoPanel_Create( unsigned int nXPos, unsigned int nYPos,
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: Used to launch a video playback (Debug)
+// Purpose: Used to launch a video playback (Debug) -
+//  user must include file extension
 //-----------------------------------------------------------------------------
 
 CON_COMMAND( playvideo, "Plays a video: <filename> [width height]" )
@@ -368,8 +376,7 @@ CON_COMMAND( playvideo, "Plays a video: <filename> [width height]" )
 	char strFilename[MAX_PATH];
 	Q_StripExtension( args[1], strFilename, MAX_PATH );
 	Q_strncat( strFullpath, args[1], MAX_PATH );
-	Q_strncat( strFullpath, ".bik", MAX_PATH );		// Assume we're a .bik extension type
-
+	
 	if ( nScreenWidth == 0 )
 	{
 		nScreenWidth = ScreenWidth();
@@ -404,7 +411,6 @@ CON_COMMAND( playvideo_exitcommand, "Plays a video and fires and exit command wh
 	char strFilename[MAX_PATH];
 	Q_StripExtension( args[1], strFilename, MAX_PATH );
 	Q_strncat( strFullpath, args[1], MAX_PATH );
-	Q_strncat( strFullpath, ".bik", MAX_PATH );		// Assume we're a .bik extension type
 
 	char *pExitCommand = Q_strstr( args.GetCommandString(), args[2] );
 

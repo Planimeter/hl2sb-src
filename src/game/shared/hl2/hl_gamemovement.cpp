@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Special handling for hl2 usable ladders
 //
@@ -620,7 +620,7 @@ void CHL2GameMovement::FullLadderMove()
 	dist1sqr = ( topPosition - mv->GetAbsOrigin() ).LengthSqr();
 	dist2sqr = ( bottomPosition - mv->GetAbsOrigin() ).LengthSqr();
 
-	float dist = min( dist1sqr, dist2sqr );
+	float dist = MIN( dist1sqr, dist2sqr );
 	bool neardismountnode = ( dist < 16.0f * 16.0f ) ? true : false;
 	float ladderUnitsPerTick = ( MAX_CLIMB_SPEED * gpGlobals->interval_per_tick );
 	bool neardismountnode2 = ( dist < ladderUnitsPerTick * ladderUnitsPerTick ) ? true : false;
@@ -1183,27 +1183,3 @@ bool CHL2GameMovement::CanAccelerate()
 
 	EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CGameMovement, IGameMovement,INTERFACENAME_GAMEMOVEMENT, g_GameMovement );
 #endif
-
-//-----------------------------------------------------------------------------
-// Purpose: Allow bots etc to use slightly different solid masks
-//-----------------------------------------------------------------------------
-unsigned int CHL2GameMovement::PlayerSolidMask( bool brushOnly )
-{
-	int mask = 0;
-#ifdef HL2MP
-	if ( HL2MPRules()->IsTeamplay() )
-	{
-		switch ( player->GetTeamNumber() )
-		{
-		case TEAM_REBELS:
-			mask = CONTENTS_TEAM1;
-			break;
-
-		case TEAM_COMBINE:
-			mask = CONTENTS_TEAM2;
-			break;
-		}
-	}
-#endif
-	return ( mask | BaseClass::PlayerSolidMask( brushOnly ) );
-}

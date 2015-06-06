@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,7 +12,7 @@
 #include "voice_status.h"
 #include "r_efx.h"
 #include <vgui_controls/TextImage.h>
-#include <vgui/mousecode.h>
+#include <vgui/MouseCode.h>
 #include "cdll_client_int.h"
 #include "hud_macros.h"
 #include "c_playerresource.h"
@@ -24,7 +24,7 @@
 #include <vgui_controls/Controls.h>
 #include <vgui/IScheme.h>
 #include <vgui/ISurface.h>
-#include "vgui_BitmapImage.h"
+#include "vgui_bitmapimage.h"
 #include "materialsystem/imaterial.h"
 #include "tier0/dbg.h"
 #include "cdll_int.h"
@@ -108,6 +108,10 @@ CVoiceStatus::CVoiceStatus()
 	m_LastUpdateServerState = 0;
 
 	m_bTalking = m_bServerAcked = false;
+
+#ifdef VOICE_VOX_ENABLE
+	m_bAboveThresholdTimer.Invalidate();
+#endif // VOICE_VOX_ENABLE
 
 	m_bServerModEnable = -1;
 
@@ -205,6 +209,9 @@ float CVoiceStatus::GetHeadLabelOffset( void ) const
 void CVoiceStatus::DrawHeadLabels()
 {
 	if ( m_bHeadLabelsDisabled )
+		return;
+
+	if ( GameRules() && ( GameRules()->ShouldDrawHeadLabels() == false ) )
 		return;
 
 	if( !m_pHeadLabelMaterial )
@@ -310,6 +317,16 @@ void CVoiceStatus::UpdateSpeakerStatus(int entindex, bool bTalking)
 	{
 		m_bServerAcked = !!bTalking;
 	}
+#ifdef VOICE_VOX_ENABLE
+	else if( entindex == -3 )
+	{
+		if ( bTalking )
+		{
+			const float AboveThresholdMinDuration = 0.5f;
+			m_bAboveThresholdTimer.Start( AboveThresholdMinDuration );
+		}
+	}
+#endif // VOICE_VOX_ENABLE
 	else if(entindex > 0 && entindex <= VOICE_MAX_PLAYERS)
 	{
 		int iClient = entindex - 1;
@@ -394,7 +411,7 @@ void CVoiceStatus::UpdateServerState(bool bForce)
 
 		// Ok, the server needs to be updated.
 		char numStr[512];
-		Q_snprintf(numStr,sizeof(numStr), " %x", banMask);
+		Q_snprintf(numStr, sizeof(numStr), " %lx", banMask);
 		Q_strncat(str, numStr, sizeof(str), COPY_ALL_CHARACTERS);
 	}
 
@@ -420,7 +437,7 @@ void CVoiceStatus::UpdateServerState(bool bForce)
 
 void CVoiceStatus::HandleVoiceMaskMsg(bf_read &msg)
 {
-	unsigned long dw;
+	unsigned int dw;
 	for(dw=0; dw < VOICE_MAX_PLAYERS_DW; dw++)
 	{
 		m_AudiblePlayers.SetDWord(dw, (unsigned long)msg.ReadLong());
@@ -429,8 +446,8 @@ void CVoiceStatus::HandleVoiceMaskMsg(bf_read &msg)
 		if( voice_clientdebug.GetInt())
 		{
 			Msg("CVoiceStatus::HandleVoiceMaskMsg\n");
-			Msg("    - m_AudiblePlayers[%d] = %lu\n", dw, m_AudiblePlayers.GetDWord(dw));
-			Msg("    - m_ServerBannedPlayers[%d] = %lu\n", dw, m_ServerBannedPlayers.GetDWord(dw));
+			Msg("    - m_AudiblePlayers[%d] = %u\n", dw, m_AudiblePlayers.GetDWord(dw));
+			Msg("    - m_ServerBannedPlayers[%d] = %u\n", dw, m_ServerBannedPlayers.GetDWord(dw));
 		}
 	}
 
@@ -525,6 +542,16 @@ bool CVoiceStatus::IsPlayerSpeaking(int iPlayerIndex)
 //-----------------------------------------------------------------------------
 bool CVoiceStatus::IsLocalPlayerSpeaking( void )
 {
+#ifdef VOICE_VOX_ENABLE
+	if ( voice_vox.GetBool() )
+	{
+		if ( m_bAboveThresholdTimer.IsElapsed() == true )
+		{
+			return false;
+		}
+	}
+#endif // VOICE_VOX_ENABLE
+
 	return m_bTalking;
 }
 

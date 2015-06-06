@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -248,4 +248,5 @@ void EventList_RegisterSharedEvents( void )
 	REGISTER_SHARED_ANIMEVENT( AE_WPN_UNHIDE, AE_TYPE_CLIENT | AE_TYPE_SERVER );
 
 	REGISTER_SHARED_ANIMEVENT( AE_WPN_PLAYWPNSOUND, AE_TYPE_CLIENT | AE_TYPE_SERVER );
+	REGISTER_SHARED_ANIMEVENT( AE_RD_ROBOT_POP_PANELS_OFF, AE_TYPE_CLIENT | AE_TYPE_SERVER );
 }

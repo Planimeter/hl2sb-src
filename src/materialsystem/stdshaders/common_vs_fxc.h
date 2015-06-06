@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: This is where all common code for vertex shaders go.
 //
@@ -74,15 +74,20 @@ const int g_nLightCountRegister			: register(i0);
 const float4 cEyePosWaterZ				: register(c2);
 #define cEyePos			cEyePosWaterZ.xyz
 
-// This is still used by asm stuff.
-const float4 cObsoleteLightIndex		: register(c3);
+// Only cFlexScale.x is used
+// It is a binary value used to switch on/off the addition of the flex delta stream
+const float4 cFlexScale					: register( c3 );
 
 const float4x4 cModelViewProj			: register(c4);
 const float4x4 cViewProj				: register(c8);
 
-// Only cFlexScale.x is used
-// It is a binary value used to switch on/off the addition of the flex delta stream
-const float4 cFlexScale					: register(c13);
+// Used to compute projPosZ in shaders without skinning
+// Using cModelViewProj with FastClip generates incorrect results
+// This is just row two of the non-FastClip cModelViewProj matrix
+const float4 cModelViewProjZ			: register(c12);
+
+// More constants working back from the top...
+const float4 cViewProjZ					: register(c13);
 
 const float4 cFogParams					: register(c16);
 #define cFogEndOverFogRange cFogParams.x
@@ -96,7 +101,7 @@ const float3 cAmbientCubeX [ 2 ] : register ( c21 ) ;
 const float3 cAmbientCubeY [ 2 ] : register ( c23 ) ;
 const float3 cAmbientCubeZ [ 2 ] : register ( c25 ) ;
 
-#ifdef SHADER_MODEL_VS_3_0
+#if defined ( SHADER_MODEL_VS_3_0 )
 const float4 cFlexWeights [ 512 ] : register ( c1024 ) ;
 #endif
 
@@ -157,8 +162,9 @@ const float4 cModulationColor			: register( c47 );
 #define SHADER_SPECIFIC_CONST_11 c15
 
 static const int cModel0Index = 58;
-const float4x3 cModel[53]					: register( c58 );
-// last cmodel is c105 for dx80, c214 for dx90
+const float4x3 cModel[53]				: register( c58 );
+// last cmodel is c105 for dx80, c216 for dx90
+
 
 #define SHADER_SPECIFIC_BOOL_CONST_0 b4
 #define SHADER_SPECIFIC_BOOL_CONST_1 b5
@@ -342,6 +348,9 @@ void SampleMorphDelta2( sampler2D vt, const float3 vMorphTargetTextureDim, const
 
 #endif // SHADER_MODEL_VS_3_0
 
+
+#if ( defined( SHADER_MODEL_VS_2_0 ) || defined( SHADER_MODEL_VS_3_0 ) )
+
 //-----------------------------------------------------------------------------
 // Method to apply morphs
 //-----------------------------------------------------------------------------
@@ -387,6 +396,9 @@ bool ApplyMorph( float4 vPosFlex, float3 vNormalFlex,
 	vTangent.xyz  += vNormalDelta;
 	return true;
 }
+
+#endif // defined( SHADER_MODEL_VS_2_0 ) || defined( SHADER_MODEL_VS_3_0 )
+
 
 #ifdef SHADER_MODEL_VS_3_0
 
@@ -810,27 +822,24 @@ float CosineTermInternal( const float3 worldPos, const float3 worldNormal, int l
 }
 
 // This routine uses booleans to do early-outs and is meant to be called by routines OUTSIDE of this file
-float GetVertexAttenForLight( const float3 worldPos, int lightNum )
+float GetVertexAttenForLight( const float3 worldPos, int lightNum, bool bUseStaticControlFlow )
 {
 	float result = 0.0f;
-	if ( g_bLightEnabled[lightNum] )
+
+	// Direct3D uses static control flow but OpenGL currently does not
+	if ( bUseStaticControlFlow )
+	{
+		if ( g_bLightEnabled[lightNum] )
+		{
+			result = VertexAttenInternal( worldPos, lightNum );
+		}
+	}
+	else // OpenGL non-static-control-flow path
 	{
 		result = VertexAttenInternal( worldPos, lightNum );
 	}
 
 	return result;
-}
-
-// This routine uses booleans to do early-outs and is meant to be called by routines OUTSIDE of this file
-float CosineTerm( const float3 worldPos, const float3 worldNormal, int lightNum, bool bHalfLambert )
-{
-	float flResult = 0.0f;
-	if ( g_bLightEnabled[lightNum] )
-	{
-		flResult = CosineTermInternal( worldPos, worldNormal, lightNum, bHalfLambert );
-	}
-
-	return flResult;
 }
 
 float3 DoLightInternal( const float3 worldPos, const float3 worldNormal, int lightNum, bool bHalfLambert )
@@ -840,7 +849,6 @@ float3 DoLightInternal( const float3 worldPos, const float3 worldNormal, int lig
 		VertexAttenInternal( worldPos, lightNum );
 }
 
-// This routine
 float3 DoLighting( const float3 worldPos, const float3 worldNormal,
 				   const float3 staticLightingColor, const bool bStaticLight,
 				   const bool bDynamicLight, bool bHalfLambert )

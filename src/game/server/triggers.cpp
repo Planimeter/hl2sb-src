@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Spawn and use functions for editor-placed triggers.
 //
@@ -33,6 +33,7 @@
 #include "ai_behavior_follow.h"
 #include "ai_behavior_lead.h"
 #include "gameinterface.h"
+#include "ilagcompensationmanager.h"
 
 #ifdef HL2_DLL
 #include "hl2_player.h"
@@ -307,6 +308,19 @@ int CBaseTrigger::DrawDebugTextOverlays(void)
 	return text_offset;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Return true if the specified point is within this zone
+//-----------------------------------------------------------------------------
+bool CBaseTrigger::PointIsWithin( const Vector &vecPoint )
+{
+	Ray_t ray;
+	trace_t tr;
+	ICollideable *pCollide = CollisionProp();
+	ray.Init( vecPoint, vecPoint );
+	enginetrace->ClipRayToCollideable( ray, MASK_ALL, pCollide, &tr );
+	return ( tr.startsolid );
+}
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -383,24 +397,37 @@ bool CBaseTrigger::PassesTriggerFilters(CBaseEntity *pOther)
 
 		bool bOtherIsPlayer = pOther->IsPlayer();
 
-		if ( HasSpawnFlags(SF_TRIGGER_ONLY_CLIENTS_IN_VEHICLES) && bOtherIsPlayer )
+		if ( bOtherIsPlayer )
 		{
-			if ( !((CBasePlayer*)pOther)->IsInAVehicle() )
+			CBasePlayer *pPlayer = (CBasePlayer*)pOther;
+			if ( !pPlayer->IsAlive() )
 				return false;
 
-			// Make sure we're also not exiting the vehicle at the moment
-			IServerVehicle *pVehicleServer = ((CBasePlayer*)pOther)->GetVehicle();
-			if ( pVehicleServer == NULL )
-				return false;
-			
-			if ( pVehicleServer->IsPassengerExiting() )
-				return false;
-		}
+			if ( HasSpawnFlags(SF_TRIGGER_ONLY_CLIENTS_IN_VEHICLES) )
+			{
+				if ( !pPlayer->IsInAVehicle() )
+					return false;
 
-		if ( HasSpawnFlags(SF_TRIGGER_ONLY_CLIENTS_OUT_OF_VEHICLES) && bOtherIsPlayer )
-		{
-			if ( ((CBasePlayer*)pOther)->IsInAVehicle() )
-				return false;
+				// Make sure we're also not exiting the vehicle at the moment
+				IServerVehicle *pVehicleServer = pPlayer->GetVehicle();
+				if ( pVehicleServer == NULL )
+					return false;
+
+				if ( pVehicleServer->IsPassengerExiting() )
+					return false;
+			}
+
+			if ( HasSpawnFlags(SF_TRIGGER_ONLY_CLIENTS_OUT_OF_VEHICLES) )
+			{
+				if ( pPlayer->IsInAVehicle() )
+					return false;
+			}
+
+			if ( HasSpawnFlags( SF_TRIGGER_DISALLOW_BOTS ) )
+			{
+				if ( pPlayer->IsFakeClient() )
+					return false;
+			}
 		}
 
 		CBaseFilter *pFilter = m_hFilter.Get();
@@ -486,6 +513,14 @@ void CBaseTrigger::EndTouch(CBaseEntity *pOther)
 
 			if ( !hOther )
 			{
+				m_hTouchingEntities.Remove( i );
+			}
+			else if ( hOther->IsPlayer() && !hOther->IsAlive() )
+			{
+#ifdef STAGING_ONLY
+				AssertMsg( 0, CFmtStr( "Dead player [%s] is still touching this trigger at [%f %f %f]", hOther->GetEntityName().ToCStr(), XYZ( hOther->GetAbsOrigin() ) ) );
+				Warning( "Dead player [%s] is still touching this trigger at [%f %f %f]", hOther->GetEntityName().ToCStr(), XYZ( hOther->GetAbsOrigin() ) );
+#endif
 				m_hTouchingEntities.Remove( i );
 			}
 			else
@@ -1189,7 +1224,7 @@ int CTriggerLook::DrawDebugTextOverlays(void)
 		// Print Look time
 		// ----------------
 		char tempstr[255];
-		Q_snprintf(tempstr,sizeof(tempstr),"Time:   %3.2f",m_flLookTime - max(0,m_flLookTimeTotal));
+		Q_snprintf(tempstr,sizeof(tempstr),"Time:   %3.2f",m_flLookTime - MAX(0,m_flLookTimeTotal));
 		EntityText(text_offset,tempstr,0);
 		text_offset++;
 	}
@@ -2277,7 +2312,7 @@ void CTriggerPush::Touch( CBaseEntity *pOther )
 #endif
 
 			Vector vecPush = (m_flPushSpeed * vecAbsDir);
-			if ( pOther->GetFlags() & FL_BASEVELOCITY )
+			if ( ( pOther->GetFlags() & FL_BASEVELOCITY ) && !lagcompensation->IsCurrentlyDoingLagCompensation() )
 			{
 				vecPush = vecPush + pOther->GetBaseVelocity();
 			}
@@ -3072,7 +3107,7 @@ void CTriggerCamera::Enable( void )
 			else
 			{
 				m_iAttachmentIndex = m_hTarget->GetBaseAnimating()->LookupAttachment( STRING(m_iszTargetAttachment) );
-				if ( !m_iAttachmentIndex )
+				if ( m_iAttachmentIndex <= 0 )
 				{
 					Warning("%s could not find attachment %s on target %s.\n", GetClassname(), STRING(m_iszTargetAttachment), STRING(m_hTarget->GetEntityName()) );
 				}
@@ -3470,7 +3505,7 @@ static void PlayCDTrack( int iTrack )
 	// UNDONE: Move this to engine sound
 	if ( iTrack < -1 || iTrack > 30 )
 	{
-		Warning( "TriggerCDAudio - Track %d out of range\n" );
+		Warning( "TriggerCDAudio - Track %d out of range\n", iTrack );
 		return;
 	}
 
@@ -3480,10 +3515,7 @@ static void PlayCDTrack( int iTrack )
 	}
 	else
 	{
-		char string [ 64 ];
-
-		Q_snprintf( string,sizeof(string), "cd play %3d\n", iTrack );
-		engine->ClientCommand ( pClient, string);
+		engine->ClientCommand ( pClient, "cd play %3d\n", iTrack);
 	}
 }
 
@@ -4086,8 +4118,8 @@ END_DATADESC()
 void CTriggerImpact::Spawn( void )
 {	
 	// Clamp date in case user made an error
-	m_flNoise = clamp(m_flNoise,0,1);
-	m_flViewkick = clamp(m_flViewkick,0,1);
+	m_flNoise = clamp(m_flNoise,0.f,1.f);
+	m_flViewkick = clamp(m_flViewkick,0.f,1.f);
 
 	// Always start disabled
 	m_bDisabled = true;
@@ -4721,7 +4753,7 @@ IMotionEvent::simresult_e CTriggerVPhysicsMotion::Simulate( IPhysicsMotionContro
 	if ( HasGravityScale() )
 	{
 		// assume object already has 1.0 gravities applied to it, so apply the additional amount
-		linear.z -= (m_gravityScale-1) * sv_gravity.GetFloat();
+		linear.z -= (m_gravityScale-1) * GetCurrentGravity();
 	}
 
 	if ( HasLinearForce() )

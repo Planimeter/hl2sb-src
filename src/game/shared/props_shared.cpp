@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: static_prop - don't move, don't animate, don't do anything.
 //			physics_prop - move, take damage, but don't animate
@@ -12,6 +12,7 @@
 #include "animation.h"
 #include <vcollide_parse.h>
 #include <bone_setup.h>
+#include <tier0/vprof.h>
 
 #ifdef CLIENT_DLL
 #include "gamestringpool.h"
@@ -482,7 +483,7 @@ const char *CPropData::GetRandomChunkModel( const char *pszBreakableSection, int
 	else
 	{
 		// Don't pick anything over the specified size
-		iRandom = RandomInt( 0, min(iMaxSize, m_BreakableChunks[i].iszChunkModels.Count()-1) );
+		iRandom = RandomInt( 0, MIN(iMaxSize, m_BreakableChunks[i].iszChunkModels.Count()-1) );
 	}
 
 	return STRING(m_BreakableChunks[i].iszChunkModels[iRandom]);
@@ -599,6 +600,10 @@ public:
 				pModel->mpBreakMode = MULTIPLAYER_BREAK_CLIENTSIDE;
 			}
 		}
+		else if ( !strcmpi( pKey, "velocity" ) )
+		{
+			UTIL_StringToVector( pModel->velocity.Base(), pValue );
+		}
 	}
 	virtual void SetDefaults( void *pData ) 
 	{
@@ -616,6 +621,7 @@ public:
 		pModel->placementName[0] = 0;
 		pModel->placementIsBone = false;
 		pModel->mpBreakMode = MULTIPLAYER_BREAK_DEFAULT;
+		pModel->velocity = vec3_origin;
 		m_wroteCollisionGroup = false;
 	}
 
@@ -625,7 +631,7 @@ private:
 	bool	m_wroteCollisionGroup;
 };
 
-void BreakModelList( CUtlVector<breakmodel_t> &list, int modelindex, float defBurstScale, int defCollisionGroup )
+void BuildPropList( const char *pszBlockName, CUtlVector<breakmodel_t> &list, int modelindex, float defBurstScale, int defCollisionGroup )
 {
 	vcollide_t *pCollide = modelinfo->GetVCollide( modelindex );
 	if ( !pCollide )
@@ -637,7 +643,7 @@ void BreakModelList( CUtlVector<breakmodel_t> &list, int modelindex, float defBu
 		CBreakParser breakParser( defBurstScale, defCollisionGroup );
 		
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "break" ) )
+		if ( !strcmpi( pBlock, pszBlockName ) )
 		{
 			int index = list.AddToTail();
 			breakmodel_t &breakModel = list[index];
@@ -649,6 +655,11 @@ void BreakModelList( CUtlVector<breakmodel_t> &list, int modelindex, float defBu
 		}
 	}
 	physcollision->VPhysicsKeyParserDestroy( pParse );
+}
+
+void BreakModelList( CUtlVector<breakmodel_t> &list, int modelindex, float defBurstScale, int defCollisionGroup )
+{
+	BuildPropList( "break", list, modelindex, defBurstScale, defCollisionGroup );
 }
 
 #if !defined(_STATIC_LINKED) || defined(CLIENT_DLL)
@@ -683,7 +694,7 @@ const char *GetMassEquivalent(float flMass)
 	static struct
 	{
 		float flMass;
-		char *sz;
+		const char *sz;
 	} masstext[] =
 	{
 		{ 5e-6,		"snowflake" },
@@ -789,7 +800,6 @@ void CGameGibManager::Activate( void )
 
 	BaseClass::Activate();
 }
-
 
 void CGameGibManager::UpdateMaxPieces()
 {
@@ -915,7 +925,7 @@ void PropBreakableCreateAll( int modelindex, IPhysicsObject *pPhysics, const bre
 	{
 		if ( iPrecomputedBreakableCount != -1 )
 		{
-			iPrecomputedBreakableCount = min( iMaxBreakCount, iPrecomputedBreakableCount );
+			iPrecomputedBreakableCount = MIN( iMaxBreakCount, iPrecomputedBreakableCount );
 		}
 		else
 		{
@@ -1226,7 +1236,7 @@ void PropBreakableCreateAll( int modelindex, IPhysicsObject *pPhysics, const Vec
 // Purpose: 
 // Input  : modelindex - 
 //-----------------------------------------------------------------------------
-void PrecacheGibsForModel( int iModel )
+void PrecachePropsForModel( int iModel, const char *pszBlockName )
 {
 	vcollide_t *pCollide = modelinfo->GetVCollide( iModel );
 	if ( !pCollide )
@@ -1240,7 +1250,7 @@ void PrecacheGibsForModel( int iModel )
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "break" ) )
+		if ( !strcmpi( pBlock, pszBlockName ) )
 		{
 			breakmodel_t breakModel;
 			pParse->ParseCustom( &breakModel, &breakParser );
@@ -1254,6 +1264,12 @@ void PrecacheGibsForModel( int iModel )
 
 	// Destroy the parser.
 	physcollision->VPhysicsKeyParserDestroy( pParse );
+}
+
+void PrecacheGibsForModel( int iModel )
+{
+	VPROF_BUDGET( "PrecacheGibsForModel", VPROF_BUDGETGROUP_PLAYER );
+	PrecachePropsForModel( iModel, "break" );
 }
 
 //-----------------------------------------------------------------------------
@@ -1301,7 +1317,7 @@ CBaseEntity *CreateGibsFromList( CUtlVector<breakmodel_t> &list, int modelindex,
 	{
 		if ( iPrecomputedBreakableCount != -1 )
 		{
-			iPrecomputedBreakableCount = min( iMaxBreakCount, iPrecomputedBreakableCount );
+			iPrecomputedBreakableCount = MIN( iMaxBreakCount, iPrecomputedBreakableCount );
 		}
 		else
 		{
@@ -1322,7 +1338,7 @@ CBaseEntity *CreateGibsFromList( CUtlVector<breakmodel_t> &list, int modelindex,
 	if ( !pCollide )
 		return NULL;
 
-	int nSkin = 0;
+	int nSkin = params.nDefaultSkin;
 	CBaseEntity *pOwnerEntity = pEntity;
 	CBaseAnimating *pOwnerAnim = NULL;
 	if ( pPhysics )
@@ -1447,12 +1463,21 @@ CBaseEntity *CreateGibsFromList( CUtlVector<breakmodel_t> &list, int modelindex,
 			}
 			Vector objectVelocity = params.velocity;
 
-			float flScale = VectorNormalize( objectVelocity );
-			objectVelocity.x += RandomFloat( -1.f, 1.0f );
-			objectVelocity.y += RandomFloat( -1.0f, 1.0f );
-			objectVelocity.z += RandomFloat( 0.0f, 1.0f );
-			VectorNormalize( objectVelocity );
-			objectVelocity *= flScale;
+			Vector gibVelocity = vec3_origin;
+			if ( !list[i].velocity.IsZero() )
+			{
+				VectorRotate( list[i].velocity, matrix, gibVelocity );
+				objectVelocity = gibVelocity;
+			}
+			else
+			{
+				float flScale = VectorNormalize( objectVelocity );
+				objectVelocity.x += RandomFloat( -1.f, 1.0f );
+				objectVelocity.y += RandomFloat( -1.0f, 1.0f );
+				objectVelocity.z += RandomFloat( 0.0f, 1.0f );
+				VectorNormalize( objectVelocity );
+				objectVelocity *= flScale;
+			}
 
 			if (pPhysics)
 			{

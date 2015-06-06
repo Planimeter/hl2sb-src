@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -60,6 +60,9 @@ public:
 	void			ScaleDamage( float flScaleAmount );
 	void			AddDamage( float flAddAmount );
 	void			SubtractDamage( float flSubtractAmount );
+	float			GetDamageBonus() const;
+	CBaseEntity		*GetDamageBonusProvider() const;
+	void			SetDamageBonus( float flBonus, CBaseEntity *pProvider = NULL );
 
 	float			GetBaseDamage() const;
 	bool			BaseDamageIsValid() const;
@@ -81,10 +84,18 @@ public:
 	void			SetDamageCustom( int iDamageCustom );
 	int				GetDamageStats( void ) const;
 	void			SetDamageStats( int iDamageStats );
+	void			SetForceFriendlyFire( bool bValue ) { m_bForceFriendlyFire = bValue; }
+	bool			IsForceFriendlyFire( void ) const { return m_bForceFriendlyFire; }
 
 	int				GetAmmoType() const;
 	void			SetAmmoType( int iAmmoType );
 	const char *	GetAmmoName() const;
+
+	int				GetPlayerPenetrationCount() const { return m_iPlayerPenetrationCount; }
+	void			SetPlayerPenetrationCount( int iPlayerPenetrationCount ) { m_iPlayerPenetrationCount = iPlayerPenetrationCount; }
+	
+	int				GetDamagedOtherPlayers() const     { return m_iDamagedOtherPlayers; }
+	void			SetDamagedOtherPlayers( int iVal ) { m_iDamagedOtherPlayers = iVal; }
 
 	void			Set( CBaseEntity *pInflictor, CBaseEntity *pAttacker, float flDamage, int bitsDamageType, int iKillType = 0 );
 	void			Set( CBaseEntity *pInflictor, CBaseEntity *pAttacker, CBaseEntity *pWeapon, float flDamage, int bitsDamageType, int iKillType = 0 );
@@ -118,6 +129,11 @@ protected:
 	int				m_iDamageCustom;
 	int				m_iDamageStats;
 	int				m_iAmmoType;			// AmmoType of the weapon used to cause this damage, if any
+	int				m_iDamagedOtherPlayers;
+	int				m_iPlayerPenetrationCount;
+	float			m_flDamageBonus;		// Anything that increases damage (crit) - store the delta
+	EHANDLE			m_hDamageBonusProvider;	// Who gave us the ability to do extra damage?
+	bool			m_bForceFriendlyFire;	// Ideally this would be a dmg type, but we can't add more
 
 	DECLARE_SIMPLE_DATADESC();
 };
@@ -234,6 +250,22 @@ inline void CTakeDamageInfo::SubtractDamage( float flSubtractAmount )
 	m_flDamage -= flSubtractAmount;
 }
 
+inline float CTakeDamageInfo::GetDamageBonus() const
+{
+	return m_flDamageBonus;
+}
+
+inline CBaseEntity *CTakeDamageInfo::GetDamageBonusProvider() const
+{
+	return m_hDamageBonusProvider;
+}
+
+inline void CTakeDamageInfo::SetDamageBonus( float flBonus, CBaseEntity *pProvider /*= NULL*/ )
+{
+	m_flDamageBonus = flBonus;
+	m_hDamageBonusProvider = pProvider;
+}
+
 inline float CTakeDamageInfo::GetBaseDamage() const
 {
 	if( BaseDamageIsValid() )
@@ -285,15 +317,15 @@ inline void CTakeDamageInfo::SetReportedPosition( const Vector &reportedPosition
 	m_vecReportedPosition = reportedPosition;
 }
 
-inline int CTakeDamageInfo::GetDamageType() const
-{
-	return m_bitsDamageType;
-}
-
 
 inline void CTakeDamageInfo::SetDamageType( int bitsDamageType )
 {
 	m_bitsDamageType = bitsDamageType;
+}
+
+inline int CTakeDamageInfo::GetDamageType() const
+{
+	return m_bitsDamageType;
 }
 
 inline void	CTakeDamageInfo::AddDamageType( int bitsDamageType )

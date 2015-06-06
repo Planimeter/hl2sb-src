@@ -59,6 +59,17 @@ if( $arg =~ m/-x360/i )
 	$platformextension = ".360";
 }
 
+# Get the changelist number for the Shader Auto Checkout changelist. Will create the changelist if it doesn't exist.
+my $changelistnumber = `valve_p4_create_changelist.cmd ..\\..\\..\\game\\hl2\\shaders \"Shader Auto Checkout VCS\"`;
+# Get rid of the newline
+$changelistnumber =~ s/\n//g;
+
+my $changelistarg = "";
+if( $changelistnumber != 0 )
+{
+	$changelistarg = "-c $changelistnumber"
+}
+
 open TXTFILE, "<$txtfilename";
 
 my $src;

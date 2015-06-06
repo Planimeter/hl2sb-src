@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -9,7 +9,9 @@
 #include "iclientmode.h"
 #include "history_resource.h"
 #include "input.h"
+#include "../hud_crosshair.h"
 
+#include "VGuiMatSurface/IMatSystemSurface.h"
 #include <KeyValues.h>
 #include <vgui/IScheme.h>
 #include <vgui/ISurface.h>
@@ -464,6 +466,17 @@ void CHudWeaponSelection::Paint()
 	if ( !pSelectedWeapon )
 		return;
 
+	bool bPushedViewport = false;
+	if( hud_fastswitch.GetInt() == HUDTYPE_FASTSWITCH  || hud_fastswitch.GetInt() == HUDTYPE_PLUS )
+	{
+		CMatRenderContextPtr pRenderContext( materials );
+		if( pRenderContext->GetRenderTarget() )
+		{
+			surface()->PushFullscreenViewport();
+			bPushedViewport = true;
+		}
+	}
+
 	// interpolate the selected box size between the small box size and the large box size
 	// interpolation has been removed since there is no weapon pickup animation anymore, so it's all at the largest size
 	float percentageDone = 1.0f; //min(1.0f, (gpGlobals->curtime - m_flPickupStartTime) / m_flWeaponPickupGrowTime);
@@ -590,15 +603,23 @@ void CHudWeaponSelection::Paint()
 
 	case HUDTYPE_PLUS:
 		{
+			float fCenterX, fCenterY;
+			bool bBehindCamera = false;
+			CHudCrosshair::GetDrawPosition( &fCenterX, &fCenterY, &bBehindCamera );
+
+			// if the crosshair is behind the camera, don't draw it
+			if( bBehindCamera )
+				return;
+
 			// bucket style
-			int screenCenterX = GetWide() / 2;
-			int screenCenterY = GetTall() / 2 - 15; // Height isn't quite screen height, so adjust for center alignement
+			int screenCenterX = (int) fCenterX;
+			int screenCenterY = (int) fCenterY - 15; // Height isn't quite screen height, so adjust for center alignment
 
 			// Modifiers for the four directions. Used to change the x and y offsets
 			// of each box based on which bucket we're drawing. Bucket directions are
 			// 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
-			int xModifiers[] = { 0, 1, 0, -1 };
-			int yModifiers[] = { -1, 0, 1, 0 };
+			int xModifiers[] = { 0, 1, 0, -1, -1, 1 };
+			int yModifiers[] = { -1, 0, 1, 0, 1, 1 };
 
 			// Draw the four buckets
 			for ( int i = 0; i < MAX_WEAPON_SLOTS; ++i )
@@ -779,6 +800,11 @@ void CHudWeaponSelection::Paint()
 			// do nothing
 		}
 		break;
+	}
+
+	if( bPushedViewport )
+	{
+		surface()->PopFullscreenViewport();
 	}
 }
 
@@ -971,7 +997,11 @@ void CHudWeaponSelection::DrawLargeWeaponBox( C_BaseCombatWeapon *pWeapon, bool 
 		// setup our localized string
 		if ( tempString )
 		{
+#ifdef WIN32
 			_snwprintf(text, sizeof(text)/sizeof(wchar_t) - 1, L"%s", tempString);
+#else
+			_snwprintf(text, sizeof(text)/sizeof(wchar_t) - 1, L"%S", tempString);
+#endif
 			text[sizeof(text)/sizeof(wchar_t) - 1] = 0;
 		}
 		else
@@ -1792,7 +1822,7 @@ void CHudWeaponSelection::SelectWeaponSlot( int iSlot )
 		return;
 
 	// Don't try and read past our possible number of slots
-	if ( iSlot > MAX_WEAPON_SLOTS )
+	if ( iSlot >= MAX_WEAPON_SLOTS )
 		return;
 	
 	// Make sure the player's allowed to switch weapons

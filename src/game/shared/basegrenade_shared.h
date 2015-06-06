@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -10,6 +10,8 @@
 #ifdef _WIN32
 #pragma once
 #endif
+
+#include "baseprojectile.h"
 
 #if defined( CLIENT_DLL )
 
@@ -28,19 +30,13 @@
 
 class CTakeDamageInfo;
 
-//Andrew; See http://www.mail-archive.com/hlcoders@list.valvesoftware.com/msg28578.html
-//Tony; Compromise! in episodic single player, inherit CBaseCombatCharacter for the barnacle interaction, otherwise this will never get called.
-class CBaseGrenade : 
-	#if defined( HL2_EPISODIC ) || defined ( HL2MP )	//Tony; HL2MP needs this too for tripmine grenades.
-		public CBaseCombatCharacter
-	#else
-		public CBaseAnimating
-	#endif
-	#if defined( GAME_DLL )
-		, public CDefaultPlayerPickupVPhysics
-	#endif
-{		//Tony; the ugliest class definition ever, but it saves characters, or something. Should I be shot for this?
-	DECLARE_CLASS( CBaseGrenade, CBaseAnimating );
+#if !defined( CLIENT_DLL )
+class CBaseGrenade : public CBaseProjectile, public CDefaultPlayerPickupVPhysics
+#else
+class CBaseGrenade : public CBaseProjectile
+#endif
+{
+	DECLARE_CLASS( CBaseGrenade, CBaseProjectile );
 public:
 
 	CBaseGrenade(void);
@@ -107,12 +103,6 @@ public:
 	void				  SetThrower( CBaseCombatCharacter *pThrower );
 	CBaseEntity *GetOriginalThrower() { return m_hOriginalThrower; }
 
-	// added for entity info so that certain classes can override this, without screwing up the normal GetOwnerEntity()
-	virtual CBaseEntity	*GetTrueOwnerEntity()
-	{
-		return dynamic_cast<CBaseEntity *>( GetThrower() );
-	}
-
 #if !defined( CLIENT_DLL )
 	// Allow +USE pickup
 	int ObjectCaps() 
@@ -130,7 +120,7 @@ public:
 	bool				m_bHasWarnedAI;				// whether or not this grenade has issued its DANGER sound to the world sound list yet.
 	CNetworkVar( bool, m_bIsLive );					// Is this grenade live, or can it be picked up?
 	CNetworkVar( float, m_DmgRadius );				// How far do I do damage?
-	CNetworkVar( float, m_flNextAttack );			// Added into grenade itself now that it's no longer CBaseCombatCharacter
+	CNetworkVar( float, m_flNextAttack );
 	float				m_flDetonateTime;			// Time at which to detonate.
 	float				m_flWarnAITime;				// Time at which to warn the AI
 

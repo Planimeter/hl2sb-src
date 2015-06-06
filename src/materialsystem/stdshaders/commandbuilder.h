@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2007, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,13 +13,14 @@
 #include "shaderapi/commandbuffer.h"
 #endif
 
-#include "basevsshader.h"
+#include "BaseVSShader.h"
+#include "shaderapi/ishaderapi.h"
 
 #ifdef _WIN32
 #pragma once
 #endif
 
-
+extern ConVar	my_mat_fullbright;
 
 template<int N> class CFixedCommandStorageBuffer
 {
@@ -27,14 +28,14 @@ public:
 	uint8 m_Data[N];
 
 	uint8 *m_pDataOut;
-#ifndef NDEBUG
+#ifdef DBGFLAG_ASSERT
 	size_t m_nNumBytesRemaining;
 #endif
 	
 	FORCEINLINE CFixedCommandStorageBuffer( void )
 	{
 		m_pDataOut = m_Data;
-#ifndef NDEBUG
+#ifdef DBGFLAG_ASSERT
 		m_nNumBytesRemaining = N;
 #endif
 
@@ -50,7 +51,7 @@ public:
 		EnsureCapacity( sizeof( T ) );
 		*( reinterpret_cast<T *>( m_pDataOut ) ) = nValue;
 		m_pDataOut += sizeof( nValue );
-#ifndef NDEBUG
+#ifdef DBGFLAG_ASSERT
 		m_nNumBytesRemaining -= sizeof( nValue );
 #endif
 	}
@@ -69,7 +70,7 @@ public:
 	{
 		Put( pPtr );
 	}
-	
+
 	FORCEINLINE void PutMemory( const void *pMemory, size_t nBytes )
 	{
 		EnsureCapacity( nBytes );
@@ -85,7 +86,7 @@ public:
 	FORCEINLINE void Reset( void )
 	{
 		m_pDataOut = m_Data;
-#ifndef NDEBUG
+#ifdef DBGFLAG_ASSERT
 		m_nNumBytesRemaining = N;
 #endif
 	}
@@ -112,7 +113,7 @@ public:
 	{
 		return CBaseShader::s_ppParams[nVar];
 	}
-	
+
 	FORCEINLINE void SetPixelShaderConstants( int nFirstConstant, int nConstants )
 	{
 		m_Storage.PutInt( CBCMD_SET_PIXEL_SHADER_FLOAT_CONST );
@@ -127,7 +128,7 @@ public:
 		m_Storage.PutFloat( pSrcData[2] );
 		m_Storage.PutFloat( pSrcData[3] );
 	}
-	
+
 	FORCEINLINE void OutputConstantData4( float flVal0, float flVal1, float flVal2, float flVal3 )
 	{
 		m_Storage.PutFloat( flVal0 );
@@ -252,7 +253,7 @@ public:
 			else if (pScaleVar->IsDefined())
 				scale[0] = scale[1] = pScaleVar->GetFloatValue();
 		}
-		
+
 		// Apply the scaling
 		transformation[0][0] *= scale[0];
 		transformation[0][1] *= scale[1];
@@ -265,7 +266,7 @@ public:
 
 	FORCEINLINE void SetEnvMapTintPixelShaderDynamicState( int pixelReg, int tintVar )
 	{
-		if( g_pConfig->bShowSpecular && mat_fullbright.GetInt() != 2 )
+		if( g_pConfig->bShowSpecular && my_mat_fullbright.GetInt() != 2 )
 		{
 			SetPixelShaderConstant( pixelReg, Param( tintVar)->GetVecValue() );
 		}
@@ -275,18 +276,18 @@ public:
 		}
 	}
 
-	FORCEINLINE void SetEnvMapTintPixelShaderDynamicStateGammaToLinear( int pixelReg, int tintVar )
+	FORCEINLINE void SetEnvMapTintPixelShaderDynamicStateGammaToLinear( int pixelReg, int tintVar, float flAlphaValue = 1.0 )
 	{
-		if( g_pConfig->bShowSpecular && mat_fullbright.GetInt() != 2 )
+		if( ( tintVar != -1 ) && g_pConfig->bShowSpecular && my_mat_fullbright.GetInt() != 2 )
 		{
 			float color[4];
-			color[3] = 1.0;
+			color[3] = flAlphaValue;
 			Param( tintVar)->GetLinearVecValue( color, 3 );
 			SetPixelShaderConstant( pixelReg, color );
 		}
 		else
 		{
-			SetPixelShaderConstant4( pixelReg, 0.0, 0.0, 0.0, 0.0 );
+			SetPixelShaderConstant4( pixelReg, 0.0, 0.0, 0.0, flAlphaValue );
 		}
 	}
 
@@ -329,9 +330,13 @@ public:
 
 	FORCEINLINE void BindTexture( Sampler_t nSampler, ShaderAPITextureHandle_t hTexture )
 	{
-		m_Storage.PutInt( CBCMD_BIND_SHADERAPI_TEXTURE_HANDLE );
-		m_Storage.PutInt( nSampler );
-		m_Storage.PutInt( hTexture );
+		Assert( hTexture != INVALID_SHADERAPI_TEXTURE_HANDLE );
+		if ( hTexture != INVALID_SHADERAPI_TEXTURE_HANDLE )
+		{
+			m_Storage.PutInt( CBCMD_BIND_SHADERAPI_TEXTURE_HANDLE );
+			m_Storage.PutInt( nSampler );
+			m_Storage.PutInt( hTexture );
+		}
 	}
 
 	FORCEINLINE void BindTexture( CBaseVSShader *pShader, Sampler_t nSampler, int nTextureVar, int nFrameVar )
@@ -383,7 +388,7 @@ public:
 	{
 		m_Storage.Reset();
 	}
-	
+
 	FORCEINLINE size_t Size( void ) const
 	{
 		return m_Storage.Size();

@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -11,6 +11,7 @@
 #endif
 
 #include "tier1/utlvector.h"
+#include "tier1/utlbinaryblock.h"
 #include "tier1/utlstring.h"
 #include "tier1/uniqueid.h"
 #include "Color.h"
@@ -102,6 +103,7 @@ enum DmAttributeType_t
 	AT_TYPE_COUNT,
 };
 
+const char *GetTypeString( DmAttributeType_t type );
 
 inline bool IsValueType( DmAttributeType_t type )
 {

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -9,8 +9,8 @@
 #include "cbase.h"
 #include <stdarg.h>
 #include "imessagechars.h"
-#include <vgui/IVgui.h>
-#include "VguiMatSurface/IMatSystemSurface.h"
+#include <vgui/IVGui.h>
+#include "VGuiMatSurface/IMatSystemSurface.h"
 #include <vgui_controls/Panel.h>
 #include <vgui_controls/Controls.h>
 #include <vgui/IScheme.h>
@@ -215,7 +215,7 @@ int CMessageCharsPanel::AddText(
 	char data[ MAX_MESSAGECHARSPANEL_LEN ];
 	int len;
 
-	va_start(argptr, fmt);
+	va_start(argptr, messageID);
 	len = Q_vsnprintf(data, sizeof( data ), fmt, argptr);
 	va_end(argptr);
 
@@ -235,9 +235,10 @@ int CMessageCharsPanel::AddText(
 
 	Assert( !msg->text );
 
-	msg->text = new char[ Q_strlen( data ) + 1 ];
+	int textLength = Q_strlen( data ) + 1;
+	msg->text = new char[ textLength ];
 	Assert( msg->text );
-	Q_strncpy( msg->text, data, sizeof( msg->text ) );
+	Q_strncpy( msg->text, data, textLength );
 
 	if ( flTime )
 		msg->fTTL = gpGlobals->curtime + flTime;
@@ -281,7 +282,11 @@ void CMessageCharsPanel::GetTextExtents( vgui::HFont hCustomFont, int *wide, int
 //-----------------------------------------------------------------------------
 void CMessageCharsPanel::OnTick( void )
 {
-	SetVisible( ShouldDraw() );
+	bool bVisible = ShouldDraw();
+	if ( IsVisible() != bVisible )
+	{
+		SetVisible( bVisible );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -374,6 +379,7 @@ public:
 		{
 			messageCharsPanel->SetParent( (vgui::Panel *)NULL );
 			delete messageCharsPanel;
+			messageCharsPanel = NULL;
 		}
 	}
 
@@ -383,7 +389,7 @@ public:
 		char data[ MAX_MESSAGECHARSPANEL_LEN ];
 		int len;
 
-		va_start(argptr, fmt);
+		va_start(argptr, messageID);
 		len = Q_vsnprintf(data, sizeof( data ), fmt, argptr);
 		va_end(argptr);
 
@@ -400,7 +406,7 @@ public:
 		int r = 192, g = 192, b = 192;
 
 		va_list argptr;
-		va_start( argptr, fmt );
+		va_start(argptr, messageID);
 		int result = DrawString( hCustomFont, x, y, r, g, b, 255, fmt, messageID, argptr );
 		va_end( argptr );
 		return result;
@@ -414,7 +420,7 @@ public:
 	int DrawString( vgui::HFont hCustomFont, int x, int y, int r, int g, int b, int a, const char *fmt, int messageID, ... )
 	{
 		va_list argptr;
-		va_start( argptr, fmt );
+		va_start(argptr, messageID);
 		int result = DrawStringForTime( 0, hCustomFont, x, y, r, g, b, a, fmt, messageID, argptr );
 		va_end( argptr );
 		return result;
@@ -423,7 +429,7 @@ public:
 	int DrawString( vgui::HFont hCustomFont, int x, int y, const char *fmt, int messageID, ... )
 	{
 		va_list argptr;
-		va_start( argptr, fmt );
+		va_start(argptr, messageID);
 		int result = DrawStringForTime( 0, hCustomFont, x, y, fmt, messageID, argptr );
 		va_end( argptr );
 		return result;

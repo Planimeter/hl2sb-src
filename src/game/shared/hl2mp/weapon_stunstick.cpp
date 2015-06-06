@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		Stun Stick- beating stick with a zappy end
 //
@@ -20,12 +20,11 @@
 	
 	#include "iviewrender_beams.h"
 	#include "beam_shared.h"
-	#include "materialsystem/IMaterial.h"
+	#include "materialsystem/imaterial.h"
 	#include "model_types.h"
 	#include "c_te_effect_dispatch.h"
 	#include "fx_quad.h"
 	#include "fx.h"
-	#include "input.h"
 
 	extern void DrawHalo( IMaterial* pMaterial, const Vector &source, float scale, float const *color, float flHDRColorScale );
 	extern void FormatViewModelAttachment( Vector &vOrigin, bool bInverse );
@@ -63,7 +62,10 @@ public:
 
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
+
+#ifndef CLIENT_DLL
 	DECLARE_ACTTABLE();
+#endif
 
 #ifdef CLIENT_DLL
 	virtual int				DrawModel( int flags );
@@ -126,9 +128,6 @@ private:
 
 	float	m_flFadeTime;
 
-	//Tony; third person check thing, this has to be done for the local player if third person switches, so we can re-calc attachment points.
-	virtual void			ThirdPersonSwitch( bool bThirdPerson );
-
 #endif
 
 	CNetworkVar( bool, m_bActive );
@@ -155,22 +154,18 @@ LINK_ENTITY_TO_CLASS( weapon_stunstick, CWeaponStunStick );
 PRECACHE_WEAPON_REGISTER( weapon_stunstick );
 
 
+#ifndef CLIENT_DLL
+
 acttable_t	CWeaponStunStick::m_acttable[] = 
 {
-	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_MELEE,					false },
-	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_MELEE,			false },
-
-	{ ACT_MP_RUN,						ACT_HL2MP_RUN_MELEE,					false },
-	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_MELEE,			false },
-
-	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE,	false },
-	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE,	false },
-
-	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_MELEE,			false },
-	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_MELEE,			false },
-
-	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_MELEE,					false },
-
+	{ ACT_RANGE_ATTACK1,				ACT_RANGE_ATTACK_SLAM, true },
+	{ ACT_HL2MP_IDLE,					ACT_HL2MP_IDLE_MELEE,					false },
+	{ ACT_HL2MP_RUN,					ACT_HL2MP_RUN_MELEE,					false },
+	{ ACT_HL2MP_IDLE_CROUCH,			ACT_HL2MP_IDLE_CROUCH_MELEE,			false },
+	{ ACT_HL2MP_WALK_CROUCH,			ACT_HL2MP_WALK_CROUCH_MELEE,			false },
+	{ ACT_HL2MP_GESTURE_RANGE_ATTACK,	ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE,	false },
+	{ ACT_HL2MP_GESTURE_RELOAD,			ACT_HL2MP_GESTURE_RELOAD_MELEE,			false },
+	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_MELEE,					false },
 #ifdef HL2SB
 	{ ACT_MELEE_ATTACK1,	ACT_MELEE_ATTACK_SWING,	true },
 	{ ACT_IDLE_ANGRY,		ACT_IDLE_ANGRY_MELEE,	true },
@@ -178,6 +173,8 @@ acttable_t	CWeaponStunStick::m_acttable[] =
 };
 
 IMPLEMENT_ACTTABLE(CWeaponStunStick);
+
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -213,6 +210,9 @@ void CWeaponStunStick::Precache()
 	PrecacheScriptSound( "Weapon_StunStick.Deactivate" );
 
 	PrecacheModel( STUNSTICK_BEAM_MATERIAL );
+	PrecacheModel( "sprites/light_glow02_add.vmt" );
+	PrecacheModel( "effects/blueflare1.vmt" );
+	PrecacheModel( "sprites/light_glow02_add_noz.vmt" );
 }
 
 //-----------------------------------------------------------------------------
@@ -493,10 +493,6 @@ void CWeaponStunStick::SetStunState( bool state )
 bool CWeaponStunStick::Deploy( void )
 {
 	SetStunState( true );
-#ifdef CLIENT_DLL
-	//Tony; we need to just do this
-	SetupAttachmentPoints();
-#endif
 
 	return BaseClass::Deploy();
 }
@@ -545,8 +541,8 @@ bool CWeaponStunStick::GetStunState( void )
 //-----------------------------------------------------------------------------
 bool UTIL_GetWeaponAttachment( C_BaseCombatWeapon *pWeapon, int attachmentID, Vector &absOrigin, QAngle &absAngles )
 {
-	// Other players & third person
-	if ( pWeapon && (!pWeapon->IsCarriedByLocalPlayer() || ::input->CAM_IsThirdPerson()))
+	// This is already correct in third-person
+	if ( pWeapon && pWeapon->ShouldDrawUsingViewModel() == false )
 	{
 		return pWeapon->GetAttachment( attachmentID, absOrigin, absAngles );
 	}
@@ -574,7 +570,7 @@ bool UTIL_GetWeaponAttachment( C_BaseCombatWeapon *pWeapon, int attachmentID, Ve
 void C_WeaponStunStick::SetupAttachmentPoints( void )
 {
 	// Setup points for both types of views
-	if ( IsCarriedByLocalPlayer() && !::input->CAM_IsThirdPerson())
+	if ( ShouldDrawUsingViewModel() )
 	{
 		const char *szBeamAttachNamesTop[NUM_BEAM_ATTACHMENTS] =
 		{
@@ -648,7 +644,7 @@ void C_WeaponStunStick::ClientThink( void )
 	if ( IsEffectActive( EF_NODRAW ) )
 		return;
 
-	if ( IsCarriedByLocalPlayer() && !::input->CAM_IsThirdPerson())
+	if ( ShouldDrawUsingViewModel() )
 	{
 		// Update our effects
 		if ( gpGlobals->frametime != 0.0f && ( random->RandomInt( 0, 3 ) == 0 ) )
@@ -727,7 +723,7 @@ bool C_WeaponStunStick::InSwing( void )
 	int activity = GetActivity();
 
 	// FIXME: This is needed until the actual animation works
-	if ( IsCarriedByLocalPlayer() == false || ::input->CAM_IsThirdPerson())
+	if ( ShouldDrawUsingViewModel() == false )
 		return true;
 
 	// These are the swing activities this weapon can play
@@ -892,17 +888,12 @@ void C_WeaponStunStick::DrawFirstPersonEffects( void )
 	}
 }
 
-void C_WeaponStunStick::ThirdPersonSwitch( bool bThirdPerson )
-{
-	SetupAttachmentPoints();
-}
 //-----------------------------------------------------------------------------
 // Purpose: Draw our special effects
 //-----------------------------------------------------------------------------
 void C_WeaponStunStick::DrawEffects( void )
 {
-
-	if ( IsCarriedByLocalPlayer() && !::input->CAM_IsThirdPerson() )
+	if ( ShouldDrawUsingViewModel() )
 	{
 		DrawFirstPersonEffects();
 	}

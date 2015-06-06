@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -7,7 +7,9 @@
 //=============================================================================//
 #include "glos.h"
 #include <gl/gl.h>
+#if _MSC_VER < 1600
 #include <gl/glaux.h>
+#endif
 #include <gl/glu.h>
 #include <stdarg.h>
 #include <string.h>
@@ -62,7 +64,7 @@ BOOL g_Update = TRUE;
 BOOL g_bDisp = FALSE;
 IPhysicsCollision *physcollision = NULL;
 // -----------
-static int g_Keys[255];
+static int g_Keys[256];
 void AppKeyDown( int key );
 void AppKeyUp( int key );
 

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -567,10 +567,11 @@ void CAI_PlayerAlly::PrescheduleThink( void )
 		if ( m_flNextIdleSpeechTime && m_flNextIdleSpeechTime < gpGlobals->curtime )
 		{
 			AISpeechSelection_t selection;
+
 			if ( SelectNonCombatSpeech( &selection ) )
 			{
 				SetSpeechTarget( selection.hSpeechTarget );
-				SpeakDispatchResponse( selection.concept.c_str(), selection.pResponse );
+				SpeakDispatchResponse( selection.concept.c_str(), selection.Response );
 				m_flNextIdleSpeechTime = gpGlobals->curtime + RandomFloat( 20,30 );
 			}
 			else
@@ -612,22 +613,23 @@ bool CAI_PlayerAlly::SelectSpeechResponse( AIConcept_t concept, const char *pszM
 {
 	if ( IsAllowedToSpeak( concept ) )
 	{
-		AI_Response *pResponse = SpeakFindResponse( concept, pszModifiers );
-		if ( pResponse )
+		bool result = SpeakFindResponse( pSelection->Response, concept, pszModifiers );
+		if ( result )
 		{
-			pSelection->Set( concept, pResponse, pTarget );
+			pSelection->concept = concept;
+			pSelection->hSpeechTarget = pTarget;
 			return true;
 		}
 	}
+
 	return false;
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::SetPendingSpeech( AIConcept_t concept, AI_Response *pResponse )
+void CAI_PlayerAlly::SetPendingSpeech( AIConcept_t concept, AI_Response &Response )
 {
-	m_PendingResponse = *pResponse;
-	pResponse->Release();
+	m_PendingResponse = Response;
 	m_PendingConcept = concept;
 	m_TimePendingSet = gpGlobals->curtime;
 }
@@ -709,7 +711,7 @@ bool CAI_PlayerAlly::SelectInterjection()
 		if ( SelectIdleSpeech( &selection ) )
 		{
 			SetSpeechTarget( selection.hSpeechTarget );
-			SpeakDispatchResponse( selection.concept.c_str(), selection.pResponse );
+			SpeakDispatchResponse( selection.concept.c_str(), selection.Response );
 			return true;
 		}
 	}
@@ -908,9 +910,8 @@ void CAI_PlayerAlly::AnswerQuestion( CAI_PlayerAlly *pQuestioner, int iQARandomN
 			}
 		}
 
-		Assert( selection.pResponse );
 		SetSpeechTarget( selection.hSpeechTarget );
-		SpeakDispatchResponse( selection.concept.c_str(), selection.pResponse );
+		SpeakDispatchResponse( selection.concept.c_str(), selection.Response );
 
 		// Prevent idle speech for a while
 		DeferAllIdleSpeech( random->RandomFloat( TALKER_DEFER_IDLE_SPEAK_MIN, TALKER_DEFER_IDLE_SPEAK_MAX ), GetSpeechTarget()->MyNPCPointer() );
@@ -958,11 +959,11 @@ int CAI_PlayerAlly::SelectNonCombatSpeechSchedule()
 	if ( !HasPendingSpeech() )
 	{
 		AISpeechSelection_t selection;
+
 		if ( SelectNonCombatSpeech( &selection ) )
 		{
-			Assert( selection.pResponse );
 			SetSpeechTarget( selection.hSpeechTarget );
-			SetPendingSpeech( selection.concept.c_str(), selection.pResponse );
+			SetPendingSpeech( selection.concept.c_str(), selection.Response );
 		}
 	}
 	
@@ -1041,14 +1042,14 @@ void CAI_PlayerAlly::StartTask( const Task_t *pTask )
 	case TASK_TALKER_SPEAK_PENDING:
 		if ( !m_PendingConcept.empty() )
 		{
-			AI_Response *pResponse = new AI_Response;
-			*pResponse = m_PendingResponse;
-			SpeakDispatchResponse( m_PendingConcept.c_str(), pResponse );
+			SpeakDispatchResponse( m_PendingConcept.c_str(), m_PendingResponse );
 			m_PendingConcept.erase();
 			TaskComplete();
 		}
 		else
+		{
 			TaskFail( FAIL_NO_SOUND );
+		}
 		break;
 
 	default:
@@ -1116,7 +1117,7 @@ void CAI_PlayerAlly::OnKilledNPC( CBaseCombatCharacter *pKilled )
 }
 
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
+void CAI_PlayerAlly::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
 	const char *pszHitLocCriterion = NULL;
 
@@ -1138,7 +1139,7 @@ void CAI_PlayerAlly::TraceAttack( const CTakeDamageInfo &info, const Vector &vec
 
 	SpeakIfAllowed( TLK_SHOT, modifiers );
 
-	BaseClass::TraceAttack( info, vecDir, ptr );
+	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
 }
 
 //-----------------------------------------------------------------------------
@@ -1723,15 +1724,15 @@ bool CAI_PlayerAlly::RespondedTo( const char *ResponseConcept, bool bForce, bool
 	{
 		// We're being forced to respond to the event, probably because it's the
 		// player dying or something equally important. 
-		AI_Response *result = SpeakFindResponse( ResponseConcept, NULL );
+		AI_Response response; 
+		bool result = SpeakFindResponse( response, ResponseConcept, NULL );
 		if ( result )
 		{
 			// We've got something to say. Stop any scenes we're in, and speak the response.
 			if ( bCancelScene )
 				RemoveActorFromScriptedScenes( this, false );
 
-			bool spoke = SpeakDispatchResponse( ResponseConcept, result );
-			return spoke;
+			return SpeakDispatchResponse( ResponseConcept, response );
 		}
 
 		return false;

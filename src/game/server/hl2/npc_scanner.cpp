@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -1302,7 +1302,7 @@ void CNPC_CScanner::PrescheduleThink(void)
 Disposition_t CNPC_CScanner::IRelationType(CBaseEntity *pTarget)
 {
 	// If it's the player and they are a criminal, we hates them
-	if ( pTarget->Classify() == CLASS_PLAYER )
+	if ( pTarget && pTarget->Classify() == CLASS_PLAYER )
 	{
 		if ( GlobalEntity_GetState("gordon_precriminal") == GLOBAL_ON )
 			return D_NU;
@@ -1992,7 +1992,7 @@ void CNPC_CScanner::BlindFlashTarget( CBaseEntity *pTarget )
 
 		if ( tr.startsolid == false && tr.fraction == 1.0)
 		{
-			color32 white = { 255, 255, 255, SCANNER_FLASH_MAX_VALUE * dotPr };
+			color32 white = { 255, 255, 255, (byte)(SCANNER_FLASH_MAX_VALUE * dotPr) };
 
 			if ( ( g_pMaterialSystemHardwareConfig != NULL ) && ( g_pMaterialSystemHardwareConfig->GetHDRType() != HDR_TYPE_NONE ) )
 			{
@@ -2316,7 +2316,10 @@ bool CNPC_CScanner::OverrideMove( float flInterval )
 		Vector vMoveTargetPos(0,0,0);
 		CBaseEntity *pMoveTarget = NULL;
 		
-		if ( !GetNavigator()->IsGoalActive() || ( GetNavigator()->GetCurWaypointFlags() | bits_WP_TO_PATHCORNER ) )
+		// The original line of code was, due to the accidental use of '|' instead of
+		// '&', always true. Replacing with 'true' to suppress the warning without changing
+		// the (long-standing) behavior.
+		if ( true ) //!GetNavigator()->IsGoalActive() || ( GetNavigator()->GetCurWaypointFlags() | bits_WP_TO_PATHCORNER ) )
 		{
 			// Select move target 
 			if ( GetTarget() != NULL )

@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2007, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Run procedural glint generation inner loop in pixel shader
 //
@@ -7,14 +7,14 @@
 //===========================================================================//
 
 #include "BaseVSShader.h"
-#include "shaderlib/CShader.h"
+#include "shaderlib/cshader.h"
 
-#include "SDK_eyeglint_vs20.inc"
-#include "SDK_eyeglint_ps20.inc"
-#include "SDK_eyeglint_ps20b.inc"
+#include "eyeglint_vs20.inc"
+#include "eyeglint_ps20.inc"
+#include "eyeglint_ps20b.inc"
 
-DEFINE_FALLBACK_SHADER( SDK_EyeGlint, SDK_EyeGlint_dx9 )
-BEGIN_VS_SHADER( SDK_EyeGlint_dx9, "Help for EyeGlint" )
+DEFINE_FALLBACK_SHADER( EyeGlint, EyeGlint_dx9 )
+BEGIN_VS_SHADER( EyeGlint_dx9, "Help for EyeGlint" )
 
 BEGIN_SHADER_PARAMS
 END_SHADER_PARAMS
@@ -46,20 +46,20 @@ SHADER_DRAW
 
 		pShaderShadow->EnableCulling( false );
 
-		pShaderShadow->EnableSRGBWrite( true );
+		pShaderShadow->EnableSRGBWrite( false ); // linear texture
 
-		DECLARE_STATIC_VERTEX_SHADER( sdk_eyeglint_vs20 );
-		SET_STATIC_VERTEX_SHADER( sdk_eyeglint_vs20 );
+		DECLARE_STATIC_VERTEX_SHADER( eyeglint_vs20 );
+		SET_STATIC_VERTEX_SHADER( eyeglint_vs20 );
 
-		SET_STATIC_PS2X_PIXEL_SHADER_NO_COMBOS( sdk_eyeglint );
+		SET_STATIC_PS2X_PIXEL_SHADER_NO_COMBOS( eyeglint );
 	}
 
 	DYNAMIC_STATE
 	{
-		DECLARE_DYNAMIC_VERTEX_SHADER( sdk_eyeglint_vs20 );
-		SET_DYNAMIC_VERTEX_SHADER( sdk_eyeglint_vs20 );
+		DECLARE_DYNAMIC_VERTEX_SHADER( eyeglint_vs20 );
+		SET_DYNAMIC_VERTEX_SHADER( eyeglint_vs20 );
 
-		SET_DYNAMIC_PS2X_PIXEL_SHADER_NO_COMBOS( sdk_eyeglint );
+		SET_DYNAMIC_PS2X_PIXEL_SHADER_NO_COMBOS( eyeglint );
 	}
 	Draw();
 }

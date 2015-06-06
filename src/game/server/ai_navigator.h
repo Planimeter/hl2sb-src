@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -43,7 +43,7 @@ extern ConVar ai_debug_nav;
 	do \
 	{ \
 		if (DbgNav()) \
-			DevMsg( pAI, CFmtStr( "[Nav] %s", static_cast<const char *>(pszMsg) ) ); \
+			DevMsg( pAI, "[Nav] %s", static_cast<const char *>(pszMsg) ); \
 	} while (0)
 #define DbgNavMsg1( pAI, pszMsg, a ) DbgNavMsg( pAI, CFmtStr(static_cast<const char *>(pszMsg), (a) ) )
 #define DbgNavMsg2( pAI, pszMsg, a, b ) DbgNavMsg( pAI, CFmtStr(static_cast<const char *>(pszMsg), (a), (b) ) )
@@ -225,16 +225,16 @@ struct AI_NavGoal_t
 
 struct AI_ProgressFlyPathParams_t
 {
-	AI_ProgressFlyPathParams_t( unsigned collisionMask, 
-							   	float strictPointTolerance = 32.0, float blockTolerance = 0.0,
-							   	float waypointTolerance = 100, float goalTolerance = 12,
-							   	AI_NpcBlockHandling_t blockHandling = AISF_BLOCK )
-	 :	collisionMask( collisionMask ),
-		strictPointTolerance( strictPointTolerance ),
-		blockTolerance( blockTolerance ),
-		waypointTolerance( waypointTolerance ),
-		goalTolerance( goalTolerance ),
-		blockHandling( blockHandling ),
+	AI_ProgressFlyPathParams_t( unsigned _collisionMask, 
+							   	float _strictPointTolerance = 32.0, float _blockTolerance = 0.0,
+							   	float _waypointTolerance = 100, float _goalTolerance = 12,
+							   	AI_NpcBlockHandling_t _blockHandling = AISF_BLOCK )
+	 :	collisionMask( _collisionMask ),
+		strictPointTolerance( _strictPointTolerance ),
+		blockTolerance( _blockTolerance ),
+		waypointTolerance( _waypointTolerance ),
+		goalTolerance( _goalTolerance ),
+		blockHandling( _blockHandling ),
 		pTarget( NULL ),
 		bTrySimplify( true )
 	{

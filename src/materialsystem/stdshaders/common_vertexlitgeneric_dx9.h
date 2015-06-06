@@ -1,3 +1,4 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
 #ifndef COMMON_VERTEXLITGENERIC_DX9_H_
 #define COMMON_VERTEXLITGENERIC_DX9_H_
 
@@ -36,19 +37,15 @@ struct PixelShaderLightInfo
 #define LIGHTTYPE_DIRECTIONAL		3
 
 // Better suited to Pixel shader models, 11 instructions in pixel shader
+// ... actually, now only 9: mul, cmp, cmp, mul, mad, mad, mad, mad, mad
 float3 PixelShaderAmbientLight( const float3 worldNormal, const float3 cAmbientCube[6] )
 {
 	float3 linearColor, nSquared = worldNormal * worldNormal;
-	float3 isNegative = ( worldNormal < 0.0 );
-	float3 isPositive = 1-isNegative;
-
-	isNegative *= nSquared;
-	isPositive *= nSquared;
-
+	float3 isNegative = ( worldNormal >= 0.0 ) ? 0 : nSquared;
+	float3 isPositive = ( worldNormal >= 0.0 ) ? nSquared : 0;
 	linearColor = isPositive.x * cAmbientCube[0] + isNegative.x * cAmbientCube[1] +
 				  isPositive.y * cAmbientCube[2] + isNegative.y * cAmbientCube[3] +
 				  isPositive.z * cAmbientCube[4] + isNegative.z * cAmbientCube[5];
-
 	return linearColor;
 }
 
@@ -177,7 +174,8 @@ void SpecularAndRimTerms( const float3 vWorldNormal, const float3 vLightDir, con
 {
 	rimLighting = float3(0.0f, 0.0f, 0.0f);
 
-	float3 vReflect = reflect( -vEyeDir, vWorldNormal );				// Reflect view through normal
+	//float3 vReflect = reflect( -vEyeDir, vWorldNormal );				// Reflect view through normal
+	float3 vReflect = 2 * vWorldNormal * dot( vWorldNormal , vEyeDir ) - vEyeDir; // Reflect view through normal
 	float LdotR = saturate(dot( vReflect, vLightDir ));					// L.R	(use half-angle instead?)
 	specularLighting = pow( LdotR, fSpecularExponent );					// Raise to specular exponent
 
@@ -202,14 +200,14 @@ void SpecularAndRimTerms( const float3 vWorldNormal, const float3 vLightDir, con
 // Traditional fresnel term approximation
 float Fresnel( const float3 vNormal, const float3 vEyeDir )
 {
-	float fresnel = 1-saturate( dot( vNormal, vEyeDir ) );				// 1-(N.V) for Fresnel term
+	float fresnel = saturate( 1 - dot( vNormal, vEyeDir ) );			// 1-(N.V) for Fresnel term
 	return fresnel * fresnel;											// Square for a more subtle look
 }
 
 // Traditional fresnel term approximation which uses 4th power (square twice)
 float Fresnel4( const float3 vNormal, const float3 vEyeDir )
 {
-	float fresnel = 1-saturate( dot( vNormal, vEyeDir ) );				// 1-(N.V) for Fresnel term
+	float fresnel = saturate( 1 - dot( vNormal, vEyeDir ) );			// 1-(N.V) for Fresnel term
 	fresnel = fresnel * fresnel;										// Square
 	return fresnel * fresnel;											// Square again for a more subtle look
 }
@@ -230,14 +228,16 @@ float Fresnel4( const float3 vNormal, const float3 vEyeDir )
 //
 float Fresnel( const float3 vNormal, const float3 vEyeDir, float3 vRanges )
 {
-	float result, f = Fresnel( vNormal, vEyeDir );			// Traditional Fresnel
+	//float result, f = Fresnel( vNormal, vEyeDir );			// Traditional Fresnel
+	//if ( f > 0.5f )
+	//	result = lerp( vRanges.y, vRanges.z, (2*f)-1 );		// Blend between mid and high values
+	//else
+	//	result = lerp( vRanges.x, vRanges.y, 2*f );			// Blend between low and mid values
 
-	if ( f > 0.5f )
-		result = lerp( vRanges.y, vRanges.z, (2*f)-1 );		// Blend between mid and high values
-	else
-        result = lerp( vRanges.x, vRanges.y, 2*f );			// Blend between low and mid values
-
-	return result;
+	// note: vRanges is now encoded as ((mid-min)*2, mid, (max-mid)*2) to optimize math
+	float f = saturate( 1 - dot( vNormal, vEyeDir ) );
+	f = f*f - 0.5;
+	return vRanges.y + (f >= 0.0 ? vRanges.z : vRanges.x) * f;
 }
 
 void PixelShaderDoSpecularLight( const float3 vWorldPos, const float3 vWorldNormal, const float fSpecularExponent, const float3 vEyeDir,
@@ -407,35 +407,17 @@ float3 PixelShaderDoLighting( const float3 worldPos, const float3 worldNormal,
 				   const bool bDoAmbientOcclusion, const float fAmbientOcclusion,
 				   const bool bDoLightingWarp, in sampler lightWarpSampler )
 {
-	float3 returnColor;
-
-	// special case for no lighting
-	if( !bStaticLight && !bAmbientLight )
-	{
-		returnColor = float3( 0.0f, 0.0f, 0.0f );
-	}
-	else if( bStaticLight && !bAmbientLight  )
-	{
-		// special case for static lighting only
-		returnColor = GammaToLinear( staticLightingColor );
-	}
-	else
-	{
-		float3 linearColor;
-
-		linearColor = PixelShaderDoLightingLinear( worldPos, worldNormal, staticLightingColor, 
-			bStaticLight, bAmbientLight, lightAtten,
-			cAmbientCube, NormalizeSampler, nNumLights, cLightInfo, bHalfLambert,
-			bDoAmbientOcclusion, fAmbientOcclusion,
-			bDoLightingWarp, lightWarpSampler );
+	float3 linearColor = PixelShaderDoLightingLinear( worldPos, worldNormal, staticLightingColor, 
+													  bStaticLight, bAmbientLight, lightAtten,
+													  cAmbientCube, NormalizeSampler, nNumLights, cLightInfo, bHalfLambert,
+													  bDoAmbientOcclusion, fAmbientOcclusion,
+													  bDoLightingWarp, lightWarpSampler );
 
 		// go ahead and clamp to the linear space equivalent of overbright 2 so that we match
 		// everything else.
-//		returnColor = HuePreservingColorClamp( linearColor, pow( 2.0f, 2.2 ) );
-		returnColor = linearColor;
-	}
+//		linearColor = HuePreservingColorClamp( linearColor, pow( 2.0f, 2.2 ) );
 
-	return returnColor;
+	return linearColor;
 }
 
 #endif //#ifndef COMMON_VERTEXLITGENERIC_DX9_H_

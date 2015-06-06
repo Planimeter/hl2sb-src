@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -186,7 +186,7 @@ CEventAction::CEventAction( const char *ActionData )
 
 // this memory pool stores blocks around the size of CEventAction/inputitem_t structs
 // can be used for other blocks; will error if to big a block is tried to be allocated
-CMemoryPool g_EntityListPool( max(sizeof(CEventAction),sizeof(CMultiInputVar::inputitem_t)), 512, CMemoryPool::GROW_FAST, "g_EntityListPool" );
+CUtlMemoryPool g_EntityListPool( MAX(sizeof(CEventAction),sizeof(CMultiInputVar::inputitem_t)), 512, CUtlMemoryPool::GROW_FAST, "g_EntityListPool" );
 
 #include "tier0/memdbgoff.h"
 
@@ -278,15 +278,41 @@ void CBaseEntityOutput::FireOutput(variant_t Value, CBaseEntity *pActivator, CBa
 		if ( ev->m_flDelay )
 		{
 			char szBuffer[256];
-			Q_snprintf( szBuffer, sizeof(szBuffer), "(%0.2f) output: (%s,%s) -> (%s,%s,%.1f)(%s)\n", gpGlobals->curtime, pCaller ? STRING(pCaller->m_iClassname) : "NULL", pCaller ? STRING(pCaller->GetEntityName()) : "NULL", STRING(ev->m_iTarget), STRING(ev->m_iTargetInput), ev->m_flDelay, STRING(ev->m_iParameter) );
-			DevMsg( 2, szBuffer );
+			Q_snprintf( szBuffer,
+						sizeof(szBuffer),
+						"(%0.2f) output: (%s,%s) -> (%s,%s,%.1f)(%s)\n",
+#ifdef TF_DLL
+						engine->GetServerTime(),
+#else
+						gpGlobals->curtime,
+#endif
+						pCaller ? STRING(pCaller->m_iClassname) : "NULL",
+						pCaller ? STRING(pCaller->GetEntityName()) : "NULL",
+						STRING(ev->m_iTarget),
+						STRING(ev->m_iTargetInput),
+						ev->m_flDelay,
+						STRING(ev->m_iParameter) );
+
+			DevMsg( 2, "%s", szBuffer );
 			ADD_DEBUG_HISTORY( HISTORY_ENTITY_IO, szBuffer );
 		}
 		else
 		{
 			char szBuffer[256];
-			Q_snprintf( szBuffer, sizeof(szBuffer), "(%0.2f) output: (%s,%s) -> (%s,%s)(%s)\n", gpGlobals->curtime, pCaller ? STRING(pCaller->m_iClassname) : "NULL", pCaller ? STRING(pCaller->GetEntityName()) : "NULL", STRING(ev->m_iTarget), STRING(ev->m_iTargetInput), STRING(ev->m_iParameter) );
-			DevMsg( 2, szBuffer );
+			Q_snprintf( szBuffer,
+						sizeof(szBuffer),
+						"(%0.2f) output: (%s,%s) -> (%s,%s)(%s)\n",
+#ifdef TF_DLL
+						engine->GetServerTime(),
+#else
+						gpGlobals->curtime,
+#endif
+						pCaller ? STRING(pCaller->m_iClassname) : "NULL",
+						pCaller ? STRING(pCaller->GetEntityName()) : "NULL", STRING(ev->m_iTarget),
+						STRING(ev->m_iTargetInput),
+						STRING(ev->m_iParameter) );
+
+			DevMsg( 2, "%s", szBuffer );
 			ADD_DEBUG_HISTORY( HISTORY_ENTITY_IO, szBuffer );
 		}
 
@@ -307,7 +333,7 @@ void CBaseEntityOutput::FireOutput(variant_t Value, CBaseEntity *pActivator, CBa
 			{
 				char szBuffer[256];
 				Q_snprintf( szBuffer, sizeof(szBuffer), "Removing from action list: (%s,%s) -> (%s,%s)\n", pCaller ? STRING(pCaller->m_iClassname) : "NULL", pCaller ? STRING(pCaller->GetEntityName()) : "NULL", STRING(ev->m_iTarget), STRING(ev->m_iTargetInput));
-				DevMsg( 2, szBuffer );
+				DevMsg( 2, "%s", szBuffer );
 				ADD_DEBUG_HISTORY( HISTORY_ENTITY_IO, szBuffer );
 				bRemove = true;
 			}
@@ -441,7 +467,7 @@ void CBaseEntityOutput::DeleteAllElements( void )
 	m_ActionList = NULL;
 	while (pNext)
 	{
-		register CEventAction *strikeThis = pNext;
+		CEventAction *strikeThis = pNext;
 		pNext = pNext->m_pNext;
 		delete strikeThis;
 	}
@@ -612,7 +638,7 @@ void CMultiInputVar::inputitem_t::operator delete( void *pMem )
 //
 // Purpose: holds and executes a global prioritized queue of entity actions
 //-----------------------------------------------------------------------------
-DEFINE_FIXEDSIZE_ALLOCATOR( EventQueuePrioritizedEvent_t, 128, CMemoryPool::GROW_SLOW );
+DEFINE_FIXEDSIZE_ALLOCATOR( EventQueuePrioritizedEvent_t, 128, CUtlMemoryPool::GROW_SLOW );
 
 CEventQueue g_EventQueue;
 
@@ -749,7 +775,13 @@ void CEventQueue::Dump( void )
 {
 	EventQueuePrioritizedEvent_t *pe = m_Events.m_pNext;
 
-	Msg("Dumping event queue. Current time is: %.2f\n", gpGlobals->curtime );
+	Msg("Dumping event queue. Current time is: %.2f\n",
+#ifdef TF_DLL
+		engine->GetServerTime()
+#else
+		gpGlobals->curtime
+#endif
+		);
 
 	while ( pe != NULL )
 	{
@@ -777,7 +809,11 @@ void CEventQueue::AddEvent( const char *target, const char *targetInput, variant
 {
 	// build the new event
 	EventQueuePrioritizedEvent_t *newEvent = new EventQueuePrioritizedEvent_t;
+#ifdef TF_DLL
+	newEvent->m_flFireTime = engine->GetServerTime() + fireDelay;	// priority key in the priority queue
+#else
 	newEvent->m_flFireTime = gpGlobals->curtime + fireDelay;	// priority key in the priority queue
+#endif
 	newEvent->m_iTarget = MAKE_STRING( target );
 	newEvent->m_pEntTarget = NULL;
 	newEvent->m_iTargetInput = MAKE_STRING( targetInput );
@@ -796,7 +832,11 @@ void CEventQueue::AddEvent( CBaseEntity *target, const char *targetInput, varian
 {
 	// build the new event
 	EventQueuePrioritizedEvent_t *newEvent = new EventQueuePrioritizedEvent_t;
+#ifdef TF_DLL
+	newEvent->m_flFireTime = engine->GetServerTime() + fireDelay;	// primary priority key in the priority queue
+#else
 	newEvent->m_flFireTime = gpGlobals->curtime + fireDelay;	// primary priority key in the priority queue
+#endif
 	newEvent->m_iTarget = NULL_STRING;
 	newEvent->m_pEntTarget = target;
 	newEvent->m_iTargetInput = MAKE_STRING( targetInput );
@@ -867,7 +907,11 @@ void CEventQueue::ServiceEvents( void )
 
 	EventQueuePrioritizedEvent_t *pe = m_Events.m_pNext;
 
+#ifdef TF_DLL
+	while ( pe != NULL && pe->m_flFireTime <= engine->GetServerTime() )
+#else
 	while ( pe != NULL && pe->m_flFireTime <= gpGlobals->curtime )
+#endif
 	{
 		MDLCACHE_CRITICAL_SECTION();
 
@@ -930,7 +974,7 @@ void CEventQueue::ServiceEvents( void )
 			
 			char szBuffer[256];
 			Q_snprintf( szBuffer, sizeof(szBuffer), "unhandled input: (%s) -> (%s), from (%s,%s); target entity not found\n", STRING(pe->m_iTargetInput), STRING(pe->m_iTarget), pClass, pName );
-			DevMsg( 2, szBuffer );
+			DevMsg( 2, "%s", szBuffer );
 			ADD_DEBUG_HISTORY( HISTORY_ENTITY_IO, szBuffer );
 		}
 
@@ -959,6 +1003,9 @@ void CEventQueue::ServiceEvents( void )
 //-----------------------------------------------------------------------------
 void CC_DumpEventQueue()
 {
+	if ( !UTIL_IsCommandIssuedByServerAdmin() )
+		return;
+
 	g_EventQueue.Dump();
 }
 static ConCommand dumpeventqueue( "dumpeventqueue", CC_DumpEventQueue, "Dump the contents of the Entity I/O event queue to the console." );
@@ -1147,11 +1194,31 @@ int CEventQueue::Restore( IRestore &restore )
 		// add the restored event into the list
 		if ( tmpEvent.m_pEntTarget )
 		{
-			AddEvent( tmpEvent.m_pEntTarget, STRING(tmpEvent.m_iTargetInput), tmpEvent.m_VariantValue, tmpEvent.m_flFireTime - gpGlobals->curtime, tmpEvent.m_pActivator, tmpEvent.m_pCaller, tmpEvent.m_iOutputID );
+			AddEvent( tmpEvent.m_pEntTarget,
+					  STRING(tmpEvent.m_iTargetInput),
+					  tmpEvent.m_VariantValue,
+#ifdef TF_DLL
+					  tmpEvent.m_flFireTime - engine->GetServerTime(),
+#else
+					  tmpEvent.m_flFireTime - gpGlobals->curtime,
+#endif
+					  tmpEvent.m_pActivator,
+					  tmpEvent.m_pCaller,
+					  tmpEvent.m_iOutputID );
 		}
 		else
 		{
-			AddEvent( STRING(tmpEvent.m_iTarget), STRING(tmpEvent.m_iTargetInput), tmpEvent.m_VariantValue, tmpEvent.m_flFireTime - gpGlobals->curtime, tmpEvent.m_pActivator, tmpEvent.m_pCaller, tmpEvent.m_iOutputID );
+			AddEvent( STRING(tmpEvent.m_iTarget),
+					  STRING(tmpEvent.m_iTargetInput),
+					  tmpEvent.m_VariantValue,
+#ifdef TF_DLL
+					  tmpEvent.m_flFireTime - engine->GetServerTime(),
+#else
+					  tmpEvent.m_flFireTime - gpGlobals->curtime,
+#endif
+					  tmpEvent.m_pActivator,
+					  tmpEvent.m_pCaller,
+					  tmpEvent.m_iOutputID );
 		}
 	}
 
@@ -1696,7 +1763,7 @@ ISaveRestoreOps *variantFuncs = &g_VariantSaveDataOps;
 
 /////////////////////// entitylist /////////////////////
 
-CMemoryPool g_EntListMemPool( sizeof(entitem_t), 256, CMemoryPool::GROW_NONE, "g_EntListMemPool" );
+CUtlMemoryPool g_EntListMemPool( sizeof(entitem_t), 256, CUtlMemoryPool::GROW_NONE, "g_EntListMemPool" );
 
 #include "tier0/memdbgoff.h"
 

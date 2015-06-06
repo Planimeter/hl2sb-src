@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -226,7 +226,7 @@ struct FileHeader_t
 	int maxBonesPerVert;
 
 	// must match checkSum in the .mdl
-	long checkSum;
+	int checkSum;
 	
 	int numLODs; // garymcthack - this is also specified in ModelHeader_t and should match
 

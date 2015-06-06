@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -38,9 +38,7 @@ public:
 	bool operator == (Panel *pPanel)		{ return (Get() == pPanel); }
 	operator bool ()						{ return Get() != 0; }
 
-#ifndef LUA_SDK
 private:
-#endif
 	HPanel m_iPanelID;
 };
 

@@ -1,4 +1,4 @@
-//==== Copyright © 1996-2007, Valve Corporation, All rights reserved. =========
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Small, fast version of the strider. Goes where striders cannot, such
 // as into buildings. Best killed with physics objects and explosives.
@@ -429,7 +429,8 @@ void CC_Hunter_Shoot_Flechette( const CCommand& args )
 		// Shoot the flechette.		
 		Vector forward;
 		pPlayer->EyeVectors( &forward );
-		entity->Shoot( forward * 2000.0f, false );
+		forward *= 2000.0f;
+		entity->Shoot( forward, false );
 	}
 
 	CBaseEntity::SetAllowPrecache( allowPrecache );
@@ -681,7 +682,7 @@ void CHunterFlechette::FlechetteTouch( CBaseEntity *pOther )
 		CBreakable *pBreak = dynamic_cast <CBreakable *>(pOther);
 		if ( pBreak && ( pBreak->GetMaterialType() == matGlass ) )
 		{
-			flDamage = max( pOther->GetHealth(), flDamage );
+			flDamage = MAX( pOther->GetHealth(), flDamage );
 		}
 
 		CTakeDamageInfo	dmgInfo( this, GetOwnerEntity(), flDamage, DMG_DISSOLVE | DMG_NEVERGIB );
@@ -1025,12 +1026,9 @@ inline void HunterTraceHull_SkipPhysics( const Vector &vecAbsStart, const Vector
 // Hunter follow behavior
 //-----------------------------------------------------------------------------
 class CAI_HunterEscortBehavior : public CAI_FollowBehavior
-{
-	typedef CAI_FollowBehavior BaseClass;
-
-	DECLARE_CLASS( CAI_HunterEscortBehavior, CAI_FollowBehavior );
-	
+{	
 public:
+	DECLARE_CLASS( CAI_HunterEscortBehavior, CAI_FollowBehavior );
 
 	CAI_HunterEscortBehavior() :
 		BaseClass( AI_FollowParams_t( AIF_HUNTER, true ) ),
@@ -1281,7 +1279,7 @@ public:
 	//---------------------------------
 	// Damage handling
 	//---------------------------------
-	void			TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
+	void			TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
 	bool			IsHeavyDamage( const CTakeDamageInfo &info );
 	int				OnTakeDamage( const CTakeDamageInfo &info );
 	int				OnTakeDamage_Alive( const CTakeDamageInfo &info );
@@ -1792,7 +1790,7 @@ void CNPC_Hunter::Spawn()
 	float freeKnowledge = hunter_free_knowledge.GetFloat();
 	if ( freeKnowledge < GetEnemies()->GetEnemyDiscardTime() )
 	{
-		GetEnemies()->SetEnemyDiscardTime( max( freeKnowledge + 0.1, AI_DEF_ENEMY_DISCARD_TIME ) );
+		GetEnemies()->SetEnemyDiscardTime( MAX( freeKnowledge + 0.1, AI_DEF_ENEMY_DISCARD_TIME ) );
 	}
 	GetEnemies()->SetFreeKnowledgeDuration( freeKnowledge );
 
@@ -2205,7 +2203,7 @@ void CNPC_Hunter::PrescheduleThink()
 		if ( m_flPupilDilateTime < gpGlobals->curtime )
 		{
  			CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
- 			if ( pPlayer && !pPlayer->IsIlluminatedByFlashlight( this, NULL ) || !PlayerFlashlightOnMyEyes( pPlayer ) )
+ 			if ( ( pPlayer && !pPlayer->IsIlluminatedByFlashlight( this, NULL ) ) || !PlayerFlashlightOnMyEyes( pPlayer ) )
 			{
 				//Msg( "NOT SHINING FLASHLIGHT ON ME\n" );
 			
@@ -4321,25 +4319,30 @@ void CNPC_Hunter::HandleAnimEvent( animevent_t *pEvent )
 		
 	if ( pEvent->event == AE_HUNTER_MELEE_ATTACK_LEFT )
 	{
-		Vector right, forward;
+		Vector right, forward, dir;
 		AngleVectors( GetLocalAngles(), &forward, &right, NULL );
 
 		right = right * -100;
 		forward = forward * 600;
+		dir = right + forward;
+		QAngle angle( 25, 30, -20 );
 
-		MeleeAttack( HUNTER_MELEE_REACH, sk_hunter_dmg_one_slash.GetFloat(), QAngle( 25, 30, -20 ), right + forward, HUNTER_BLOOD_LEFT_FOOT );
+		MeleeAttack( HUNTER_MELEE_REACH, sk_hunter_dmg_one_slash.GetFloat(), angle, dir, HUNTER_BLOOD_LEFT_FOOT );
 		return;
 	}
 
 	if ( pEvent->event == AE_HUNTER_MELEE_ATTACK_RIGHT )
 	{
-		Vector right, forward;
+		Vector right, forward,dir;
 		AngleVectors( GetLocalAngles(), &forward, &right, NULL );
 
 		right = right * 100;
 		forward = forward * 600;
+		dir = right + forward;
+		
+		QAngle angle( 25, -30, 20 );
 
-		MeleeAttack( HUNTER_MELEE_REACH, sk_hunter_dmg_one_slash.GetFloat(), QAngle( 25, -30, 20 ), right + forward, HUNTER_BLOOD_LEFT_FOOT );
+		MeleeAttack( HUNTER_MELEE_REACH, sk_hunter_dmg_one_slash.GetFloat(), angle, dir, HUNTER_BLOOD_LEFT_FOOT );
 		return;
 	}
 
@@ -5200,7 +5203,7 @@ CBaseEntity *CNPC_Hunter::MeleeAttack( float flDist, int iDamage, QAngle &qaView
 					{
 						if ( GetAttachment( "blood_left", vecBloodPos ) )
 						{
-							SpawnBlood( vecBloodPos, g_vecAttackDir, pHurt->BloodColor(), min( iDamage, 30 ) );
+							SpawnBlood( vecBloodPos, g_vecAttackDir, pHurt->BloodColor(), MIN( iDamage, 30 ) );
 						}
 						
 						break;
@@ -5355,7 +5358,7 @@ void CNPC_Hunter::DeathSound( const CTakeDamageInfo &info )
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CNPC_Hunter::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr )
+void CNPC_Hunter::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
 	CTakeDamageInfo info = inputInfo;
 
@@ -5414,7 +5417,7 @@ void CNPC_Hunter::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &v
 		DispatchParticleEffect( "blood_impact_synth_01_arc_parent", PATTACH_POINT_FOLLOW, this, gm_nHeadCenterAttachment );
 	}
 
-	BaseClass::TraceAttack( info, vecDir, ptr );
+	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
 }
 
 
@@ -6374,13 +6377,13 @@ void CNPC_Hunter::FootFX( const Vector &origin )
 CBaseEntity *CNPC_Hunter::GetEnemyVehicle()
 {
 	if ( GetEnemy() == NULL )
-		return false;
+		return NULL;
 
 	CBaseCombatCharacter *pCCEnemy = GetEnemy()->MyCombatCharacterPointer();
 	if ( pCCEnemy != NULL )
 		return pCCEnemy->GetVehicleEntity();
 
-	return false;
+	return NULL;
 }
 
 
@@ -7143,7 +7146,7 @@ public:
 		int nRequested = nNPCs;
 		if ( nNPCs < 3 )
 		{
-			nNPCs = min( 3, nNPCs + freeHunters.Count() );
+			nNPCs = MIN( 3, nNPCs + freeHunters.Count() );
 		}
 
 		int nSummoned = 0;

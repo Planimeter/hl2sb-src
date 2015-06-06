@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Base combat character with no AI
 //
@@ -37,6 +37,11 @@
 #include "RagdollBoogie.h"
 #include "rumble_shared.h"
 #include "saverestoretypes.h"
+#include "nav_mesh.h"
+
+#ifdef NEXT_BOT
+#include "NextBot/NextBotManager.h"
+#endif
 
 #ifdef HL2_DLL
 #include "weapon_physcannon.h"
@@ -64,6 +69,8 @@ extern ConVar weapon_showproficiency;
 
 ConVar ai_show_hull_attacks( "ai_show_hull_attacks", "0" );
 ConVar ai_force_serverside_ragdoll( "ai_force_serverside_ragdoll", "0" );
+
+ConVar nb_last_area_update_tolerance( "nb_last_area_update_tolerance", "4.0", FCVAR_CHEAT, "Distance a character needs to travel in order to invalidate cached area" ); // 4.0 tested as sweet spot (for wanderers, at least). More resulted in little benefit, less quickly diminished benefit [7/31/2008 tom]
 
 #ifndef _RETAIL
 ConVar ai_use_visibility_cache( "ai_use_visibility_cache", "1" );
@@ -187,6 +194,9 @@ END_SEND_TABLE();
 // This table encodes the CBaseCombatCharacter
 //-----------------------------------------------------------------------------
 IMPLEMENT_SERVERCLASS_ST(CBaseCombatCharacter, DT_BaseCombatCharacter)
+#ifdef GLOWS_ENABLE
+	SendPropBool( SENDINFO( m_bGlowEnabled ) ),
+#endif // GLOWS_ENABLE
 	// Data that only gets sent to the local player.
 	SendPropDataTable( "bcc_localdata", 0, &REFERENCE_SEND_TABLE(DT_BCCLocalPlayerExclusive), SendProxy_SendBaseCombatCharacterLocalDataTable ),
 
@@ -291,7 +301,7 @@ void CBaseCombatCharacter::CorpseFade( void )
 	SetMoveType( MOVETYPE_NONE );
 	SetLocalAngularVelocity( vec3_angle );
 	m_flAnimTime = gpGlobals->curtime;
-	AddEffects( EF_NOINTERP );
+	IncrementInterpolationFrame();
 	SUB_StartFadeOut();
 }
 
@@ -623,7 +633,7 @@ CProp_Portal* CBaseCombatCharacter::FInViewConeThroughPortal( const Vector &vecS
 			float flDot = DotProduct( los, facingDir );
 
 			// Use the tougher FOV of either the standard FOV or FOV clipped to the portal hole
-			if ( flDot > max( fFOVThroughPortal, m_flFieldOfView ) )
+			if ( flDot > MAX( fFOVThroughPortal, m_flFieldOfView ) )
 			{
 				float fActualDist = ptEyePosition.DistToSqr( vTranslatedVecSpot );
 				if( fActualDist < fDistToBeat )
@@ -714,6 +724,19 @@ CBaseCombatCharacter::CBaseCombatCharacter( void )
 
 	// reset all ammo values to 0
 	RemoveAllAmmo();
+	
+	// not alive yet
+	m_aliveTimer.Invalidate();
+	m_hasBeenInjured = 0;
+
+	for( int t=0; t<MAX_DAMAGE_TEAMS; ++t )
+	{
+		m_damageHistory[t].team = TEAM_INVALID;
+	}
+
+	// not standing on a nav area yet
+	m_lastNavArea = NULL;
+	m_registeredNavTeam = TEAM_INVALID;
 
 	for (int i = 0; i < MAX_WEAPONS; i++)
 	{
@@ -724,6 +747,10 @@ CBaseCombatCharacter::CBaseCombatCharacter( void )
 	m_impactEnergyScale = 1.0f;
 
 	m_bForceServerRagdoll = ai_force_serverside_ragdoll.GetBool();
+
+#ifdef GLOWS_ENABLE
+	m_bGlowEnabled.Set( false );
+#endif // GLOWS_ENABLE
 }
 
 //------------------------------------------------------------------------------
@@ -734,6 +761,28 @@ CBaseCombatCharacter::CBaseCombatCharacter( void )
 CBaseCombatCharacter::~CBaseCombatCharacter( void )
 {
 	ResetVisibilityCache( this );
+	ClearLastKnownArea();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Put the combat character into the environment
+//-----------------------------------------------------------------------------
+void CBaseCombatCharacter::Spawn( void )
+{
+	BaseClass::Spawn();
+	
+	SetBlocksLOS( false );
+	m_aliveTimer.Start();
+	m_hasBeenInjured = 0;
+
+	for( int t=0; t<MAX_DAMAGE_TEAMS; ++t )
+	{
+		m_damageHistory[t].team = TEAM_INVALID;
+	}
+
+	// not standing on a nav area yet
+	ClearLastKnownArea();
+
 }
 
 //-----------------------------------------------------------------------------
@@ -805,6 +854,10 @@ void CBaseCombatCharacter::UpdateOnRemove( void )
 		pOwner->DeathNotice( this );
 		SetOwnerEntity( NULL );
 	}
+
+#ifdef GLOWS_ENABLE
+	RemoveGlowEffect();
+#endif // GLOWS_ENABLE
 
 	// Chain at end to mimic destructor unwind order
 	BaseClass::UpdateOnRemove();
@@ -1171,7 +1224,7 @@ CBaseEntity *CBaseCombatCharacter::CheckTraceHullAttack( const Vector &vStart, c
 
 #if 1
 
-	CTakeDamageInfo	dmgInfo( this, this, iDamage, DMG_SLASH );
+	CTakeDamageInfo	dmgInfo( this, this, iDamage, iDmgType );
 	
 	// COLLISION_GROUP_PROJECTILE does some handy filtering that's very appropriate for this type of attack, as well. (sjb) 7/25/2007
 	CTraceFilterMelee traceFilter( this, COLLISION_GROUP_PROJECTILE, &dmgInfo, flForceScale, bDamageAnyNPC );
@@ -1496,12 +1549,18 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 #endif
 
 #ifdef HL2_DLL	
-	// Mega physgun requires everything to be a server-side ragdoll
+
+	bool bMegaPhyscannonActive = false;
+#if !defined( HL2MP )
 #ifndef HL2SB
-	if ( m_bForceServerRagdoll == true || ( HL2GameRules()->MegaPhyscannonActive() == true ) && !IsPlayer() && Classify() != CLASS_PLAYER_ALLY_VITAL && Classify() != CLASS_PLAYER_ALLY )
+	bMegaPhyscannonActive = HL2GameRules()->MegaPhyscannonActive();
 #else
-	if ( m_bForceServerRagdoll == true || ( HL2MPRules()->MegaPhyscannonActive() == true ) && !IsPlayer() && Classify() != CLASS_PLAYER_ALLY_VITAL && Classify() != CLASS_PLAYER_ALLY )
+	bMegaPhyscannonActive = HL2MPRules()->MegaPhyscannonActive();
 #endif
+#endif // !HL2MP
+
+	// Mega physgun requires everything to be a server-side ragdoll
+	if ( m_bForceServerRagdoll == true || ( ( bMegaPhyscannonActive == true ) && !IsPlayer() && Classify() != CLASS_PLAYER_ALLY_VITAL && Classify() != CLASS_PLAYER_ALLY ) )
 	{
 		if ( CanBecomeServerRagdoll() == false )
 			return false;
@@ -1613,10 +1672,36 @@ void CBaseCombatCharacter::Event_Killed( const CTakeDamageInfo &info )
 			BecomeRagdoll( info, forceVector );
 		}
 	}
+	
+	// no longer standing on a nav area
+	ClearLastKnownArea();
+
+#if 0
+	// L4D specific hack for zombie commentary mode
+	if( GetOwnerEntity() != NULL )
+	{
+		GetOwnerEntity()->DeathNotice( this );
+	}
+#endif
+	
+#ifdef NEXT_BOT
+	// inform bots
+	TheNextBots().OnKilled( this, info );
+#endif
+
+#ifdef GLOWS_ENABLE
+	RemoveGlowEffect();
+#endif // GLOWS_ENABLE
 }
 
-void CBaseCombatCharacter::Event_Dying( void )
+void CBaseCombatCharacter::Event_Dying( const CTakeDamageInfo &info )
 {
+}
+
+void CBaseCombatCharacter::Event_Dying()
+{
+	CTakeDamageInfo info;
+	Event_Dying( info );
 }
 
 
@@ -1629,6 +1714,11 @@ bool CBaseCombatCharacter::Weapon_Detach( CBaseCombatWeapon *pWeapon )
 	{
 		if ( pWeapon == m_hMyWeapons[i] )
 		{
+			pWeapon->Detach();
+			if ( pWeapon->HolsterOnDetach() )
+			{
+				pWeapon->Holster();
+			}
 			m_hMyWeapons.Set( i, NULL );
 			pWeapon->SetOwner( NULL );
 
@@ -2310,6 +2400,32 @@ int CBaseCombatCharacter::OnTakeDamage( const CTakeDamageInfo &info )
 		UTIL_Smoke( info.GetDamagePosition(), random->RandomInt( 10, 15 ), 10 );
 	}
 
+	// track damage history
+	if ( info.GetAttacker() )
+	{
+		int attackerTeam = info.GetAttacker()->GetTeamNumber();
+
+		m_hasBeenInjured |= ( 1 << attackerTeam );
+
+		for( int i=0; i<MAX_DAMAGE_TEAMS; ++i )
+		{
+			if ( m_damageHistory[i].team == attackerTeam )
+			{
+				// restart the injury timer
+				m_damageHistory[i].interval.Start();
+				break;
+			}
+
+			if ( m_damageHistory[i].team == TEAM_INVALID )
+			{
+				// team not registered yet
+				m_damageHistory[i].team = attackerTeam;
+				m_damageHistory[i].interval.Start();
+				break;
+			}
+		}
+	}
+
 	switch( m_lifeState )
 	{
 	case LIFE_ALIVE:
@@ -2334,7 +2450,7 @@ int CBaseCombatCharacter::OnTakeDamage( const CTakeDamageInfo &info )
 			
 			if ( bGibbed == false )
 			{
-				Event_Dying();
+				Event_Dying( info );
 			}
 		}
 		return retVal;
@@ -2876,7 +2992,7 @@ int CBaseCombatCharacter::GiveAmmo( int iCount, int iAmmoIndex, bool bSuppressSo
 		return 0;
 
 	int iMax = GetAmmoDef()->MaxCarry(iAmmoIndex);
-	int iAdd = min( iCount, iMax - m_iAmmo[iAmmoIndex] );
+	int iAdd = MIN( iCount, iMax - m_iAmmo[iAmmoIndex] );
 	if ( iAdd < 1 )
 		return 0;
 
@@ -2952,7 +3068,7 @@ void CBaseCombatCharacter::ApplyStressDamage( IPhysicsObject *pPhysics, bool bRe
 
 		//Msg("Stress! %.2f / %.2f\n", stressOut.exertedStress, stressOut.receivedStress );
 		CTakeDamageInfo dmgInfo( GetWorldEntity(), GetWorldEntity(), vec3_origin, vec3_origin, damage, DMG_CRUSH );
-		dmgInfo.SetDamageForce( Vector( 0, 0, -stressOut.receivedStress * sv_gravity.GetFloat() * gpGlobals->frametime ) );
+		dmgInfo.SetDamageForce( Vector( 0, 0, -stressOut.receivedStress * GetCurrentGravity() * gpGlobals->frametime ) );
 		dmgInfo.SetDamagePosition( GetAbsOrigin() );
 		TakeDamage( dmgInfo );
 	}
@@ -2998,7 +3114,7 @@ void CBaseCombatCharacter::VPhysicsShadowCollision( int index, gamevcollisioneve
 	// which can occur owing to ordering issues it appears.
 	float flOtherAttackerTime = 0.0f;
 
-#ifdef HL2_DLL
+#if defined( HL2_DLL ) && !defined( HL2MP )
 #ifndef HL2SB
 	if ( HL2GameRules()->MegaPhyscannonActive() == true )
 #else
@@ -3007,7 +3123,7 @@ void CBaseCombatCharacter::VPhysicsShadowCollision( int index, gamevcollisioneve
 	{
 		flOtherAttackerTime = 1.0f;
 	}
-#endif
+#endif // HL2_DLL && !HL2MP
 
 	if ( this == pOther->HasPhysicsAttacker( flOtherAttackerTime ) )
 		return;
@@ -3090,7 +3206,7 @@ void RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrc, float flRa
 	{
 		// Even the tiniest explosion gets attention. Don't let the radius
 		// be less than 128 units.
-		float soundRadius = max( 128.0f, flRadius * 1.5 );
+		float soundRadius = MAX( 128.0f, flRadius * 1.5 );
 
 		CSoundEnt::InsertSound( SOUND_COMBAT | SOUND_CONTEXT_EXPLOSION, vecSrc, soundRadius, 0.25, info.GetInflictor() );
 	}
@@ -3129,6 +3245,33 @@ float CBaseCombatCharacter::GetSpreadBias( CBaseCombatWeapon *pWeapon, CBaseEnti
 		return pWeapon->GetSpreadBias(GetCurrentWeaponProficiency());
 	return 1.0;
 }
+
+#ifdef GLOWS_ENABLE
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBaseCombatCharacter::AddGlowEffect( void )
+{
+	SetTransmitState( FL_EDICT_ALWAYS );
+	m_bGlowEnabled.Set( true );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBaseCombatCharacter::RemoveGlowEffect( void )
+{
+	m_bGlowEnabled.Set( false );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CBaseCombatCharacter::IsGlowEffectActive( void )
+{
+	return m_bGlowEnabled;
+}
+#endif // GLOWS_ENABLE
 
 //-----------------------------------------------------------------------------
 // Assume everyone is average with every weapon. Override this to make exceptions.
@@ -3218,3 +3361,252 @@ void CBaseCombatCharacter::DoMuzzleFlash()
 		BaseClass::DoMuzzleFlash();
 	}
 }
+
+//-----------------------------------------------------------------------------
+// Purpose: return true if given target cant be seen because of fog
+//-----------------------------------------------------------------------------
+bool CBaseCombatCharacter::IsHiddenByFog( const Vector &target ) const
+{
+	float range = EyePosition().DistTo( target );
+	return IsHiddenByFog( range );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: return true if given target cant be seen because of fog
+//-----------------------------------------------------------------------------
+bool CBaseCombatCharacter::IsHiddenByFog( CBaseEntity *target ) const
+{
+	if ( !target )
+		return false;
+
+	float range = EyePosition().DistTo( target->WorldSpaceCenter() );
+	return IsHiddenByFog( range );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: return true if given target cant be seen because of fog
+//-----------------------------------------------------------------------------
+bool CBaseCombatCharacter::IsHiddenByFog( float range ) const
+{
+	if ( GetFogObscuredRatio( range ) >= 1.0f )
+		return true;
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: return 0-1 ratio where zero is not obscured, and 1 is completely obscured
+//-----------------------------------------------------------------------------
+float CBaseCombatCharacter::GetFogObscuredRatio( const Vector &target ) const
+{
+	float range = EyePosition().DistTo( target );
+	return GetFogObscuredRatio( range );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: return 0-1 ratio where zero is not obscured, and 1 is completely obscured
+//-----------------------------------------------------------------------------
+float CBaseCombatCharacter::GetFogObscuredRatio( CBaseEntity *target ) const
+{
+	if ( !target )
+		return false;
+
+	float range = EyePosition().DistTo( target->WorldSpaceCenter() );
+	return GetFogObscuredRatio( range );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: return 0-1 ratio where zero is not obscured, and 1 is completely obscured
+//-----------------------------------------------------------------------------
+float CBaseCombatCharacter::GetFogObscuredRatio( float range ) const
+{
+/* TODO: Get global fog from map somehow since nav mesh fog is gone
+	fogparams_t fog;
+	GetFogParams( &fog );
+
+	if ( !fog.enable )
+		return 0.0f;
+
+	if ( range <= fog.start )
+		return 0.0f;
+
+	if ( range >= fog.end )
+		return 1.0f;
+
+	float ratio = (range - fog.start) / (fog.end - fog.start);
+	ratio = MIN( ratio, fog.maxdensity );
+	return ratio;
+*/
+	return 0.0f;
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Invoke this to update our last known nav area 
+// (since there is no think method chained to CBaseCombatCharacter)
+//-----------------------------------------------------------------------------
+void CBaseCombatCharacter::UpdateLastKnownArea( void )
+{
+#ifdef NEXT_BOT
+	if ( TheNavMesh->IsGenerating() )
+	{
+		ClearLastKnownArea();
+		return;
+	}
+
+	if ( nb_last_area_update_tolerance.GetFloat() > 0.0f )
+	{
+		// skip this test if we're not standing on the world (ie: elevators that move us)
+		if ( GetGroundEntity() == NULL || GetGroundEntity()->IsWorld() )
+		{
+			if ( m_lastNavArea && m_NavAreaUpdateMonitor.IsMarkSet() && !m_NavAreaUpdateMonitor.TargetMoved( this ) )
+				return;
+
+			m_NavAreaUpdateMonitor.SetMark( this, nb_last_area_update_tolerance.GetFloat() );
+		}
+	}
+
+	// find the area we are directly standing in
+	CNavArea *area = TheNavMesh->GetNearestNavArea( this, GETNAVAREA_CHECK_GROUND | GETNAVAREA_CHECK_LOS, 50.0f );
+	if ( !area )
+		return;
+
+	// make sure we can actually use this area - if not, consider ourselves off the mesh
+	if ( !IsAreaTraversable( area ) )
+		return;
+
+	if ( area != m_lastNavArea )
+	{
+		// player entered a new nav area
+		if ( m_lastNavArea )
+		{
+			m_lastNavArea->DecrementPlayerCount( m_registeredNavTeam, entindex() );
+			m_lastNavArea->OnExit( this, area );
+		}
+
+		m_registeredNavTeam = GetTeamNumber();
+		area->IncrementPlayerCount( m_registeredNavTeam, entindex() );
+		area->OnEnter( this, m_lastNavArea );
+
+		OnNavAreaChanged( area, m_lastNavArea );
+
+		m_lastNavArea = area;
+	}
+#endif
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Return true if we can use (walk through) the given area 
+//-----------------------------------------------------------------------------
+bool CBaseCombatCharacter::IsAreaTraversable( const CNavArea *area ) const
+{
+	return area ? !area->IsBlocked( GetTeamNumber() ) : false;
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Leaving the nav mesh
+//-----------------------------------------------------------------------------
+void CBaseCombatCharacter::ClearLastKnownArea( void )
+{
+	OnNavAreaChanged( NULL, m_lastNavArea );
+	
+	if ( m_lastNavArea )
+	{
+		m_lastNavArea->DecrementPlayerCount( m_registeredNavTeam, entindex() );
+		m_lastNavArea->OnExit( this, NULL );
+		m_lastNavArea = NULL;
+		m_registeredNavTeam = TEAM_INVALID;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Handling editor removing the area we're standing upon
+//-----------------------------------------------------------------------------
+void CBaseCombatCharacter::OnNavAreaRemoved( CNavArea *removedArea )
+{
+	if ( m_lastNavArea == removedArea )
+	{
+		ClearLastKnownArea();
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Changing team, maintain associated data
+//-----------------------------------------------------------------------------
+void CBaseCombatCharacter::ChangeTeam( int iTeamNum )
+{
+	// old team member no longer in the nav mesh
+	ClearLastKnownArea();
+
+#ifdef GLOWS_ENABLE
+	RemoveGlowEffect();
+#endif // GLOWS_ENABLE
+
+	BaseClass::ChangeTeam( iTeamNum );
+}
+
+
+//-----------------------------------------------------------------------------
+// Return true if we have ever been injured by a member of the given team
+//-----------------------------------------------------------------------------
+bool CBaseCombatCharacter::HasEverBeenInjured( int team /*= TEAM_ANY */ ) const
+{
+	if ( team == TEAM_ANY )
+	{
+		return ( m_hasBeenInjured == 0 ) ? false : true;
+	}
+
+	int teamMask = 1 << team;
+
+	if ( m_hasBeenInjured & teamMask )
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+//-----------------------------------------------------------------------------
+// Return time since we were hurt by a member of the given team
+//-----------------------------------------------------------------------------
+float CBaseCombatCharacter::GetTimeSinceLastInjury( int team /*= TEAM_ANY */ ) const
+{
+	const float never = 999999999999.9f;
+
+	if ( team == TEAM_ANY )
+	{
+		float time = never;
+
+		// find most recent injury time
+		for( int i=0; i<MAX_DAMAGE_TEAMS; ++i )
+		{
+			if ( m_damageHistory[i].team != TEAM_INVALID )
+			{
+				if ( m_damageHistory[i].interval.GetElapsedTime() < time )
+				{
+					time = m_damageHistory[i].interval.GetElapsedTime();
+				}
+			}
+		}
+
+		return time;
+	}
+	else
+	{
+		for( int i=0; i<MAX_DAMAGE_TEAMS; ++i )
+		{
+			if ( m_damageHistory[i].team == team )
+			{
+				return m_damageHistory[i].interval.GetElapsedTime();
+			}
+		}
+	}
+
+	return never;
+}
+

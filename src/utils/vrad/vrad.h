@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -27,7 +27,7 @@
 #include "VRAD_DispColl.h"
 #include "UtlMemory.h"
 #include "UtlHash.h"
-#include "UtlVector.h"
+#include "utlvector.h"
 #include "iincremental.h"
 #include "raytrace.h"
 
@@ -281,6 +281,7 @@ extern qboolean		g_bLowPriority;
 extern qboolean		do_fast;
 extern bool			g_bInterrupt;		// Was used with background lighting in WC. Tells VRAD to stop lighting.
 extern IIncremental *g_pIncremental;	// null if not doing incremental lighting
+extern bool			g_bDumpPropLightmaps;
 
 extern float g_flSkySampleScale;								// extra sampling factor for indirect light
 
@@ -336,7 +337,7 @@ extern dface_t *g_pFaces;
 extern bool g_bMPIProps;
 
 extern	byte	nodehit[MAX_MAP_NODES];
-extern  float	gamma;
+extern  float	gamma_value;
 extern	float	indirect_sun;
 extern	float	smoothing_threshold;
 extern	int		dlight_map;
@@ -363,7 +364,10 @@ void BuildFacelights (int facenum, int threadnum);
 void PrecompLightmapOffsets();
 void FinalLightFace (int threadnum, int facenum);
 void PvsForOrigin (Vector& org, byte *pvs);
-void ConvertRGBExp32ToRGBA8888( const ColorRGBExp32 *pSrc, unsigned char *pDst );
+void ConvertRGBExp32ToRGBA8888( const ColorRGBExp32 *pSrc, unsigned char *pDst, Vector* _optOutLinear = NULL );
+void ConvertRGBExp32ToLinear(const ColorRGBExp32 *pSrc, Vector* pDst);
+void ConvertLinearToRGBA8888( const Vector *pSrc, unsigned char *pDst );
+
 
 inline byte PVSCheck( const byte *pvs, int iCluster )
 {

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: combine ball -	can be held by the super physcannon and launched
 //							by the AR2's alt-fire
@@ -25,7 +25,7 @@
 #include "hl2_player.h"
 #include "eventqueue.h"
 #include "physics_collisionevent.h"
-#include "GameStats.h"
+#include "gamestats.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -100,11 +100,11 @@ CBasePlayer *CPropCombineBall::HasPhysicsAttacker( float dt )
 {
 	// Must have an owner
 	if ( GetOwnerEntity() == NULL )
-		return false;
+		return NULL;
 
 	// Must be a player
 	if ( GetOwnerEntity()->IsPlayer() == false )
-		return false;
+		return NULL;
 
 	// We don't care about the time passed in
 	return static_cast<CBasePlayer *>(GetOwnerEntity());
@@ -240,7 +240,7 @@ END_SEND_TABLE()
 //-----------------------------------------------------------------------------
 // Gets at the spawner
 //-----------------------------------------------------------------------------
-inline CFuncCombineBallSpawner *CPropCombineBall::GetSpawner()
+CFuncCombineBallSpawner *CPropCombineBall::GetSpawner()
 {
 	return m_hSpawner;
 }
@@ -762,7 +762,6 @@ void CPropCombineBall::WhizSoundThink()
 	else
 	{
 		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-
 		if ( pPlayer )
 		{
 			Vector vecDelta;
@@ -797,7 +796,6 @@ void CPropCombineBall::WhizSoundThink()
 				}
 			}
 		}
-
 	}
 
 	SetContextThink( &CPropCombineBall::WhizSoundThink, gpGlobals->curtime + 2.0f * TICK_INTERVAL, s_pWhizThinkContext );
@@ -1288,7 +1286,7 @@ void CPropCombineBall::OnHitEntity( CBaseEntity *pHitEntity, float flSpeed, int 
 
 					if ( pHitEntity->IsNPC() && pHitEntity->Classify() != CLASS_PLAYER_ALLY_VITAL && hl2_episodic.GetBool() == true )
 					{
-						if ( pHitEntity->Classify() != CLASS_PLAYER_ALLY || pHitEntity->Classify() == CLASS_PLAYER_ALLY && m_bStruckEntity == false )
+						if ( pHitEntity->Classify() != CLASS_PLAYER_ALLY || ( pHitEntity->Classify() == CLASS_PLAYER_ALLY && m_bStruckEntity == false ) )
 						{
 							info.SetDamage( pHitEntity->GetMaxHealth() );
 							m_bStruckEntity = true;
@@ -1835,7 +1833,7 @@ void CFuncCombineBallSpawner::Spawn()
 
 	float flWidth = CollisionProp()->OBBSize().x;
 	float flHeight = CollisionProp()->OBBSize().y;
-	m_flRadius = min( flWidth, flHeight ) * 0.5f;
+	m_flRadius = MIN( flWidth, flHeight ) * 0.5f;
 	if ( m_flRadius <= 0.0f && m_bShooter == false )
 	{
 		Warning("Zero dimension func_combine_ball_spawner! Removing...\n");

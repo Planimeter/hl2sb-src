@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -867,7 +867,7 @@ public:
     int iFirstUsed;
     int iOrigIndex;
 
-    bool operator<(const SortEntry& rhs)
+    bool operator<(const SortEntry& rhs) const
     {
         return iFirstUsed < rhs.iFirstUsed;
     }
