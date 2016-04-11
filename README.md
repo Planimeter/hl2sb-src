@@ -4,7 +4,7 @@ Half-Life 2: Sandbox is an open-source sandbox modification of the Source Engine
 
 ### Proudly powered by
 
-[![ARGG](http://skew.telefragged.com/mods/hl2/ARGG/ARGG_button.jpg "ARGG")](http://skew.telefragged.com/mods/hl2/ARGG)
+[![ARGG](http://media.moddb.com/images/downloads/1/6/5011/profile.jpg "ARGG")](http://skew.telefragged.com/mods/hl2/ARGG)
 
 **Adnan's Rotational Gravity Gun**  
 Adnan Zafar  
