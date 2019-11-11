@@ -13,7 +13,5 @@ http://skew.telefragged.com/mods/hl2/ARGG/
 
 ARGG is used by Half-Life 2: Sandbox to implement rotational functionality for the physics manipulator.
 
-[![Open Steamworks](http://hl2sb-src.googlecode.com/files/opensteamworks_logo2.png "Open Steamworks")](http://opensteamworks.org/)
-
 **Open Steamworks**  
 Open Steamworks is used in Half-Life 2: Sandbox for mounting additional game content through Steam's abstraction layer rather than the game engine's filesystem class, which prevents non-fatal engine errors.
