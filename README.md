@@ -1,4 +1,4 @@
-![hl2sb-src](http://hl2sb.googlecode.com/files/Half-Life%202%20Sandbox%20Title%20Logo%2048%20pt.png "hl2sb-src")
+# hl2sb-src
 
 Half-Life 2: Sandbox is an open-source sandbox modification of the Source Engine which provides Lua as a scripting platform for developers to quickly prototype game ideas. The minimalistic game includes a sandbox gamemode for playing with the many aspects of the Source Engine.
 
