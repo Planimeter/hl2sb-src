@@ -4,12 +4,12 @@ Half-Life 2: Sandbox is an open-source sandbox modification of the Source Engine
 
 ### Proudly powered by
 
-[![ARGG](http://media.moddb.com/images/downloads/1/6/5011/profile.jpg "ARGG")](http://skew.telefragged.com/mods/hl2/ARGG)
+[![ARGG](http://media.moddb.com/images/downloads/1/6/5011/profile.jpg "ARGG")](https://web.archive.org/web/20150222194420/http://skew.telefragged.com/mods/hl2/ARGG/)
 
 **Adnan's Rotational Gravity Gun**  
 Adnan Zafar  
 adnan.f.zafar AT gmail DOT com  
-http://skew.telefragged.com/mods/hl2/ARGG/  
+https://web.archive.org/web/20150222194420/http://skew.telefragged.com/mods/hl2/ARGG//  
 
 ARGG is used by Half-Life 2: Sandbox to implement rotational functionality for the physics manipulator.
 
