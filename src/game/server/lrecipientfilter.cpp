@@ -5,8 +5,6 @@
 // $NoKeywords: $
 //
 //=============================================================================//
-#define lrecipientfilter_cpp
-
 #include "cbase.h"
 #include "recipientfilter.h"
 #include "luamanager.h"

@@ -59,7 +59,7 @@ void DBG_AssertFunction( bool fExpr, const char *szExpr, const char *szFile, int
 		Q_snprintf(szOut,sizeof(szOut), "ASSERT FAILED:\n %s \n(%s@%d)\n%s", szExpr, szFile, szLine, szMessage);
 	else
 		Q_snprintf(szOut,sizeof(szOut), "ASSERT FAILED:\n %s \n(%s@%d)\n", szExpr, szFile, szLine);
-	Warning( szOut);
+	Warning( "%s", szOut);
 }
 #endif	// DEBUG
 
@@ -74,7 +74,8 @@ public:
 
 	virtual void InstallFactory( IEntityFactory *pFactory, const char *pClassName );
 #ifdef LUA_SDK
-	virtual void RemoveFactory( IEntityFactory *pFactory, const char *pClassName );
+        virtual void RemoveFactory(IEntityFactory *pFactory,
+                                   const char *pClassName);
 #endif
 	virtual IServerNetworkable *Create( const char *pClassName );
 	virtual void Destroy( const char *pClassName, IServerNetworkable *pNetworkable );
@@ -151,23 +152,19 @@ IEntityFactory *CEntityFactoryDictionary::FindFactory( const char *pClassName )
 //-----------------------------------------------------------------------------
 void CEntityFactoryDictionary::InstallFactory( IEntityFactory *pFactory, const char *pClassName )
 {
-#ifndef HL2SB
 	Assert( FindFactory( pClassName ) == NULL );
-#endif
 	m_Factories.Insert( pClassName, pFactory );
 }
-
 
 #ifdef LUA_SDK
 //-----------------------------------------------------------------------------
 // Remove an existing factory
 //-----------------------------------------------------------------------------
-void CEntityFactoryDictionary::RemoveFactory( IEntityFactory *pFactory, const char *pClassName )
-{
-	m_Factories.Remove( pClassName );
+void CEntityFactoryDictionary::RemoveFactory(IEntityFactory *pFactory,
+                                             const char *pClassName) {
+    m_Factories.Remove(pClassName);
 }
 #endif
-
 
 //-----------------------------------------------------------------------------
 // Instantiate something using a factory
@@ -177,6 +174,11 @@ IServerNetworkable *CEntityFactoryDictionary::Create( const char *pClassName )
 	IEntityFactory *pFactory = FindFactory( pClassName );
 	if ( !pFactory )
 	{
+#ifdef STAGING_ONLY
+		static ConVarRef tf_bot_use_items( "tf_bot_use_items" );
+		if ( tf_bot_use_items.IsValid() && tf_bot_use_items.GetInt() )
+			return NULL;
+#endif
 		Warning("Attempted to create unknown entity type %s!\n", pClassName );
 		return NULL;
 	}
@@ -584,6 +586,24 @@ CBasePlayer	*UTIL_PlayerByIndex( int playerIndex )
 	return pPlayer;
 }
 
+CBasePlayer *UTIL_PlayerBySteamID( const CSteamID &steamID )
+{
+	CSteamID steamIDPlayer;
+	for ( int i = 1; i <= gpGlobals->maxClients; i++ )
+	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+		if ( !pPlayer )
+			continue;
+
+		if ( !pPlayer->GetSteamID( &steamIDPlayer ) )
+			continue;
+
+		if ( steamIDPlayer == steamID )
+			return pPlayer;
+	}
+	return NULL;
+}
+
 CBasePlayer* UTIL_PlayerByName( const char *name )
 {
 	if ( !name || !name[0] )
@@ -635,27 +655,8 @@ CBasePlayer* UTIL_PlayerByUserId( int userID )
 // 
 CBasePlayer *UTIL_GetLocalPlayer( void )
 {
-#ifdef HL2SB
-	// HACKHACK: We change the behavior of UTIL_GetLocalPlayer() here to be
-	// compatible with multiplayer games for the sake of not crashing.
-	CBasePlayer *pHostPlayer = UTIL_GetListenServerHost();
-	if ( pHostPlayer != NULL )
-		return pHostPlayer;
-#endif
-
 	if ( gpGlobals->maxClients > 1 )
 	{
-#ifdef HL2SB
-		for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
-		{
-			CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
-			if(!pEnt || !pEnt->IsPlayer())
-				continue;
-
-			// Return the first player we can get a hold of.
-			return pEnt;
-		}
-#else
 		if ( developer.GetBool() )
 		{
 			Assert( !"UTIL_GetLocalPlayer" );
@@ -666,65 +667,10 @@ CBasePlayer *UTIL_GetLocalPlayer( void )
 		}
 
 		return NULL;
-#endif
 	}
 
 	return UTIL_PlayerByIndex( 1 );
 }
-
-#ifdef HL2SB
-CBasePlayer *UTIL_GetNearestPlayer( const Vector& pos )
-{
-	CBasePlayer *pPlayer = NULL;
-	float	flNearestDistSqr = FLT_MAX;
-	float	flDistSqr;
-	for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
-	{
-		CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
-		if(!pEnt || !pEnt->IsPlayer())
-			continue;
-
-		// Distance is the deciding factor
-		flDistSqr = ( pos - pEnt->GetAbsOrigin() ).LengthSqr();
-
-		// Closer, take it
-		if ( flDistSqr < flNearestDistSqr )
-		{
-			flNearestDistSqr = flDistSqr;
-			pPlayer = pEnt;
-		}
-	}
-	
-	return pPlayer;
-}
-
-CBasePlayer *UTIL_GetNearestVisiblePlayer( CBaseEntity *pEntity, int mask )
-{
-	const Vector& pos = pEntity->GetAbsOrigin();
-
-	CBasePlayer *pPlayer = NULL;
-	float	flNearestDistSqr = FLT_MAX;
-	float	flDistSqr;
-	for( int iClient = 1; iClient <= gpGlobals->maxClients; ++iClient )
-	{
-		CBasePlayer *pEnt = UTIL_PlayerByIndex( iClient );
-		if(!pEnt || !pEnt->IsPlayer())
-			continue;
-
-		// Distance is the deciding factor
-		flDistSqr = ( pos - pEnt->GetAbsOrigin() ).LengthSqr();
-
-		// Closer, take it
-		if ( flDistSqr < flNearestDistSqr && pEntity->FVisible( pEnt, mask ) )
-		{
-			flNearestDistSqr = flDistSqr;
-			pPlayer = pEnt;
-		}
-	}
-
-	return pPlayer;
-}
-#endif
 
 //
 // Get the local player on a listen server - this is for multiplayer use only

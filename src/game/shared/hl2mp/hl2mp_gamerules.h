@@ -84,14 +84,6 @@ class CHL2MPRules : public CTeamplayRules
 public:
 	DECLARE_CLASS( CHL2MPRules, CTeamplayRules );
 
-#ifdef HL2SB
-private:
-	// Rules change for the mega physgun
-	CNetworkVar( bool, m_bMegaPhysgun );
-
-public:
-#endif
-
 #ifdef CLIENT_DLL
 
 	DECLARE_CLIENTCLASS_NOBASE(); // This makes datatables able to access our private vars.
@@ -116,13 +108,18 @@ public:
 	virtual void CreateStandardEntities( void );
 	virtual void ClientSettingsChanged( CBasePlayer *pPlayer );
 	virtual int PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget );
-#ifdef LUA_SDK
+
+ #ifdef LUA_SDK
 #ifndef CLIENT_DLL
-	virtual bool PlayerCanHearChat( CBasePlayer *pListener, CBasePlayer *pSpeaker );
-	virtual bool ClientConnected( edict_t *pEntity, const char *pszName, const char *pszAddress, char *reject, int maxrejectlen );
-	virtual void InitHUD( CBasePlayer *pl );
+        virtual bool PlayerCanHearChat(CBasePlayer *pListener,
+                                       CBasePlayer *pSpeaker);
+        virtual bool ClientConnected(edict_t *pEntity, const char *pszName,
+                                     const char *pszAddress, char *reject,
+                                     int maxrejectlen);
+        virtual void InitHUD(CBasePlayer *pl);
 #endif
 #endif
+
 	virtual void GoToIntermission( void );
 	virtual void DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info );
 	virtual const char *GetGameDescription( void );
@@ -140,10 +137,12 @@ public:
 	virtual Vector VecItemRespawnSpot( CItem *pItem );
 	virtual QAngle VecItemRespawnAngles( CItem *pItem );
 	virtual float	FlItemRespawnTime( CItem *pItem );
+
 #ifdef LUA_SDK
-	virtual void PlayerGotItem( CBasePlayer *pPlayer, CItem *pItem );
-	virtual int ItemShouldRespawn( CItem *pItem );
+        virtual void PlayerGotItem(CBasePlayer *pPlayer, CItem *pItem);
+        virtual int ItemShouldRespawn(CItem *pItem);
 #endif
+
 	virtual bool	CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem );
 	virtual bool FShouldSwitchWeapon( CBasePlayer *pPlayer, CBaseCombatWeapon *pWeapon );
 
@@ -152,16 +151,13 @@ public:
 	void	ManageObjectRelocation( void );
 	void    CheckChatForReadySignal( CHL2MP_Player *pPlayer, const char *chatmsg );
 	const char *GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer );
+#endif
 
-#ifdef HL2SB
-	virtual void InitDefaultAIRelationships( void );
-#endif
-#endif
 	virtual void ClientDisconnected( edict_t *pClient );
 
 #ifdef LUA_SDK
 #ifndef CLIENT_DLL
-	virtual float FlPlayerFallDamage( CBasePlayer *pPlayer );
+        virtual float FlPlayerFallDamage(CBasePlayer *pPlayer);
 #endif
 #endif
 
@@ -172,38 +168,42 @@ public:
 
 	
 	bool	IsTeamplay( void ) { return m_bTeamPlayEnabled;	}
+
 #ifdef LUA_SDK
 #ifndef CLIENT_DLL
-	bool	FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker );
-	bool	AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info );
+        bool FPlayerCanTakeDamage(CBasePlayer *pPlayer, CBaseEntity *pAttacker);
+        bool AllowDamage(CBaseEntity *pVictim, const CTakeDamageInfo &info);
 
-	void	PlayerSpawn( CBasePlayer *pPlayer );
-	void	PlayerThink( CBasePlayer *pPlayer );
-	bool	FPlayerCanRespawn( CBasePlayer *pPlayer );
-	float	FlPlayerSpawnTime( CBasePlayer *pPlayer );
+        void PlayerSpawn(CBasePlayer *pPlayer);
+        void PlayerThink(CBasePlayer *pPlayer);
+        bool FPlayerCanRespawn(CBasePlayer *pPlayer);
+        float FlPlayerSpawnTime(CBasePlayer *pPlayer);
 #endif
 #endif
+
 #ifdef HL2SB
 #ifndef CLIENT_DLL
-	bool	NPC_ShouldDropGrenade( CBasePlayer *pRecipient );
-	bool	NPC_ShouldDropHealth( CBasePlayer *pRecipient );
-	void	NPC_DroppedHealth( void );
-	void	NPC_DroppedGrenade( void );
-	bool	MegaPhyscannonActive( void ) { return m_bMegaPhysgun;	}
-	
-	virtual bool IsAlyxInDarknessMode();
+        bool NPC_ShouldDropGrenade(CBasePlayer *pRecipient);
+        bool NPC_ShouldDropHealth(CBasePlayer *pRecipient);
+        void NPC_DroppedHealth(void);
+        void NPC_DroppedGrenade(void);
+        /*bool MegaPhyscannonActive(void) {
+            return m_bMegaPhysgun;
+        }
+
+        virtual bool IsAlyxInDarknessMode();*/
 #endif
 #endif
+
 	void	CheckAllPlayersReady( void );
 
 	virtual bool IsConnectedUserInfoChangeAllowed( CBasePlayer *pPlayer );
 	
 private:
-	
 #ifdef HL2SB
 #ifndef CLIENT_DLL
-	float	m_flLastHealthDropTime;
-	float	m_flLastGrenadeDropTime;
+        float m_flLastHealthDropTime;
+        float m_flLastGrenadeDropTime;
 #endif
 #endif
 

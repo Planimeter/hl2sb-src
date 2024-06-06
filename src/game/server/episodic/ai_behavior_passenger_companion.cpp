@@ -778,11 +778,7 @@ bool CAI_PassengerBehaviorCompanion::CanEnterVehicleImmediately( int *pResultSeq
 		return false;
 
 	// If the player can see us, then we can't enter immediately anyway
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
-#else
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
+	CBasePlayer *pPlayer = AI_GetSinglePlayer();	
 	if ( pPlayer == NULL )
 		return false;
 
@@ -1116,11 +1112,7 @@ bool CAI_PassengerBehaviorCompanion::FindPathToVehicleEntryPoint( void )
 //-----------------------------------------------------------------------------
 bool CAI_PassengerBehaviorCompanion::CanExitAtPosition( const Vector &vecTestPos )
 {
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 	if ( pPlayer == NULL )
 		return false;
 
@@ -1842,11 +1834,7 @@ bool CAI_PassengerBehaviorCompanion::CanFidget( void )
 		return false;
 
 	// Must be visible to the player
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetOuter()->EyePosition() );
-#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 	if ( pPlayer && pPlayer->FInViewCone( GetOuter()->EyePosition() ) == false )
 		return false;
 

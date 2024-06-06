@@ -4,8 +4,6 @@
 //
 //===========================================================================//
 
-#define lbaseentity_cpp
-
 #include "cbase.h"
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
@@ -91,10 +89,10 @@ static int CBaseEntity_ValidateEntityConnections (lua_State *L) {
   return 0;
 }
 
-static int CBaseEntity_PostClientMessagesSent (lua_State *L) {
-  luaL_checkentity(L, 1)->PostClientMessagesSent();
-  return 0;
-}
+//static int CBaseEntity_PostClientMessagesSent (lua_State *L) {
+//  luaL_checkentity(L, 1)->PostClientMessagesSent();
+//  return 0;
+//}
 
 static int CBaseEntity_SetName (lua_State *L) {
   luaL_checkentity(L, 1)->SetName(MAKE_STRING( luaL_checkstring(L, 2) ));
@@ -659,7 +657,7 @@ static const luaL_Reg CBaseEntitymeta[] = {
   {"PostConstructor", CBaseEntity_PostConstructor},
   {"PostClientActive", CBaseEntity_PostClientActive},
   {"ValidateEntityConnections", CBaseEntity_ValidateEntityConnections},
-  {"PostClientMessagesSent", CBaseEntity_PostClientMessagesSent},
+  //{"PostClientMessagesSent", CBaseEntity_PostClientMessagesSent},
   {"SetName", CBaseEntity_SetName},
   {"GetEntityName", CBaseEntity_GetEntityName},
   {"NameMatches", CBaseEntity_NameMatches},

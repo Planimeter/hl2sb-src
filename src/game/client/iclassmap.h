@@ -20,11 +20,15 @@ public:
 	virtual					~IClassMap() {}
 
 #ifdef LUA_SDK
-	virtual void			Add( const char *mapname, const char *classname, int size, DISPATCHFUNCTION factory = 0, bool scripted = false ) = 0;
-	virtual void			RemoveAllScripted( void ) = 0;
+        virtual void Add(const char *mapname, const char *classname, int size,
+                         DISPATCHFUNCTION factory = 0,
+                         bool scripted = false) = 0;
+        virtual void RemoveAllScripted(void) = 0;
 #else
-	virtual void			Add( const char *mapname, const char *classname, int size, DISPATCHFUNCTION factory = 0 ) = 0;
+        virtual void Add(const char *mapname, const char *classname, int size,
+                         DISPATCHFUNCTION factory = 0) = 0;
 #endif
+
 	virtual char const		*Lookup( const char *classname ) = 0;
 #ifdef LUA_SDK
 	virtual DISPATCHFUNCTION FindFactory( const char *classname ) = 0;

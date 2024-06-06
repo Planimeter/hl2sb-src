@@ -5,9 +5,6 @@
 // $NoKeywords: $
 //
 //===========================================================================//
-
-#define limaterial_cpp
-
 #include "cbase.h"
 #include "imaterial.h"
 #include "luamanager.h"

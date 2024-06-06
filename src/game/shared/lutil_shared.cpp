@@ -4,8 +4,6 @@
 //
 //=============================================================================//
 
-#define lutil_shared_cpp
-
 #include "cbase.h"
 #include "luamanager.h"
 #include "lbaseentity_shared.h"

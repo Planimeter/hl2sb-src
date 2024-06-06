@@ -250,12 +250,11 @@ void CBaseCombatWeapon::Precache( void )
 #endif
 	m_iPrimaryAmmoType = m_iSecondaryAmmoType = -1;
 
+#if defined(LUA_SDK)
+        if (!IsScripted()) {
+#endif
 	// Add this weapon to the weapon registry, and get our index into it
 	// Get weapon data from script file
-#if defined( LUA_SDK )
-	if ( !IsScripted() )
-	{
-#endif
 	if ( ReadWeaponDataFromFileForSlot( filesystem, GetClassname(), &m_hWeaponFileInfo, GetEncryptionKey() ) )
 	{
 		// Get the ammo indexes for the ammo's specified in the data file
@@ -315,9 +314,9 @@ void CBaseCombatWeapon::Precache( void )
 		// Couldn't read data file, remove myself
 		Warning( "Error reading weapon data file for: %s\n", GetClassname() );
 	//	Remove( );	//don't remove, this gets released soon!
-	}
-#if defined( LUA_SDK )
-	}
+        }
+#if defined(LUA_SDK)
+        }
 #endif
 }
 
@@ -1156,7 +1155,7 @@ float CBaseCombatWeapon::GetViewModelSequenceDuration()
 	return vm->SequenceDuration();
 }
 
-bool CBaseCombatWeapon::IsViewModelSequenceFinished( void )
+bool CBaseCombatWeapon::IsViewModelSequenceFinished( void ) const
 {
 	// These are not valid activities and always complete immediately
 	if ( GetActivity() == ACT_RESET || GetActivity() == ACT_INVALID )
@@ -1459,7 +1458,12 @@ selects and deploys each weapon as you pass it. (sjb)
 bool CBaseCombatWeapon::Deploy( )
 {
 	MDLCACHE_CRITICAL_SECTION();
-	return DefaultDeploy( (char*)GetViewModel(), (char*)GetWorldModel(), GetDrawActivity(), (char*)GetAnimPrefix() );
+	bool bResult = DefaultDeploy( (char*)GetViewModel(), (char*)GetWorldModel(), GetDrawActivity(), (char*)GetAnimPrefix() );
+
+	// override pose parameters
+	PoseParameterOverride( false );
+
+	return bResult;
 }
 
 Activity CBaseCombatWeapon::GetDrawActivity( void )
@@ -1517,6 +1521,9 @@ bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 		if( m_bReloadHudHintDisplayed )
 			RescindReloadHudHint();
 	}
+
+	// reset pose parameters
+	PoseParameterOverride( true );
 
 	return true;
 }
@@ -1782,8 +1789,8 @@ void CBaseCombatWeapon::ItemPostFrame( void )
 
 	// -----------------------
 	//  Reload pressed / Clip Empty
-	// -----------------------
-	if ( ( pOwner->m_nButtons & IN_RELOAD ) && UsesClipsForAmmo1() && !m_bInReload ) 
+	//  Can only start the Reload Cycle after the firing cycle
+	if ( ( pOwner->m_nButtons & IN_RELOAD ) && m_flNextPrimaryAttack <= gpGlobals->curtime && UsesClipsForAmmo1() && !m_bInReload ) 
 	{
 		// reload when reload is pressed, or if no buttons are down and weapon is empty.
 		Reload();
@@ -2447,22 +2454,52 @@ bool CBaseCombatWeapon::IsLocked( CBaseEntity *pAsker )
 //-----------------------------------------------------------------------------
 Activity CBaseCombatWeapon::ActivityOverride( Activity baseAct, bool *pRequired )
 {
-	acttable_t *pTable = ActivityList();
-	int actCount = ActivityListCount();
+	int actCount = 0;
+	acttable_t *pTable = ActivityList( actCount );
 
-	for ( int i = 0; i < actCount; i++, pTable++ )
+	for ( int i = 0; i < actCount; i++ )
 	{
-		if ( baseAct == pTable->baseAct )
+		const acttable_t& act = pTable[i];
+		if ( baseAct == act.baseAct )
 		{
 			if (pRequired)
 			{
-				*pRequired = pTable->required;
+				*pRequired = act.required;
 			}
-			return (Activity)pTable->weaponAct;
+			return (Activity)act.weaponAct;
 		}
 	}
 	return baseAct;
 }
+
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CBaseCombatWeapon::PoseParameterOverride( bool bReset )
+{
+	CBaseCombatCharacter *pOwner = GetOwner();
+	if ( !pOwner )
+		return;
+
+	CStudioHdr *pStudioHdr = pOwner->GetModelPtr();
+	if ( !pStudioHdr )
+		return;
+	
+	int iCount = 0;
+	poseparamtable_t *pPoseParamList = PoseParamList( iCount );
+	if ( pPoseParamList )
+	{
+		for ( int i=0; i<iCount; ++i )
+		{
+			int iPoseParam = pOwner->LookupPoseParameter( pStudioHdr, pPoseParamList[i].pszName );
+		
+			if ( iPoseParam != -1 )
+				pOwner->SetPoseParameter( iPoseParam, bReset ? 0 : pPoseParamList[i].flValue );
+		}
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -2752,6 +2789,13 @@ void* SendProxy_SendNonLocalWeaponDataTable( const SendProp *pProp, const void *
 }
 REGISTER_SEND_PROXY_NON_MODIFIED_POINTER( SendProxy_SendNonLocalWeaponDataTable );
 
+#else
+void CBaseCombatWeapon::RecvProxy_WeaponState( const CRecvProxyData *pData, void *pStruct, void *pOut )
+{
+	CBaseCombatWeapon *pWeapon = (CBaseCombatWeapon*)pStruct;
+	pWeapon->m_iState = pData->m_Value.m_Int;
+	pWeapon->UpdateVisibility();
+}
 #endif
 
 #if PREDICTION_ERROR_CHECK_LEVEL > 1
@@ -2825,7 +2869,7 @@ BEGIN_NETWORK_TABLE(CBaseCombatWeapon, DT_BaseCombatWeapon)
 	RecvPropDataTable("LocalActiveWeaponData", 0, 0, &REFERENCE_RECV_TABLE(DT_LocalActiveWeaponData)),
 	RecvPropInt( RECVINFO(m_iViewModelIndex)),
 	RecvPropInt( RECVINFO(m_iWorldModelIndex)),
-	RecvPropInt( RECVINFO(m_iState )),
+	RecvPropInt( RECVINFO(m_iState), 0, &CBaseCombatWeapon::RecvProxy_WeaponState ),
 	RecvPropEHandle( RECVINFO(m_hOwner ) ),
 #endif
 END_NETWORK_TABLE()

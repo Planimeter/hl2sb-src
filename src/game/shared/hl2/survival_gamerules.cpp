@@ -29,264 +29,233 @@
 #define CHalfLife2SurvivalProxy C_HalfLife2SurvivalProxy
 #endif
 
-ConVar gamerules_survival( "gamerules_survival", "0", FCVAR_REPLICATED );
+ConVar gamerules_survival("gamerules_survival", "0", FCVAR_REPLICATED);
 
-class CHalfLife2SurvivalProxy : public CGameRulesProxy
-{
-public:
-	DECLARE_CLASS( CHalfLife2SurvivalProxy, CGameRulesProxy );
-	DECLARE_NETWORKCLASS();
+class CHalfLife2SurvivalProxy : public CGameRulesProxy {
+   public:
+    DECLARE_CLASS(CHalfLife2SurvivalProxy, CGameRulesProxy);
+    DECLARE_NETWORKCLASS();
 };
 
-class CSurvivalAmmo
-{
-public:
-
-	char	m_szAmmoName[256];
-	int		m_iAmount;
+class CSurvivalAmmo {
+   public:
+    char m_szAmmoName[256];
+    int m_iAmount;
 };
 
-class CSurvivalSettings
-{
-public:
+class CSurvivalSettings {
+   public:
+    CSurvivalSettings();
 
-	CSurvivalSettings();
-
-	CUtlVector<char*, CUtlMemory<char*> > m_Loadout;
-	int		 m_iSpawnHealth;
-	string_t m_szPickups;
-	CUtlVector<CSurvivalAmmo> m_Ammo;
+    CUtlVector<char *, CUtlMemory<char *> > m_Loadout;
+    int m_iSpawnHealth;
+    string_t m_szPickups;
+    CUtlVector<CSurvivalAmmo> m_Ammo;
 };
 
-CSurvivalSettings::CSurvivalSettings()
-{
-	m_iSpawnHealth = 100;
+CSurvivalSettings::CSurvivalSettings() {
+    m_iSpawnHealth = 100;
 }
 
-class CHalfLife2Survival : public CHalfLife2
-{
-public:
-	DECLARE_CLASS( CHalfLife2Survival, CHalfLife2 );
+class CHalfLife2Survival : public CHalfLife2 {
+   public:
+    DECLARE_CLASS(CHalfLife2Survival, CHalfLife2);
 
 #ifdef CLIENT_DLL
 
-	DECLARE_CLIENTCLASS_NOBASE(); // This makes datatables able to access our private vars.
+    DECLARE_CLIENTCLASS_NOBASE();  // This makes datatables able to access our
+                                   // private vars.
 
 #else
 
-	DECLARE_SERVERCLASS_NOBASE(); // This makes datatables able to access our private vars.
+    DECLARE_SERVERCLASS_NOBASE();  // This makes datatables able to access our
+                                   // private vars.
 
-	CHalfLife2Survival();
-	virtual ~CHalfLife2Survival() {}
-
+    CHalfLife2Survival();
+    virtual ~CHalfLife2Survival() {
+    }
 #endif
-#ifdef LUA_SDK
-	virtual void Think( void );
-#else
+
+#if defined(LUA_SDK) || !defined(CLIENT_DLL)
+    virtual void Think(void);
+#endif
+
 #ifndef CLIENT_DLL
-	virtual void Think( void );
-#endif
-#endif
-#ifndef CLIENT_DLL
-	virtual void PlayerSpawn( CBasePlayer *pPlayer );
-	virtual bool IsAllowedToSpawn( CBaseEntity *pEntity );
-	virtual void CreateStandardEntities();
+    virtual void PlayerSpawn(CBasePlayer *pPlayer);
+    virtual bool IsAllowedToSpawn(CBaseEntity *pEntity);
+    virtual void CreateStandardEntities();
 
-	void	ReadSurvivalScriptFile( void );
-	void	ParseSurvivalSettings( KeyValues *pSubKey );
-	void	ParseSurvivalAmmo( KeyValues *pSubKey );
+    void ReadSurvivalScriptFile(void);
+    void ParseSurvivalSettings(KeyValues *pSubKey);
+    void ParseSurvivalAmmo(KeyValues *pSubKey);
 
-private:
-	bool			  m_bActive;
-	CSurvivalSettings m_SurvivalSettings;
+   private:
+    bool m_bActive;
+    CSurvivalSettings m_SurvivalSettings;
 #endif
-
 };
 
 //-----------------------------------------------------------------------------
 // Gets us at the Half-Life 2 game rules
 //-----------------------------------------------------------------------------
-inline CHalfLife2Survival* HL2SurvivalGameRules()
-{
-	return static_cast<CHalfLife2Survival*>(g_pGameRules);
+inline CHalfLife2Survival *HL2SurvivalGameRules() {
+    return static_cast<CHalfLife2Survival *>(g_pGameRules);
 }
 
-REGISTER_GAMERULES_CLASS( CHalfLife2Survival );
+REGISTER_GAMERULES_CLASS(CHalfLife2Survival);
 
-BEGIN_NETWORK_TABLE_NOBASE( CHalfLife2Survival, DT_HL2SurvivalGameRules )
+BEGIN_NETWORK_TABLE_NOBASE(CHalfLife2Survival, DT_HL2SurvivalGameRules)
 END_NETWORK_TABLE()
 
-
-LINK_ENTITY_TO_CLASS( hl2_survival_gamerules, CHalfLife2SurvivalProxy );
-IMPLEMENT_NETWORKCLASS_ALIASED( HalfLife2SurvivalProxy, DT_HalfLife2SurvivalProxy )
+LINK_ENTITY_TO_CLASS(hl2_survival_gamerules, CHalfLife2SurvivalProxy);
+IMPLEMENT_NETWORKCLASS_ALIASED(HalfLife2SurvivalProxy,
+                               DT_HalfLife2SurvivalProxy)
 
 #ifdef CLIENT_DLL
-	void RecvProxy_HL2SurvivalGameRules( const RecvProp *pProp, void **pOut, void *pData, int objectID )
-	{
-		CHalfLife2Survival *pRules = HL2SurvivalGameRules();
-		Assert( pRules );
-		*pOut = pRules;
-	}
-
-	BEGIN_RECV_TABLE( CHalfLife2SurvivalProxy, DT_HalfLife2SurvivalProxy )
-	RecvPropDataTable( "hl2_survival_gamerules_data", 0, 0, &REFERENCE_RECV_TABLE( DT_HL2SurvivalGameRules ), RecvProxy_HL2SurvivalGameRules )
-	END_RECV_TABLE()
-	#else
-	void* SendProxy_HL2SurvivalGameRules( const SendProp *pProp, const void *pStructBase, const void *pData, CSendProxyRecipients *pRecipients, int objectID )
-	{
-		CHalfLife2Survival *pRules = HL2SurvivalGameRules();
-		Assert( pRules );
-		pRecipients->SetAllRecipients();
-		return pRules;
-	}
-
-	BEGIN_SEND_TABLE( CHalfLife2SurvivalProxy, DT_HalfLife2SurvivalProxy )
-	SendPropDataTable( "hl2_survival_gamerules_data", 0, &REFERENCE_SEND_TABLE( DT_HL2SurvivalGameRules ), SendProxy_HL2SurvivalGameRules )
-	END_SEND_TABLE()
-#endif
-
-#ifndef CLIENT_DLL
-
-CHalfLife2Survival::CHalfLife2Survival()
-{
-	m_bActive = false;
+void RecvProxy_HL2SurvivalGameRules(const RecvProp *pProp, void **pOut,
+                                    void *pData, int objectID) {
+    CHalfLife2Survival *pRules = HL2SurvivalGameRules();
+    Assert(pRules);
+    *pOut = pRules;
 }
 
-#endif
-#ifdef LUA_SDK
-void CHalfLife2Survival::Think( void )
-{
-#ifndef CLIENT_DLL
-
-#endif
-}
+BEGIN_RECV_TABLE(CHalfLife2SurvivalProxy, DT_HalfLife2SurvivalProxy)
+RecvPropDataTable("hl2_survival_gamerules_data", 0, 0,
+                  &REFERENCE_RECV_TABLE(DT_HL2SurvivalGameRules),
+                  RecvProxy_HL2SurvivalGameRules) END_RECV_TABLE()
 #else
-#ifndef CLIENT_DLL
-void CHalfLife2Survival::Think( void )
-{
+void *SendProxy_HL2SurvivalGameRules(const SendProp *pProp,
+                                     const void *pStructBase, const void *pData,
+                                     CSendProxyRecipients *pRecipients,
+                                     int objectID) {
+    CHalfLife2Survival *pRules = HL2SurvivalGameRules();
+    Assert(pRules);
+    pRecipients->SetAllRecipients();
+    return pRules;
+}
 
+BEGIN_SEND_TABLE(CHalfLife2SurvivalProxy, DT_HalfLife2SurvivalProxy)
+SendPropDataTable("hl2_survival_gamerules_data", 0,
+                  &REFERENCE_SEND_TABLE(DT_HL2SurvivalGameRules),
+                  SendProxy_HL2SurvivalGameRules) END_SEND_TABLE()
+#endif
+
+#ifndef CLIENT_DLL
+    CHalfLife2Survival::CHalfLife2Survival() {
+    m_bActive = false;
 }
 #endif
+
+#if defined(LUA_SDK) || !defined(CLIENT_DLL)
+void CHalfLife2Survival::Think(void) {
+}
 #endif
+
 #ifndef CLIENT_DLL
+bool CHalfLife2Survival::IsAllowedToSpawn(CBaseEntity *pEntity) {
+    if (!m_bActive)
+        return BaseClass::IsAllowedToSpawn(pEntity);
 
-bool CHalfLife2Survival::IsAllowedToSpawn( CBaseEntity *pEntity )
-{
-	if ( !m_bActive )
-		return BaseClass::IsAllowedToSpawn( pEntity );
+    const char *pPickups = STRING(m_SurvivalSettings.m_szPickups);
+    if (!pPickups)
+        return false;
 
-	const char *pPickups = STRING( m_SurvivalSettings.m_szPickups );
-	if ( !pPickups )
-		return false;
+    if (Q_stristr(pPickups, "everything"))
+        return true;
 
-	if ( Q_stristr( pPickups, "everything" ) )
-		return true;
+    if (Q_stristr(pPickups, pEntity->GetClassname()) ||
+        Q_stristr(pPickups, STRING(pEntity->GetEntityName())))
+        return true;
 
-	if ( Q_stristr( pPickups, pEntity->GetClassname() ) ||  Q_stristr( pPickups, STRING( pEntity->GetEntityName() ) ) )
-		return true;
-
-	return false;
+    return false;
 }
 
-void CHalfLife2Survival::PlayerSpawn( CBasePlayer *pPlayer )
-{
-	BaseClass::PlayerSpawn( pPlayer );
+void CHalfLife2Survival::PlayerSpawn(CBasePlayer *pPlayer) {
+    BaseClass::PlayerSpawn(pPlayer);
 
-	if ( !m_bActive )
-		return;
+    if (!m_bActive)
+        return;
 
-	pPlayer->EquipSuit();
-	pPlayer->SetHealth( m_SurvivalSettings.m_iSpawnHealth );
+    pPlayer->EquipSuit();
+    pPlayer->SetHealth(m_SurvivalSettings.m_iSpawnHealth);
 
-	for ( int i = 0; i < m_SurvivalSettings.m_Loadout.Count(); ++i )
-	{
-		pPlayer->GiveNamedItem( m_SurvivalSettings.m_Loadout[i] );
-	}
+    for (int i = 0; i < m_SurvivalSettings.m_Loadout.Count(); ++i) {
+        pPlayer->GiveNamedItem(m_SurvivalSettings.m_Loadout[i]);
+    }
 
-	for ( int i = 0; i < m_SurvivalSettings.m_Ammo.Count(); ++i )
-	{
-		pPlayer->CBasePlayer::GiveAmmo( m_SurvivalSettings.m_Ammo[i].m_iAmount , m_SurvivalSettings.m_Ammo[i].m_szAmmoName );
-	}
+    for (int i = 0; i < m_SurvivalSettings.m_Ammo.Count(); ++i) {
+        pPlayer->CBasePlayer::GiveAmmo(
+            m_SurvivalSettings.m_Ammo[i].m_iAmount,
+            m_SurvivalSettings.m_Ammo[i].m_szAmmoName);
+    }
 }
 
-void CHalfLife2Survival::ParseSurvivalSettings( KeyValues *pSubKey )
-{
-	if ( pSubKey == NULL )
-		return;
+void CHalfLife2Survival::ParseSurvivalSettings(KeyValues *pSubKey) {
+    if (pSubKey == NULL)
+        return;
 
-	m_SurvivalSettings.m_szPickups = NULL_STRING;
-	m_SurvivalSettings.m_iSpawnHealth = 100;
+    m_SurvivalSettings.m_szPickups = NULL_STRING;
+    m_SurvivalSettings.m_iSpawnHealth = 100;
 
-	KeyValues *pTestKey = pSubKey->GetFirstSubKey();
+    KeyValues *pTestKey = pSubKey->GetFirstSubKey();
 
-	while ( pTestKey )
-	{
-		if ( !stricmp( pTestKey->GetName(), "weapons" ) )
-		{
-			const char *pLoadout =  pTestKey->GetString();
-			Q_SplitString( pLoadout, ";", m_SurvivalSettings.m_Loadout );
-		}
-		else if ( !stricmp( pTestKey->GetName(), "spawnhealth" ) )
-		{
-			m_SurvivalSettings.m_iSpawnHealth = pTestKey->GetInt( NULL, 100 );
-		}
-		else if ( !stricmp( pTestKey->GetName(), "allowedpickups" ) )
-		{
-			m_SurvivalSettings.m_szPickups = MAKE_STRING( pTestKey->GetString() );
-		}
-		
-		pTestKey = pTestKey->GetNextKey();
-	}
+    while (pTestKey) {
+        if (!stricmp(pTestKey->GetName(), "weapons")) {
+            const char *pLoadout = pTestKey->GetString();
+            Q_SplitString(pLoadout, ";", m_SurvivalSettings.m_Loadout);
+        } else if (!stricmp(pTestKey->GetName(), "spawnhealth")) {
+            m_SurvivalSettings.m_iSpawnHealth = pTestKey->GetInt(NULL, 100);
+        } else if (!stricmp(pTestKey->GetName(), "allowedpickups")) {
+            m_SurvivalSettings.m_szPickups = MAKE_STRING(pTestKey->GetString());
+        }
+
+        pTestKey = pTestKey->GetNextKey();
+    }
 }
 
-void CHalfLife2Survival::ParseSurvivalAmmo( KeyValues *pSubKey )
-{
-	if ( pSubKey )
-	{
-		KeyValues *pAmmoKey = pSubKey->GetFirstSubKey();
+void CHalfLife2Survival::ParseSurvivalAmmo(KeyValues *pSubKey) {
+    if (pSubKey) {
+        KeyValues *pAmmoKey = pSubKey->GetFirstSubKey();
 
-		while ( pAmmoKey )
-		{
-			CSurvivalAmmo ammo;
+        while (pAmmoKey) {
+            CSurvivalAmmo ammo;
 
-			Q_strcpy( ammo.m_szAmmoName, pAmmoKey->GetName() );
-			ammo.m_iAmount = pAmmoKey->GetInt();
+            Q_strcpy(ammo.m_szAmmoName, pAmmoKey->GetName());
+            ammo.m_iAmount = pAmmoKey->GetInt();
 
-			m_SurvivalSettings.m_Ammo.AddToTail( ammo );
+            m_SurvivalSettings.m_Ammo.AddToTail(ammo);
 
-			pAmmoKey = pAmmoKey->GetNextKey();
-		}
-	}
+            pAmmoKey = pAmmoKey->GetNextKey();
+        }
+    }
 }
 
-void CHalfLife2Survival::ReadSurvivalScriptFile( void )
-{
-	char szFullName[512];
-	Q_snprintf( szFullName, sizeof( szFullName ), "maps/%s_survival.txt", STRING(gpGlobals->mapname) );
+void CHalfLife2Survival::ReadSurvivalScriptFile(void) {
+    char szFullName[512];
+    Q_snprintf(szFullName, sizeof(szFullName), "maps/%s_survival.txt",
+               STRING(gpGlobals->mapname));
 
-	KeyValues *pkvFile = new KeyValues( "Survival" );
-	if ( pkvFile->LoadFromFile( filesystem, szFullName, "MOD" ) )
-	{
-		ParseSurvivalSettings( pkvFile->FindKey( "settings" ) );
-		ParseSurvivalAmmo( pkvFile->FindKey( "ammo" ) );
+    KeyValues *pkvFile = new KeyValues("Survival");
+    if (pkvFile->LoadFromFile(filesystem, szFullName, "MOD")) {
+        ParseSurvivalSettings(pkvFile->FindKey("settings"));
+        ParseSurvivalAmmo(pkvFile->FindKey("ammo"));
 
-		CUtlVector <CBaseEntity*> entities;
-		UTIL_LoadAndSpawnEntitiesFromScript( entities, szFullName, "Survival", true );
+        CUtlVector<CBaseEntity *> entities;
+        UTIL_LoadAndSpawnEntitiesFromScript(entities, szFullName, "Survival",
+                                            true);
 
-		// It's important to turn on survival mode after we create all the entities
-		// in the script, so that we don't remove them if they violate survival rules.
-		// i.e. we want the player to start with a shotgun, but prevent all future shotguns from spawning.
-		m_bActive = true;
-	}
-	else
-	{
-		m_bActive = false;
-	}
+        // It's important to turn on survival mode after we create all the
+        // entities in the script, so that we don't remove them if they violate
+        // survival rules. i.e. we want the player to start with a shotgun, but
+        // prevent all future shotguns from spawning.
+        m_bActive = true;
+    } else {
+        m_bActive = false;
+    }
 }
 
-void CHalfLife2Survival::CreateStandardEntities( void )
-{
-	ReadSurvivalScriptFile();
+void CHalfLife2Survival::CreateStandardEntities(void) {
+    ReadSurvivalScriptFile();
 }
 
 #endif

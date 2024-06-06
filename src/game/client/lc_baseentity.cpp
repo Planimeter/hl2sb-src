@@ -4,8 +4,6 @@
 //
 // $NoKeywords: $
 //===========================================================================//
-#define lc_baseentity_cpp
-
 #include "cbase.h"
 #include "luamanager.h"
 #include "luasrclib.h"

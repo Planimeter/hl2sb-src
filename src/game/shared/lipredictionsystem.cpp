@@ -5,8 +5,6 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lipredictionsystem_cpp
-
 #include "cbase.h"
 #include "ipredictionsystem.h"
 #include "luamanager.h"

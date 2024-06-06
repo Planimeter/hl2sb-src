@@ -90,6 +90,7 @@ bool CBaseEntity::sm_bDisableTouchFuncs = false;	// Disables PhysicsTouch and Ph
 bool CBaseEntity::sm_bAccurateTriggerBboxChecks = true;	// set to false for legacy behavior in ep1
 
 int CBaseEntity::m_nPredictionRandomSeed = -1;
+int CBaseEntity::m_nPredictionRandomSeedServer = -1;
 CBasePlayer *CBaseEntity::m_pPredictionPlayer = NULL;
 
 // Used to make sure nobody calls UpdateTransmitState directly.
@@ -419,8 +420,8 @@ CBaseEntity::CBaseEntity( bool bServerOnly )
 	AddEFlags( EFL_USE_PARTITION_WHEN_NOT_SOLID );
 #endif
 
-#if defined( LUA_SDK )
-	m_nTableReference = LUA_NOREF;
+#ifdef LUA_SDK
+    m_nTableReference = LUA_NOREF;
 #endif
 }
 
@@ -477,8 +478,8 @@ CBaseEntity::~CBaseEntity( )
 		gEntList.RemoveEntity( GetRefEHandle() );
 	}
 
-#if defined( LUA_SDK )
-	lua_unref( L, m_nTableReference );
+#if defined(LUA_SDK)
+    lua_unref(L, m_nTableReference);
 #endif
 }
 
@@ -951,20 +952,12 @@ void CBaseEntity::DrawDebugGeometryOverlays(void)
 			NDebugOverlay::EntityBounds(this, 255, 255, 255, 0, 0 );
 		}
 	}
-#ifdef HL2SB
-	if ( m_debugOverlays & OVERLAY_AUTOAIM_BIT && (GetFlags()&FL_AIMTARGET) && AI_GetNearestPlayer( GetAbsOrigin() ) != NULL )
-#else
 	if ( m_debugOverlays & OVERLAY_AUTOAIM_BIT && (GetFlags()&FL_AIMTARGET) && AI_GetSinglePlayer() != NULL )
-#endif
 	{
 		// Crude, but it gets the point across.
 		Vector vecCenter = GetAutoAimCenter();
 		Vector vecRight, vecUp, vecDiag;
-#ifdef HL2SB
-		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 		float radius = GetAutoAimRadius();
 
 		QAngle angles = pPlayer->EyeAngles();
@@ -1460,10 +1453,10 @@ int CBaseEntity::OnTakeDamage( const CTakeDamageInfo &info )
 //-----------------------------------------------------------------------------
 // Purpose: Scale damage done and call OnTakeDamage
 //-----------------------------------------------------------------------------
-void CBaseEntity::TakeDamage( const CTakeDamageInfo &inputInfo )
+int CBaseEntity::TakeDamage( const CTakeDamageInfo &inputInfo )
 {
 	if ( !g_pGameRules )
-		return;
+		return 0;
 
 	bool bHasPhysicsForceDamage = !g_pGameRules->Damage_NoPhysicsForce( inputInfo.GetDamageType() );
 	if ( bHasPhysicsForceDamage && inputInfo.GetDamageType() != DMG_GENERIC )
@@ -1495,12 +1488,12 @@ void CBaseEntity::TakeDamage( const CTakeDamageInfo &inputInfo )
 	// Make sure our damage filter allows the damage.
 	if ( !PassesDamageFilter( inputInfo ))
 	{
-		return;
+		return 0;
 	}
 
 	if( !g_pGameRules->AllowDamage(this, inputInfo) )
 	{
-		return;
+		return 0;
 	}
 
 	if ( PhysIsInCallback() )
@@ -1522,8 +1515,9 @@ void CBaseEntity::TakeDamage( const CTakeDamageInfo &inputInfo )
 
 		//Msg("%s took %.2f Damage, at %.2f\n", GetClassname(), info.GetDamage(), gpGlobals->curtime );
 
-		OnTakeDamage( info );
+		return OnTakeDamage( info );
 	}
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -1595,8 +1589,28 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 		if ( gameFlags & FVPHYSICS_PLAYER_HELD )
 		{
 			// if the player is holding the object, use it's real mass (player holding reduced the mass)
-			CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-			if ( pPlayer )
+            CBasePlayer *pPlayer = NULL;
+
+			if ( gpGlobals->maxClients == 1 )
+			{
+				pPlayer = UTIL_GetLocalPlayer();
+			}
+			else
+			{
+				// See which MP player is holding the physics object and then use that player to get the real mass of the object.
+				// This is ugly but better than having linkage between an object and its "holding" player.
+				for ( int i = 1; i <= gpGlobals->maxClients; i++ )
+				{
+					CBasePlayer *tempPlayer = UTIL_PlayerByIndex( i );
+					if ( tempPlayer && (tempPlayer->GetHeldObject() == this ) )
+					{
+						pPlayer = tempPlayer;
+						break;
+					}
+				}
+			}
+
+            if ( pPlayer )
 			{
 				float mass = pPlayer->GetHeldObjectMass( VPhysicsGetObject() );
 				if ( mass != 0.0f )
@@ -6109,7 +6123,7 @@ void CBaseEntity::SetLocalAngles( const QAngle& angles )
 		{
 			Warning( "Bad SetLocalAngles(%f,%f,%f) on %s\n", angles.x, angles.y, angles.z, GetDebugName() );
 		}
-		Assert( false );
+		AssertMsg( false, "Bad SetLocalAngles(%f,%f,%f) on %s\n", angles.x, angles.y, angles.z, GetDebugName() );
 		return;
 	}
 
@@ -6666,11 +6680,7 @@ void CBaseEntity::DispatchResponse( const char *conceptName )
 	ModifyOrAppendCriteria( set );
 
 	// Append local player criteria to set,too
-#ifdef HL2SB
-	CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#endif
 	if( pPlayer )
 		pPlayer->ModifyOrAppendPlayerCriteria( set );
 
@@ -6729,11 +6739,7 @@ void CBaseEntity::DumpResponseCriteria( void )
 	ModifyOrAppendCriteria( set );
 
 	// Append local player criteria to set,too
-#ifdef HL2SB
-	CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#endif
 	if ( pPlayer )
 	{
 		pPlayer->ModifyOrAppendPlayerCriteria( set );
@@ -7218,11 +7224,7 @@ bool CBaseEntity::SUB_AllowedToFade( void )
 
 	// on Xbox, allow these to fade out
 #ifndef _XBOX
-#ifdef HL2SB
-	CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = ( AI_IsSinglePlayer() ) ? UTIL_GetLocalPlayer() : NULL;
-#endif
 
 	if ( pPlayer && pPlayer->FInViewCone( this ) )
 		return false;

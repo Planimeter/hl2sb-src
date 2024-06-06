@@ -231,16 +231,10 @@ extern int gEvilImpulse101;
 //-----------------------------------------------------------------------------
 void CItem::ActivateWhenAtRest( float flTime /* = 0.5f */ )
 {
-	// Andrew; This doesn't work in HL2SB, default to HL2MP spawn behavior.
-#if !defined( HL2SB )
 	RemoveSolidFlags( FSOLID_TRIGGER );
 	m_bActivateWhenAtRest = true;
 	SetThink( &CItem::ComeToRest );
 	SetNextThink( gpGlobals->curtime + flTime );
-#else
-	SetThink( &CItem::FallThink );
-	SetNextThink( gpGlobals->curtime + 0.1f );
-#endif
 }
 
 

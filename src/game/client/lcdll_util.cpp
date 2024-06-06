@@ -6,8 +6,6 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lcdll_util_cpp
-
 #include "cbase.h"
 #include "luamanager.h"
 #include "lbaseplayer_shared.h"

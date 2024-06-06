@@ -88,29 +88,17 @@ void ClientPutInServer( edict_t *pEdict, const char *playername )
 {
 	// Allocate a CBaseTFPlayer for pev, and call spawn
 	CHL2MP_Player *pPlayer = CHL2MP_Player::CreatePlayer( "player", pEdict );
-#ifdef HL2SB
-	if( pPlayer )
-		pPlayer->SetPlayerName( playername );
-#else
 	pPlayer->SetPlayerName( playername );
-#endif
 }
 
 
 void ClientActive( edict_t *pEdict, bool bLoadGame )
 {
 	// Can't load games in CS!
-#ifndef HL2SB
 	Assert( !bLoadGame );
-#endif
 
 	CHL2MP_Player *pPlayer = ToHL2MPPlayer( CBaseEntity::Instance( pEdict ) );
-#ifdef HL2SB
-	if( pPlayer )
-		FinishClientPutInServer( pPlayer );
-#else
 	FinishClientPutInServer( pPlayer );
-#endif
 }
 
 
@@ -200,7 +188,7 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
 
-#if defined( DEBUG ) || defined( LUA_SDK )
+#if defined(DEBUG) || defined(LUA_SDK)
 	extern void Bot_RunAll();
 	Bot_RunAll();
 #endif

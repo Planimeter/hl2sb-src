@@ -5,8 +5,6 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lvphysics_interface_cpp
-
 #include "cbase.h"
 #include "vphysics_interface.h"
 #include "vphysics/performance.h"

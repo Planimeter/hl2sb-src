@@ -9,7 +9,7 @@
 #include "beam_shared.h"
 #include "player.h"
 #include "gamerules.h"
-#include "weapon_hl2mpbasehlmpcombatweapon.h"
+#include "basecombatweapon.h"
 #include "baseviewmodel.h"
 #include "vphysics/constraints.h"
 #include "physics.h"
@@ -32,8 +32,6 @@ ConVar phys_gunglueradius("phys_gunglueradius", "128" );
 
 static int g_physgunBeam;
 #define PHYSGUN_BEAM_SPRITE		"sprites/physbeam.vmt"
-
-#define	PHYSGUN_SKIN	1
 
 #define MAX_PELLETS	16
 
@@ -461,12 +459,12 @@ struct pelletlist_t
 	EHANDLE						parent;
 };
 
-class CWeaponGravityGun : public CBaseHL2MPCombatWeapon
+class CWeaponGravityGun : public CBaseCombatWeapon
 {
 	DECLARE_DATADESC();
 
 public:
-	DECLARE_CLASS( CWeaponGravityGun, CBaseHL2MPCombatWeapon );
+	DECLARE_CLASS( CWeaponGravityGun, CBaseCombatWeapon );
 
 	CWeaponGravityGun();
 	void Spawn( void );
@@ -480,7 +478,7 @@ public:
 	virtual bool Holster( CBaseCombatWeapon *pSwitchingTo )
 	{
 		EffectDestroy();
-		return BaseClass::Holster( pSwitchingTo );
+		return BaseClass::Holster();
 	}
 
 	bool Reload( void );
@@ -573,8 +571,6 @@ private:
 	int			m_pelletAttract;
 	float		m_glueTime;
 	CNetworkVar( bool, m_glueTouching );
-
-	DECLARE_ACTTABLE();
 };
 
 IMPLEMENT_SERVERCLASS_ST( CWeaponGravityGun, DT_WeaponGravityGun )
@@ -587,25 +583,6 @@ END_SEND_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_physgun, CWeaponGravityGun );
 PRECACHE_WEAPON_REGISTER(weapon_physgun);
-
-acttable_t	CWeaponGravityGun::m_acttable[] = 
-{
-	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_PHYSGUN,					false },
-	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_PHYSGUN,			false },
-
-	{ ACT_MP_RUN,						ACT_HL2MP_RUN_PHYSGUN,					false },
-	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_PHYSGUN,			false },
-
-	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
-	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
-
-	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
-	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
-
-	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_PHYSGUN,					false },
-};
-
-IMPLEMENT_ACTTABLE(CWeaponGravityGun);
 
 //---------------------------------------------------------
 // Save/Restore
@@ -664,9 +641,6 @@ void CWeaponGravityGun::Spawn( )
 {
 	BaseClass::Spawn();
 //	SetModel( GetWorldModel() );
-
-	// The physgun uses a different skin
-	m_nSkin = PHYSGUN_SKIN;
 
 	FallInit();
 }
@@ -1247,7 +1221,7 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start,
 
 		m_gravCallback.AttachEntity( pObject, pPhysics, end );
 		float mass = pPhysics->GetMass();
-//		Msg( "Object mass: %.2f lbs (%.2f kg)\n", kg2lbs(mass), mass );
+		Msg( "Object mass: %.2f lbs (%.2f kg)\n", kg2lbs(mass), mass );
 		float vel = phys_gunvel.GetFloat();
 		if ( mass > phys_gunmass.GetFloat() )
 		{
@@ -1447,3 +1421,103 @@ bool CWeaponGravityGun::Reload( void )
 
 	return false;
 }
+
+#define NUM_COLLISION_TESTS 2500
+void CC_CollisionTest( const CCommand &args )
+{
+	if ( !physenv )
+		return;
+
+	Msg( "Testing collision system\n" );
+	int i;
+	CBaseEntity *pSpot = gEntList.FindEntityByClassname( NULL, "info_player_start");
+	Vector start = pSpot->GetAbsOrigin();
+	static Vector *targets = NULL;
+	static bool first = true;
+	static float test[2] = {1,1};
+	if ( first )
+	{
+		targets = new Vector[NUM_COLLISION_TESTS];
+		float radius = 0;
+		float theta = 0;
+		float phi = 0;
+		for ( i = 0; i < NUM_COLLISION_TESTS; i++ )
+		{
+			radius += NUM_COLLISION_TESTS * 123.123;
+			radius = fabs(fmod(radius, 128));
+			theta += NUM_COLLISION_TESTS * 76.76;
+			theta = fabs(fmod(theta, DEG2RAD(360)));
+			phi += NUM_COLLISION_TESTS * 1997.99;
+			phi = fabs(fmod(phi, DEG2RAD(180)));
+			
+			float st, ct, sp, cp;
+			SinCos( theta, &st, &ct );
+			SinCos( phi, &sp, &cp );
+
+			targets[i].x = radius * ct * sp;
+			targets[i].y = radius * st * sp;
+			targets[i].z = radius * cp;
+			
+			// make the trace 1024 units long
+			Vector dir = targets[i] - start;
+			VectorNormalize(dir);
+			targets[i] = start + dir * 1024;
+		}
+		first = false;
+	}
+
+	//Vector results[NUM_COLLISION_TESTS];
+
+	int testType = 0;
+	if ( args.ArgC() >= 2 )
+	{
+		testType = atoi( args[1] );
+	}
+	float duration = 0;
+	Vector size[2];
+	size[0].Init(0,0,0);
+	size[1].Init(16,16,16);
+	unsigned int dots = 0;
+
+	for ( int j = 0; j < 2; j++ )
+	{
+		float startTime = engine->Time();
+		if ( testType == 1 )
+		{
+			const CPhysCollide *pCollide = g_PhysWorldObject->GetCollide();
+			trace_t tr;
+
+			for ( i = 0; i < NUM_COLLISION_TESTS; i++ )
+			{
+				physcollision->TraceBox( start, targets[i], -size[j], size[j], pCollide, vec3_origin, vec3_angle, &tr );
+				dots += physcollision->ReadStat(0);
+				//results[i] = tr.endpos;
+			}
+		}
+		else
+		{
+			testType = 0;
+			CBaseEntity *pWorld = GetContainingEntity( INDEXENT(0) );
+			trace_t tr;
+
+			for ( i = 0; i < NUM_COLLISION_TESTS; i++ )
+			{
+				UTIL_TraceModel( start, targets[i], -size[j], size[j], pWorld, COLLISION_GROUP_NONE, &tr );
+				//results[i] = tr.endpos;
+			}
+		}
+
+		duration += engine->Time() - startTime;
+	}
+	test[testType] = duration;
+	Msg("%d collisions in %.2f ms (%u dots)\n", NUM_COLLISION_TESTS, duration*1000, dots );
+	Msg("Current speed ratio: %.2fX BSP:JGJK\n", test[1] / test[0] );
+#if 0
+	int red = 255, green = 0, blue = 0;
+	for ( i = 0; i < NUM_COLLISION_TESTS; i++ )
+	{
+		NDebugOverlay::Line( start, results[i], red, green, blue, false, 2 );
+	}
+#endif
+}
+static ConCommand collision_test("collision_test", CC_CollisionTest, "Tests collision system", FCVAR_CHEAT );

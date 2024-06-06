@@ -4,9 +4,6 @@
 //
 // $NoKeywords: $
 //=============================================================================//
-
-#define leffect_dispatch_data_cpp
-
 #include "cbase.h"
 #if CLIENT_DLL
 #include "c_te_effect_dispatch.h"

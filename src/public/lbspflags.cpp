@@ -7,8 +7,6 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lbspflags_cpp
-
 #include "cbase.h"
 #include "bspflags.h"
 #include "luamanager.h"

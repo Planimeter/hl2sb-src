@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Â© 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -10,8 +10,6 @@
 //
 // $NoKeywords: $
 //=============================================================================//
-#define linetchannelinfo_cpp
-
 #include "cbase.h"
 #include "inetchannelinfo.h"
 #include "lua.hpp"

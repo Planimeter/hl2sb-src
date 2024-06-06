@@ -21,11 +21,11 @@
 #ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
-#endif // LUA_SDK
+#endif
 
 #ifdef HL2_DLL
 #include "npc_playercompanion.h"
-#endif // HL2_DLL
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -204,17 +204,11 @@ public:
 			// only copy out entities that will simulate or think this frame
 			if ( m_simThinkList[i].nextThinkTick <= gpGlobals->tickcount )
 			{
-				// FIXME: Why isn't a check for this done so entities can be
-				// removed from the list and later just request simulation?
-#ifndef HL2SB
 				Assert(m_simThinkList[i].nextThinkTick>=0);
-#endif
 				int entinfoIndex = m_simThinkList[i].entEntry;
 				const CEntInfo *pInfo = gEntList.GetEntInfoPtrByIndex( entinfoIndex );
 				pList[out] = (CBaseEntity *)pInfo->m_pEntity;
-#ifndef HL2SB
 				Assert(m_simThinkList[i].nextThinkTick==0 || pList[out]->GetFirstThinkTick()==m_simThinkList[i].nextThinkTick);
-#endif
 				Assert( gEntList.IsEntityPtr( pList[out] ) );
 				out++;
 			}
@@ -250,9 +244,7 @@ public:
 				if ( pEntity->IsEFlagSet(EFL_NO_GAME_PHYSICS_SIMULATION) )
 				{
 					m_simThinkList[m_entinfoIndex[index]].nextThinkTick = pEntity->GetFirstThinkTick();
-#ifndef HL2SB
 					Assert(m_simThinkList[m_entinfoIndex[index]].nextThinkTick>=0);
-#endif
 				}
 			}
 			else
@@ -261,9 +253,7 @@ public:
 				if ( pEntity->IsEFlagSet(EFL_NO_GAME_PHYSICS_SIMULATION) )
 				{
 					m_simThinkList[m_entinfoIndex[index]].nextThinkTick = pEntity->GetFirstThinkTick();
-#ifndef HL2SB
 					Assert(m_simThinkList[m_entinfoIndex[index]].nextThinkTick>=0);
-#endif
 				}
 				else
 				{
@@ -1266,12 +1256,11 @@ void CNotifyList::LevelShutdownPreEntity( void )
 	m_notifyList.Purge();
 }
 
-void CNotifyList::OnEntityCreated( CBaseEntity *pEntity )
-{
-#if defined ( LUA_SDK )
-	BEGIN_LUA_CALL_HOOK( "OnEntityCreated" );
-		lua_pushentity( L, pEntity );
-	END_LUA_CALL_HOOK( 1, 0 );
+void CNotifyList::OnEntityCreated( CBaseEntity *pEntity ) {
+#if defined(LUA_SDK)
+    BEGIN_LUA_CALL_HOOK("OnEntityCreated");
+    lua_pushentity(L, pEntity);
+    END_LUA_CALL_HOOK(1, 0);
 #endif
 }
 

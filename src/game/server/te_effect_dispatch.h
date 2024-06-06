@@ -1,6 +1,6 @@
 //========= Copyright Valve Corporation, All rights reserved. ============//
 //
-// Purpose: 
+// Purpose:
 //
 // $NoKeywords: $
 //=============================================================================//
@@ -18,6 +18,6 @@
 
 void DispatchEffect( const char *pName, const CEffectData &data );
 void DispatchEffect( const char *pName, const CEffectData &data, CRecipientFilter &filter );
-
+void DispatchEffect( const char *pName, const CEffectData &data, IRecipientFilter &filter );
 
 #endif // TE_EFFECT_DISPATCH_H

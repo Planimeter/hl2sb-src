@@ -5,8 +5,6 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lvgui_cpp
-
 #include "cbase.h"
 #include "lua.hpp"
 #include "luasrclib.h"

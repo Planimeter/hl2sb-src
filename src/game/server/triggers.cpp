@@ -479,6 +479,7 @@ void CBaseTrigger::StartTouch(CBaseEntity *pOther)
 		{
 			// First entity to touch us that passes our filters
 			m_OnStartTouchAll.FireOutput( pOther, this );
+			StartTouchAll();
 		}
 	}
 }
@@ -518,7 +519,10 @@ void CBaseTrigger::EndTouch(CBaseEntity *pOther)
 			else if ( hOther->IsPlayer() && !hOther->IsAlive() )
 			{
 #ifdef STAGING_ONLY
-				AssertMsg( 0, CFmtStr( "Dead player [%s] is still touching this trigger at [%f %f %f]", hOther->GetEntityName().ToCStr(), XYZ( hOther->GetAbsOrigin() ) ) );
+				if ( !HushAsserts() )
+				{
+					AssertMsg( false, "Dead player [%s] is still touching this trigger at [%f %f %f]", hOther->GetEntityName().ToCStr(), XYZ( hOther->GetAbsOrigin() ) );
+				}
 				Warning( "Dead player [%s] is still touching this trigger at [%f %f %f]", hOther->GetEntityName().ToCStr(), XYZ( hOther->GetAbsOrigin() ) );
 #endif
 				m_hTouchingEntities.Remove( i );
@@ -534,6 +538,7 @@ void CBaseTrigger::EndTouch(CBaseEntity *pOther)
 		if ( !bFoundOtherTouchee /*&& !m_bDisabled*/ )
 		{
 			m_OnEndTouchAll.FireOutput(pOther, this);
+			EndTouchAll();
 		}
 	}
 }
@@ -638,8 +643,8 @@ void CTriggerRemove::Touch( CBaseEntity *pOther )
 BEGIN_DATADESC( CTriggerHurt )
 
 	// Function Pointers
-	DEFINE_FUNCTION( RadiationThink ),
-	DEFINE_FUNCTION( HurtThink ),
+	DEFINE_FUNCTION( CTriggerHurtShim::RadiationThinkShim ),
+	DEFINE_FUNCTION( CTriggerHurtShim::HurtThinkShim ),
 
 	// Fields
 	DEFINE_FIELD( m_flOriginalDamage, FIELD_FLOAT ),
@@ -665,6 +670,7 @@ END_DATADESC()
 
 LINK_ENTITY_TO_CLASS( trigger_hurt, CTriggerHurt );
 
+IMPLEMENT_AUTO_LIST( ITriggerHurtAutoList );
 
 //-----------------------------------------------------------------------------
 // Purpose: Called when spawning, after keyvalues have been handled.
@@ -681,7 +687,7 @@ void CTriggerHurt::Spawn( void )
 	SetThink( NULL );
 	if (m_bitsDamageInflict & DMG_RADIATION)
 	{
-		SetThink ( &CTriggerHurt::RadiationThink );
+		SetThink ( &CTriggerHurtShim::RadiationThinkShim );
 		SetNextThink( gpGlobals->curtime + random->RandomFloat(0.0, 0.5) );
 	}
 }
@@ -725,6 +731,15 @@ void CTriggerHurt::RadiationThink( void )
 bool CTriggerHurt::HurtEntity( CBaseEntity *pOther, float damage )
 {
 	if ( !pOther->m_takedamage || !PassesTriggerFilters(pOther) )
+		return false;
+
+	// If player is disconnected, we're probably in this routine via the
+	//  PhysicsRemoveTouchedList() function to make sure all Untouch()'s are called for the
+	//  player. Calling TakeDamage() in this case can get into the speaking criteria, which
+	//  will then loop through the control points and the touched list again. We shouldn't
+	//  need to hurt players that are disconnected, so skip all of this...
+	bool bPlayerDisconnected = pOther->IsPlayer() && ( ((CBasePlayer *)pOther)->IsConnected() == false );
+	if ( bPlayerDisconnected )
 		return false;
 
 	if ( damage < 0 )
@@ -866,9 +881,27 @@ void CTriggerHurt::Touch( CBaseEntity *pOther )
 {
 	if ( m_pfnThink == NULL )
 	{
-		SetThink( &CTriggerHurt::HurtThink );
+		SetThink( &CTriggerHurtShim::HurtThinkShim );
 		SetNextThink( gpGlobals->curtime );
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Checks if this point is in any trigger_hurt zones with positive damage
+//-----------------------------------------------------------------------------
+bool IsTakingTriggerHurtDamageAtPoint( const Vector &vecPoint )
+{
+	for ( int i = 0; i < ITriggerHurtAutoList::AutoList().Count(); i++ )
+	{
+		// Some maps use trigger_hurt with negative values as healing triggers; don't consider those
+		CTriggerHurt *pTrigger = static_cast<CTriggerHurt*>( ITriggerHurtAutoList::AutoList()[i] );
+		if ( !pTrigger->m_bDisabled && pTrigger->PointIsWithin( vecPoint ) && pTrigger->m_flDamage > 0.f )
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 
@@ -1362,16 +1395,16 @@ bool CChangeLevel::KeyValue( const char *szKeyName, const char *szValue )
 			Assert(0);
 		}
 		Q_strncpy(m_szMapName, szValue, sizeof(m_szMapName));
+
 #ifdef LUA_SDK
-		if (m_nTableReference == LUA_NOREF)
-		{
-			lua_newtable(L);
-			m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
-		}
-		lua_getref(L, m_nTableReference);
-		lua_pushstring(L, m_szMapName);
-		lua_setfield(L, -2, "m_szMapName");
-		lua_pop(L, 1);
+        if (m_nTableReference == LUA_NOREF) {
+            lua_newtable(L);
+            m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+        }
+        lua_getref(L, m_nTableReference);
+        lua_pushstring(L, m_szMapName);
+        lua_setfield(L, -2, "m_szMapName");
+        lua_pop(L, 1);
 #endif
 	}
 	else if (FStrEq(szKeyName, "landmark"))
@@ -1383,16 +1416,16 @@ bool CChangeLevel::KeyValue( const char *szKeyName, const char *szValue )
 		}
 		
 		Q_strncpy(m_szLandmarkName, szValue, sizeof( m_szLandmarkName ));
+
 #ifdef LUA_SDK
-		if (m_nTableReference == LUA_NOREF)
-		{
-			lua_newtable(L);
-			m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
-		}
-		lua_getref(L, m_nTableReference);
-		lua_pushstring(L, m_szLandmarkName);
-		lua_setfield(L, -2, "m_szLandmarkName");
-		lua_pop(L, 1);
+                if (m_nTableReference == LUA_NOREF) {
+                    lua_newtable(L);
+                    m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+                }
+                lua_getref(L, m_nTableReference);
+                lua_pushstring(L, m_szLandmarkName);
+                lua_setfield(L, -2, "m_szLandmarkName");
+                lua_pop(L, 1);
 #endif
 	}
 	else
@@ -1500,14 +1533,6 @@ void CChangeLevel::InputChangeLevel( inputdata_t &inputdata )
 		if ( pPlayer && ( !pPlayer->IsAlive() || pPlayer->GetBonusChallenge() > 0 ) )
 			return;
 	}
-#ifdef HL2SB
-	else
-	{
-		CBasePlayer *pPlayer = inputdata.pActivator->IsPlayer() ? (CBasePlayer *)inputdata.pActivator : NULL;
-		if ( pPlayer && ( !pPlayer->IsAlive() || pPlayer->GetBonusChallenge() > 0 ) )
-			return;
-	}
-#endif
 
 	ChangeLevelNow( inputdata.pActivator );
 }
@@ -1595,11 +1620,9 @@ void CChangeLevel::ChangeLevelNow( CBaseEntity *pActivator )
 
 	Assert(!FStrEq(m_szMapName, ""));
 
-// #ifndef HL2SB
 	// Don't work in deathmatch
 	if ( g_pGameRules->IsDeathmatch() )
 		return;
-// #endif
 
 	// Some people are firing these multiple times in a frame, disable
 	if ( m_bTouched )
@@ -1607,13 +1630,7 @@ void CChangeLevel::ChangeLevelNow( CBaseEntity *pActivator )
 
 	m_bTouched = true;
 
-#ifdef HL2SB
-	CBasePlayer *pPlayer = (pActivator && pActivator->IsPlayer()) ? ToBasePlayer( pActivator ) : UTIL_GetLocalPlayer();
-	if( !pPlayer )
-		return;
-#else
 	CBaseEntity *pPlayer = (pActivator && pActivator->IsPlayer()) ? pActivator : UTIL_GetLocalPlayer();
-#endif
 
 	int transitionState = InTransitionVolume(pPlayer, m_szLandmarkName);
 	if ( transitionState == TRANSITION_VOLUME_SCREENED_OUT )
@@ -2352,8 +2369,8 @@ class CTriggerTeleport : public CBaseTrigger
 public:
 	DECLARE_CLASS( CTriggerTeleport, CBaseTrigger );
 
-	void Spawn( void );
-	void Touch( CBaseEntity *pOther );
+	virtual void Spawn( void ) OVERRIDE;
+	virtual void Touch( CBaseEntity *pOther ) OVERRIDE;
 
 	string_t m_iLandmark;
 
@@ -2368,13 +2385,10 @@ BEGIN_DATADESC( CTriggerTeleport )
 
 END_DATADESC()
 
-
-
 void CTriggerTeleport::Spawn( void )
 {
 	InitTrigger();
 }
-
 
 //-----------------------------------------------------------------------------
 // Purpose: Teleports the entity that touched us to the location of our target,
@@ -2456,6 +2470,46 @@ void CTriggerTeleport::Touch( CBaseEntity *pOther )
 
 LINK_ENTITY_TO_CLASS( info_teleport_destination, CPointEntity );
 
+
+//-----------------------------------------------------------------------------
+// Teleport Relative trigger
+//-----------------------------------------------------------------------------
+class CTriggerTeleportRelative : public CBaseTrigger
+{
+public:
+	DECLARE_CLASS(CTriggerTeleportRelative, CBaseTrigger);
+
+	virtual void Spawn( void ) OVERRIDE;
+	virtual void Touch( CBaseEntity *pOther ) OVERRIDE;
+
+	Vector m_TeleportOffset;
+
+	DECLARE_DATADESC();
+};
+
+LINK_ENTITY_TO_CLASS( trigger_teleport_relative, CTriggerTeleportRelative );
+BEGIN_DATADESC( CTriggerTeleportRelative )
+	DEFINE_KEYFIELD( m_TeleportOffset, FIELD_VECTOR, "teleportoffset" )
+END_DATADESC()
+
+
+void CTriggerTeleportRelative::Spawn( void )
+{
+	InitTrigger();
+}
+
+void CTriggerTeleportRelative::Touch( CBaseEntity *pOther )
+{
+	if ( !PassesTriggerFilters(pOther) )
+	{
+		return;
+	}
+
+	const Vector finalPos = m_TeleportOffset + WorldSpaceCenter();
+	const Vector *momentum = &vec3_origin;
+
+	pOther->Teleport( &finalPos, NULL, momentum );
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: Saves the game when the player touches the trigger. Can be enabled or disabled
@@ -2929,10 +2983,6 @@ void CTriggerCamera::Spawn( void )
 	SetRenderColorA( 0 );								// The engine won't draw this model if this is set to 0 and blending is on
 	m_nRenderMode = kRenderTransTexture;
 
-#ifdef HL2SB
-	m_nOldTakeDamage = -1;
-#endif
-
 	m_state = USE_OFF;
 	
 	m_initialSpeed = m_flSpeed;
@@ -3014,11 +3064,7 @@ void CTriggerCamera::Enable( void )
 
 	if ( !m_hPlayer || !m_hPlayer->IsPlayer() )
 	{
-#ifdef HL2SB
-		m_hPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 		m_hPlayer = UTIL_GetLocalPlayer();
-#endif
 	}
 
 	if ( !m_hPlayer )
@@ -3209,15 +3255,9 @@ void CTriggerCamera::Disable( void )
 		{
 			((CBasePlayer*)m_hPlayer.Get())->GetActiveWeapon()->RemoveEffects( EF_NODRAW );
 		}
-	}
-
-	//return the player to previous takedamage state
-#ifndef HL2SB
-	m_hPlayer->m_takedamage = m_nOldTakeDamage;
-#else
-	if ( m_nOldTakeDamage != -1 )
+		//return the player to previous takedamage state
 		m_hPlayer->m_takedamage = m_nOldTakeDamage;
-#endif
+	}
 
 	m_state = USE_OFF;
 	m_flReturnTime = gpGlobals->curtime;
@@ -4875,6 +4915,78 @@ void CServerRagdollTrigger::EndTouch(CBaseEntity *pOther)
 	if ( pCombatChar )
 	{
 		pCombatChar->m_bForceServerRagdoll = false;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: A trigger that adds impulse to touching entities
+//-----------------------------------------------------------------------------
+class CTriggerApplyImpulse : public CBaseTrigger
+{
+public:
+	DECLARE_CLASS( CTriggerApplyImpulse, CBaseTrigger );
+	DECLARE_DATADESC();
+
+	CTriggerApplyImpulse();
+
+	void Spawn( void );
+
+	void InputApplyImpulse( inputdata_t& );
+
+private:
+	Vector m_vecImpulseDir;
+	float m_flForce;
+};
+
+
+BEGIN_DATADESC( CTriggerApplyImpulse )
+	DEFINE_KEYFIELD( m_vecImpulseDir, FIELD_VECTOR, "impulse_dir" ),
+	DEFINE_KEYFIELD( m_flForce, FIELD_FLOAT, "force" ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "ApplyImpulse", InputApplyImpulse ),
+END_DATADESC()
+
+
+LINK_ENTITY_TO_CLASS( trigger_apply_impulse, CTriggerApplyImpulse );
+
+
+CTriggerApplyImpulse::CTriggerApplyImpulse()
+{
+	m_flForce = 300.f;
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTriggerApplyImpulse::Spawn()
+{
+	// Convert pushdir from angles to a vector
+	Vector vecAbsDir;
+	QAngle angPushDir = QAngle(m_vecImpulseDir.x, m_vecImpulseDir.y, m_vecImpulseDir.z);
+	AngleVectors(angPushDir, &vecAbsDir);
+
+	// Transform the vector into entity space
+	VectorIRotate( vecAbsDir, EntityToWorldTransform(), m_vecImpulseDir );
+
+	BaseClass::Spawn();
+
+	InitTrigger();
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTriggerApplyImpulse::InputApplyImpulse( inputdata_t& )
+{
+	Vector vecImpulse = m_flForce * m_vecImpulseDir;
+	FOR_EACH_VEC( m_hTouchingEntities, i )
+	{
+		if ( m_hTouchingEntities[i] )
+		{
+			m_hTouchingEntities[i]->ApplyAbsVelocityImpulse( vecImpulse );
+		}
 	}
 }
 

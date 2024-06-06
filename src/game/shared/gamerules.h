@@ -228,13 +228,13 @@ public:
 	virtual void FrameUpdatePostEntityThink();
 
 #endif
-#ifdef LUA_SDK
-	virtual void Think( void ) = 0;// GR_Think - runs every server frame, should handle any timer tasks, periodic events, etc.
-#else
-#ifndef CLIENT_DLL
-	virtual void Think( void ) = 0;// GR_Think - runs every server frame, should handle any timer tasks, periodic events, etc.
+
+#if defined(LUA_SDK) || !defined(CLIENT_DLL)
+        virtual void Think(
+            void) = 0;  // GR_Think - runs every frame, should handle any
+                        // timer tasks, periodic events, etc.
 #endif
-#endif
+
 #ifndef CLIENT_DLL
 	virtual bool IsAllowedToSpawn( CBaseEntity *pEntity ) = 0;  // Can this item spawn (eg NPCs don't spawn in deathmatch).
 
@@ -425,6 +425,8 @@ public:
 	virtual void OnFileReceived( const char * fileName, unsigned int transferID ) { return; }
 
 	virtual bool IsHolidayActive( /*EHoliday*/ int eHoliday ) const { return false; }
+
+	virtual bool IsManualMapChangeOkay( const char **pszReason ){ return true; }
 
 #ifndef CLIENT_DLL
 private:

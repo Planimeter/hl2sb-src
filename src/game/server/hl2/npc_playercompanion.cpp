@@ -234,7 +234,7 @@ void CNPC_PlayerCompanion::Spawn()
 
 	m_AnnounceAttackTimer.Set( 10, 30 );
 
-#if !defined( HL2SB ) && defined( HL2_EPISODIC )
+#ifdef HL2_EPISODIC
 	// We strip this flag because it's been made obsolete by the StartScripting behavior
 	if ( HasSpawnFlags( SF_NPC_ALTCOLLISION ) )
 	{
@@ -243,7 +243,7 @@ void CNPC_PlayerCompanion::Spawn()
 	}
 
 	m_hFlare = NULL;
-#endif // !HL2SB && HL2_EPISODIC
+#endif // HL2_EPISODIC
 
 	BaseClass::Spawn();
 }
@@ -260,14 +260,14 @@ int CNPC_PlayerCompanion::Restore( IRestore &restore )
 		m_StandoffBehavior.SetActive( false );
 	}
 
-#if !defined( HL2SB ) && defined( HL2_EPISODIC )
+#ifdef HL2_EPISODIC
 	// We strip this flag because it's been made obsolete by the StartScripting behavior
 	if ( HasSpawnFlags( SF_NPC_ALTCOLLISION ) )
 	{
 		Warning( "NPC %s using alternate collision! -- DISABLED\n", STRING( GetEntityName() ) );
 		RemoveSpawnFlags( SF_NPC_ALTCOLLISION );
 	}
-#endif // !HL2SB && HL2_EPISODIC
+#endif // HL2_EPISODIC
 
 	return baseResult;
 }
@@ -348,15 +348,9 @@ void CNPC_PlayerCompanion::GatherConditions()
 {
 	BaseClass::GatherConditions();
 
-#ifndef HL2SB
 	if ( AI_IsSinglePlayer() )
 	{
-#endif
-#ifdef HL2SB
-		CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#endif
 
 		if ( Classify() == CLASS_PLAYER_ALLY_VITAL )
 		{
@@ -444,9 +438,7 @@ void CNPC_PlayerCompanion::GatherConditions()
 				m_flBoostSpeed *= mult;
 			}
 		}
-#ifndef HL2SB
 	}
-#endif
 
 	// Update our readiness if we're 
 	if ( IsReadinessCapable() )
@@ -504,15 +496,9 @@ void CNPC_PlayerCompanion::GatherConditions()
 		DoCustomSpeechAI();
 	}
 
-#ifdef HL2SB
-	if ( hl2_episodic.GetBool() && !GetEnemy() && HasCondition( COND_HEAR_PLAYER ) )
-	{
-		Vector los = ( UTIL_GetNearestPlayer( GetAbsOrigin() )->EyePosition() - EyePosition() );
-#else
 	if ( AI_IsSinglePlayer() && hl2_episodic.GetBool() && !GetEnemy() && HasCondition( COND_HEAR_PLAYER ) )
 	{
 		Vector los = ( UTIL_GetLocalPlayer()->EyePosition() - EyePosition() );
-#endif
 		los.z = 0;
 		VectorNormalize( los );
 
@@ -528,11 +514,7 @@ void CNPC_PlayerCompanion::GatherConditions()
 //-----------------------------------------------------------------------------
 void CNPC_PlayerCompanion::DoCustomSpeechAI( void )
 {
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 	
 	// Don't allow this when we're getting in the car
 #ifdef HL2_EPISODIC
@@ -565,11 +547,7 @@ void CNPC_PlayerCompanion::DoCustomSpeechAI( void )
 //-----------------------------------------------------------------------------
 void CNPC_PlayerCompanion::PredictPlayerPush()
 {
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 	if ( pPlayer && pPlayer->GetSmoothedVelocity().LengthSqr() >= Square(140))
 	{
 		Vector predictedPosition = pPlayer->WorldSpaceCenter() + pPlayer->GetSmoothedVelocity() * .4;
@@ -992,13 +970,9 @@ int CNPC_PlayerCompanion::TranslateSchedule( int scheduleType )
 
 			if( CanReload() && pWeapon->UsesClipsForAmmo1() && pWeapon->Clip1() < ( pWeapon->GetMaxClip1() * .5 ) && OccupyStrategySlot( SQUAD_SLOT_EXCLUSIVE_RELOAD ) )
 			{
-#ifdef HL2SB
-					CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 				if ( AI_IsSinglePlayer() )
 				{
 					CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#endif
 					pWeapon = pPlayer->GetActiveWeapon();
 					if( pWeapon && pWeapon->UsesClipsForAmmo1() && 
 						pWeapon->Clip1() < ( pWeapon->GetMaxClip1() * .75 ) &&
@@ -1006,9 +980,7 @@ int CNPC_PlayerCompanion::TranslateSchedule( int scheduleType )
 					{
 						SpeakIfAllowed( TLK_PLRELOAD );
 					}
-#ifndef HL2SB
 				}
-#endif
 				return SCHED_RELOAD;
 			}
 		}
@@ -1181,14 +1153,10 @@ void CNPC_PlayerCompanion::RunTask( const Task_t *pTask )
 
 		case TASK_PC_GET_PATH_OFF_COMPANION:
 			{
-#ifdef HL2SB
-				GetNavigator()->SetAllowBigStep( UTIL_GetNearestPlayer( GetAbsOrigin() ) );
-#else
 				if ( AI_IsSinglePlayer() )
 				{
 					GetNavigator()->SetAllowBigStep( UTIL_GetLocalPlayer() );
 				}
-#endif
 				ChainRunTask( TASK_MOVE_AWAY_PATH, 48 );
 			}
 			break;
@@ -1545,11 +1513,7 @@ void CNPC_PlayerCompanion::Touch( CBaseEntity *pOther )
 		if ( m_afMemory & bits_MEMORY_PROVOKED )
 			return;
 			
-#ifdef HL2SB
-		TestPlayerPushing( ( pOther->IsPlayer() ) ? pOther : AI_GetNearestPlayer( GetAbsOrigin() ) );
-#else
 		TestPlayerPushing( ( pOther->IsPlayer() ) ? pOther : AI_GetSinglePlayer() );
-#endif
 	}
 }
 
@@ -1933,11 +1897,7 @@ bool CNPC_PlayerCompanion::PickTacticalLookTarget( AILookTargetArgs_t *pArgs )
 		// 1/3rd chance to authoritatively look at player
 		if( random->RandomInt( 0, 2 ) == 0 )
 		{
-#ifdef HL2SB
-			pArgs->hTarget = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 			pArgs->hTarget = AI_GetSinglePlayer();
-#endif
 			return true;
 		}
 	}
@@ -2824,11 +2784,7 @@ void CNPC_PlayerCompanion::OnFriendDamaged( CBaseCombatCharacter *pSquadmate, CB
 			}
 		}
 
-#ifdef HL2SB
-		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 		if ( pPlayer && IsInPlayerSquad() && ( pPlayer->GetAbsOrigin().AsVector2D() - GetAbsOrigin().AsVector2D() ).LengthSqr() < Square( 25*12 ) && IsAllowedToSpeak( TLK_WATCHOUT ) )
 		{
 			if ( !pPlayer->FInViewCone( pAttacker ) )
@@ -3128,10 +3084,8 @@ bool CNPC_PlayerCompanion::ShouldAlwaysTransition( void )
 //-----------------------------------------------------------------------------
 void CNPC_PlayerCompanion::InputOutsideTransition( inputdata_t &inputdata )
 {
-#ifndef HL2SB
 	if ( !AI_IsSinglePlayer() )
 		return;
-#endif
 
 	// Must want to do this
 	if ( ShouldAlwaysTransition() == false )
@@ -3141,11 +3095,7 @@ void CNPC_PlayerCompanion::InputOutsideTransition( inputdata_t &inputdata )
 	if ( IsInAVehicle() )
 		return;
 
-#ifdef HL2SB
-	CBaseEntity *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBaseEntity *pPlayer = UTIL_GetLocalPlayer();
-#endif
 	const Vector &playerPos = pPlayer->GetAbsOrigin();
 
 	// Mark us as already having succeeded if we're vital or always meant to come with the player
@@ -3734,11 +3684,7 @@ bool CNPC_PlayerCompanion::IsNavigationUrgent( void )
 		// could not see the player but the player could in fact see them.  Now the NPC's facing is
 		// irrelevant and the player's viewcone is more authorative. -- jdw
 
-#ifdef HL2SB
-		CBasePlayer *pLocalPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
-#endif
 		if ( pLocalPlayer->FInViewCone( EyePosition() ) )
 			return false;
 

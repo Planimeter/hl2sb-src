@@ -72,13 +72,8 @@ void CNPCEventResponseSystem::TriggerEvent( const char *pResponse, bool bForce, 
 //-----------------------------------------------------------------------------
 void CNPCEventResponseSystem::FrameUpdatePreEntityThink()
 {
-#ifdef HL2SB
- 	if ( !m_ActiveEvents.Count() || !UTIL_GetLocalPlayer() )
-		return;
-#else
  	if ( !m_ActiveEvents.Count() || !AI_IsSinglePlayer() || !UTIL_GetLocalPlayer() )
 		return;
-#endif
 
 	if ( m_flNextEventPoll > gpGlobals->curtime )
 		return;

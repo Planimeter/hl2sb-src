@@ -113,7 +113,7 @@ CBaseFlex::CBaseFlex( void ) :
 CBaseFlex::~CBaseFlex( void )
 {
 	m_LocalToGlobal.RemoveAll();
-	Assert( m_SceneEvents.Count() == 0 );
+	AssertMsg( m_SceneEvents.Count() == 0, "m_ScenesEvent.Count != 0: %d", m_SceneEvents.Count() );
 }
 
 void CBaseFlex::SetModel( const char *szModelName )
@@ -508,7 +508,7 @@ bool CBaseFlex::HandleStartSequenceSceneEvent( CSceneEventInfo *info, CChoreoSce
 		float seq_duration = SequenceDuration( info->m_nSequence );
 		float flCycle = dt / seq_duration;
 		flCycle = flCycle - (int)flCycle; // loop
-		SetLayerCycle( info->m_iLayer, flCycle, flCycle );
+		SetLayerCycle( info->m_iLayer, flCycle, flCycle, 0.f );
 
 		SetLayerPlaybackRate( info->m_iLayer, 0.0 );
 	}
@@ -1197,11 +1197,7 @@ bool CBaseFlex::ProcessFlexAnimationSceneEvent( CSceneEventInfo *info, CChoreoSc
 					// only check occasionally
 					else if (info->m_flNext <= gpGlobals->curtime)
 					{
-#ifdef HL2SB
-						CBasePlayer *pPlayer = AI_GetNearestVisiblePlayer( this );
-#else
 						CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#endif
 
 						// if not in view, disable
 						info->m_bHasArrived = (pPlayer && !pPlayer->FInViewCone( this ) );
@@ -2716,11 +2712,7 @@ void CFlexCycler::Think( void )
 	Vector forward, right, up;
 	GetVectors( &forward, &right, &up );
 
-#ifdef HL2SB
-	CBaseEntity *pPlayer = (CBaseEntity *)UTIL_GetNearestPlayer(GetAbsOrigin());
-#else
 	CBaseEntity *pPlayer = (CBaseEntity *)UTIL_GetLocalPlayer();
-#endif
 	if (pPlayer)
 	{
 		if (pPlayer->GetSmoothedVelocity().Length() != 0 && DotProduct( forward, pPlayer->EyePosition() - EyePosition()) > 0.5)

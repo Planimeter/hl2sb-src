@@ -4,8 +4,6 @@
 //
 //=============================================================================//
 
-#define lperformance_cpp
-
 #include "cbase.h"
 #include "performance.h"
 #include "lua.hpp"

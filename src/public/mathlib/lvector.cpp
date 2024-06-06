@@ -6,8 +6,6 @@
 //
 //=============================================================================//
 
-#define lvector_cpp
-
 #include "cbase.h"
 #include "vector.h"
 #include "fmtstr.h"

@@ -38,7 +38,9 @@ public:
 	bool operator == (Panel *pPanel)		{ return (Get() == pPanel); }
 	operator bool ()						{ return Get() != 0; }
 
+#ifndef LUA_SDK
 private:
+#endif
 	HPanel m_iPanelID;
 };
 

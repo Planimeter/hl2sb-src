@@ -1,11 +1,9 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Â© 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
 // $NoKeywords: $
 //=============================================================================//
-
-#define leditablepanel_cpp
 
 #include "cbase.h"
 #include <vgui_controls/PHandle.h>
@@ -317,5 +315,6 @@ LUALIB_API int luaopen_vgui_EditablePanel (lua_State *L) {
   luaL_register(L, NULL, EditablePanelmeta);
   lua_pushstring(L, "panel");
   lua_setfield(L, -2, "__type");  /* metatable.__type = "panel" */
+  lua_pop(L, 1);
   return 1;
 }

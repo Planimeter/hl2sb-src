@@ -5,8 +5,6 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define lfilesystem_cpp
-
 #include "cbase.h"
 #include "filesystem.h"
 #include "luamanager.h"
@@ -109,7 +107,7 @@ static int filesystem_Disconnect (lua_State *L) {
 }
 
 static int filesystem_EnableWhitelistFileTracking (lua_State *L) {
-  filesystem->EnableWhitelistFileTracking(luaL_checkboolean(L, 1));
+  filesystem->EnableWhitelistFileTracking(luaL_checkboolean(L, 1), luaL_checkboolean(L, 2), luaL_checkboolean(L, 3));
   return 0;
 }
 

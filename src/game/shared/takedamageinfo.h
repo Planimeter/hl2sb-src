@@ -31,7 +31,6 @@ public:
 					CTakeDamageInfo( CBaseEntity *pInflictor, CBaseEntity *pAttacker, CBaseEntity *pWeapon, float flDamage, int bitsDamageType, int iKillType = 0 );
 					CTakeDamageInfo( CBaseEntity *pInflictor, CBaseEntity *pAttacker, const Vector &damageForce, const Vector &damagePosition, float flDamage, int bitsDamageType, int iKillType = 0, Vector *reportedPosition = NULL );
 					CTakeDamageInfo( CBaseEntity *pInflictor, CBaseEntity *pAttacker, CBaseEntity *pWeapon, const Vector &damageForce, const Vector &damagePosition, float flDamage, int bitsDamageType, int iKillType = 0, Vector *reportedPosition = NULL );
-	
 
 #if 0
 #ifdef LUA_SDK
@@ -70,6 +69,8 @@ public:
 	Vector			GetDamageForce() const;
 	void			SetDamageForce( const Vector &damageForce );
 	void			ScaleDamageForce( float flScaleAmount );
+	float			GetDamageForForceCalc() const;
+	void			SetDamageForForceCalc( const float flScaleAmount );
 
 	Vector			GetDamagePosition() const;
 	void			SetDamagePosition( const Vector &damagePosition );
@@ -134,6 +135,8 @@ protected:
 	float			m_flDamageBonus;		// Anything that increases damage (crit) - store the delta
 	EHANDLE			m_hDamageBonusProvider;	// Who gave us the ability to do extra damage?
 	bool			m_bForceFriendlyFire;	// Ideally this would be a dmg type, but we can't add more
+
+	float			m_flDamageForForce;
 
 	DECLARE_SIMPLE_DATADESC();
 };
@@ -295,6 +298,16 @@ inline void	CTakeDamageInfo::ScaleDamageForce( float flScaleAmount )
 	m_vecDamageForce *= flScaleAmount;
 }
 
+inline float CTakeDamageInfo::GetDamageForForceCalc() const
+{
+	return m_flDamageForForce;
+}
+
+inline void CTakeDamageInfo::SetDamageForForceCalc( float flDamage )
+{
+	m_flDamageForForce = flDamage;
+}
+
 inline Vector CTakeDamageInfo::GetDamagePosition() const
 {
 	return m_vecDamagePosition;
@@ -379,7 +392,6 @@ CTakeDamageInfo& CTakeDamageInfo::operator=( const CTakeDamageInfo& from )
 }
 #endif
 #endif
-
 
 // -------------------------------------------------------------------------------------------------- //
 // Inlines.

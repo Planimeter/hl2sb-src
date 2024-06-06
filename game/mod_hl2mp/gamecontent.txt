@@ -1,0 +1,6 @@
+"GameContent"
+{
+	FileSystem
+	{
+	}
+}
