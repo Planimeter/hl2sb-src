@@ -1,6 +1,6 @@
 //========= Copyright Valve Corporation, All rights reserved. ============//
 //
-// Purpose: 
+// Purpose:
 //
 // $NoKeywords: $
 //=============================================================================//
@@ -15,42 +15,56 @@
 
 class CBeam;
 
+// for constraints
+#include "vphysics/constraints.h"
 
-class CTripmineGrenade : public CBaseGrenade
-{
-public:
-	DECLARE_CLASS( CTripmineGrenade, CBaseGrenade );
+class CTripmineGrenade : public CBaseGrenade {
+   public:
+    DECLARE_CLASS(CTripmineGrenade, CBaseGrenade);
 
-	CTripmineGrenade();
-	void Spawn( void );
-	void Precache( void );
+    CTripmineGrenade();
+    ~CTripmineGrenade();
 
-#if 0 // FIXME: OnTakeDamage_Alive() is no longer called now that base grenade derives from CBaseAnimating
-	int OnTakeDamage_Alive( const CTakeDamageInfo &info );
-#endif	
-	void WarningThink( void );
-	void PowerupThink( void );
-	void BeamBreakThink( void );
-	void DelayDeathThink( void );
-	void Event_Killed( const CTakeDamageInfo &info );
+    void Spawn(void);
+    void Precache(void);
 
-	void MakeBeam( void );
-	void KillBeam( void );
+    virtual int OnTakeDamage(const CTakeDamageInfo &info);
+    void WarningThink(void);
+    void PowerupThink(void);
+    void BeamBreakThink(void);
+    void DelayDeathThink(void);
+    void Event_Killed(const CTakeDamageInfo &info);
 
-public:
-	EHANDLE		m_hOwner;
+    void MakeBeam(void);
+    void KillBeam(void);
 
-private:
-	float		m_flPowerUp;
-	Vector		m_vecDir;
-	Vector		m_vecEnd;
-	float		m_flBeamLength;
+    // Added to create a constraint
+    void AttachToEntity(CBaseEntity *pOther);
+    bool MakeConstraint(CBaseEntity *pOther);
 
-	CBeam		*m_pBeam;
-	Vector		m_posOwner;
-	Vector		m_angleOwner;
+   public:
+    EHANDLE m_hOwner;
+    // Added for following
+    EHANDLE m_hAttachEntity;
 
-	DECLARE_DATADESC();
+   private:
+    float m_flPowerUp;
+    Vector m_vecDir;
+    Vector m_vecEnd;
+    float m_flBeamLength;
+
+    CBeam *m_pBeam;
+    Vector m_posOwner;
+    Vector m_angleOwner;
+
+    // signifies if we're attached to something, and need to update slightly
+    // differently.
+    bool m_bAttached;
+    IPhysicsConstraint *m_pConstraint;
+    Vector m_vAttachedPosition;  // if the attached position changes, we need to
+                                 // detonate
+
+    DECLARE_DATADESC();
 };
 
-#endif // GRENADE_TRIPMINE_H
+#endif  // GRENADE_TRIPMINE_H

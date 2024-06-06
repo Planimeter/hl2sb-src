@@ -775,11 +775,6 @@ void UTIL_Tracer( const Vector &vecStart, const Vector &vecEnd, int iEntIndex,
 
 void UTIL_BloodDrips( const Vector &origin, const Vector &direction, int color, int amount )
 {
-#ifdef HL2SB
-	//Andrew; see https://developer.valvesoftware.com/wiki/Fixing_AI_in_multiplayer#Blood
-	IPredictionSystem::SuppressHostEvents( NULL );
-#endif
-
 	if ( !UTIL_ShouldShowBlood( color ) )
 		return;
 

@@ -1,0 +1,33 @@
+DisableFormat: true
+# TODO: Consider enabling formatting, e.g:
+# BasedOnStyle: Google
+# SortIncludes: false # Important, or sorting includes will break some dependencies
+# IndentWidth: 2
+# TabWidth: 2
+# UseTab: Never
+
+# SpaceBeforeParens: ControlStatements
+# SpacesInParentheses: true
+# SpacesInAngles: true
+# SpacesInContainerLiterals: true
+# SpacesInCStyleCastParentheses: true
+# SpaceBeforeAssignmentOperators: true
+# SpacesInConditionalStatement: true
+
+# ColumnLimit: 0
+# AlignTrailingComments: true
+# IndentCaseLabels: true
+
+# AllowShortFunctionsOnASingleLine: Empty
+
+# BreakBeforeBraces: Allman
+# BraceWrapping:
+#   AfterClass: true
+#   AfterControlStatement: true
+#   AfterEnum: true
+#   AfterFunction: true
+#   AfterNamespace: true
+#   AfterStruct: true
+#   AfterUnion: true
+#   BeforeCatch: true
+#   BeforeElse: true

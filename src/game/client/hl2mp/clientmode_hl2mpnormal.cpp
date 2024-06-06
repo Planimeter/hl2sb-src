@@ -98,16 +98,15 @@ IViewPortPanel* CHudViewport::CreatePanelByName( const char *szPanelName )
 //-----------------------------------------------------------------------------
 // ClientModeHLNormal implementation
 //-----------------------------------------------------------------------------
-ClientModeHL2MPNormal::ClientModeHL2MPNormal()
-{
+ClientModeHL2MPNormal::ClientModeHL2MPNormal() {
 #ifdef LUA_SDK
-	m_pScriptedViewport = new CScriptedHudViewport();
+    m_pScriptedViewport = new CScriptedHudViewport();
 #endif
 	m_pViewport = new CHudViewport();
-	m_pViewport->Start( gameuifuncs, gameeventmanager );
+    m_pViewport->Start(gameuifuncs, gameeventmanager);
 #ifdef LUA_SDK
-	m_pClientLuaPanel = new CScriptedClientLuaPanel();
-	m_pClientLuaPanel->Start( gameuifuncs, gameeventmanager );
+    m_pClientLuaPanel = new CScriptedClientLuaPanel();
+    m_pClientLuaPanel->Start(gameuifuncs, gameeventmanager);
 #endif
 }
 

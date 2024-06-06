@@ -5,8 +5,6 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lentitylist_cpp
-
 #include "cbase.h"
 #include "luamanager.h"
 #include "luasrclib.h"
@@ -16,10 +14,10 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static int gEntList_AddPostClientMessageEntity (lua_State *L) {
-  gEntList.AddPostClientMessageEntity(luaL_checkentity(L, 1));
-  return 0;
-}
+//static int gEntList_AddPostClientMessageEntity (lua_State *L) {
+//  gEntList.AddPostClientMessageEntity(luaL_checkentity(L, 1));
+//  return 0;
+//}
 
 static int gEntList_CleanupDeleteList (lua_State *L) {
   gEntList.CleanupDeleteList();
@@ -37,12 +35,12 @@ static int gEntList_FindEntityByClassname (lua_State *L) {
 }
 
 static int gEntList_FindEntityByClassnameNearest (lua_State *L) {
-  lua_pushentity(L, gEntList.FindEntityByClassnameNearest(luaL_checkstring(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_optint(L, 4, BRUSHPRECISION_NORMAL)));
+  lua_pushentity(L, gEntList.FindEntityByClassnameNearest(luaL_checkstring(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3)));
   return 1;
 }
 
 static int gEntList_FindEntityByClassnameWithin (lua_State *L) {
-  lua_pushentity(L, gEntList.FindEntityByClassnameWithin(lua_toentity(L, 1), luaL_checkstring(L, 2), luaL_checkvector(L, 3), luaL_checknumber(L, 4), luaL_optint(L, 5, BRUSHPRECISION_NORMAL)));
+  lua_pushentity(L, gEntList.FindEntityByClassnameWithin(lua_toentity(L, 1), luaL_checkstring(L, 2), luaL_checkvector(L, 3), luaL_checknumber(L, 4)));
   return 1;
 }
 
@@ -57,12 +55,12 @@ static int gEntList_FindEntityByName (lua_State *L) {
 }
 
 static int gEntList_FindEntityByNameNearest (lua_State *L) {
-  lua_pushentity(L, gEntList.FindEntityByNameNearest(luaL_checkstring(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_optentity(L, 4, 0), luaL_optentity(L, 5, 0), luaL_optentity(L, 6, 0), luaL_optint(L, 7, BRUSHPRECISION_NORMAL)));
+  lua_pushentity(L, gEntList.FindEntityByNameNearest(luaL_checkstring(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_optentity(L, 4, 0), luaL_optentity(L, 5, 0), luaL_optentity(L, 6, 0)));
   return 1;
 }
 
 static int gEntList_FindEntityByNameWithin (lua_State *L) {
-  lua_pushentity(L, gEntList.FindEntityByNameWithin(lua_toentity(L, 1), luaL_checkstring(L, 2), luaL_checkvector(L, 3), luaL_checknumber(L, 4), luaL_optentity(L, 5, 0), luaL_optentity(L, 6, 0), luaL_optentity(L, 7, 0), luaL_optint(L, 7, BRUSHPRECISION_NORMAL)));
+  lua_pushentity(L, gEntList.FindEntityByNameWithin(lua_toentity(L, 1), luaL_checkstring(L, 2), luaL_checkvector(L, 3), luaL_checknumber(L, 4), luaL_optentity(L, 5, 0), luaL_optentity(L, 6, 0), luaL_optentity(L, 7, 0)));
   return 1;
 }
 
@@ -82,12 +80,12 @@ static int gEntList_FindEntityGeneric (lua_State *L) {
 }
 
 static int gEntList_FindEntityGenericNearest (lua_State *L) {
-  lua_pushentity(L, gEntList.FindEntityGenericNearest(luaL_checkstring(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_optentity(L, 4, 0), luaL_optentity(L, 5, 0), luaL_optentity(L, 6, 0), luaL_optint(L, 7, BRUSHPRECISION_NORMAL)));
+  lua_pushentity(L, gEntList.FindEntityGenericNearest(luaL_checkstring(L, 1), luaL_checkvector(L, 2), luaL_checknumber(L, 3), luaL_optentity(L, 4, 0), luaL_optentity(L, 5, 0), luaL_optentity(L, 6, 0)));
   return 1;
 }
 
 static int gEntList_FindEntityGenericWithin (lua_State *L) {
-  lua_pushentity(L, gEntList.FindEntityGenericWithin(lua_toentity(L, 1), luaL_checkstring(L, 2), luaL_checkvector(L, 3), luaL_checknumber(L, 4), luaL_optentity(L, 5, 0), luaL_optentity(L, 6, 0), luaL_optentity(L, 7, 0), luaL_optint(L, 8, BRUSHPRECISION_NORMAL)));
+  lua_pushentity(L, gEntList.FindEntityGenericWithin(lua_toentity(L, 1), luaL_checkstring(L, 2), luaL_checkvector(L, 3), luaL_checknumber(L, 4), luaL_optentity(L, 5, 0), luaL_optentity(L, 6, 0), luaL_optentity(L, 7, 0)));
   return 1;
 }
 
@@ -141,10 +139,10 @@ static int gEntList_NumberOfEntities (lua_State *L) {
   return 1;
 }
 
-static int gEntList_PostClientMessagesSent (lua_State *L) {
-  gEntList.PostClientMessagesSent();
-  return 0;
-}
+//static int gEntList_PostClientMessagesSent (lua_State *L) {
+//  gEntList.PostClientMessagesSent();
+//  return 0;
+//}
 
 static int gEntList_ReportEntityFlagsChanged (lua_State *L) {
   gEntList.ReportEntityFlagsChanged(luaL_checkentity(L, 1), (unsigned int)luaL_checkinteger(L, 2), (unsigned int)luaL_checkinteger(L, 3));
@@ -158,7 +156,7 @@ static int gEntList_ResetDeleteList (lua_State *L) {
 
 
 static const luaL_Reg gEntListlib[] = {
-  {"AddPostClientMessageEntity",   gEntList_AddPostClientMessageEntity},
+  //{"AddPostClientMessageEntity",   gEntList_AddPostClientMessageEntity},
   {"CleanupDeleteList",   gEntList_CleanupDeleteList},
   {"Clear",   gEntList_Clear},
   {"FindEntityByClassname",   gEntList_FindEntityByClassname},
@@ -183,7 +181,7 @@ static const luaL_Reg gEntListlib[] = {
   {"NotifySpawn",   gEntList_NotifySpawn},
   {"NumberOfEdicts",   gEntList_NumberOfEdicts},
   {"NumberOfEntities",   gEntList_NumberOfEntities},
-  {"PostClientMessagesSent",   gEntList_PostClientMessagesSent},
+  //{"PostClientMessagesSent",   gEntList_PostClientMessagesSent},
   {"ReportEntityFlagsChanged",   gEntList_ReportEntityFlagsChanged},
   {"ResetDeleteList",   gEntList_ResetDeleteList},
   {NULL, NULL}

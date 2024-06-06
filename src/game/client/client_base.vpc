@@ -51,8 +51,8 @@ $Configuration
 
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\lua-5.1.5\src;$SRCDIR\lua-5.1.5\etc;$SRCDIR\open-steamworks\Open Steamworks;.\;$SRCDIR\common;$SRCDIR\public;$SRCDIR\public\tier0;$SRCDIR\public\tier1;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include;.\scripted_controls;.\hl2;.\hl2\elements;$SRCDIR\game\shared\hl2;$SRCDIR\game\shared\Multiplayer;$SRCDIR\game\shared\episodic"
-		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;LUA_SDK;HL2SB;ARGG"
+		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include;.\scripted_controls;.\hl2;.\hl2\elements;$SRCDIR\game\shared\hl2;$SRCDIR\game\shared\episodic\;$SRCDIR\lua-5.1.5\include"
+		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;HL2SB;LUA_SDK"
 		$PreprocessorDefinitions		"$BASE;fopen=dont_use_fopen" [$WIN32]
 		$PreprocessorDefinitions		"$BASE;USE_WEBM_FOR_REPLAY;" [$LINUXALL]
 		$PreprocessorDefinitions		"$BASE;CURL_STATICLIB" [$WIN32 && $BUILD_REPLAY]
@@ -80,7 +80,7 @@ $Project
 		$File	"replay/replaycamera.h"
 		$File	"replay/cdll_replay.cpp"
 		$File	"replay/cdll_replay.h"
-		
+
 		$File	"replay/gamedefs.h"	[$BUILD_REPLAY]
 		$File	"replay/gamedefs.cpp"	[$BUILD_REPLAY]
 		$File	"replay/replay_ragdoll.cpp"	[$BUILD_REPLAY]
@@ -93,13 +93,13 @@ $Project
 		$File	"replay/replayrenderer.h"	[$BUILD_REPLAY]
 		$File	"replay/replayvideo.cpp"	[$BUILD_REPLAY]
 		$File	"replay/replayvideo.h"	[$BUILD_REPLAY]
-		
+
 		$File	"replay/genericclassbased_replay.cpp"	[$BUILD_REPLAY]
 		$File	"replay/genericclassbased_replay.h"	[$BUILD_REPLAY]
-		
+
 		$File	"$SRCDIR\game\shared\replay_gamestats_shared.cpp"	[$BUILD_REPLAY]
 		$File	"$SRCDIR\game\shared\replay_gamestats_shared.h"	[$BUILD_REPLAY]
-		
+
 		$File	"$SRCDIR\game\client\youtubeapi.h"	[$BUILD_REPLAY]
 		$File	"$SRCDIR\game\client\youtubeapi.cpp"	[$BUILD_REPLAY]
 		{
@@ -111,7 +111,7 @@ $Project
 				}
 			}
 		}
-		
+
 		$Folder "UI"	[$BUILD_REPLAY]
 		{
 			$File	"replay\vgui\replaybrowserbasepage.cpp"
@@ -152,10 +152,10 @@ $Project
 			$File	"replay\replayyoutubeapi.h"
 			$File	"replay\replayyoutubeapi_key.cpp" [!$SOURCESDK]
 			$File	"replay\replayyoutubeapi_key_sdk.cpp" [$SOURCESDK]
-			
+
 			$File	"game_controls\slideshowpanel.cpp"
 			$File	"game_controls\slideshowpanel.h"
-			
+
 			$File	"$SRCDIR\common\movieobjects\timeutils.cpp"
 			{
 				$Configuration
@@ -169,7 +169,7 @@ $Project
 			$File	"$SRCDIR\public\movieobjects\timeutils.h"
 		}
 	}
-		
+
 	$Folder	"Source Files"
 	{
 		$File	"hl2\C_Func_Monitor.cpp"
@@ -500,11 +500,10 @@ $Project
 		$File	"$SRCDIR\game\shared\mp_shareddefs.cpp"
 		$File	"$SRCDIR\game\client\c_vote_controller.h"
 		$File	"$SRCDIR\game\client\c_vote_controller.cpp"
-		
 		//Haptics
 		$File	"$SRCDIR\public\haptics\haptic_msgs.cpp"	[!$X360]
 		$File	"$SRCDIR\public\haptics\haptic_utils.cpp"	[$WIN32&&!$X360]
-		
+
 		$Folder	"Lua"
 		{
             $File "$SRCDIR\game\shared\basescripted.cpp"
@@ -569,6 +568,35 @@ $Project
             $File "$SRCDIR\public\vgui_controls\lEditablePanel.cpp"
         }
 
+		$Folder	"Scripted Controls"
+		{
+			$File "$SRCDIR\game\client\scripted_controls\lButton.h"
+			$File "$SRCDIR\game\client\scripted_controls\lButton.cpp"
+			$File "$SRCDIR\game\client\scripted_controls\lCheckButton.h"
+			$File "$SRCDIR\game\client\scripted_controls\lCheckButton.cpp"
+			$File "$SRCDIR\game\client\scripted_controls\lFrame.h"
+			$File "$SRCDIR\game\client\scripted_controls\lFrame.cpp"
+			$File "$SRCDIR\game\client\scripted_controls\lPanel.h"
+			$File "$SRCDIR\game\client\scripted_controls\lPanel.cpp"
+			{
+				$Configuration
+				{
+					$Compiler
+					{
+						$ObjectFileName	"$(IntDir)\$(InputName)1.obj"
+					}
+				}
+			}
+			$File "$SRCDIR\game\client\scripted_controls\lPropertyDialog.h"
+			$File "$SRCDIR\game\client\scripted_controls\lPropertyDialog.cpp"
+			$File "$SRCDIR\game\client\scripted_controls\lPropertyPage.h"
+			$File "$SRCDIR\game\client\scripted_controls\lPropertyPage.cpp"
+			$File "$SRCDIR\game\client\scripted_controls\scriptedclientluapanel.h"
+			$File "$SRCDIR\game\client\scripted_controls\scriptedclientluapanel.cpp"
+			$File "$SRCDIR\game\client\scripted_controls\scriptedhudviewport.h"
+			$File "$SRCDIR\game\client\scripted_controls\scriptedhudviewport.cpp"
+		}
+
 		$Folder	"Sixense"
 		{
 			$File	"sixense\in_sixense.cpp"
@@ -578,7 +606,7 @@ $Project
 			$File	"$SRCDIR\game\shared\sixense\sixense_convars.cpp"
 			$File	"$SRCDIR\game\shared\sixense\sixense_convars_extern.h"
 		}
-		
+
 		// Files not using precompiled header cbase.h
 
 		$File	"$SRCDIR\public\bone_setup.cpp"						\
@@ -611,7 +639,7 @@ $Project
 				"in_mouse.cpp"										\
 				"mumble.cpp"						\
 				"$SRCDIR\public\renamed_recvtable_compat.cpp"		\
-				"rendertexture.cpp"									
+				"rendertexture.cpp"
 				{
 					$Configuration
 					{
@@ -699,6 +727,7 @@ $Project
 			$File	"fx_envelope.cpp"
 			$File	"fx_line.cpp"
 			$File	"fx_sparks.cpp"
+			$File	"lc_recipientfilter.cpp"
 			$File	"particlesphererenderer.cpp"
 			$File	"smoke_fog_overlay.cpp"
 		}
@@ -728,7 +757,7 @@ $Project
 		$File	"mp3player.cpp"
 		$File	"mp3player.h"
 	}
-	
+
 	$Folder	"Tool Framework"
 	{
 		$File	"$SRCDIR\public\tools\bonelist.cpp"
@@ -939,7 +968,7 @@ $Project
 		$File	"weapons_resource.h"
 		$File	"vgui_video.h"
 		$File   "vgui_video_player.h"
-		
+
         // Lua
         $File "lc_recipientfilter.h"
         $File "$SRCDIR\public\lvphysics_interface.h"
@@ -1167,11 +1196,11 @@ $Project
 		$File	"$SRCDIR\public\vgui_controls\WizardSubPanel.h"
 		$File	"$SRCDIR\public\worldsize.h"
 		$File	"$SRCDIR\public\zip_uncompressed.h"
-		
-		//Haptics
+
+		// Haptics
 		$File   "$SRCDIR\public\haptics\ihaptics.h"	[$WIN32]
 		$File   "$SRCDIR\public\haptics\haptic_utils.h"	[$WIN32]
-		
+
         // Lua
         $File "$SRCDIR\public\mathlib\lvector.h"
         $File "$SRCDIR\public\lcmodel.h"
@@ -1309,7 +1338,7 @@ $Project
 		$File	"$SRCDIR\game\shared\weapon_proficiency.h"
 		$File	"$SRCDIR\game\shared\weapon_ifmsteadycam.h"
 		$File	"$SRCDIR\game\shared\mp_shareddefs.h"
-		
+
         // Lua
         $File "$SRCDIR\game\shared\lbaseplayer_shared.h"
         $File "$SRCDIR\game\shared\leffect_dispatch_data.h"
@@ -1334,13 +1363,12 @@ $Project
 		$File	"game_controls\vguitextwindow.h"
 		$File	"game_controls\IconPanel.h"
 	}
-	
+
 	$Folder	"Link Libraries"
 	{
 		$Lib		bitmap
 		$Lib		choreoobjects
 		$Lib		dmxloader
-		$Lib		lua51
 		$Lib		mathlib
 		$Lib		matsys_controls
 		$Lib		particles
@@ -1350,8 +1378,9 @@ $Project
 		$Lib		vgui_controls
 		$Lib		vtf
 		$ImpLib		steam_api
-		
-		$Lib $LIBCOMMON/libcrypto [$POSIX]
+
+		$Libexternal $LIBCOMMON/libcrypto [$OSXALL]
+		$Libexternal "$SRCDIR\lib\common\$(CRYPTOPPDIR)\libcrypto" [$LINUXALL]
 
 		$ImpLib	"$LIBCOMMON\curl"	  [$OSXALL]
 
@@ -1361,7 +1390,7 @@ $Project
 		$Libexternal	libz [$LINUXALL]
 		$Libexternal "$LIBCOMMON/libcurl" [$LINUXALL]
 		$Libexternal "$LIBCOMMON/libcurlssl" [$LINUXALL]
-		$Libexternal "$LIBCOMMON/libssl" [$LINUXALL]
+		$Libexternal "$SRCDIR\lib\common\$(CRYPTOPPDIR)\libssl" [$LINUXALL]
  	}
 
 }

@@ -53,7 +53,7 @@
 
 #ifdef PORTAL
 #include "portal_player.h"
-#endif // PORTAL
+#endif
 
 #ifdef LUA_SDK
 #include "luamanager.h"
@@ -2651,13 +2651,12 @@ bool CHL2_Player::Weapon_CanUse( CBaseCombatWeapon *pWeapon )
 // Purpose: 
 // Input  : *pWeapon - 
 //-----------------------------------------------------------------------------
-void CHL2_Player::Weapon_Equip( CBaseCombatWeapon *pWeapon )
-{
+void CHL2_Player::Weapon_Equip( CBaseCombatWeapon *pWeapon ) {
 #if LUA_SDK
-	BEGIN_LUA_CALL_HOOK( "Weapon_Equip" );
-		lua_pushplayer( L, this );
-		lua_pushweapon( L, pWeapon );
-	END_LUA_CALL_HOOK( 2, 0 );
+    BEGIN_LUA_CALL_HOOK("Weapon_Equip");
+    lua_pushplayer(L, this);
+    lua_pushweapon(L, pWeapon);
+    END_LUA_CALL_HOOK(2, 0);
 #endif
 
 #if	HL2_SINGLE_PRIMARY_WEAPON_MODE
@@ -3165,6 +3164,11 @@ float CHL2_Player::GetHeldObjectMass( IPhysicsObject *pHeldObject )
 		mass = PhysCannonGetHeldObjectMass( GetActiveWeapon(), pHeldObject );
 	}
 	return mass;
+}
+
+CBaseEntity	*CHL2_Player::GetHeldObject( void )
+{
+	return PhysCannonGetHeldEntity( GetActiveWeapon() );
 }
 
 //-----------------------------------------------------------------------------

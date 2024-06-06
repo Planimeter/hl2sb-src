@@ -1420,11 +1420,6 @@ void CSceneEntity::DispatchEndInterrupt( CChoreoScene *scene, CChoreoEvent *even
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartExpression( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->AddSceneEvent( scene, event );
 }
 
@@ -1435,11 +1430,6 @@ void CSceneEntity::DispatchStartExpression( CChoreoScene *scene, CBaseFlex *acto
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchEndExpression( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->RemoveSceneEvent( scene, event, false );
 }
 
@@ -1450,11 +1440,6 @@ void CSceneEntity::DispatchEndExpression( CChoreoScene *scene, CBaseFlex *actor,
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartFlexAnimation( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->AddSceneEvent( scene, event );
 }
 
@@ -1465,11 +1450,6 @@ void CSceneEntity::DispatchStartFlexAnimation( CChoreoScene *scene, CBaseFlex *a
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchEndFlexAnimation( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->RemoveSceneEvent( scene, event, false );
 }
 
@@ -1480,11 +1460,6 @@ void CSceneEntity::DispatchEndFlexAnimation( CChoreoScene *scene, CBaseFlex *act
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartGesture( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	// Ingore null gestures
 	if ( !Q_stricmp( event->GetName(), "NULL" ) )
 		return;
@@ -1500,11 +1475,6 @@ void CSceneEntity::DispatchStartGesture( CChoreoScene *scene, CBaseFlex *actor, 
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchEndGesture( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	// Ingore null gestures
 	if ( !Q_stricmp( event->GetName(), "NULL" ) )
 		return;
@@ -1519,11 +1489,6 @@ void CSceneEntity::DispatchEndGesture( CChoreoScene *scene, CBaseFlex *actor, CC
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartGeneric( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	CBaseEntity *pTarget = FindNamedEntity( event->GetParameters2( ) );
 	actor->AddSceneEvent( scene, event, pTarget );
 }
@@ -1536,11 +1501,6 @@ void CSceneEntity::DispatchStartGeneric( CChoreoScene *scene, CBaseFlex *actor, 
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchEndGeneric( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->RemoveSceneEvent( scene, event, m_bRestoring );
 }
 
@@ -1551,22 +1511,12 @@ void CSceneEntity::DispatchEndGeneric( CChoreoScene *scene, CBaseFlex *actor, CC
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartLookAt( CChoreoScene *scene, CBaseFlex *actor, CBaseEntity *actor2, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->AddSceneEvent( scene, event, actor2 );
 }
 
 
 void CSceneEntity::DispatchEndLookAt( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->RemoveSceneEvent( scene, event, m_bRestoring );
 }
 
@@ -1580,22 +1530,12 @@ void CSceneEntity::DispatchEndLookAt( CChoreoScene *scene, CBaseFlex *actor, CCh
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartMoveTo( CChoreoScene *scene, CBaseFlex *actor, CBaseEntity *actor2, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->AddSceneEvent( scene, event, actor2 );
 }
 
 
 void CSceneEntity::DispatchEndMoveTo( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->RemoveSceneEvent( scene, event, m_bRestoring );
 }
 
@@ -1725,9 +1665,6 @@ void CSceneEntity::DispatchStartSpeak( CChoreoScene *scene, CBaseFlex *actor, CC
 	if ( actor )
 	{
 		CPASAttenuationFilter filter( actor );
-#ifdef HL2SB
-		filter.AddAllPlayers();
-#endif
 
 		if ( m_pRecipientFilter )
 		{
@@ -1928,11 +1865,6 @@ void CSceneEntity::DispatchStartSpeak( CChoreoScene *scene, CBaseFlex *actor, CC
 
 void CSceneEntity::DispatchEndSpeak( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->RemoveSceneEvent( scene, event, m_bRestoring );
 }
 
@@ -1944,11 +1876,6 @@ void CSceneEntity::DispatchEndSpeak( CChoreoScene *scene, CBaseFlex *actor, CCho
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartFace( CChoreoScene *scene, CBaseFlex *actor, CBaseEntity *actor2, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->AddSceneEvent( scene, event, actor2 );
 }
 
@@ -1961,11 +1888,6 @@ void CSceneEntity::DispatchStartFace( CChoreoScene *scene, CBaseFlex *actor, CBa
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchEndFace( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->RemoveSceneEvent( scene, event, m_bRestoring );
 }
 
@@ -1977,11 +1899,6 @@ void CSceneEntity::DispatchEndFace( CChoreoScene *scene, CBaseFlex *actor, CChor
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->AddSceneEvent( scene, event );
 }
 
@@ -1993,11 +1910,6 @@ void CSceneEntity::DispatchStartSequence( CChoreoScene *scene, CBaseFlex *actor,
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchEndSequence( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->RemoveSceneEvent( scene, event, m_bRestoring );
 }
 
@@ -2009,11 +1921,6 @@ void CSceneEntity::DispatchEndSequence( CChoreoScene *scene, CBaseFlex *actor, C
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchStartPermitResponses( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->SetPermitResponse( gpGlobals->curtime + event->GetDuration() );
 }
 
@@ -2025,11 +1932,6 @@ void CSceneEntity::DispatchStartPermitResponses( CChoreoScene *scene, CBaseFlex 
 //-----------------------------------------------------------------------------
 void CSceneEntity::DispatchEndPermitResponses( CChoreoScene *scene, CBaseFlex *actor, CChoreoEvent *event )
 {
-#ifdef HL2SB
-	if ( !actor )
-		return;
-#endif
-
 	actor->SetPermitResponse( 0 );
 }
 
@@ -2567,10 +2469,6 @@ void CSceneEntity::StartPlayback( void )
 			return;
 		}
 
-#ifdef HL2SB
-		PrecacheScene( m_pScene );
-#endif
-
 		OnLoaded();
 
 		if ( ShouldNetwork() )
@@ -3014,11 +2912,7 @@ void CSceneEntity::StartEvent( float currenttime, CChoreoScene *scene, CChoreoEv
 				event->SetEndTime( event->GetStartTime() + 1.0 );
 			}
 
-#ifdef HL2SB
-			if ( pActor )
-#else
 			if ( pActor && !IsMultiplayer() )
-#endif
 			{
 				CBaseEntity *pActor2 = NULL;
 				if ( event->GetParameters3( ) && strlen( event->GetParameters3( ) ) > 0 )
@@ -3043,11 +2937,7 @@ void CSceneEntity::StartEvent( float currenttime, CChoreoScene *scene, CChoreoEv
 		break;
 	case CChoreoEvent::FACE:
 		{
-#ifdef HL2SB
-			if ( pActor )
-#else
 			if ( pActor && !IsMultiplayer() )
-#endif
 			{
 				CBaseEntity *pActor2 = FindNamedEntity( event->GetParameters( ), pActor );
 				if ( pActor2 )
@@ -3417,52 +3307,6 @@ bool CSceneEntity::ShouldNetwork() const
 	return false;
 }
 
-#ifdef HL2SB
-//Andrew; See https://developer.valvesoftware.com/wiki/Scenes.image
-CChoreoScene *CSceneEntity::LoadScene( const char *filename, IChoreoEventCallback *pCallback )
-{
-	char loadfile[MAX_PATH];
-	Q_strncpy( loadfile, filename, sizeof( loadfile ) );
-	Q_SetExtension( loadfile, ".vcd", sizeof( loadfile ) );
-	Q_FixSlashes( loadfile );
- 
-	void *pBuffer = 0;
-	CChoreoScene *pScene;
- 
-	int fileSize = filesystem->ReadFileEx( loadfile, "GAME", &pBuffer, true );
-	if (fileSize)
-	{
-		g_TokenProcessor.SetBuffer((char*)pBuffer);
-		pScene = ChoreoLoadScene( loadfile, NULL, &g_TokenProcessor, LocalScene_Printf );
-	}
-	else
-	{
-		// binary compiled vcd
-		pScene = new CChoreoScene( NULL );
-		if ( !CopySceneFileIntoMemory( loadfile, &pBuffer, &fileSize ) )
-		{
-			MissingSceneWarning( loadfile );
-			return NULL;
-		}
-		CUtlBuffer buf( pBuffer, fileSize, CUtlBuffer::READ_ONLY );
-		if ( !pScene->RestoreFromBinaryBuffer( buf, loadfile, &g_ChoreoStringPool ) )
-		{
-			Warning( "CSceneEntity::LoadScene: Unable to load scene '%s'\n", loadfile );
-			delete pScene;
-			pScene = NULL;
-		}
-	}
- 
-	if(pScene)
-	{
-		pScene->SetPrintFunc( LocalScene_Printf );
-		pScene->SetEventCallbackInterface( pCallback );
-	}
- 
-	FreeSceneFileMemory( pBuffer );
-	return pScene;
-}
-#else
 CChoreoScene *CSceneEntity::LoadScene( const char *filename, IChoreoEventCallback *pCallback )
 {
 	DevMsg( 2, "Blocking load of scene from '%s'\n", filename );
@@ -3498,7 +3342,6 @@ CChoreoScene *CSceneEntity::LoadScene( const char *filename, IChoreoEventCallbac
 	FreeSceneFileMemory( pBuffer );
 	return pScene;
 }
-#endif
 
 CChoreoScene *BlockingLoadScene( const char *filename )
 {
@@ -3869,18 +3712,7 @@ CBaseEntity *CSceneEntity::FindNamedEntity( const char *name, CBaseEntity *pActo
 
 	if ( !stricmp( name, "Player" ) || !stricmp( name, "!player" ))
 	{
-#ifndef HL2SB
 		entity = ( gpGlobals->maxClients == 1 ) ? ( CBaseEntity * )UTIL_GetLocalPlayer() : NULL;
-#else
-		if (pActor == NULL)
-		{
-			entity = ( gpGlobals->maxClients == 1 ) ? ( CBaseEntity * )UTIL_GetLocalPlayer() : NULL;
-		}
-		else
-		{
-			entity = ( CBaseEntity * )UTIL_GetNearestPlayer( pActor->GetAbsOrigin() );
-		}
-#endif
 	}
 	else if ( !stricmp( name, "!target1" ) )
 	{
@@ -4007,11 +3839,7 @@ CBaseEntity *CSceneEntity::FindNamedEntityClosest( const char *name, CBaseEntity
 	} 
 	else if ( !stricmp( name, "Player" ) || !stricmp( name, "!player" ))
 	{
-#ifndef HL2SB
 		entity = ( gpGlobals->maxClients == 1 ) ? ( CBaseEntity * )UTIL_GetLocalPlayer() : NULL;
-#else
-		entity = ( CBaseEntity * )UTIL_GetNearestPlayer( pActor->GetAbsOrigin() );
-#endif
 		return entity;
 	}
 	else if ( !stricmp( name, "!target1" ) )
@@ -5123,8 +4951,9 @@ void CSceneManager::RemoveScenesInvolvingActor( CBaseFlex *pActor )
 	if ( !pActor )
 		return;
 
+	// This loop can remove items from m_ActiveScenes array, so loop through backwards.
 	int c = m_ActiveScenes.Count();
-	for ( int i = 0; i < c; i++ )
+	for ( int i = c - 1 ; i >= 0; --i )
 	{
 		CSceneEntity *pScene = m_ActiveScenes[ i ].Get();
 		if ( !pScene )
