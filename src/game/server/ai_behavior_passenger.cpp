@@ -205,11 +205,7 @@ void CAI_PassengerBehavior::AddPhysicsPush( float force )
 //-----------------------------------------------------------------------------
 bool CAI_PassengerBehavior::IsPassengerHostile( void )
 {
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
-#else
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
+	CBaseEntity *pPlayer = AI_GetSinglePlayer();
 	
 	// If the player hates or fears the passenger, they're hostile
 	if ( GetOuter()->IRelationType( pPlayer ) == D_HT || GetOuter()->IRelationType( pPlayer ) == D_FR )
@@ -224,11 +220,7 @@ bool CAI_PassengerBehavior::IsPassengerHostile( void )
 void CAI_PassengerBehavior::InitVehicleState( void )
 {
 	// Set the player's state
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 	m_vehicleState.m_bPlayerInVehicle = ( pPlayer && pPlayer->IsInAVehicle() && pPlayer->GetServerVehicle() == m_hVehicle->GetServerVehicle() );
 
 	// Update our vehicle state so we don't confuse our previous velocity on the first frame!
@@ -1291,11 +1283,7 @@ void CAI_PassengerBehavior::GatherVehicleStateConditions( void )
 	ClearCondition( COND_PASSENGER_PLAYER_ENTERED_VEHICLE );
 	ClearCondition( COND_PASSENGER_PLAYER_EXITED_VEHICLE );
 
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetOuter()->GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 	if ( pPlayer )
 	{
 		if ( pPlayer->IsInAVehicle() && pPlayer->GetVehicle() == m_hVehicle->GetServerVehicle() )

@@ -6,8 +6,6 @@
 //
 //===========================================================================//
 
-#define leiface_cpp
-
 #include "cbase.h"
 #include "luamanager.h"
 #include "luasrclib.h"

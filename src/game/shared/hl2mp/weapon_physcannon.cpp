@@ -45,18 +45,6 @@
 #include "vphysics/friction.h"
 #include "debugoverlay_shared.h"
 
-#ifdef HL2SB
-#ifdef CLIENT_DLL
-enum PhysGunForce_t
-{
-	PHYSGUN_FORCE_DROPPED,	// Dropped by +USE
-	PHYSGUN_FORCE_THROWN,	// Thrown from +USE
-	PHYSGUN_FORCE_PUNTED,	// Punted by cannon
-	PHYSGUN_FORCE_LAUNCHED,	// Launched by cannon
-};
-#endif
-#endif
-
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -1158,11 +1146,7 @@ protected:
 	void	PuntVPhysics( CBaseEntity *pEntity, const Vector &forward, trace_t &tr );
 
 	// Velocity-based throw common to punt and launch code.
-#ifndef HL2SB
 	void	ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vector &forward );
-#else
-	void	ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vector &forward, const Vector &vecHitPos, PhysGunForce_t reason );
-#endif
 
 	// Physgun effects
 	void	DoEffectClosed( void );
@@ -1240,7 +1224,9 @@ protected:
 	bool			m_bOldOpen;			// Used for parity checks
 
 	void			NotifyShouldTransmit( ShouldTransmitState_t state );
-
+private:
+	virtual void ThirdPersonSwitch( bool bThirdPerson );
+protected:
 #endif	// CLIENT_DLL
 
 	int		m_nChangeState;				// For delayed state change of elements
@@ -1265,10 +1251,7 @@ protected:
 
 private:
 	CWeaponPhysCannon( const CWeaponPhysCannon & );
-
-#ifndef CLIENT_DLL
 	DECLARE_ACTTABLE();
-#endif
 };
 
 IMPLEMENT_NETWORKCLASS_ALIASED( WeaponPhysCannon, DT_WeaponPhysCannon )
@@ -1305,23 +1288,24 @@ END_PREDICTION_DATA()
 LINK_ENTITY_TO_CLASS( weapon_physcannon, CWeaponPhysCannon );
 PRECACHE_WEAPON_REGISTER( weapon_physcannon );
 
-#ifndef CLIENT_DLL
-
 acttable_t	CWeaponPhysCannon::m_acttable[] = 
 {
-	{ ACT_HL2MP_IDLE,					ACT_HL2MP_IDLE_PHYSGUN,					false },
-	{ ACT_HL2MP_RUN,					ACT_HL2MP_RUN_PHYSGUN,					false },
-	{ ACT_HL2MP_IDLE_CROUCH,			ACT_HL2MP_IDLE_CROUCH_PHYSGUN,			false },
-	{ ACT_HL2MP_WALK_CROUCH,			ACT_HL2MP_WALK_CROUCH_PHYSGUN,			false },
-	{ ACT_HL2MP_GESTURE_RANGE_ATTACK,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
-	{ ACT_HL2MP_GESTURE_RELOAD,			ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
-	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_PHYSGUN,					false },
+	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_PHYSGUN,					false },
+	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_PHYSGUN,			false },
+
+	{ ACT_MP_RUN,						ACT_HL2MP_RUN_PHYSGUN,					false },
+	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_PHYSGUN,			false },
+
+	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
+	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
+
+	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
+	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
+
+	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_PHYSGUN,					false },
 };
 
 IMPLEMENT_ACTTABLE(CWeaponPhysCannon);
-
-#endif
-
 
 enum
 {
@@ -1743,11 +1727,7 @@ void CWeaponPhysCannon::PuntVPhysics( CBaseEntity *pEntity, const Vector &vecFor
 		}
 		else
 		{
-#ifndef HL2SB
 			ApplyVelocityBasedForce( pEntity, vecForward );
-#else
-			ApplyVelocityBasedForce( pEntity, vecForward, tr.endpos, PHYSGUN_FORCE_PUNTED );
-#endif
 		}
 	}
 
@@ -1776,13 +1756,8 @@ void CWeaponPhysCannon::PuntVPhysics( CBaseEntity *pEntity, const Vector &vecFor
 //			ASSUMES: that pEntity is a vphysics entity.
 // Input  : - 
 //-----------------------------------------------------------------------------
-#ifndef HL2SB
 void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vector &forward )
-#else
-void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vector &forward, const Vector &vecHitPos, PhysGunForce_t reason )
-#endif
 {
-#ifndef HL2SB
 #ifndef CLIENT_DLL
 	IPhysicsObject *pPhysicsObject = pEntity->VPhysicsGetObject();
 	Assert(pPhysicsObject); // Shouldn't ever get here with a non-vphysics object.
@@ -1808,58 +1783,6 @@ void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vec
 
 #endif
 
-#else
-#ifndef CLIENT_DLL
-	// Get the launch velocity
-	Vector vVel = Pickup_PhysGunLaunchVelocity( pEntity, forward, reason );
-	
-	// Get the launch angular impulse
-	AngularImpulse aVel = Pickup_PhysGunLaunchAngularImpulse( pEntity, reason );
-		
-	// Get the physics object (MUST have one)
-	IPhysicsObject *pPhysicsObject = pEntity->VPhysicsGetObject();
-	if ( pPhysicsObject == NULL )
-	{
-		Assert( 0 );
-		return;
-	}
-
-	// Affect the object
-	CRagdollProp *pRagdoll = dynamic_cast<CRagdollProp*>( pEntity );
-	if ( pRagdoll == NULL )
-	{
-#ifdef HL2_EPISODIC
-		// The jeep being punted needs special force overrides
-		if ( reason == PHYSGUN_FORCE_PUNTED && pEntity->GetServerVehicle() )
-		{
-			// We want the point to emanate low on the vehicle to move it along the ground, not to twist it
-			Vector vecFinalPos = vecHitPos;
-			vecFinalPos.z = pEntity->GetAbsOrigin().z;
-			pPhysicsObject->ApplyForceOffset( vVel, vecFinalPos );
-		}
-		else
-		{
-			pPhysicsObject->AddVelocity( &vVel, &aVel );
-		}
-#else
-
-		pPhysicsObject->AddVelocity( &vVel, &aVel );
-
-#endif // HL2_EPISODIC
-	}
-	else
-	{
-		Vector	vTempVel;
-		AngularImpulse vTempAVel;
-
-		ragdoll_t *pRagdollPhys = pRagdoll->GetRagdoll( );
-		for ( int j = 0; j < pRagdollPhys->listCount; ++j )
-		{
-			pRagdollPhys->list[j].pObject->AddVelocity( &vVel, &aVel ); 
-		}
-	}
-#endif
-#endif
 }
 
 
@@ -2678,56 +2601,26 @@ void CWeaponPhysCannon::DoEffectIdle( void )
 
 	StartEffects();
 
-	//if ( ShouldDrawUsingViewModel() )
+	// Turn on the glow sprites
+	for ( int i = PHYSCANNON_GLOW1; i < (PHYSCANNON_GLOW1+NUM_GLOW_SPRITES); i++ )
 	{
-		// Turn on the glow sprites
-		for ( int i = PHYSCANNON_GLOW1; i < (PHYSCANNON_GLOW1+NUM_GLOW_SPRITES); i++ )
-		{
-			m_Parameters[i].GetScale().SetAbsolute( random->RandomFloat( 0.075f, 0.05f ) * SPRITE_SCALE );
-			m_Parameters[i].GetAlpha().SetAbsolute( random->RandomInt( 24, 32 ) );
-		}
-
-		// Turn on the glow sprites
-		for ( int i = PHYSCANNON_ENDCAP1; i < (PHYSCANNON_ENDCAP1+NUM_ENDCAP_SPRITES); i++ )
-		{
-			m_Parameters[i].GetScale().SetAbsolute( random->RandomFloat( 3, 5 ) );
-			m_Parameters[i].GetAlpha().SetAbsolute( random->RandomInt( 200, 255 ) );
-		}
-
-		if ( m_EffectState != EFFECT_HOLDING )
-		{
-			// Turn beams off
-			m_Beams[0].SetVisible( false );
-			m_Beams[1].SetVisible( false );
-			m_Beams[2].SetVisible( false );
-		}
+		m_Parameters[i].GetScale().SetAbsolute( random->RandomFloat( 0.075f, 0.05f ) * SPRITE_SCALE );
+		m_Parameters[i].GetAlpha().SetAbsolute( random->RandomInt( 24, 32 ) );
 	}
-	/*
-	else
+
+	// Turn on the glow sprites
+	for ( int i = PHYSCANNON_ENDCAP1; i < (PHYSCANNON_ENDCAP1+NUM_ENDCAP_SPRITES); i++ )
 	{
-		// Turn on the glow sprites
-		for ( int i = PHYSCANNON_GLOW1; i < (PHYSCANNON_GLOW1+NUM_GLOW_SPRITES); i++ )
-		{
-			m_Parameters[i].GetScale().SetAbsolute( random->RandomFloat( 0.075f, 0.05f ) * SPRITE_SCALE );
-			m_Parameters[i].GetAlpha().SetAbsolute( random->RandomInt( 24, 32 ) );
-		}
-
-		// Turn on the glow sprites
-		for ( i = PHYSCANNON_ENDCAP1; i < (PHYSCANNON_ENDCAP1+NUM_ENDCAP_SPRITES); i++ )
-		{
-			m_Parameters[i].GetScale().SetAbsolute( random->RandomFloat( 3, 5 ) );
-			m_Parameters[i].GetAlpha().SetAbsolute( random->RandomInt( 200, 255 ) );
-		}
-		
-		if ( m_EffectState != EFFECT_HOLDING )
-		{
-			// Turn beams off
-			m_Beams[0].SetVisible( false );
-			m_Beams[1].SetVisible( false );
-			m_Beams[2].SetVisible( false );
-		}
+		m_Parameters[i].GetScale().SetAbsolute( random->RandomFloat( 3, 5 ) );
+		m_Parameters[i].GetAlpha().SetAbsolute( random->RandomInt( 200, 255 ) );
 	}
-	*/
+	if ( m_EffectState != EFFECT_HOLDING )
+	{
+		// Turn beams off
+		m_Beams[0].SetVisible( false );
+		m_Beams[1].SetVisible( false );
+		m_Beams[2].SetVisible( false );
+	}
 #endif
 }
 
@@ -2814,33 +2707,8 @@ void CWeaponPhysCannon::LaunchObject( const Vector &vecDir, float flForce )
 			m_hLastPuntedObject = pObject;
 			m_flRepuntObjectTime = gpGlobals->curtime + 0.5f;
 
-#ifndef HL2SB
 			// Launch
 			ApplyVelocityBasedForce( pObject, vecDir );
-#else
-			// Trace ahead a bit and make a chain of danger sounds ahead of the phys object
-			// to scare potential targets
-			trace_t	tr;
-			Vector	vecStart = pObject->GetAbsOrigin();
-			Vector	vecSpot;
-			int		iLength;
-			int		i;
-
-			UTIL_TraceLine( vecStart, vecStart + vecDir * flForce, MASK_SHOT, pObject, COLLISION_GROUP_NONE, &tr );
-			iLength = ( tr.startpos - tr.endpos ).Length();
-			vecSpot = vecStart + vecDir * PHYSCANNON_DANGER_SOUND_RADIUS;
-
-			for( i = PHYSCANNON_DANGER_SOUND_RADIUS ; i < iLength ; i += PHYSCANNON_DANGER_SOUND_RADIUS )
-			{
-#ifndef CLIENT_DLL
-				CSoundEnt::InsertSound( SOUND_PHYSICS_DANGER, vecSpot, PHYSCANNON_DANGER_SOUND_RADIUS, 0.5, pObject );
-#endif
-				vecSpot = vecSpot + ( vecDir * PHYSCANNON_DANGER_SOUND_RADIUS );
-			}
-					
-			// Launch
-			ApplyVelocityBasedForce( pObject, vecDir, tr.endpos, PHYSGUN_FORCE_LAUNCHED );
-#endif
 
 			// Don't allow the gun to regrab a thrown object!!
 			m_flNextSecondaryAttack = m_flNextPrimaryAttack = gpGlobals->curtime + 0.5;
@@ -3059,6 +2927,15 @@ void CWeaponPhysCannon::StopEffects( bool stopSound )
 #endif	// !CLIENT_DLL
 }
 
+#ifdef CLIENT_DLL
+void CWeaponPhysCannon::ThirdPersonSwitch( bool bThirdPerson )
+{
+	//Tony; if we switch to first or third person or whatever, destroy and recreate the effects.
+	//Note: the sound only ever gets shut off on the server, so it's okay - as this is entirely client side.
+	DestroyEffects();
+	StartEffects();
+}
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

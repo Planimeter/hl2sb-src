@@ -5,8 +5,6 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lutil_cpp
-
 #include "cbase.h"
 #include "luamanager.h"
 #include "lbaseentity_shared.h"

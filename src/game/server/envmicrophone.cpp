@@ -448,10 +448,8 @@ MicrophoneResult_t CEnvMicrophone::SoundPlayed( int entindex, const char *soundn
 	Msg("%s heard %s: ", STRING(GetEntityName()), soundname );
 #endif
 
-#ifndef HL2SB
 	if ( !CanHearSound( entindex, soundlevel, flVolume, pOrigin ) )
 		return MicrophoneResult_Ok;
-#endif
 
 	// We've heard it. Play it out our speaker. If our speaker's gone away, we're done.
 	if ( !m_hSpeaker )

@@ -291,11 +291,7 @@ void CItem_DynamicResupply::InputKill( inputdata_t &data )
 //-----------------------------------------------------------------------------
 void CItem_DynamicResupply::InputCalculateType( inputdata_t &data )
 {
-#ifdef HL2SB
-	CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#endif
 	SpawnDynamicItem( pPlayer );
 }
 

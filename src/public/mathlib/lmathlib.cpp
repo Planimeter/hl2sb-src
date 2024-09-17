@@ -4,8 +4,6 @@
 //
 //===========================================================================//
 
-#define lmathlib_cpp
-
 #include "cbase.h"
 #include "mathlib.h"
 #include "lua.hpp"

@@ -62,6 +62,60 @@ extern bool IsInCommentaryMode( void );
 
 ConVar  *sv_cheats = NULL;
 
+enum eAllowPointServerCommand {
+	eAllowNever,
+	eAllowOfficial,
+	eAllowAlways
+};
+
+#ifdef TF_DLL
+// The default value here should match the default of the convar
+eAllowPointServerCommand sAllowPointServerCommand = eAllowOfficial;
+#else
+eAllowPointServerCommand sAllowPointServerCommand = eAllowAlways;
+#endif // TF_DLL
+
+void sv_allow_point_servercommand_changed( IConVar *pConVar, const char *pOldString, float flOldValue )
+{
+	ConVarRef var( pConVar );
+	if ( !var.IsValid() )
+	{
+		return;
+	}
+
+	const char *pNewValue = var.GetString();
+	if ( V_strcasecmp ( pNewValue, "always" ) == 0 )
+	{
+		sAllowPointServerCommand = eAllowAlways;
+	}
+#ifdef TF_DLL
+	else if ( V_strcasecmp ( pNewValue, "official" ) == 0 )
+	{
+		sAllowPointServerCommand = eAllowOfficial;
+	}
+#endif // TF_DLL
+	else
+	{
+		sAllowPointServerCommand = eAllowNever;
+	}
+}
+
+ConVar sv_allow_point_servercommand ( "sv_allow_point_servercommand",
+#ifdef TF_DLL
+                                      // The default value here should match the default of the convar
+                                      "official",
+#else
+                                      // Other games may use this in their official maps, and only TF exposes IsValveMap() currently
+                                      "always",
+#endif // TF_DLL
+                                      FCVAR_NONE,
+                                      "Allow use of point_servercommand entities in map. Potentially dangerous for untrusted maps.\n"
+                                      "  disallow : Always disallow\n"
+#ifdef TF_DLL
+                                      "  official : Allowed for valve maps only\n"
+#endif // TF_DLL
+                                      "  always   : Allow for all maps", sv_allow_point_servercommand_changed );
+
 void ClientKill( edict_t *pEdict, const Vector &vecForce, bool bExplode = false )
 {
 	CBasePlayer *pPlayer = static_cast<CBasePlayer*>( GetContainingEntity( pEdict ) );
@@ -149,30 +203,25 @@ void Host_Say( edict_t *pEdict, const CCommand &args, bool teamonly )
 		pPlayer = ((CBasePlayer *)CBaseEntity::Instance( pEdict ));
 		Assert( pPlayer );
 
-#if defined ( LUA_SDK )
-		BEGIN_LUA_CALL_HOOK( "Host_Say" );
-			lua_pushplayer( L, pPlayer );
-			lua_pushstring( L, p );
-			lua_pushboolean( L, teamonly );
-		END_LUA_CALL_HOOK( 3, 1 );
+#if defined(LUA_SDK)
+                BEGIN_LUA_CALL_HOOK("Host_Say");
+                lua_pushplayer(L, pPlayer);
+                lua_pushstring(L, p);
+                lua_pushboolean(L, teamonly);
+                END_LUA_CALL_HOOK(3, 1);
 
-		// Andrew; this is just a continuation of RETURN_LUA_NONE().
-		if ( lua_isboolean( L, -1 ) )
-		{
-			bool res = (bool)luaL_checkboolean( L, -1 );
-			lua_pop( L, 1 );
-			if ( !res )
-				return;
-		}
-		else if ( lua_isstring( L, -1 ) )
-		{
-			p = (char *)luaL_checkstring( L, -1 );
-			lua_pop( L, 1 );
-		}
-		else
-		{
-			lua_pop( L, 1 );
-		}
+                // Andrew; this is just a continuation of RETURN_LUA_NONE().
+                if (lua_isboolean(L, -1)) {
+                    bool res = (bool)luaL_checkboolean(L, -1);
+                    lua_pop(L, 1);
+                    if (!res)
+                        return;
+                } else if (lua_isstring(L, -1)) {
+                    p = (char *)luaL_checkstring(L, -1);
+                    lua_pop(L, 1);
+                } else {
+                    lua_pop(L, 1);
+                }
 #endif
 
 		// make sure the text has valid content
@@ -600,7 +649,22 @@ void CPointServerCommand::InputCommand( inputdata_t& inputdata )
 	if ( !inputdata.value.String()[0] )
 		return;
 
-	engine->ServerCommand( UTIL_VarArgs( "%s\n", inputdata.value.String() ) );
+	bool bAllowed = ( sAllowPointServerCommand == eAllowAlways );
+#ifdef TF_DLL
+	if ( sAllowPointServerCommand == eAllowOfficial )
+	{
+		bAllowed = TFGameRules() && TFGameRules()->IsValveMap();
+	}
+#endif // TF_DLL
+
+	if ( bAllowed )
+	{
+		engine->ServerCommand( UTIL_VarArgs( "%s\n", inputdata.value.String() ) );
+	}
+	else
+	{
+		Warning( "point_servercommand usage blocked by sv_allow_point_servercommand setting\n" );
+	}
 }
 
 BEGIN_DATADESC( CPointServerCommand )
@@ -631,7 +695,7 @@ void CC_DrawLine( const CCommand &args )
 static ConCommand drawline("drawline", CC_DrawLine, "Draws line between two 3D Points.\n\tGreen if no collision\n\tRed is collides with something\n\tArguments: x1 y1 z1 x2 y2 z2", FCVAR_CHEAT);
 
 //------------------------------------------------------------------------------
-// Purpose : Draw a cross at a points.  
+// Purpose : Draw a cross at a points.
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
@@ -997,9 +1061,7 @@ void CC_Player_PhysSwap( void )
 
 			if ( !Q_stricmp( strWeaponName, "weapon_physcannon" ) )
 			{
-#ifndef HL2SB
 				PhysCannonForceDrop( pWeapon, NULL );
-#endif
 				pPlayer->SelectLastItem();
 			}
 			else

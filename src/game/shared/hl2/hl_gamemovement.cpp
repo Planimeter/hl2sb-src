@@ -9,10 +9,6 @@
 #include "utlrbtree.h"
 #include "hl2_shareddefs.h"
 
-#ifdef HL2MP
-#include "hl2mp_gamerules.h"
-#endif
-
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -287,11 +283,7 @@ bool CHL2GameMovement::ContinueForcedMove()
 //-----------------------------------------------------------------------------
 bool CHL2GameMovement::OnLadder( trace_t &trace )
 {
-#ifndef HL2SB
 	return ( GetLadder() != NULL ) ? true : false;
-#else
-	return ( GetLadder() != NULL ) ? true : BaseClass::OnLadder( trace );
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -532,14 +524,9 @@ void CHL2GameMovement::FullLadderMove()
 {
 #if !defined( CLIENT_DLL )
 	CFuncLadder *ladder = GetLadder();
-#if !defined( HL2SB )
 	Assert( ladder );
-#endif
 	if ( !ladder )
 	{
-#if defined( HL2SB )
-		BaseClass::FullLadderMove();
-#endif
 		return;
 	}
 
@@ -900,11 +887,7 @@ bool CHL2GameMovement::LadderMove( void )
 	if ( player->GetMoveType() == MOVETYPE_NOCLIP )
 	{
 		SetLadder( NULL );
-#if !defined (HL2SB)
 		return false;
-#else
-		return BaseClass::LadderMove();
-#endif
 	}
 
 	// If being forced to mount/dismount continue to act like we are on the ladder
@@ -971,11 +954,7 @@ bool CHL2GameMovement::LadderMove( void )
 			}
 		}
 
-#if !defined (HL2SB)
 		return false;
-#else
-		return BaseClass::LadderMove();
-#endif
 	}
 
 	if ( !ladder && 
@@ -989,11 +968,7 @@ bool CHL2GameMovement::LadderMove( void )
 	ladder = GetLadder();
 	if ( !ladder )
 	{
-#if !defined (HL2SB)
 		return false;
-#else
-		return BaseClass::LadderMove();
-#endif
 	}
 
 	// Don't play the deny sound
@@ -1057,11 +1032,7 @@ bool CHL2GameMovement::LadderMove( void )
 		{
 			mv->m_vecVelocity.z = mv->m_vecVelocity.z + 50;
 		}
-#if !defined (HL2SB)
 		return false;
-#else
-		return BaseClass::LadderMove();
-#endif
 	}
 
 	if ( forwardSpeed != 0 || rightSpeed != 0 )
@@ -1093,11 +1064,7 @@ bool CHL2GameMovement::LadderMove( void )
 			player->SetMoveType( MOVETYPE_WALK );
 			// Remove from ladder
 			SetLadder( NULL );
-#if !defined (HL2SB)
 			return false;
-#else
-			return BaseClass::LadderMove();
-#endif
 		}
 
 		bool ishorizontal = fabs( topPosition.z - bottomPosition.z ) < 64.0f ? true : false;

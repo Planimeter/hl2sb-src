@@ -91,8 +91,12 @@ extern int ActivityList_HighestIndex();
 // #ifndef LUA_SDK
 #define REGISTER_SHARED_ACTIVITY( _n ) ActivityList_RegisterSharedActivity(#_n, _n);
 // #else
-// Andrew; we register the enumerations here in Lua for use in scripts.
-// #define REGISTER_SHARED_ACTIVITY( _n ) ActivityList_RegisterSharedActivity(#_n, _n); lua_pushstring(L, #_n); lua_pushinteger(L, _n); lua_settable(L, -3);
+// // Andrew; we register the enumerations here in Lua for use in scripts.
+// #define REGISTER_SHARED_ACTIVITY( _n ) \
+//      ActivityList_RegisterSharedActivity(#_n, _n); \
+//      lua_pushstring(L, #_n); \
+//      lua_pushinteger(L, _n); \
+//      lua_settable(L, -3);
 // #endif
 #define REGISTER_PRIVATE_ACTIVITY( _n ) _n = ActivityList_RegisterPrivateActivity( #_n );
 

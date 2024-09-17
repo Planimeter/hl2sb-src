@@ -290,24 +290,15 @@ bool CAI_ScriptConditions::EvalActorSeeTarget( const EvalArgs_t &args )
 
 bool CAI_ScriptConditions::EvalPlayerActorProximity( const EvalArgs_t &args )
 {
-#ifndef HL2SB
 	return ( !args.pActor || m_PlayerActorProxTester.Check( args.pPlayer, args.pActor ) );
-#else
-	return ( !args.pActor || !args.pPlayer || m_PlayerActorProxTester.Check( args.pPlayer, args.pActor ) );
-#endif
 }
 
 //-----------------------------------------------------------------------------
 
 bool CAI_ScriptConditions::EvalPlayerTargetProximity( const EvalArgs_t &args )
 {
-#ifndef HL2SB
 	return ( !args.pTarget || 
 		m_PlayerTargetProxTester.Check( args.pPlayer, args.pTarget ) );
-#else
-	return ( !args.pTarget || !args.pPlayer || 
-		m_PlayerTargetProxTester.Check( args.pPlayer, args.pTarget ) );
-#endif
 }
 
 
@@ -344,11 +335,7 @@ bool CAI_ScriptConditions::EvalPlayerActorLOS( const EvalArgs_t &args )
 		return true;
 	}
 
-#ifndef HL2SB
 	return ( !args.pActor || PlayerHasLineOfSight( args.pPlayer, args.pActor, m_fPlayerActorLOS == TRS_FALSE ) );
-#else
-	return ( !args.pActor || !args.pPlayer || PlayerHasLineOfSight( args.pPlayer, args.pActor, m_fPlayerActorLOS == TRS_FALSE ) );
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -361,11 +348,7 @@ bool CAI_ScriptConditions::EvalPlayerTargetLOS( const EvalArgs_t &args )
 		return true;
 	}
 
-#ifndef HL2SB
 	return ( !args.pTarget || PlayerHasLineOfSight( args.pPlayer, args.pTarget, m_fPlayerTargetLOS == TRS_FALSE ) );
-#else
-	return ( !args.pTarget || !args.pPlayer || PlayerHasLineOfSight( args.pPlayer, args.pTarget, m_fPlayerTargetLOS == TRS_FALSE ) );
-#endif
 }
 
 bool CAI_ScriptConditions::EvalActorInPVS( const EvalArgs_t &args )
@@ -491,12 +474,10 @@ void CAI_ScriptConditions::EvaluationThink()
 	int iActorsDone = 0;
 
 #ifdef HL2_DLL
-#ifndef HL2SB
 	if( AI_GetSinglePlayer()->GetFlags() & FL_NOTARGET )
 	{
 		ScrCondDbgMsg( ("%s WARNING: Player is NOTARGET. This will affect all LOS conditiosn involving the player!\n", GetDebugName()) );
 	}
-#endif
 #endif
 
 

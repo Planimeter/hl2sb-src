@@ -55,10 +55,7 @@ public:
 	virtual bool PointsMayBeCaptured( void ) { return true; }
 	virtual void SetLastCapPointChanged( int iIndex ) { return; }
 
-#ifdef CLIENT_DLL
-
-#else
-
+#ifndef CLIENT_DLL
 	CTeamplayRules();
 	virtual ~CTeamplayRules() {};
 
@@ -78,13 +75,11 @@ public:
 	virtual const char *GetGameDescription( void ) { return "Teamplay"; }  // this is the game name that gets seen in the server browser
 	virtual void PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &info );
 #endif
-#ifdef LUA_SDK
-	virtual void Think ( void );
-#else
-#ifndef CLIENT_DLL
+
+#if defined(LUA_SDK) || !defined(CLIENT_DLL)
 	virtual void Think ( void );
 #endif
-#endif
+
 #ifndef CLIENT_DLL
 	virtual int GetTeamIndex( const char *pTeamName );
 	virtual const char *GetIndexedTeamName( int teamIndex );
@@ -95,7 +90,7 @@ public:
 	virtual bool TimerMayExpire( void ) { return true; }
 
 	// A game has been won by the specified team
-	virtual void SetWinningTeam( int team, int iWinReason, bool bForceMapReset = true, bool bSwitchTeams = false, bool bDontAddScore = false ) { return; }
+	virtual void SetWinningTeam( int team, int iWinReason, bool bForceMapReset = true, bool bSwitchTeams = false, bool bDontAddScore = false, bool bFinal = false ) { return; }
 	virtual void SetStalemate( int iReason, bool bForceMapReset = true, bool bSwitchTeams = false ) { return; }
 
 	// Used to determine if all players should switch teams

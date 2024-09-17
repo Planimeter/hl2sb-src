@@ -1,0 +1,17 @@
+
+// strider is still after player, but can't see player
+
+"NPC_Strider.Hunt"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		"1.0"
+	"soundlevel"  		"SNDLVL_140dB"
+
+	"rndwave"
+	{
+		"wave"	"npc/strider/strider_hunt1.wav"
+		"wave"	"npc/strider/strider_hunt2.wav"
+		"wave"	"npc/strider/strider_hunt3.wav"
+	}
+}
+

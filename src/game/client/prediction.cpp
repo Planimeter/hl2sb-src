@@ -45,6 +45,12 @@ static ConVar	cl_predictionentitydump( "cl_pdump", "-1", FCVAR_CHEAT, "Dump info
 static ConVar	cl_predictionentitydumpbyclass( "cl_pclass", "", FCVAR_CHEAT, "Dump entity by prediction classname." );
 static ConVar	cl_pred_optimize( "cl_pred_optimize", "2", 0, "Optimize for not copying data if didn't receive a network update (1), and also for not repredicting if there were no errors (2)." );
 
+#ifdef STAGING_ONLY
+// Do not ship this - testing a fix
+static ConVar	cl_pred_optimize_prefer_server_data( "cl_pred_optimize_prefer_server_data", "0", 0, "In the case where we have both server data and predicted data up to the same tick, choose server data over predicted data." );
+//
+#endif // STAGING_ONLY
+
 #endif
 
 extern IGameMovement *g_pGameMovement;
@@ -770,36 +776,39 @@ void CPrediction::RunPreThink( C_BasePlayer *player )
 	// g_pGameRules->PlayerThink( player );
 
 #ifdef LUA_SDK
-	// Andrew; Yes. At least for mods using the Source Engine Lua SDK, we do.
-	//
-	//=========================================================================
-	// SOURCE ENGINE LUA SDK GAMERULES THINK
-	//
-	// Below, we call Think() on the global gamerules object. This needs to be
-	// done by our SDK, and our SDK only, simply because without this call,
-	// only GAME_LUA has a Think hook. This isn't helpful for many game logic
-	// situations, considering this SDK extends functionality for developers.
-	//
-	// The issue is that while this is fine to call, where we do it may not be.
-	// There's a specific chain of calls made during every frame, and depending
-	// on what scripters do in their hooks for the CLIENT_LUA Think hook, they
-	// could be unintentionally causing senarios to arise which do not behave
-	// well with other game events, or logic set out internally. In one case,
-	// someone's hook may not work at all, and in another, it may break
-	// prediction, or prevent critical events from being fired properly.
-	//
-	// In the end, caution will simply need to be taken when using this hook,
-	// and careful observation will need to be made when controlling things
-	// like a player's view for cinematic purposes, or the creation and
-	// placement of entities for a gamemode.
-	//
-	// This isn't the only client-side thinking hook we're providing, so, in
-	// worst-case scenarios, if functionality of something breaks, you may just
-	// need to implement your feature or write your logic in other calls to
-	// create harmony with the frame function call sequence.
-	//
-	//========================================================================= 
-	g_pGameRules->Think();
+        // Andrew; Yes. At least for mods using the Source Engine Lua SDK, we
+        // do.
+        //
+        //=========================================================================
+        // SOURCE ENGINE LUA SDK GAMERULES THINK
+        //
+        // Below, we call Think() on the global gamerules object. This needs to
+        // be done by our SDK, and our SDK only, simply because without this
+        // call, only GAME_LUA has a Think hook. This isn't helpful for many
+        // game logic situations, considering this SDK extends functionality for
+        // developers.
+        //
+        // The issue is that while this is fine to call, where we do it may not
+        // be. There's a specific chain of calls made during every frame, and
+        // depending on what scripters do in their hooks for the CLIENT_LUA
+        // Think hook, they could be unintentionally causing senarios to arise
+        // which do not behave well with other game events, or logic set out
+        // internally. In one case, someone's hook may not work at all, and in
+        // another, it may break prediction, or prevent critical events from
+        // being fired properly.
+        //
+        // In the end, caution will simply need to be taken when using this
+        // hook, and careful observation will need to be made when controlling
+        // things like a player's view for cinematic purposes, or the creation
+        // and placement of entities for a gamemode.
+        //
+        // This isn't the only client-side thinking hook we're providing, so, in
+        // worst-case scenarios, if functionality of something breaks, you may
+        // just need to implement your feature or write your logic in other
+        // calls to create harmony with the frame function call sequence.
+        //
+        //=========================================================================
+        g_pGameRules->Think();
 #endif
 
 	player->PreThink();
@@ -1434,6 +1443,11 @@ int CPrediction::ComputeFirstCommandToExecute( bool received_new_world_update, i
 	}
 	else
 	{
+#ifdef STAGING_ONLY	
+		int nPredictedLimit = cl_pred_optimize_prefer_server_data.GetBool() ? m_nCommandsPredicted - 1 : m_nCommandsPredicted;
+#else
+		int nPredictedLimit = m_nCommandsPredicted;		
+#endif // STAGING_ONLY
 		// Otherwise, there is a second optimization, wherein if we did receive an update, but no
 		//  values differed (or were outside their epsilon) and the server actually acknowledged running
 		//  one or more commands, then we can revert the entity to the predicted state from last frame, 
@@ -1442,7 +1456,7 @@ int CPrediction::ComputeFirstCommandToExecute( bool received_new_world_update, i
 		if ( cl_pred_optimize.GetInt() >= 2 && 
 			!m_bPreviousAckHadErrors && 
 			m_nCommandsPredicted > 0 && 
-			m_nServerCommandsAcknowledged <= m_nCommandsPredicted )
+			m_nServerCommandsAcknowledged <= nPredictedLimit )
 		{
 			// Copy all of the previously predicted data back into entity so we can skip repredicting it
 			// This is the final slot that we previously predicted

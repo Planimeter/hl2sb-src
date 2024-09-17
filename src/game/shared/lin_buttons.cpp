@@ -5,8 +5,6 @@
 // $NoKeywords: $
 //
 //=============================================================================//
-#define lin_buttons_cpp
-
 #include "cbase.h"
 #include "in_buttons.h"
 #include "luamanager.h"
