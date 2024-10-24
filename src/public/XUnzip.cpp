@@ -92,6 +92,7 @@
 //       own source and binary releases.
 //
 ///////////////////////////////////////////////////////////////////////////////
+#define DWORD
 
 #if defined( WIN32 ) && !defined( _X360 )
 #define STRICT

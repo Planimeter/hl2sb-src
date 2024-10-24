@@ -183,7 +183,7 @@ static int CBasePlayer_Event_KilledOther (lua_State *L) {
 }
 
 static int CBasePlayer_Event_Dying (lua_State *L) {
-  luaL_checkplayer(L, 1)->Event_Dying();
+  //luaL_checkplayer(L, 1)->Event_Dying();
   return 0;
 }
 

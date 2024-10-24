@@ -89,15 +89,15 @@
   basegrenade_concussion.cpp
   basegrenade_contact.cpp
   basegrenade_shared.cpp
+  basegrenade_timed.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\baseflex.cpp(512): error C2661: 'CBaseAnimatingOverlay::SetLayerCycle' : no overloaded function takes 4 arguments
+  basemultiplayerplayer.cpp
 c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.cpp(89): error C2039: 'm_nPredictionRandomSeedServer' : is not a member of 'CBaseEntity'
           c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.h(344) : see declaration of 'CBaseEntity'
 c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.cpp(1445): error C2556: 'int CBaseEntity::TakeDamage(const CTakeDamageInfo &)' : overloaded function differs only by return type from 'void CBaseEntity::TakeDamage(const CTakeDamageInfo &)'
           c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.h(915) : see declaration of 'CBaseEntity::TakeDamage'
 c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.cpp(1445): error C2371: 'CBaseEntity::TakeDamage' : redefinition; different basic types
           c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.h(915) : see declaration of 'CBaseEntity::TakeDamage'
-c:\users\hp\documents\hl2sb-src\src\game\server\baseflex.cpp(512): error C2661: 'CBaseAnimatingOverlay::SetLayerCycle' : no overloaded function takes 4 arguments
-  basegrenade_timed.cpp
-  basemultiplayerplayer.cpp
   baseparticleentity.cpp
   baseplayer_shared.cpp
   baseprojectile.cpp
@@ -202,7 +202,11 @@ c:\users\hp\documents\hl2sb-src\src\game\server\baseflex.cpp(512): error C2661: 
   hintmessage.cpp
   hintsystem.cpp
   hltvdirector.cpp
+  igamesystem.cpp
+  info_camera_link.cpp
+  info_overlay_accessor.cpp
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(567): error C2338: Compile time assert constraint is not true: INTERFACEVERSION_SERVERGAMEDLL_INT == 10
+  intermission.cpp
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1941): error C2039: 'PrepareLevelResources' : is not a member of 'CServerGameDLL'
           c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.h(63) : see declaration of 'CServerGameDLL'
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C2039: 'ePrepareLevelResourcesResult' : is not a member of 'IServerGameDLL'
@@ -210,7 +214,6 @@ c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C2039: 'AsyncPrepareLevelResources' : is not a member of 'CServerGameDLL'
           c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.h(63) : see declaration of 'CServerGameDLL'
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C2146: syntax error : missing ';' before identifier 'AsyncPrepareLevelResources'
-  igamesystem.cpp
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1954): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1963): error C2039: 'ePrepareLevelResources_Prepared' : is not a member of 'IServerGameDLL'
@@ -230,9 +233,6 @@ c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1976): error C
           c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.h(63) : see declaration of 'CServerGameDLL'
 c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1980): error C2039: 'IsManualMapChangeOkay' : is not a member of 'CGameRules'
           c:\users\hp\documents\hl2sb-src\src\game\shared\gamerules.h(114) : see declaration of 'CGameRules'
-  info_camera_link.cpp
-  info_overlay_accessor.cpp
-  intermission.cpp
   item_world.cpp
   lightglow.cpp
   lights.cpp
@@ -261,11 +261,11 @@ c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1980): error C
   particle_parse.cpp
   particle_system.cpp
   particlesystemquery.cpp
+  pathcorner.cpp
+  pathtrack.cpp
 c:\users\hp\documents\hl2sb-src\src\game\shared\multiplay_gamerules.cpp(404): error C2509: 'FrameUpdatePostEntityThink' : member function not declared in 'CMultiplayRules'
           c:\users\hp\documents\hl2sb-src\src\game\shared\multiplay_gamerules.h(76) : see declaration of 'CMultiplayRules'
 c:\users\hp\documents\hl2sb-src\src\game\shared\multiplay_gamerules.cpp(404): fatal error C1903: unable to recover from previous error(s); stopping compilation
-  pathcorner.cpp
-  pathtrack.cpp
   phys_controller.cpp
   physconstraint.cpp
   physics.cpp
@@ -512,14 +512,14 @@ c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(57):
 c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(57): warning C4183: 'GetOuter': missing return type; assumed to be a member function returning 'int' (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
 c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(71): error C2143: syntax error : missing ';' before '*' (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
 c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(71): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
+  grenade_satchel.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_gamerules.cpp(379): error C2660: 'CTeamplayRules::FPlayerCanTakeDamage' : function does not take 2 arguments
+  grenade_tripmine.cpp
 c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(173): error C2267: 'CHL2MP_Player___newindex' : static functions with block scope are illegal
 c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(173): error C2601: 'CHL2MP_Player___newindex' : local function definitions are illegal
           c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(106): this line contains a '{' which has not yet been matched
 c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(260): fatal error C1075: end of file found before the left brace '{' at 'c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(173)' was matched
-  grenade_satchel.cpp
-  grenade_tripmine.cpp
   te_hl2mp_shotgun_shot.cpp
-c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_gamerules.cpp(379): error C2660: 'CTeamplayRules::FPlayerCanTakeDamage' : function does not take 2 arguments
   weapon_357.cpp
   weapon_ar2.cpp
   weapon_crossbow.cpp
@@ -537,7 +537,6 @@ c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_gamerules.cpp(379): 
   weapon_slam.cpp
   weapon_smg1.cpp
   weapon_stunstick.cpp
-  basescripted.cpp
 c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.h(22): error C2146: syntax error : missing ';' before identifier 'lua_CBaseCombatWeapon' (..\..\game\shared\hl2mp\weapon_shotgun.cpp)
 c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.h(22): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int (..\..\game\shared\hl2mp\weapon_shotgun.cpp)
 c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.h(22): error C2065: 'lua_State' : undeclared identifier (..\..\game\shared\hl2mp\weapon_shotgun.cpp)
@@ -558,6 +557,7 @@ c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.h(32): 
 c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.h(32): error C2065: 'lua_State' : undeclared identifier (..\..\game\shared\hl2mp\weapon_shotgun.cpp)
 c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.h(32): error C2065: 'L' : undeclared identifier (..\..\game\shared\hl2mp\weapon_shotgun.cpp)
 c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.h(32): error C2062: type 'int' unexpected (..\..\game\shared\hl2mp\weapon_shotgun.cpp)
+  basescripted.cpp
   basescriptedtrigger.cpp
   lbaseanimating.cpp
 c:\users\hp\documents\hl2sb-src\src\game\server\lbaseanimating.cpp(7): error C2220: warning treated as error - no 'object' file generated
@@ -569,11 +569,6 @@ c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.cpp(7):
 c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.cpp(7): warning C4603: 'lbasecombatweapon_shared_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.cpp(9) : use of precompiled header
-c:\users\hp\documents\hl2sb-src\src\game\server\lbaseanimating.cpp(177): error C2039: 'GetModelWidthScale' : is not a member of 'CBaseAnimating'
-          c:\users\hp\documents\hl2sb-src\src\game\server\baseanimating.h(29) : see declaration of 'CBaseAnimating'
-c:\users\hp\documents\hl2sb-src\src\game\server\lbaseanimating.cpp(177): error C2660: 'lua_pushnumber' : function does not take 1 arguments
-c:\users\hp\documents\hl2sb-src\src\game\server\lbaseanimating.cpp(355): error C2039: 'SetModelWidthScale' : is not a member of 'CBaseAnimating'
-          c:\users\hp\documents\hl2sb-src\src\game\server\baseanimating.h(29) : see declaration of 'CBaseAnimating'
   lbaseentity.cpp
 c:\users\hp\documents\hl2sb-src\src\game\server\lbaseentity.cpp(7): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\game\server\lbaseentity.cpp(7): warning C4603: 'lbaseentity_cpp' : macro is not defined or definition is different after precompiled header use
@@ -601,68 +596,59 @@ c:\users\hp\documents\hl2sb-src\src\public\tier1\lconvar.cpp(12): warning C4603:
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\tier1\lconvar.cpp(14) : use of precompiled header
   ldbg.cpp
+  leffect_dispatch_data.cpp
 c:\users\hp\documents\hl2sb-src\src\public\tier0\ldbg.cpp(8): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\tier0\ldbg.cpp(8): warning C4603: 'ldbg_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\tier0\ldbg.cpp(10) : use of precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\tier1\lconvar.cpp(169): error C3861: 'MDLCACHE_CRITICAL_SECTION': identifier not found
-  leffect_dispatch_data.cpp
   leiface.cpp
 c:\users\hp\documents\hl2sb-src\src\game\shared\leffect_dispatch_data.cpp(8): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\game\shared\leffect_dispatch_data.cpp(8): warning C4603: 'leffect_dispatch_data_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\game\shared\leffect_dispatch_data.cpp(10) : use of precompiled header
-  lentitylist.cpp
 c:\users\hp\documents\hl2sb-src\src\public\leiface.cpp(9): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\leiface.cpp(9): warning C4603: 'leiface_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\leiface.cpp(11) : use of precompiled header
+  lentitylist.cpp
 c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(8): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(8): warning C4603: 'lentitylist_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(10) : use of precompiled header
-c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(20): error C2039: 'AddPostClientMessageEntity' : is not a member of 'CGlobalEntityList'
-          c:\users\hp\documents\hl2sb-src\src\game\server\entitylist.h(73) : see declaration of 'CGlobalEntityList'
-c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(40): error C2065: 'BRUSHPRECISION_NORMAL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(45): error C2065: 'BRUSHPRECISION_NORMAL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(60): error C2065: 'BRUSHPRECISION_NORMAL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(65): error C2065: 'BRUSHPRECISION_NORMAL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(85): error C2065: 'BRUSHPRECISION_NORMAL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(90): error C2065: 'BRUSHPRECISION_NORMAL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(145): error C2039: 'PostClientMessagesSent' : is not a member of 'CGlobalEntityList'
-          c:\users\hp\documents\hl2sb-src\src\game\server\entitylist.h(73) : see declaration of 'CGlobalEntityList'
   lfilesystem.cpp
   lgametrace.cpp
-c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(8): error C2220: warning treated as error - no 'object' file generated
-c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(8): warning C4603: 'lfilesystem_cpp' : macro is not defined or definition is different after precompiled header use
-          Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(10) : use of precompiled header
 c:\users\hp\documents\hl2sb-src\src\public\lgametrace.cpp(7): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\lgametrace.cpp(7): warning C4603: 'lgametrace_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\lgametrace.cpp(9) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(8): warning C4603: 'lfilesystem_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(10) : use of precompiled header
   lglobalvars_base.cpp
   liconvar.cpp
-c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(7): error C2220: warning treated as error - no 'object' file generated
-c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(7): warning C4603: 'lglobalvars_base_cpp' : macro is not defined or definition is different after precompiled header use
-          Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(9) : use of precompiled header
+  licvar.cpp
 c:\users\hp\documents\hl2sb-src\src\public\tier1\liconvar.cpp(12): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\tier1\liconvar.cpp(12): warning C4603: 'liconvar_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\tier1\liconvar.cpp(14) : use of precompiled header
-  licvar.cpp
+c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(7): warning C4603: 'lglobalvars_base_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(9) : use of precompiled header
   limaterial.cpp
 c:\users\hp\documents\hl2sb-src\src\public\licvar.cpp(7): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\licvar.cpp(7): warning C4603: 'leiface_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\licvar.cpp(9) : use of precompiled header
+  limovehelper.cpp
+  lin_buttons.cpp
 c:\users\hp\documents\hl2sb-src\src\public\materialsystem\limaterial.cpp(9): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\materialsystem\limaterial.cpp(9): warning C4603: 'limaterial_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\materialsystem\limaterial.cpp(11) : use of precompiled header
-  limovehelper.cpp
-  lin_buttons.cpp
+  linetchannelinfo.cpp
+  lipredictionsystem.cpp
 c:\users\hp\documents\hl2sb-src\src\game\shared\limovehelper.cpp(8): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\game\shared\limovehelper.cpp(8): warning C4603: 'limovehelper_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
@@ -671,40 +657,37 @@ c:\users\hp\documents\hl2sb-src\src\game\shared\lin_buttons.cpp(8): error C2220:
 c:\users\hp\documents\hl2sb-src\src\game\shared\lin_buttons.cpp(8): warning C4603: 'lin_buttons_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\game\shared\lin_buttons.cpp(10) : use of precompiled header
-  linetchannelinfo.cpp
-  lipredictionsystem.cpp
-c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(8): error C2220: warning treated as error - no 'object' file generated
-c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(8): warning C4603: 'lipredictionsystem_cpp' : macro is not defined or definition is different after precompiled header use
-          Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(10) : use of precompiled header
 c:\users\hp\documents\hl2sb-src\src\public\linetchannelinfo.cpp(13): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\linetchannelinfo.cpp(13): warning C4603: 'linetchannelinfo_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\linetchannelinfo.cpp(15) : use of precompiled header
   lisoundemittersystembase.cpp
-  listeamfriends.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(8): warning C4603: 'lipredictionsystem_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(10) : use of precompiled header
 c:\users\hp\documents\hl2sb-src\src\public\soundemittersystem\lisoundemittersystembase.cpp(8): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\soundemittersystem\lisoundemittersystembase.cpp(8): warning C4603: 'lisoundemittersystembase_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\soundemittersystem\lisoundemittersystembase.cpp(10) : use of precompiled header
+  listeamfriends.cpp
+  livdebugoverlay.cpp
 c:\users\hp\documents\hl2sb-src\src\public\steam\listeamfriends.cpp(8): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\steam\listeamfriends.cpp(8): warning C4603: 'listeamfriends_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\steam\listeamfriends.cpp(10) : use of precompiled header
-  livdebugoverlay.cpp
 c:\users\hp\documents\hl2sb-src\src\public\engine\livdebugoverlay.cpp(15): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\engine\livdebugoverlay.cpp(15): warning C4603: 'lglobalvars_base_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\engine\livdebugoverlay.cpp(17) : use of precompiled header
   LKeyValues.cpp
   lmathlib.cpp
+  lnetworkstringtabledefs.cpp
 c:\users\hp\documents\hl2sb-src\src\public\mathlib\lmathlib.cpp(7): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\mathlib\lmathlib.cpp(7): warning C4603: 'lmathlib_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\mathlib\lmathlib.cpp(9) : use of precompiled header
-  lnetworkstringtabledefs.cpp
   lperformance.cpp
-  lplayer.cpp
 c:\users\hp\documents\hl2sb-src\src\public\lnetworkstringtabledefs.cpp(8): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\lnetworkstringtabledefs.cpp(8): warning C4603: 'lnetworkstringtabledefs_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
@@ -713,15 +696,16 @@ c:\users\hp\documents\hl2sb-src\src\public\vphysics\lperformance.cpp(7): error C
 c:\users\hp\documents\hl2sb-src\src\public\vphysics\lperformance.cpp(7): warning C4603: 'lperformance_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\vphysics\lperformance.cpp(9) : use of precompiled header
+  lplayer.cpp
   lrandom.cpp
-c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(7): error C2220: warning treated as error - no 'object' file generated
-c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(7): warning C4603: 'lplayer_cpp' : macro is not defined or definition is different after precompiled header use
-          Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(9) : use of precompiled header
 c:\users\hp\documents\hl2sb-src\src\public\vstdlib\lrandom.cpp(9): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\vstdlib\lrandom.cpp(9): warning C4603: 'lrandom_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\vstdlib\lrandom.cpp(11) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(7): warning C4603: 'lplayer_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(9) : use of precompiled header
   lrecipientfilter.cpp
   lshareddefs.cpp
   lsrcinit.cpp
@@ -729,21 +713,20 @@ c:\users\hp\documents\hl2sb-src\src\game\server\lrecipientfilter.cpp(8): error C
 c:\users\hp\documents\hl2sb-src\src\game\server\lrecipientfilter.cpp(8): warning C4603: 'lrecipientfilter_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\game\server\lrecipientfilter.cpp(10) : use of precompiled header
-c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(186): error C2660: 'CBasePlayer::Event_Dying' : function does not take 0 arguments
-c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(8): error C2220: warning treated as error - no 'object' file generated
-c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(8): warning C4603: 'lshareddefs_cpp' : macro is not defined or definition is different after precompiled header use
-          Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(10) : use of precompiled header
 c:\users\hp\documents\hl2sb-src\src\game\shared\lsrcinit.cpp(9): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\game\shared\lsrcinit.cpp(9): warning C4603: 'lsrcinit_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\game\shared\lsrcinit.cpp(11) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(8): warning C4603: 'lshareddefs_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(10) : use of precompiled header
   lsteam_api.cpp
-  ltakedamageinfo.cpp
 c:\users\hp\documents\hl2sb-src\src\public\steam\lsteam_api.cpp(7): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\steam\lsteam_api.cpp(7): warning C4603: 'lsteam_api_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\steam\lsteam_api.cpp(9) : use of precompiled header
+  ltakedamageinfo.cpp
   luacachefile.cpp
   luamanager.cpp
   lutil.cpp
@@ -763,318 +746,321 @@ c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvector.cpp(9): warning C4603
           c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvector.cpp(11) : use of precompiled header
   lvmatrix.cpp
   lvphysics_interface.cpp
-  XUnzip.cpp
-c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(8): error C2220: warning treated as error - no 'object' file generated
-c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(8): warning C4603: 'lvphysics_interface_cpp' : macro is not defined or definition is different after precompiled header use
-          Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(10) : use of precompiled header
 c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvmatrix.cpp(26): error C2220: warning treated as error - no 'object' file generated
 c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvmatrix.cpp(26): warning C4603: 'lvmatrix_cpp' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
           c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvmatrix.cpp(28) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(8): warning C4603: 'lvphysics_interface_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(10) : use of precompiled header
+  XUnzip.cpp
   zip_utils.cpp
   nav_area.cpp
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(99): error C2220: warning treated as error - no 'object' file generated
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(99): warning C4627: '#include <windows.h>': skipped when looking for precompiled header use
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(100): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(100): warning C4627: '#include <windows.h>': skipped when looking for precompiled header use
           Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(102): warning C4627: '#include <fcntl.h>': skipped when looking for precompiled header use
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(103): warning C4627: '#include <fcntl.h>': skipped when looking for precompiled header use
           Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(103): warning C4627: '#include <sys/stat.h>': skipped when looking for precompiled header use
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(104): warning C4627: '#include <sys/stat.h>': skipped when looking for precompiled header use
           Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(104): warning C4627: '#include <sys/time.h>': skipped when looking for precompiled header use
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(105): warning C4627: '#include <sys/time.h>': skipped when looking for precompiled header use
           Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(105): warning C4627: '#include <unistd.h>': skipped when looking for precompiled header use
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(106): warning C4627: '#include <unistd.h>': skipped when looking for precompiled header use
           Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(107): warning C4627: '#include <time.h>': skipped when looking for precompiled header use
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(108): warning C4627: '#include <time.h>': skipped when looking for precompiled header use
           Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(111): warning C4627: '#include "zip/XUnzip.h"': skipped when looking for precompiled header use
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(112): warning C4627: '#include "zip/XUnzip.h"': skipped when looking for precompiled header use
           Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(12): error C2220: warning treated as error - no 'object' file generated
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(12): warning C4627: '#include <windows.h>': skipped when looking for precompiled header use
-          Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(97): warning C4603: 'STRICT' : macro is not defined or definition is different after precompiled header use
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(95): warning C4603: 'DWORD' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(112) : use of precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(18): warning C4627: '#include "utlbuffer.h"': skipped when looking for precompiled header use
-          Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(98): warning C4603: 'WIN32_LEAN_AND_MEAN' : macro is not defined or definition is different after precompiled header use
+          c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(113) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(98): warning C4603: 'STRICT' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(112) : use of precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(20): warning C4627: '#include "zip_utils.h"': skipped when looking for precompiled header use
-          Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(23): warning C4627: '#include "byteswap.h"': skipped when looking for precompiled header use
-          Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(24): warning C4627: '#include "utlstring.h"': skipped when looking for precompiled header use
-          Add directive to 'cbase.h' or rebuild precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(14): warning C4603: 'INVALID_HANDLE_VALUE' : macro is not defined or definition is different after precompiled header use
+          c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(113) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(99): warning C4603: 'WIN32_LEAN_AND_MEAN' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(25) : use of precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(15): warning C4603: 'FILE_BEGIN' : macro is not defined or definition is different after precompiled header use
+          c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(113) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(13): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(13): warning C4627: '#include <windows.h>': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(19): warning C4627: '#include "utlbuffer.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(21): warning C4627: '#include "zip_utils.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(24): warning C4627: '#include "byteswap.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(25): warning C4627: '#include "utlstring.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(15): warning C4603: 'INVALID_HANDLE_VALUE' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(25) : use of precompiled header
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(16): warning C4603: 'FILE_END' : macro is not defined or definition is different after precompiled header use
+          c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(26) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(16): warning C4603: 'FILE_BEGIN' : macro is not defined or definition is different after precompiled header use
           Add macro to precompiled header instead of defining here
-          c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(25) : use of precompiled header
+          c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(26) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(17): warning C4603: 'FILE_END' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(26) : use of precompiled header
   nav_colors.cpp
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(133): error C2061: syntax error : identifier 'DWORD'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(105): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(121): error C2065: 'SYSTEMTIME' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(121): error C2146: syntax error : missing ';' before identifier 'sysTime'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(121): error C2065: 'sysTime' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(121): error C3861: 'GetLocalTime': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(123): error C2065: 'sysTime' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(123): error C2228: left of '.wDay' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(134): error C2061: syntax error : identifier 'DWORD'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(106): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(122): error C2065: 'SYSTEMTIME' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(122): error C2146: syntax error : missing ';' before identifier 'sysTime'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(122): error C2065: 'sysTime' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(122): error C3861: 'GetLocalTime': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(124): error C2065: 'sysTime' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(124): error C2228: left of '.wDay' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(123): error C2228: left of '.wHour' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(124): error C2228: left of '.wHour' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(123): error C2228: left of '.wMinute' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(124): error C2228: left of '.wMinute' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(123): error C2228: left of '.wSecond' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(124): error C2228: left of '.wSecond' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(123): error C2228: left of '.wMilliseconds' must have class/struct/union
-          type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(128): error C2065: 'GENERIC_READ' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(128): error C2065: 'GENERIC_WRITE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(128): error C2065: 'CREATE_ALWAYS' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(128): error C2065: 'FILE_ATTRIBUTE_NORMAL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(128): error C3861: 'CreateFile': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(135): error C2065: 'LARGE_INTEGER' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(135): error C2146: syntax error : missing ';' before identifier 'li'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(135): error C2065: 'li' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(137): error C2065: 'li' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(137): error C2228: left of '.QuadPart' must have class/struct/union
-          type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(138): error C2065: 'li' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(138): error C2228: left of '.LowPart' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(124): error C2228: left of '.wMilliseconds' must have class/struct/union
           type is 'unknown-type'
   nav_edit.cpp
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(138): error C2228: left of '.HighPart' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(129): error C2065: 'GENERIC_READ' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(129): error C2065: 'GENERIC_WRITE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(129): error C2065: 'CREATE_ALWAYS' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(129): error C2065: 'FILE_ATTRIBUTE_NORMAL' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(129): error C3861: 'CreateFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(136): error C2065: 'LARGE_INTEGER' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(136): error C2146: syntax error : missing ';' before identifier 'li'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(136): error C2065: 'li' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(138): error C2065: 'li' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(138): error C2228: left of '.QuadPart' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(138): error C2065: 'MoveMethod' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(138): error C3861: 'SetFilePointer': identifier not found
 c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(139): error C2065: 'li' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(139): error C2228: left of '.LowPart' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(139): error C2065: 'INVALID_SET_FILE_POINTER' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(139): error C2065: 'NO_ERROR' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(139): error C3861: 'GetLastError': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(141): error C2065: 'li' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(141): error C2228: left of '.QuadPart' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(139): error C2228: left of '.HighPart' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(144): error C2065: 'li' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(144): error C2228: left of '.QuadPart' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(139): error C2065: 'MoveMethod' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(139): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(140): error C2065: 'li' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(140): error C2228: left of '.LowPart' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(149): error C2065: 'FILE_CURRENT' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(154): error C2065: 'DWORD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(154): error C2146: syntax error : missing ';' before identifier 'numBytesRead'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(154): error C2065: 'numBytesRead' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(155): error C2039: 'ReadFile' : is not a member of '`global namespace''
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(140): error C2065: 'INVALID_SET_FILE_POINTER' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(140): error C2065: 'NO_ERROR' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(140): error C3861: 'GetLastError': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(142): error C2065: 'li' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(142): error C2228: left of '.QuadPart' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(145): error C2065: 'li' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(145): error C2228: left of '.QuadPart' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(150): error C2065: 'FILE_CURRENT' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(155): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(155): error C2146: syntax error : missing ';' before identifier 'numBytesRead'
 c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(155): error C2065: 'numBytesRead' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(155): error C3861: 'ReadFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(156): error C2039: 'ReadFile' : is not a member of '`global namespace''
 c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(156): error C2065: 'numBytesRead' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(161): error C2065: 'DWORD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(161): error C2146: syntax error : missing ';' before identifier 'numBytesWritten'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(161): error C2065: 'numBytesWritten' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(156): error C3861: 'ReadFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(157): error C2065: 'numBytesRead' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(162): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(162): error C2146: syntax error : missing ';' before identifier 'numBytesWritten'
 c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(162): error C2065: 'numBytesWritten' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(162): error C3861: 'WriteFile': identifier not found
 c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(163): error C2065: 'numBytesWritten' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(255): error C2027: use of undefined type 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(163): error C3861: 'WriteFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(164): error C2065: 'numBytesWritten' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(256): error C2027: use of undefined type 'CUtlBuffer'
           c:\users\hp\documents\hl2sb-src\src\public\engine\ivmodelinfo.h(36) : see declaration of 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(255): error C2227: left of '->Put' must point to class/struct/union/generic type
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(258): error C2027: use of undefined type 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(256): error C2227: left of '->Put' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(259): error C2027: use of undefined type 'CUtlBuffer'
           c:\users\hp\documents\hl2sb-src\src\public\engine\ivmodelinfo.h(36) : see declaration of 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(258): error C2227: left of '->TellPut' must point to class/struct/union/generic type
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(270): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(283): error C2065: 'DWORD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(283): error C2146: syntax error : missing ';' before identifier 'numBytesWritten'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(283): error C2065: 'numBytesWritten' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(259): error C2227: left of '->TellPut' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(271): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(284): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(284): error C2146: syntax error : missing ';' before identifier 'numBytesWritten'
 c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(284): error C2065: 'numBytesWritten' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(284): error C3861: 'WriteFile': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(385): error C2146: syntax error : missing ';' before identifier 'm_Swap'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(385): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(498): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(526): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(529): error C3861: 'CloseHandle': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(530): error C3861: 'DeleteFile': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(535): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(588): error C2065: 'm_Swap' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(588): error C2228: left of '.SetTargetBigEndian' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(285): error C2065: 'numBytesWritten' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(285): error C3861: 'WriteFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(386): error C2146: syntax error : missing ';' before identifier 'm_Swap'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(386): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(499): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(527): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(530): error C3861: 'CloseHandle': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(531): error C3861: 'DeleteFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(536): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(589): error C2065: 'm_Swap' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(589): error C2228: left of '.SetTargetBigEndian' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(593): error C2065: 'm_Swap' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(593): error C2228: left of '.ActivateByteSwapping' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2767): error C2061: syntax error : identifier 'DWORD'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(594): error C2065: 'm_Swap' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2769): error C2065: 'flags' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(594): error C2228: left of '.ActivateByteSwapping' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2766): error C2061: syntax error : identifier 'DWORD'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(607): error C2079: 'buf' uses undefined class 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2768): error C2065: 'flags' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(607): error C2078: too many initializers
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2768): error C2065: 'ZIP_HANDLE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(610): error C2228: left of '.ActivateByteSwapping' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2769): error C2065: 'ZIP_HANDLE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(608): error C2079: 'buf' uses undefined class 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(608): error C2078: too many initializers
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2769): error C2065: 'ZIP_FILENAME' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(611): error C2228: left of '.ActivateByteSwapping' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(610): error C2065: 'm_Swap' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2768): error C2065: 'ZIP_FILENAME' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(610): error C2228: left of '.IsSwappingBytes' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(611): error C2065: 'm_Swap' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2769): error C2065: 'ZIP_MEMORY' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(611): error C2228: left of '.IsSwappingBytes' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(612): error C2228: left of '.Put' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2771): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(613): error C2228: left of '.Put' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2768): error C2065: 'ZIP_MEMORY' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(614): error C2228: left of '.SeekGet' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2771): error C2065: 'ZR_ARGS' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(615): error C2228: left of '.SeekGet' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2770): error C2065: 'err' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(614): error C2027: use of undefined type 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2775): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(615): error C2027: use of undefined type 'CUtlBuffer'
           c:\users\hp\documents\hl2sb-src\src\public\engine\ivmodelinfo.h(36) : see declaration of 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2770): error C2065: 'ZR_ARGS' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(614): error C2065: 'SEEK_TAIL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2774): error C2065: 'err' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(615): error C2228: left of '.TellGet' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2775): error C2065: 'ZR_OK' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(615): error C2065: 'SEEK_TAIL' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2776): error C2065: 'flags' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(616): error C2228: left of '.TellGet' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2774): error C2065: 'ZR_OK' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(618): error C2228: left of '.SeekGet' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2776): error C2065: 'ZIP_HANDLE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(619): error C2228: left of '.SeekGet' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2775): error C2065: 'flags' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(618): error C2027: use of undefined type 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(619): error C2027: use of undefined type 'CUtlBuffer'
           c:\users\hp\documents\hl2sb-src\src\public\engine\ivmodelinfo.h(36) : see declaration of 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2775): error C2065: 'ZIP_HANDLE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(618): error C2065: 'SEEK_HEAD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(631): error C2228: left of '.SeekGet' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2776): error C2065: 'ZIP_FILENAME' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(619): error C2065: 'SEEK_HEAD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2778): error C2065: 'flags' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(632): error C2228: left of '.SeekGet' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2775): error C2065: 'ZIP_FILENAME' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(631): error C2027: use of undefined type 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2778): error C2065: 'ZIP_HANDLE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(632): error C2027: use of undefined type 'CUtlBuffer'
           c:\users\hp\documents\hl2sb-src\src\public\engine\ivmodelinfo.h(36) : see declaration of 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2777): error C2065: 'flags' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(631): error C2065: 'SEEK_HEAD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2777): error C2065: 'ZIP_HANDLE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(632): error C2228: left of '.GetObjects' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2783): error C2065: 'DUPLICATE_SAME_ACCESS' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(632): error C2065: 'SEEK_HEAD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2783): warning C4805: '==' : unsafe mix of type 'unknown-type' and type 'bool' in operation
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(633): error C2228: left of '.GetObjects' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2782): error C2065: 'DUPLICATE_SAME_ACCESS' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(644): error C2228: left of '.Get' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2783): error C3861: 'DuplicateHandle': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(645): error C2228: left of '.Get' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2782): warning C4805: '==' : unsafe mix of type 'unknown-type' and type 'bool' in operation
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(668): error C2228: left of '.SeekGet' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2783): error C3861: 'GetCurrentProcess': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(669): error C2228: left of '.SeekGet' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2782): error C3861: 'DuplicateHandle': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(668): error C2027: use of undefined type 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2790): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(669): error C2027: use of undefined type 'CUtlBuffer'
           c:\users\hp\documents\hl2sb-src\src\public\engine\ivmodelinfo.h(36) : see declaration of 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2782): error C3861: 'GetCurrentProcess': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(668): error C2065: 'SEEK_HEAD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2789): error C2065: 'err' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(679): error C2228: left of '.GetObjects' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2790): error C2065: 'ZR_NODUPH' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(669): error C2065: 'SEEK_HEAD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2797): error C2065: 'GENERIC_READ' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2797): error C2065: 'FILE_SHARE_READ' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(680): error C2228: left of '.GetObjects' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2789): error C2065: 'ZR_NODUPH' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2796): error C2065: 'GENERIC_READ' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(684): error C2228: left of '.Get' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2798): error C2065: 'OPEN_EXISTING' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2798): error C2065: 'FILE_ATTRIBUTE_NORMAL' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2797): error C3861: 'CreateFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(685): error C2228: left of '.Get' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2796): error C2065: 'FILE_SHARE_READ' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(705): error C2228: left of '.SeekGet' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2802): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(706): error C2228: left of '.SeekGet' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2797): error C2065: 'OPEN_EXISTING' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(705): error C2027: use of undefined type 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2804): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(706): error C2027: use of undefined type 'CUtlBuffer'
           c:\users\hp\documents\hl2sb-src\src\public\engine\ivmodelinfo.h(36) : see declaration of 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2797): error C2065: 'FILE_ATTRIBUTE_NORMAL' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(705): error C2065: 'SEEK_CURRENT' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2796): error C3861: 'CreateFile': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(721): error C2228: left of '.SeekGet' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2804): error C2065: 'ZR_NOFILE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(706): error C2065: 'SEEK_CURRENT' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2809): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(722): error C2228: left of '.SeekGet' must have class/struct/union
           type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2801): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(721): error C2027: use of undefined type 'CUtlBuffer'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2809): error C2146: syntax error : missing ';' before identifier 'type'
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(722): error C2027: use of undefined type 'CUtlBuffer'
           c:\users\hp\documents\hl2sb-src\src\public\engine\ivmodelinfo.h(36) : see declaration of 'CUtlBuffer'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2803): error C2065: 'err' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(721): error C2065: 'SEEK_HEAD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2803): error C2065: 'ZR_NOFILE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(722): error C2228: left of '.Get' must have class/struct/union
-          type is 'int'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2808): error C2065: 'DWORD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(743): error C2065: 'GENERIC_READ' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(743): fatal error C1003: error count exceeds 100; stopping compilation
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2808): error C2146: syntax error : missing ';' before identifier 'type'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2808): error C2065: 'type' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2808): error C3861: 'GetFileType': identifier not found
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2809): error C2065: 'type' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2809): error C2065: 'FILE_TYPE_DISK' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(722): error C2065: 'SEEK_HEAD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2809): error C3861: 'GetFileType': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(723): error C2228: left of '.Get' must have class/struct/union
+          type is 'int'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2810): error C2065: 'type' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(744): error C2065: 'GENERIC_READ' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(744): fatal error C1003: error count exceeds 100; stopping compilation
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2810): error C2065: 'FILE_TYPE_DISK' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2818): error C2065: 'flags' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2818): error C2065: 'ZIP_HANDLE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2818): error C2065: 'ZIP_FILENAME' : undeclared identifier
   nav_entities.cpp
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2817): error C2065: 'flags' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2817): error C2065: 'ZIP_HANDLE' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2817): error C2065: 'ZIP_FILENAME' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2825): error C2065: 'FILE_CURRENT' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2825): error C3861: 'SetFilePointer': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2837): error C2065: 'err' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2837): error C2065: 'ZR_OK' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2844): error C3861: 'CloseHandle': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2855): error C2065: 'FILE_CURRENT' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2855): error C3861: 'SetFilePointer': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2862): error C2065: 'FILE_BEGIN' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2862): error C3861: 'SetFilePointer': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2863): error C2065: 'FILE_CURRENT' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2826): error C2065: 'FILE_CURRENT' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2826): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2838): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2838): error C2065: 'ZR_OK' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2845): error C3861: 'CloseHandle': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2856): error C2065: 'FILE_CURRENT' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2856): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2863): error C2065: 'FILE_BEGIN' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2863): error C3861: 'SetFilePointer': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2864): error C2065: 'FILE_END' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2864): error C2065: 'FILE_CURRENT' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2864): error C3861: 'SetFilePointer': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2881): error C2065: 'DWORD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2881): error C2146: syntax error : missing ';' before identifier 'red'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2881): error C2065: 'red' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2881): error C3861: 'ReadFile': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2883): error C2065: 'red' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2886): error C2065: 'DWORD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2886): error C2146: syntax error : missing ';' before identifier 'red'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2886): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2865): error C2065: 'FILE_END' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2865): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2882): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2882): error C2146: syntax error : missing ';' before identifier 'red'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2882): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2882): error C3861: 'ReadFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2884): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2887): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2887): error C2146: syntax error : missing ';' before identifier 'red'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2887): error C2065: 'red' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2888): error C2065: 'red' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3895): error C2146: syntax error : missing ';' before identifier 'timet2filetime'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3895): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2889): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3896): error C2146: syntax error : missing ';' before identifier 'timet2filetime'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3896): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3896): error C3861: 'gmtime': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3897): error C2065: 'SYSTEMTIME' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3897): error C2146: syntax error : missing ';' before identifier 'st'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3897): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3897): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3897): error C3861: 'gmtime': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3898): error C2065: 'SYSTEMTIME' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3898): error C2146: syntax error : missing ';' before identifier 'st'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3898): error C2065: 'st' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3898): error C2228: left of '.wYear' must have class/struct/union
-          type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3898): error C2065: 'WORD' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3898): error C2027: use of undefined type 'tm'
-          c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3898): error C2227: left of '->tm_year' must point to class/struct/union/generic type
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3899): error C2065: 'st' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3899): error C2228: left of '.wMonth' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3899): error C2228: left of '.wYear' must have class/struct/union
           type is 'unknown-type'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3899): error C2065: 'WORD' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3899): error C2027: use of undefined type 'tm'
           c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3899): error C2227: left of '->tm_mon' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3899): error C2227: left of '->tm_year' must point to class/struct/union/generic type
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3900): error C2065: 'st' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3900): error C2228: left of '.wDay' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3900): error C2228: left of '.wMonth' must have class/struct/union
           type is 'unknown-type'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3900): error C2065: 'WORD' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3900): error C2027: use of undefined type 'tm'
           c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3900): error C2227: left of '->tm_mday' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3900): error C2227: left of '->tm_mon' must point to class/struct/union/generic type
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3901): error C2065: 'st' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3901): error C2228: left of '.wHour' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3901): error C2228: left of '.wDay' must have class/struct/union
           type is 'unknown-type'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3901): error C2065: 'WORD' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3901): error C2027: use of undefined type 'tm'
           c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3901): error C2227: left of '->tm_hour' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3901): error C2227: left of '->tm_mday' must point to class/struct/union/generic type
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3902): error C2065: 'st' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3902): error C2228: left of '.wMinute' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3902): error C2228: left of '.wHour' must have class/struct/union
           type is 'unknown-type'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3902): error C2065: 'WORD' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3902): error C2027: use of undefined type 'tm'
           c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3902): error C2227: left of '->tm_min' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3902): error C2227: left of '->tm_hour' must point to class/struct/union/generic type
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3903): error C2065: 'st' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3903): error C2228: left of '.wSecond' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3903): error C2228: left of '.wMinute' must have class/struct/union
           type is 'unknown-type'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3903): error C2065: 'WORD' : undeclared identifier
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3903): error C2027: use of undefined type 'tm'
           c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3903): error C2227: left of '->tm_sec' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3903): error C2227: left of '->tm_min' must point to class/struct/union/generic type
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3904): error C2065: 'st' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3904): error C2228: left of '.wMilliseconds' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3904): error C2228: left of '.wSecond' must have class/struct/union
           type is 'unknown-type'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3905): error C2146: syntax error : missing ';' before identifier 'ft'
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3905): error C2065: 'ft' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3906): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3904): error C2065: 'WORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3904): error C2027: use of undefined type 'tm'
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3904): error C2227: left of '->tm_sec' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3905): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3905): error C2228: left of '.wMilliseconds' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3906): error C2146: syntax error : missing ';' before identifier 'ft'
 c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3906): error C2065: 'ft' : undeclared identifier
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3906): error C3861: 'SystemTimeToFileTime': identifier not found
-c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3906): fatal error C1003: error count exceeds 100; stopping compilation
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3907): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3907): error C2065: 'ft' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3907): error C3861: 'SystemTimeToFileTime': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3907): fatal error C1003: error count exceeds 100; stopping compilation
   nav_file.cpp
   nav_generate.cpp
   nav_ladder.cpp

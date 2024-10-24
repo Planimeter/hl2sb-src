@@ -6,6 +6,7 @@
 
 // If we are going to include windows.h then we need to disable protected_things.h
 // or else we get many warnings.
+
 #undef PROTECTED_THINGS_ENABLE
 #include <tier0/platform.h>
 #ifdef IS_WINDOWS_PC
