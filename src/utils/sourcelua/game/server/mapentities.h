@@ -5,6 +5,12 @@
 // $NoKeywords: $
 //=============================================================================//
 
+#include "..\shared\luamanager.h"
+#include "..\shared\luacachefile.h"
+#include "..\shared\luasrclib.h"
+#include "..\lua-5.1.5\etc\lua.hpp"
+#include "luamanager.h"
+
 #ifndef MAPENTITIES_H
 #define MAPENTITIES_H
 #ifdef _WIN32

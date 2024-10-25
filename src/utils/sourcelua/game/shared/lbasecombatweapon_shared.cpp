@@ -6,8 +6,11 @@
 //=============================================================================//
 #define lbasecombatweapon_shared_cpp
 
-#include "../../luamanager.h"
+#include "..\shared\luasrclib.h"
+#include "..\lua-5.1.5\etc\lua.hpp"
+#include "..\game\shared\luamanager.h"
 #include "lbasecombatweapon_shared.h"
+#include "luamanager.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

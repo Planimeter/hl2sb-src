@@ -9,7 +9,11 @@
 #define leiface_cpp
 
 #include "eiface.h"
-#include "../luamanager.h"
+#include "..\shared\luamanager.h"
+#include "..\shared\luacachefile.h"
+#include "..\shared\luasrclib.h"
+#include "..\lua-5.1.5\etc\lua.hpp"
+#include "luamanager.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

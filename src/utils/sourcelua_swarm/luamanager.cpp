@@ -29,6 +29,11 @@
 #include "vstdlib/lrandom.h"
 #include "lutil.h"
 #include "mathlib/lvector.h"
+#include "..\..\lua-5.1.5\etc\lua.hpp"
+#include "..\..\lua-5.1.5\src\lua.h"
+#include "..\..\game\shared\luamanager.h"
+#include "..\..\game\shared\luasrclib.h"
+#include "..\..\game\shared\luacachefile.h"
 
 const ConVar *lua_path;
 
@@ -116,9 +121,11 @@ static void base_open (lua_State *L) {
 }
 
 
-lua_State *lua_GetState (void) {
-  return L;
-}
+//lua_State *lua_GetState (void) {
+  //return L;
+//}
+// Comment as a tempoary solution -Guest
+
 
 void lua_init (void) {
   L = lua_open();
@@ -136,9 +143,10 @@ void lua_init (void) {
   luaopen_filesystem(L);
   luaopen_gpGlobals(L);
   luaopen_cvar(L);
-  luaopen_helpers(L);
-  luaopen_g_pVoiceServer(L);
-  luaopen_randomStr(L);
+  //luaopen_helpers(L);
+  //luaopen_g_pVoiceServer(L);
+  //luaopen_randomStr(L);
+  // Comment as a tempoary solution -Guest
   luaopen_UTIL(L);
   luaopen_Vector(L);
   luaopen_QAngle(L);

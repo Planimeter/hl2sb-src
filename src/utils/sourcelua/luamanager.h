@@ -17,7 +17,11 @@
 #pragma once
 #endif
 
-#include "lua.hpp"
+// Most files require this
+#include "..\shared\luamanager.h"
+#include "..\shared\luacachefile.h"
+#include "..\shared\luasrclib.h"
+#include "..\lua-5.1.5\etc\lua.hpp"
 
 #define LUA_ROOT                "lua" // Can't be "LUA_PATH" because luaconf.h uses it.
 #define LUA_PATH_ENUM           LUA_ROOT "\\includes\\enum"

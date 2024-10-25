@@ -11,6 +11,9 @@
 #include "../../luamanager.h"
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
+#include "..\shared\luamanager.h"
+#include "..\shared\luacachefile.h"
+#include "..\shared\luasrclib.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

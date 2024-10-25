@@ -11,8 +11,12 @@
 #include "mathlib/vector.h"
 #include "fmtstr.h"
 #include "mathlib/mathlib.h"
-#include "lua.hpp"
+#include "..\shared\luamanager.h"
+#include "..\shared\luacachefile.h"
+#include "..\shared\luasrclib.h"
+#include "..\lua-5.1.5\etc\lua.hpp"
 #include "lvector.h"
+#include "..\lua-5.1.5\src\lua.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

@@ -9,10 +9,14 @@
 
 #include "player.h"
 #include "basecombatcharacter.h"
-#include "../../luamanager.h"
 #include "lbaseplayer_shared.h"
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
+#include "..\shared\luamanager.h"
+#include "..\shared\luacachefile.h"
+#include "..\shared\luasrclib.h"
+#include "..\lua-5.1.5\etc\lua.hpp"
+#include "luamanager.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

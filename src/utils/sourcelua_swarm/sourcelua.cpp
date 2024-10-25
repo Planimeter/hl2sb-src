@@ -6,10 +6,6 @@
 //
 //===========================================================================//
 
-#include <stdio.h>
-
-
-#include <stdio.h>
 #include "interface.h"
 #include "filesystem.h"
 #include "engine/iserverplugin.h"
@@ -43,6 +39,8 @@
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
 #include "lColor.h"
+#include "..\..\lua-5.1.5\etc\lua.hpp"
+#include "..\..\lua-5.1.5\src\lua.h"
 
 // Uncomment this to compile the sample TF2 plugin code, note: most of this is duplicated in serverplugin_tony, but kept here for reference!
 //#define SAMPLE_TF2_PLUGIN
