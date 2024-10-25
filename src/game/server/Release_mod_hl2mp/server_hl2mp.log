@@ -1,0 +1,979 @@
+﻿  Compiling pointeroverride.asm
+   Assembling: C:\Users\hp\Documents\hl2sb-src\src\public\tier0\pointeroverride.asm
+  Microsoft (R) Macro Assembler Version 12.00.40629.0
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  Running VPC CRC Check - server_hl2mp.vpc
+  stdafx.cpp
+  gamedll_replay.cpp
+  achievement_saverestore.cpp
+  achievementmgr.cpp
+  achievements_hlx.cpp
+  activitylist.cpp
+  ai_activity.cpp
+  ai_baseactor.cpp
+  ai_basehumanoid.cpp
+  ai_basenpc.cpp
+  ai_basenpc_flyer.cpp
+  ai_basenpc_flyer_new.cpp
+  ai_basenpc_movement.cpp
+  ai_basenpc_physicsflyer.cpp
+  ai_basenpc_schedule.cpp
+  ai_basenpc_squad.cpp
+  ai_behavior.cpp
+  ai_behavior_assault.cpp
+  ai_behavior_fear.cpp
+  ai_behavior_follow.cpp
+  ai_behavior_lead.cpp
+  ai_behavior_rappel.cpp
+  ai_behavior_standoff.cpp
+  ai_blended_movement.cpp
+  ai_concommands.cpp
+  ai_condition.cpp
+  AI_Criteria.cpp
+  ai_default.cpp
+  ai_dynamiclink.cpp
+  ai_event.cpp
+  ai_goalentity.cpp
+  ai_hint.cpp
+  ai_hull.cpp
+  ai_initutils.cpp
+  AI_Interest_Target.cpp
+  ai_link.cpp
+  ai_localnavigator.cpp
+  ai_looktarget.cpp
+  ai_memory.cpp
+  ai_motor.cpp
+  ai_moveprobe.cpp
+  ai_moveshoot.cpp
+  ai_movesolver.cpp
+  ai_namespaces.cpp
+  ai_navigator.cpp
+  ai_network.cpp
+  ai_networkmanager.cpp
+  ai_node.cpp
+  ai_pathfinder.cpp
+  ai_planesolver.cpp
+  ai_playerally.cpp
+  ai_relationship.cpp
+  AI_ResponseSystem.cpp
+  ai_route.cpp
+  ai_saverestore.cpp
+  ai_schedule.cpp
+  ai_scriptconditions.cpp
+  ai_senses.cpp
+  ai_sentence.cpp
+  ai_speech.cpp
+  ai_speechfilter.cpp
+  ai_squad.cpp
+  ai_squadslot.cpp
+  ai_tacticalservices.cpp
+  ai_task.cpp
+  ai_trackpather.cpp
+  ai_utils.cpp
+  ai_waypoint.cpp
+  ammodef.cpp
+  animation.cpp
+  base_playeranimstate.cpp
+  base_transmit_proxy.cpp
+  baseachievement.cpp
+  baseanimating.cpp
+  BaseAnimatingOverlay.cpp
+  basecombatcharacter.cpp
+  basecombatcharacter_shared.cpp
+  basecombatweapon.cpp
+  basecombatweapon_shared.cpp
+  baseentity.cpp
+  baseentity_shared.cpp
+  baseflex.cpp
+  basegrenade_concussion.cpp
+  basegrenade_contact.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.cpp(89): error C2039: 'm_nPredictionRandomSeedServer' : is not a member of 'CBaseEntity'
+          c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.h(344) : see declaration of 'CBaseEntity'
+c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.cpp(1445): error C2556: 'int CBaseEntity::TakeDamage(const CTakeDamageInfo &)' : overloaded function differs only by return type from 'void CBaseEntity::TakeDamage(const CTakeDamageInfo &)'
+          c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.h(915) : see declaration of 'CBaseEntity::TakeDamage'
+c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.cpp(1445): error C2371: 'CBaseEntity::TakeDamage' : redefinition; different basic types
+          c:\users\hp\documents\hl2sb-src\src\game\server\baseentity.h(915) : see declaration of 'CBaseEntity::TakeDamage'
+c:\users\hp\documents\hl2sb-src\src\game\server\baseflex.cpp(512): error C2661: 'CBaseAnimatingOverlay::SetLayerCycle' : no overloaded function takes 4 arguments
+  basegrenade_shared.cpp
+  basegrenade_timed.cpp
+  basemultiplayerplayer.cpp
+  baseparticleentity.cpp
+  baseplayer_shared.cpp
+  baseprojectile.cpp
+  baseviewmodel.cpp
+  baseviewmodel_shared.cpp
+  beam_shared.cpp
+  bitstring.cpp
+  bmodels.cpp
+  buttons.cpp
+  cbase.cpp
+  client.cpp
+  collisionproperty.cpp
+  colorcorrection.cpp
+  colorcorrectionvolume.cpp
+  CommentarySystem.cpp
+  controlentities.cpp
+  cplane.cpp
+  CRagdollMagnet.cpp
+  damagemodifier.cpp
+  death_pose.cpp
+  debugoverlay_shared.cpp
+  decals.cpp
+  doors.cpp
+  dynamiclight.cpp
+  effect_dispatch_data.cpp
+  effects.cpp
+  EffectsServer.cpp
+  ehandle.cpp
+  entityblocker.cpp
+  EntityDissolve.cpp
+  EntityFlame.cpp
+  entitylist.cpp
+  entitylist_base.cpp
+  EntityParticleTrail.cpp
+  EntityParticleTrail_Shared.cpp
+  env_debughistory.cpp
+  env_detail_controller.cpp
+  env_effectsscript.cpp
+  env_entity_maker.cpp
+  env_particlescript.cpp
+  env_player_surface_trigger.cpp
+  env_projectedtexture.cpp
+  env_screenoverlay.cpp
+  env_texturetoggle.cpp
+  env_tonemap_controller.cpp
+  env_wind_shared.cpp
+  env_zoom.cpp
+  EnvBeam.cpp
+  EnvFade.cpp
+  EnvHudHint.cpp
+  EnvLaser.cpp
+  EnvMessage.cpp
+  envmicrophone.cpp
+  EnvShake.cpp
+  EnvSpark.cpp
+  eventlist.cpp
+  EventLog.cpp
+  explode.cpp
+  filters.cpp
+  fire.cpp
+  fire_smoke.cpp
+  fish.cpp
+  fogcontroller.cpp
+  fourwheelvehiclephysics.cpp
+  func_areaportal.cpp
+  func_areaportalbase.cpp
+  func_areaportalwindow.cpp
+  func_break.cpp
+  func_breakablesurf.cpp
+  func_dust.cpp
+  func_ladder.cpp
+  func_ladder_endpoint.cpp
+  func_lod.cpp
+  Func_Monitor.cpp
+  func_movelinear.cpp
+  func_occluder.cpp
+  func_reflective_glass.cpp
+  func_smokevolume.cpp
+  game.cpp
+  game_ui.cpp
+  gameinterface.cpp
+  gamemovement.cpp
+  gamerules.cpp
+  gamerules_register.cpp
+  GameStats.cpp
+  gamestringpool.cpp
+  gametrace_dll.cpp
+  gamevars_shared.cpp
+  gameweaponmanager.cpp
+  genericactor.cpp
+  genericmonster.cpp
+  gib.cpp
+  globals.cpp
+  globalstate.cpp
+  grenadethrown.cpp
+  guntarget.cpp
+  h_ai.cpp
+  h_cycler.cpp
+  haptic_msgs.cpp
+  haptic_utils.cpp
+  hierarchy.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(567): error C2338: Compile time assert constraint is not true: INTERFACEVERSION_SERVERGAMEDLL_INT == 10
+  hintmessage.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1941): error C2039: 'PrepareLevelResources' : is not a member of 'CServerGameDLL'
+          c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.h(63) : see declaration of 'CServerGameDLL'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C2039: 'ePrepareLevelResourcesResult' : is not a member of 'IServerGameDLL'
+          c:\users\hp\documents\hl2sb-src\src\public\eiface.h(434) : see declaration of 'IServerGameDLL'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C2039: 'AsyncPrepareLevelResources' : is not a member of 'CServerGameDLL'
+          c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.h(63) : see declaration of 'CServerGameDLL'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C2146: syntax error : missing ';' before identifier 'AsyncPrepareLevelResources'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1951): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1954): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1963): error C2039: 'ePrepareLevelResources_Prepared' : is not a member of 'IServerGameDLL'
+          c:\users\hp\documents\hl2sb-src\src\public\eiface.h(434) : see declaration of 'IServerGameDLL'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1963): error C2065: 'ePrepareLevelResources_Prepared' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1967): error C2039: 'eCanProvideLevelResult' : is not a member of 'IServerGameDLL'
+          c:\users\hp\documents\hl2sb-src\src\public\eiface.h(434) : see declaration of 'IServerGameDLL'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1967): error C2039: 'CanProvideLevel' : is not a member of 'CServerGameDLL'
+          c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.h(63) : see declaration of 'CServerGameDLL'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1967): error C2146: syntax error : missing ';' before identifier 'CanProvideLevel'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1967): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1968): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1972): error C2039: 'eCanProvideLevel_CannotProvide' : is not a member of 'IServerGameDLL'
+          c:\users\hp\documents\hl2sb-src\src\public\eiface.h(434) : see declaration of 'IServerGameDLL'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1972): error C2065: 'eCanProvideLevel_CannotProvide' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1976): error C2039: 'IsManualMapChangeOkay' : is not a member of 'CServerGameDLL'
+          c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.h(63) : see declaration of 'CServerGameDLL'
+c:\users\hp\documents\hl2sb-src\src\game\server\gameinterface.cpp(1980): error C2039: 'IsManualMapChangeOkay' : is not a member of 'CGameRules'
+          c:\users\hp\documents\hl2sb-src\src\game\shared\gamerules.h(114) : see declaration of 'CGameRules'
+  hintsystem.cpp
+  hltvdirector.cpp
+  igamesystem.cpp
+  info_camera_link.cpp
+  info_overlay_accessor.cpp
+  intermission.cpp
+  item_world.cpp
+  lightglow.cpp
+  lights.cpp
+  logic_measure_movement.cpp
+  logic_navigation.cpp
+  logicauto.cpp
+  logicentities.cpp
+  logicrelay.cpp
+  mapentities.cpp
+  mapentities_shared.cpp
+  maprules.cpp
+  MaterialModifyControl.cpp
+  message_entity.cpp
+  modelentities.cpp
+  ModelSoundsCache.cpp
+  monstermaker.cpp
+  movehelper_server.cpp
+  movement.cpp
+  movevars_shared.cpp
+  mp_shareddefs.cpp
+  multiplay_gamerules.cpp
+  ndebugoverlay.cpp
+  npc_vehicledriver.cpp
+  obstacle_pushaway.cpp
+  particle_light.cpp
+  particle_parse.cpp
+  particle_system.cpp
+  particlesystemquery.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\multiplay_gamerules.cpp(404): error C2509: 'FrameUpdatePostEntityThink' : member function not declared in 'CMultiplayRules'
+          c:\users\hp\documents\hl2sb-src\src\game\shared\multiplay_gamerules.h(76) : see declaration of 'CMultiplayRules'
+c:\users\hp\documents\hl2sb-src\src\game\shared\multiplay_gamerules.cpp(404): fatal error C1903: unable to recover from previous error(s); stopping compilation
+  pathcorner.cpp
+  pathtrack.cpp
+  phys_controller.cpp
+  physconstraint.cpp
+  physics.cpp
+  physics_bone_follower.cpp
+  physics_cannister.cpp
+  physics_fx.cpp
+  physics_impact_damage.cpp
+  physics_main.cpp
+  physics_main_shared.cpp
+  physics_npc_solver.cpp
+  physics_prop_ragdoll.cpp
+  physics_saverestore.cpp
+  physics_shared.cpp
+  physobj.cpp
+  player.cpp
+  player_command.cpp
+  player_lagcompensation.cpp
+  player_pickup.cpp
+  player_resource.cpp
+  playerinfomanager.cpp
+  playerlocaldata.cpp
+  plugin_check.cpp
+  point_bonusmaps_accessor.cpp
+  point_camera.cpp
+  point_devshot_camera.cpp
+  point_playermoveconstraint.cpp
+  point_posecontroller.cpp
+  point_spotlight.cpp
+  point_template.cpp
+  pointanglesensor.cpp
+  PointAngularVelocitySensor.cpp
+  pointhurt.cpp
+  pointteleport.cpp
+  precache_register.cpp
+  predictableid.cpp
+  predicted_viewmodel.cpp
+  props.cpp
+  props_shared.cpp
+  querycache.cpp
+  ragdoll_manager.cpp
+  ragdoll_shared.cpp
+  RagdollBoogie.cpp
+  recipientfilter.cpp
+  rope.cpp
+  rope_helpers.cpp
+  saverestore.cpp
+  saverestore_gamedll.cpp
+  SceneCache.cpp
+  sceneentity.cpp
+  sceneentity_shared.cpp
+  scratchpad_gamedll_helpers.cpp
+  scripted.cpp
+  scriptedtarget.cpp
+  sendproxy.cpp
+  sequence_Transitioner.cpp
+  serverbenchmark_base.cpp
+  ServerNetworkProperty.cpp
+  shadowcontrol.cpp
+  simtimer.cpp
+  singleplay_gamerules.cpp
+  SkyCamera.cpp
+  slideshow_display.cpp
+  sound.cpp
+  SoundEmitterSystem.cpp
+  soundent.cpp
+  soundenvelope.cpp
+  SoundParametersInternal.cpp
+  soundscape.cpp
+  soundscape_system.cpp
+  spotlightend.cpp
+  Sprite.cpp
+  sprite_perfmonitor.cpp
+  studio_shared.cpp
+  subs.cpp
+  sun.cpp
+  survival_gamerules.cpp
+  tactical_mission.cpp
+  takedamageinfo.cpp
+  tanktrain.cpp
+  team.cpp
+  team_control_point.cpp
+  team_control_point_master.cpp
+  team_control_point_round.cpp
+  team_objectiveresource.cpp
+  team_spawnpoint.cpp
+  team_train_watcher.cpp
+  teamplay_gamerules.cpp
+  teamplay_round_timer.cpp
+  teamplayroundbased_gamerules.cpp
+  TemplateEntities.cpp
+  tempmonster.cpp
+  tesla.cpp
+  test_ehandle.cpp
+  test_proxytoggle.cpp
+  test_stressentities.cpp
+  testfunctions.cpp
+  testtraceline.cpp
+  textstatsmgr.cpp
+  timedeventmgr.cpp
+  trains.cpp
+  trigger_area_capture.cpp
+  triggers.cpp
+  usercmd.cpp
+  util.cpp
+  util_shared.cpp
+  variant_t.cpp
+  vehicle_base.cpp
+  vehicle_baseserver.cpp
+  vehicle_viewblend_shared.cpp
+  vguiscreen.cpp
+  voice_gamemgr.cpp
+  vote_controller.cpp
+  waterbullet.cpp
+  WaterLODControl.cpp
+  wcedit.cpp
+  weapon_parse.cpp
+  weapon_proficiency.cpp
+  weight_button.cpp
+  world.cpp
+  ai_allymanager.cpp
+  ai_behavior_actbusy.cpp
+  ai_behavior_functank.cpp
+  ai_behavior_holster.cpp
+  ai_behavior_police.cpp
+  ai_goal_police.cpp
+  ai_spotlight.cpp
+  antlion_dust.cpp
+  antlion_maker.cpp
+  ar2_explosion.cpp
+  basebludgeonweapon.cpp
+  basehlcombatweapon.cpp
+  basehlcombatweapon_shared.cpp
+  cbasehelicopter.cpp
+  cbasespriteprojectile.cpp
+  citadel_effects.cpp
+  combine_mine.cpp
+  env_alyxemp.cpp
+  env_headcrabcanister.cpp
+  env_headcrabcanister_shared.cpp
+  env_speaker.cpp
+  env_starfield.cpp
+  func_recharge.cpp
+  func_tank.cpp
+  grenade_ar2.cpp
+  grenade_bugbait.cpp
+  grenade_frag.cpp
+  hl2_ai_network.cpp
+  hl2_eventlog.cpp
+  hl2_gamerules.cpp
+  hl2_player.cpp
+  hl2_playerlocaldata.cpp
+  hl2_triggers.cpp
+  hl2_usermessages.cpp
+  hl_gamemovement.cpp
+  hl_playermove.cpp
+  info_teleporter_countdown.cpp
+  item_ammo.cpp
+  item_battery.cpp
+  item_dynamic_resupply.cpp
+  item_healthkit.cpp
+  item_itemcrate.cpp
+  item_suit.cpp
+  look_door.cpp
+  monster_dummy.cpp
+  npc_alyx.cpp
+  npc_antlion.cpp
+  npc_antlionguard.cpp
+  npc_apcdriver.cpp
+  npc_attackchopper.cpp
+  npc_barnacle.cpp
+  npc_barney.cpp
+  npc_basescanner.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\hl2\npc_antlion.cpp(4036): error C3861: 'AI_GetNearestPlayer': identifier not found
+  npc_BaseZombie.cpp
+  npc_breen.cpp
+  npc_bullseye.cpp
+  npc_citizen17.cpp
+  npc_combine.cpp
+  npc_combinecamera.cpp
+  npc_combinedropship.cpp
+  npc_combinegunship.cpp
+  npc_combines.cpp
+  npc_cranedriver.cpp
+  npc_crow.cpp
+  npc_dog.cpp
+  npc_eli.cpp
+  npc_enemyfinder.cpp
+  npc_fisherman.cpp
+  npc_gman.cpp
+  npc_headcrab.cpp
+  npc_ichthyosaur.cpp
+  npc_kleiner.cpp
+  npc_launcher.cpp
+  npc_manhack.cpp
+  npc_metropolice.cpp
+  npc_monk.cpp
+  npc_mossman.cpp
+  npc_playercompanion.cpp
+  npc_PoisonZombie.cpp
+  npc_rollermine.cpp
+  npc_scanner.cpp
+  npc_stalker.cpp
+  npc_strider.cpp
+  npc_talker.cpp
+  npc_turret_ceiling.cpp
+  npc_turret_floor.cpp
+  npc_turret_ground.cpp
+  npc_vortigaunt_episodic.cpp
+  npc_zombie.cpp
+  point_apc_controller.cpp
+  prop_combine_ball.cpp
+  prop_thumper.cpp
+  proto_sniper.cpp
+  rotorwash.cpp
+  script_intro.cpp
+  script_intro_shared.cpp
+  vehicle_airboat.cpp
+  vehicle_crane.cpp
+  vehicle_prisoner_pod.cpp
+  vehicle_viewcontroller.cpp
+  weapon_annabelle.cpp
+  weapon_bugbait.cpp
+  weapon_cubemap.cpp
+  grenade_beam.cpp
+  grenade_homer.cpp
+  grenade_pathfollower.cpp
+  npc_missiledefense.cpp
+  vehicle_apc.cpp
+  weapon_cguard.cpp
+  weapon_flaregun.cpp
+  hl2mp_bot_temp.cpp
+  hl2mp_client.cpp
+  hl2mp_cvars.cpp
+  hl2mp_gameinterface.cpp
+  hl2mp_gamerules.cpp
+  hl2mp_player.cpp
+  hl2mp_player_shared.cpp
+  hl2mp_weapon_parse.cpp
+  lhl2_player.cpp
+  lhl2mp_player_shared.cpp
+  grenade_satchel.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(47): error C2061: syntax error : identifier 'CHL2MP_Player' (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(57): error C2143: syntax error : missing ';' before '*' (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(57): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(57): warning C4183: 'GetOuter': missing return type; assumed to be a member function returning 'int' (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(71): error C2143: syntax error : missing ';' before '*' (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_player_shared.h(71): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int (..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp)
+  grenade_tripmine.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(173): error C2267: 'CHL2MP_Player___newindex' : static functions with block scope are illegal
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(173): error C2601: 'CHL2MP_Player___newindex' : local function definitions are illegal
+          c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(106): this line contains a '{' which has not yet been matched
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(260): fatal error C1075: end of file found before the left brace '{' at 'c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\lhl2mp_player_shared.cpp(173)' was matched
+  te_hl2mp_shotgun_shot.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\hl2mp\hl2mp_gamerules.cpp(379): error C2660: 'CTeamplayRules::FPlayerCanTakeDamage' : function does not take 2 arguments
+  weapon_357.cpp
+  weapon_ar2.cpp
+  weapon_crossbow.cpp
+  weapon_crowbar.cpp
+  weapon_frag.cpp
+  weapon_hl2mpbase.cpp
+  weapon_hl2mpbase_machinegun.cpp
+  weapon_hl2mpbase_scriptedweapon.cpp
+  weapon_hl2mpbasebasebludgeon.cpp
+  weapon_hl2mpbasehlmpcombatweapon.cpp
+  weapon_physcannon.cpp
+  weapon_pistol.cpp
+  weapon_rpg.cpp
+  weapon_shotgun.cpp
+  weapon_slam.cpp
+  weapon_smg1.cpp
+  weapon_stunstick.cpp
+  basescripted.cpp
+  basescriptedtrigger.cpp
+  lbaseanimating.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\lbaseanimating.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\server\lbaseanimating.cpp(7): warning C4603: 'lbaseanimating_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\server\lbaseanimating.cpp(9) : use of precompiled header
+  lbasecombatweapon_shared.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.cpp(7): warning C4603: 'lbasecombatweapon_shared_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lbasecombatweapon_shared.cpp(9) : use of precompiled header
+  lbaseentity.cpp
+  lbaseentity_shared.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\lbaseentity.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\server\lbaseentity.cpp(7): warning C4603: 'lbaseentity_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\server\lbaseentity.cpp(9) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\game\shared\lbaseentity_shared.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lbaseentity_shared.cpp(7): warning C4603: 'lbaseentity_shared_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lbaseentity_shared.cpp(9) : use of precompiled header
+  lbaseplayer_shared.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\lbaseplayer_shared.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lbaseplayer_shared.cpp(8): warning C4603: 'lbaseplayer_shared_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lbaseplayer_shared.cpp(10) : use of precompiled header
+  lbspflags.cpp
+  lColor.cpp
+c:\users\hp\documents\hl2sb-src\src\public\lcolor.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lcolor.cpp(8): warning C4603: 'lColor_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lcolor.cpp(10) : use of precompiled header
+  lconvar.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\lconvar.cpp(12): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\tier1\lconvar.cpp(12): warning C4603: 'lconvar_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\lconvar.cpp(14) : use of precompiled header
+  ldbg.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier0\ldbg.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\tier0\ldbg.cpp(8): warning C4603: 'ldbg_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\ldbg.cpp(10) : use of precompiled header
+  leffect_dispatch_data.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\leffect_dispatch_data.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\leffect_dispatch_data.cpp(8): warning C4603: 'leffect_dispatch_data_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\leffect_dispatch_data.cpp(10) : use of precompiled header
+  leiface.cpp
+c:\users\hp\documents\hl2sb-src\src\public\leiface.cpp(9): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\leiface.cpp(9): warning C4603: 'leiface_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\leiface.cpp(11) : use of precompiled header
+  lentitylist.cpp
+  lfilesystem.cpp
+c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(8): warning C4603: 'lfilesystem_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lfilesystem.cpp(10) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(8): warning C4603: 'lentitylist_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\server\lentitylist.cpp(10) : use of precompiled header
+  lgametrace.cpp
+  lglobalvars_base.cpp
+c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(7): warning C4603: 'lglobalvars_base_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lglobalvars_base.cpp(9) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\lgametrace.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lgametrace.cpp(7): warning C4603: 'lgametrace_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lgametrace.cpp(9) : use of precompiled header
+  liconvar.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\liconvar.cpp(12): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\tier1\liconvar.cpp(12): warning C4603: 'liconvar_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\liconvar.cpp(14) : use of precompiled header
+  licvar.cpp
+  limaterial.cpp
+  limovehelper.cpp
+c:\users\hp\documents\hl2sb-src\src\public\licvar.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\licvar.cpp(7): warning C4603: 'leiface_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\licvar.cpp(9) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\materialsystem\limaterial.cpp(9): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\materialsystem\limaterial.cpp(9): warning C4603: 'limaterial_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\materialsystem\limaterial.cpp(11) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\game\shared\limovehelper.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\limovehelper.cpp(8): warning C4603: 'limovehelper_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\limovehelper.cpp(10) : use of precompiled header
+  lin_buttons.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\lin_buttons.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lin_buttons.cpp(8): warning C4603: 'lin_buttons_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lin_buttons.cpp(10) : use of precompiled header
+  linetchannelinfo.cpp
+  lipredictionsystem.cpp
+  lisoundemittersystembase.cpp
+c:\users\hp\documents\hl2sb-src\src\public\linetchannelinfo.cpp(13): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\linetchannelinfo.cpp(13): warning C4603: 'linetchannelinfo_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\linetchannelinfo.cpp(15) : use of precompiled header
+  listeamfriends.cpp
+c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(8): warning C4603: 'lipredictionsystem_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lipredictionsystem.cpp(10) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\soundemittersystem\lisoundemittersystembase.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\soundemittersystem\lisoundemittersystembase.cpp(8): warning C4603: 'lisoundemittersystembase_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\soundemittersystem\lisoundemittersystembase.cpp(10) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\steam\listeamfriends.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\steam\listeamfriends.cpp(8): warning C4603: 'listeamfriends_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\steam\listeamfriends.cpp(10) : use of precompiled header
+  livdebugoverlay.cpp
+  LKeyValues.cpp
+  lmathlib.cpp
+c:\users\hp\documents\hl2sb-src\src\public\engine\livdebugoverlay.cpp(15): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\engine\livdebugoverlay.cpp(15): warning C4603: 'lglobalvars_base_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\engine\livdebugoverlay.cpp(17) : use of precompiled header
+  lnetworkstringtabledefs.cpp
+c:\users\hp\documents\hl2sb-src\src\public\mathlib\lmathlib.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\mathlib\lmathlib.cpp(7): warning C4603: 'lmathlib_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\mathlib\lmathlib.cpp(9) : use of precompiled header
+  lperformance.cpp
+c:\users\hp\documents\hl2sb-src\src\public\lnetworkstringtabledefs.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lnetworkstringtabledefs.cpp(8): warning C4603: 'lnetworkstringtabledefs_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lnetworkstringtabledefs.cpp(10) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\vphysics\lperformance.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\vphysics\lperformance.cpp(7): warning C4603: 'lperformance_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\vphysics\lperformance.cpp(9) : use of precompiled header
+  lplayer.cpp
+  lrandom.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(7): warning C4603: 'lplayer_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\server\lplayer.cpp(9) : use of precompiled header
+  lrecipientfilter.cpp
+  lshareddefs.cpp
+c:\users\hp\documents\hl2sb-src\src\public\vstdlib\lrandom.cpp(9): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\vstdlib\lrandom.cpp(9): warning C4603: 'lrandom_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\vstdlib\lrandom.cpp(11) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(8): warning C4603: 'lshareddefs_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lshareddefs.cpp(10) : use of precompiled header
+  lsrcinit.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\lrecipientfilter.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\server\lrecipientfilter.cpp(8): warning C4603: 'lrecipientfilter_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\server\lrecipientfilter.cpp(10) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\game\shared\lsrcinit.cpp(9): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lsrcinit.cpp(9): warning C4603: 'lsrcinit_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lsrcinit.cpp(11) : use of precompiled header
+  lsteam_api.cpp
+  ltakedamageinfo.cpp
+  luacachefile.cpp
+c:\users\hp\documents\hl2sb-src\src\public\steam\lsteam_api.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\steam\lsteam_api.cpp(7): warning C4603: 'lsteam_api_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\steam\lsteam_api.cpp(9) : use of precompiled header
+  luamanager.cpp
+  lutil.cpp
+c:\users\hp\documents\hl2sb-src\src\game\server\lutil.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\server\lutil.cpp(8): warning C4603: 'lutil_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\server\lutil.cpp(10) : use of precompiled header
+  lutil_shared.cpp
+  lvector.cpp
+c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvector.cpp(9): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvector.cpp(9): warning C4603: 'lvector_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvector.cpp(11) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\game\shared\lutil_shared.cpp(7): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\game\shared\lutil_shared.cpp(7): warning C4603: 'lutil_shared_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\game\shared\lutil_shared.cpp(9) : use of precompiled header
+  lvmatrix.cpp
+c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvmatrix.cpp(26): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvmatrix.cpp(26): warning C4603: 'lvmatrix_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\mathlib\lvmatrix.cpp(28) : use of precompiled header
+  lvphysics_interface.cpp
+  XUnzip.cpp
+c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(8): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(8): warning C4603: 'lvphysics_interface_cpp' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\lvphysics_interface.cpp(10) : use of precompiled header
+  zip_utils.cpp
+  nav_area.cpp
+  nav_colors.cpp
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(99): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(99): warning C4627: '#include <windows.h>': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(102): warning C4627: '#include <fcntl.h>': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(103): warning C4627: '#include <sys/stat.h>': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(104): warning C4627: '#include <sys/time.h>': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(105): warning C4627: '#include <unistd.h>': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(107): warning C4627: '#include <time.h>': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(12): error C2220: warning treated as error - no 'object' file generated
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(12): warning C4627: '#include <windows.h>': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(111): warning C4627: '#include "zip/XUnzip.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(18): warning C4627: '#include "utlbuffer.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(20): warning C4627: '#include "zip_utils.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(23): warning C4627: '#include "byteswap.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(24): warning C4627: '#include "utlstring.h"': skipped when looking for precompiled header use
+          Add directive to 'cbase.h' or rebuild precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.cpp(1722): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "cbase.h"' to your source?
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(97): warning C4603: 'STRICT' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(114) : use of precompiled header
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(98): warning C4603: 'WIN32_LEAN_AND_MEAN' : macro is not defined or definition is different after precompiled header use
+          Add macro to precompiled header instead of defining here
+          c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(114) : use of precompiled header
+  nav_edit.cpp
+  nav_entities.cpp
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2779): error C2061: syntax error : identifier 'DWORD'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2781): error C2065: 'flags' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2781): error C2065: 'ZIP_HANDLE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2781): error C2065: 'ZIP_FILENAME' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2781): error C2065: 'ZIP_MEMORY' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2783): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2783): error C2065: 'ZR_ARGS' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2787): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2787): error C2065: 'ZR_OK' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2788): error C2065: 'flags' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2788): error C2065: 'ZIP_HANDLE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2788): error C2065: 'ZIP_FILENAME' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2790): error C2065: 'flags' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2790): error C2065: 'ZIP_HANDLE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2795): error C2065: 'DUPLICATE_SAME_ACCESS' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2795): warning C4805: '==' : unsafe mix of type 'unknown-type' and type 'bool' in operation
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2795): error C3861: 'DuplicateHandle': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2795): error C3861: 'GetCurrentProcess': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2802): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2802): error C2065: 'ZR_NODUPH' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2809): error C2065: 'GENERIC_READ' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2809): error C2065: 'FILE_SHARE_READ' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2810): error C2065: 'OPEN_EXISTING' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2810): error C2065: 'FILE_ATTRIBUTE_NORMAL' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2809): error C3861: 'CreateFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2814): error C2065: 'INVALID_HANDLE_VALUE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2816): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2816): error C2065: 'ZR_NOFILE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2821): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2821): error C2146: syntax error : missing ';' before identifier 'type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2821): error C2065: 'type' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2821): error C3861: 'GetFileType': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2822): error C2065: 'type' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2822): error C2065: 'FILE_TYPE_DISK' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2830): error C2065: 'flags' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2830): error C2065: 'ZIP_HANDLE' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2830): error C2065: 'ZIP_FILENAME' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2838): error C2065: 'FILE_CURRENT' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2838): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2850): error C2065: 'err' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2850): error C2065: 'ZR_OK' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2858): error C3861: 'CloseHandle': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2871): error C2065: 'FILE_CURRENT' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2871): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2880): error C2065: 'FILE_BEGIN' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2880): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2881): error C2065: 'FILE_CURRENT' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2881): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2882): error C2065: 'FILE_END' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2882): error C3861: 'SetFilePointer': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2902): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2902): error C2146: syntax error : missing ';' before identifier 'red'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2902): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2902): error C3861: 'ReadFile': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2904): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2907): error C2065: 'DWORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2907): error C2146: syntax error : missing ';' before identifier 'red'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2907): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2908): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(2909): error C2065: 'red' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3938): error C2146: syntax error : missing ';' before identifier 'timet2filetime'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3938): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3939): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3940): error C3861: 'gmtime': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3941): error C2065: 'SYSTEMTIME' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3941): error C2146: syntax error : missing ';' before identifier 'st'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3941): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3942): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3942): error C2228: left of '.wYear' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3942): error C2065: 'WORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3942): error C2027: use of undefined type 'tm'
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3942): error C2227: left of '->tm_year' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3943): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3943): error C2228: left of '.wMonth' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3943): error C2065: 'WORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3943): error C2027: use of undefined type 'tm'
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3943): error C2227: left of '->tm_mon' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3944): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3944): error C2228: left of '.wDay' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3944): error C2065: 'WORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3944): error C2027: use of undefined type 'tm'
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3944): error C2227: left of '->tm_mday' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3945): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3945): error C2228: left of '.wHour' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3945): error C2065: 'WORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3945): error C2027: use of undefined type 'tm'
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3945): error C2227: left of '->tm_hour' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3946): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3946): error C2228: left of '.wMinute' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3946): error C2065: 'WORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3946): error C2027: use of undefined type 'tm'
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3946): error C2227: left of '->tm_min' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3947): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3947): error C2228: left of '.wSecond' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3947): error C2065: 'WORD' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3947): error C2027: use of undefined type 'tm'
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\platform.h(1100) : see declaration of 'tm'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3947): error C2227: left of '->tm_sec' must point to class/struct/union/generic type
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3948): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3948): error C2228: left of '.wMilliseconds' must have class/struct/union
+          type is 'unknown-type'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3949): error C2146: syntax error : missing ';' before identifier 'ft'
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3949): error C2065: 'ft' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3950): error C2065: 'st' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3950): error C2065: 'ft' : undeclared identifier
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3950): error C3861: 'SystemTimeToFileTime': identifier not found
+c:\users\hp\documents\hl2sb-src\src\public\xunzip.cpp(3950): fatal error C1003: error count exceeds 100; stopping compilation
+  nav_file.cpp
+  nav_generate.cpp
+  nav_ladder.cpp
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winbase.h(7558): error C2220: warning treated as error - no 'object' file generated (..\..\game\shared\luamanager.cpp)
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winbase.h(7558): warning C4005: 'GetCommandLine' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(172) : see previous definition of 'GetCommandLine'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\wincon.h(328): warning C4005: 'ReadConsoleInput' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(238) : see previous definition of 'ReadConsoleInput'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winreg.h(290): warning C4005: 'RegCreateKey' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(220) : see previous definition of 'RegCreateKey'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winreg.h(324): warning C4005: 'RegCreateKeyEx' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(214) : see previous definition of 'RegCreateKeyEx'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winreg.h(636): warning C4005: 'RegOpenKey' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(184) : see previous definition of 'RegOpenKey'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winreg.h(662): warning C4005: 'RegOpenKeyEx' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(178) : see previous definition of 'RegOpenKeyEx'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winreg.h(756): warning C4005: 'RegQueryValue' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(208) : see previous definition of 'RegQueryValue'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winreg.h(813): warning C4005: 'RegQueryValueEx' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(202) : see previous definition of 'RegQueryValueEx'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winreg.h(929): warning C4005: 'RegSetValue' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(196) : see previous definition of 'RegSetValue'
+c:\program files (x86)\microsoft sdks\windows\v7.1a\include\winreg.h(958): warning C4005: 'RegSetValueEx' : macro redefinition (..\..\game\shared\luamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\public\tier0\protected_things.h(190) : see previous definition of 'RegSetValueEx'
+  nav_merge.cpp
+  nav_mesh.cpp
+  nav_mesh_factory.cpp
+  nav_node.cpp
+  nav_simplify.cpp
+  basetempentity.cpp
+  event_tempentity_tester.cpp
+  movie_explosion.cpp
+  particle_fire.cpp
+  particle_smokegrenade.cpp
+  plasma.cpp
+  smoke_trail.cpp
+  smokestack.cpp
+  SpriteTrail.cpp
+  steamjet.cpp
+  te.cpp
+  te_armorricochet.cpp
+  te_basebeam.cpp
+  te_beamentpoint.cpp
+  te_beaments.cpp
+  te_beamfollow.cpp
+  te_beamlaser.cpp
+  te_beampoints.cpp
+  te_beamring.cpp
+  te_beamringpoint.cpp
+  te_beamspline.cpp
+  te_bloodsprite.cpp
+  te_bloodstream.cpp
+  te_breakmodel.cpp
+  te_bspdecal.cpp
+  te_bubbles.cpp
+  te_bubbletrail.cpp
+  te_clientprojectile.cpp
+  te_decal.cpp
+  te_dynamiclight.cpp
+  te_effect_dispatch.cpp
+  te_energysplash.cpp
+  te_explosion.cpp
+  te_fizz.cpp
+  te_footprintdecal.cpp
+  te_gaussexplosion.cpp
+  te_glassshatter.cpp
+  te_glowsprite.cpp
+  te_impact.cpp
+  te_killplayerattachments.cpp
+  te_largefunnel.cpp
+  te_muzzleflash.cpp
+  te_particlesystem.cpp
+  te_physicsprop.cpp
+  te_playerdecal.cpp
+  te_projecteddecal.cpp
+  te_showline.cpp
+  te_smoke.cpp
+  te_sparks.cpp
+  te_sprite.cpp
+  te_spritespray.cpp
+  te_worlddecal.cpp
+  usermessages.cpp
+  entity_tools_server.cpp
+  toolframework_server.cpp
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.h(21): fatal error C1014: too many include files : depth = 1024 (..\..\game\shared\luacachefile.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\zip_utils.h(21): fatal error C1014: too many include files : depth = 1024 (..\..\game\shared\luamanager.cpp)

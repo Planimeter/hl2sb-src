@@ -15,9 +15,7 @@
 #include "basetypes.h"
 #include "dbgflag.h"
 #include "platform.h"
-#include <math.h>
-#include <stdio.h>
-#include <stdarg.h>
+#include "..\lua-5.1.5\etc\lua.hpp"
 
 #ifdef POSIX
 #define __cdecl
@@ -655,7 +653,7 @@ public:
 		va_list arg_ptr;
 
 		va_start(arg_ptr, pszFormat);
-		_vsntprintf(m_szBuf, sizeof(m_szBuf)-1, pszFormat, arg_ptr);
+		//_vsntprintf(m_szBuf, sizeof(m_szBuf)-1, pszFormat, arg_ptr);
 		va_end(arg_ptr);
 
 		m_szBuf[sizeof(m_szBuf)-1] = 0;

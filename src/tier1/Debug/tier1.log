@@ -11,30 +11,515 @@
   diff.cpp
   generichash.cpp
   ilocalize.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (byteswap.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\datamap.h(424) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (byteswap.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (byteswap.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   interface.cpp
   KeyValues.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (commandbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\datamap.h(424) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (commandbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (commandbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utllinkedlist.h(673): error C2027: use of undefined type 'type_info' (commandbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utllinkedlist.h(659) : while compiling class template member function 'int CUtlLinkedList<T,int,true,int,CUtlFixedMemory<UtlLinkedListElem_t<T,int>>>::AllocInternal(bool)'
+          with
+          [
+              T=CCommandBuffer::Command_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utllinkedlist.h(721) : see reference to function template instantiation 'int CUtlLinkedList<T,int,true,int,CUtlFixedMemory<UtlLinkedListElem_t<T,int>>>::AllocInternal(bool)' being compiled
+          with
+          [
+              T=CCommandBuffer::Command_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utllinkedlist.h(433) : while compiling class template member function 'CUtlLinkedList<T,int,true,int,CUtlFixedMemory<UtlLinkedListElem_t<T,int>>>::CUtlLinkedList(int,int)'
+          with
+          [
+              T=CCommandBuffer::Command_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utllinkedlist.h(392) : see reference to function template instantiation 'CUtlLinkedList<T,int,true,int,CUtlFixedMemory<UtlLinkedListElem_t<T,int>>>::CUtlLinkedList(int,int)' being compiled
+          with
+          [
+              T=CCommandBuffer::Command_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utllinkedlist.h(389) : see reference to class template instantiation 'CUtlLinkedList<T,int,true,int,CUtlFixedMemory<UtlLinkedListElem_t<T,int>>>' being compiled
+          with
+          [
+              T=CCommandBuffer::Command_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\commandbuffer.h(124) : see reference to class template instantiation 'CUtlFixedLinkedList<CCommandBuffer::Command_t>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utllinkedlist.h(673): error C2228: left of '.name' must have class/struct/union (commandbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utllinkedlist.h(673): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (commandbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   kvpacker.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (convar.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\datamap.h(424) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (convar.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (convar.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   lzmaDecoder.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (datamanager.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<CUtlMultiList<CDataManagerBase::resource_lru_element_t,unsigned short>::ListElem_t,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmultilist.h(182) : see reference to function template instantiation 'CUtlMemory<CUtlMultiList<CDataManagerBase::resource_lru_element_t,unsigned short>::ListElem_t,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmultilist.h(180) : while compiling class template member function 'CUtlMultiList<CDataManagerBase::resource_lru_element_t,unsigned short>::CUtlMultiList(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\datamanager.cpp(17) : see reference to function template instantiation 'CUtlMultiList<CDataManagerBase::resource_lru_element_t,unsigned short>::CUtlMultiList(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\datamanager.h(120) : see reference to class template instantiation 'CUtlMultiList<CDataManagerBase::resource_lru_element_t,unsigned short>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (datamanager.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (datamanager.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   mempool.cpp
   memstack.cpp
   NetAdr.cpp
   newbitbuf.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2027: use of undefined type 'type_info' (ilocalize.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(711) : while compiling class template member function 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(879) : see reference to function template instantiation 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(681) : while compiling class template member function 'int CUtlVector<char *,CUtlMemory<char *,int>>::Count(void) const'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(858) : see reference to function template instantiation 'int CUtlVector<char *,CUtlMemory<char *,int>>::Count(void) const' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(568) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::~CUtlVector(void)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1179) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::~CUtlVector(void)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2228: left of '.name' must have class/struct/union (ilocalize.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (ilocalize.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   rangecheckedvar.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (kvpacker.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\datamap.h(424) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (kvpacker.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (kvpacker.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   reliabletimer.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2027: use of undefined type 'type_info' (mempool.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(711) : while compiling class template member function 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(879) : see reference to function template instantiation 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(681) : while compiling class template member function 'int CUtlVector<char *,CUtlMemory<char *,int>>::Count(void) const'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(858) : see reference to function template instantiation 'int CUtlVector<char *,CUtlMemory<char *,int>>::Count(void) const' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(568) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::~CUtlVector(void)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1179) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::~CUtlVector(void)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2228: left of '.name' must have class/struct/union (mempool.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (mempool.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   snappy-sinksource.cpp
   snappy-stubs-internal.cpp
   snappy.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (memstack.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<UtlRBTreeNode_t<T,I>,I>::CUtlMemory(int,int)'
+          with
+          [
+              T=CUtlMap<void *,MemAllocFileLine_t,int>::Node_t
+  ,            I=int
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlrbtree.h(397) : see reference to function template instantiation 'CUtlMemory<UtlRBTreeNode_t<T,I>,I>::CUtlMemory(int,int)' being compiled
+          with
+          [
+              T=CUtlMap<void *,MemAllocFileLine_t,int>::Node_t
+  ,            I=int
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlrbtree.h(390) : while compiling class template member function 'CUtlRBTree<CUtlMap<void *,MemAllocFileLine_t,int>::Node_t,I,CUtlMap<void *,MemAllocFileLine_t,I>::CKeyLess,CUtlMemory<UtlRBTreeNode_t<T,I>,I>>::CUtlRBTree(const CUtlMap<void *,MemAllocFileLine_t,I>::CKeyLess &)'
+          with
+          [
+              I=int
+  ,            T=CUtlMap<void *,MemAllocFileLine_t,int>::Node_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmap.h(70) : see reference to function template instantiation 'CUtlRBTree<CUtlMap<void *,MemAllocFileLine_t,int>::Node_t,I,CUtlMap<void *,MemAllocFileLine_t,I>::CKeyLess,CUtlMemory<UtlRBTreeNode_t<T,I>,I>>::CUtlRBTree(const CUtlMap<void *,MemAllocFileLine_t,I>::CKeyLess &)' being compiled
+          with
+          [
+              I=int
+  ,            T=CUtlMap<void *,MemAllocFileLine_t,int>::Node_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmap.h(215) : see reference to class template instantiation 'CUtlRBTree<CUtlMap<void *,MemAllocFileLine_t,int>::Node_t,I,CUtlMap<void *,MemAllocFileLine_t,I>::CKeyLess,CUtlMemory<UtlRBTreeNode_t<T,I>,I>>' being compiled
+          with
+          [
+              I=int
+  ,            T=CUtlMap<void *,MemAllocFileLine_t,int>::Node_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\tier1\memstack.cpp(29) : see reference to class template instantiation 'CUtlMap<void *,MemAllocFileLine_t,int>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (memstack.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (memstack.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   sparsematrix.cpp
   splitstring.cpp
   stringpool.cpp
   strtools.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (KeyValues.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\datamap.h(424) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (KeyValues.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (KeyValues.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2027: use of undefined type 'type_info' (KeyValues.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(711) : while compiling class template member function 'void CUtlVector<KeyValues *,CUtlMemory<T,int>>::GrowVector(int)'
+          with
+          [
+              T=KeyValues *
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlsortvector.h(193) : see reference to function template instantiation 'void CUtlVector<KeyValues *,CUtlMemory<T,int>>::GrowVector(int)' being compiled
+          with
+          [
+              T=KeyValues *
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<KeyValues *,CUtlMemory<T,int>>::CUtlVector(int,int)'
+          with
+          [
+              T=KeyValues *
+          ]
+          c:\users\hp\documents\hl2sb-src\src\tier1\keyvalues.cpp(2109) : see reference to function template instantiation 'CUtlVector<KeyValues *,CUtlMemory<T,int>>::CUtlVector(int,int)' being compiled
+          with
+          [
+              T=KeyValues *
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlsortvector.h(47) : see reference to class template instantiation 'CUtlVector<KeyValues *,CUtlMemory<T,int>>' being compiled
+          with
+          [
+              T=KeyValues *
+          ]
+          c:\users\hp\documents\hl2sb-src\src\tier1\keyvalues.cpp(762) : see reference to class template instantiation 'CUtlSortVector<KeyValues *,CUtlSortVectorKeyValuesByName,CUtlVector<KeyValues *,CUtlMemory<T,int>>>' being compiled
+          with
+          [
+              T=KeyValues *
+          ]
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2228: left of '.name' must have class/struct/union (KeyValues.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (KeyValues.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
   tier1.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2027: use of undefined type 'type_info' (reliabletimer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(711) : while compiling class template member function 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(879) : see reference to function template instantiation 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(681) : while compiling class template member function 'int CUtlVector<char *,CUtlMemory<char *,int>>::Count(void) const'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(858) : see reference to function template instantiation 'int CUtlVector<char *,CUtlMemory<char *,int>>::Count(void) const' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(568) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::~CUtlVector(void)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1179) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::~CUtlVector(void)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2228: left of '.name' must have class/struct/union (reliabletimer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (reliabletimer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   tokenreader.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (splitstring.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\splitstring.cpp(11) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (splitstring.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (splitstring.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   uniqueid.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2027: use of undefined type 'type_info' (sparsematrix.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(711) : while compiling class template member function 'void CUtlVector<CSparseMatrix::NonZeroValueDescriptor_t,CUtlMemory<T,int>>::GrowVector(int)'
+          with
+          [
+              T=CSparseMatrix::NonZeroValueDescriptor_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(879) : see reference to function template instantiation 'void CUtlVector<CSparseMatrix::NonZeroValueDescriptor_t,CUtlMemory<T,int>>::GrowVector(int)' being compiled
+          with
+          [
+              T=CSparseMatrix::NonZeroValueDescriptor_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(612) : while compiling class template member function 'const CSparseMatrix::NonZeroValueDescriptor_t &CUtlVector<CSparseMatrix::NonZeroValueDescriptor_t,CUtlMemory<T,int>>::operator [](int) const'
+          with
+          [
+              T=CSparseMatrix::NonZeroValueDescriptor_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\sparsematrix.h(58) : see reference to function template instantiation 'const CSparseMatrix::NonZeroValueDescriptor_t &CUtlVector<CSparseMatrix::NonZeroValueDescriptor_t,CUtlMemory<T,int>>::operator [](int) const' being compiled
+          with
+          [
+              T=CSparseMatrix::NonZeroValueDescriptor_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\sparsematrix.h(34) : see reference to class template instantiation 'CUtlVector<CSparseMatrix::NonZeroValueDescriptor_t,CUtlMemory<T,int>>' being compiled
+          with
+          [
+              T=CSparseMatrix::NonZeroValueDescriptor_t
+          ]
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2228: left of '.name' must have class/struct/union (sparsematrix.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (sparsematrix.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   utlbinaryblock.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2027: use of undefined type 'type_info' (tier1.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(711) : while compiling class template member function 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(879) : see reference to function template instantiation 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(681) : while compiling class template member function 'int CUtlVector<char *,CUtlMemory<char *,int>>::Count(void) const'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(858) : see reference to function template instantiation 'int CUtlVector<char *,CUtlMemory<char *,int>>::Count(void) const' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(568) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::~CUtlVector(void)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1179) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::~CUtlVector(void)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2228: left of '.name' must have class/struct/union (tier1.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (stringpool.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<UtlRBTreeNode_t<T,I>,I>::CUtlMemory(int,int)'
+          with
+          [
+              T=const char *
+  ,            I=unsigned short
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlrbtree.h(385) : see reference to function template instantiation 'CUtlMemory<UtlRBTreeNode_t<T,I>,I>::CUtlMemory(int,int)' being compiled
+          with
+          [
+              T=const char *
+  ,            I=unsigned short
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlrbtree.h(378) : while compiling class template member function 'CUtlRBTree<const char *,unsigned short,bool (__cdecl *)(const T &,const T &),CUtlMemory<UtlRBTreeNode_t<T,I>,I>>::CUtlRBTree(int,int,bool (__cdecl *const &)(const T &,const T &))'
+          with
+          [
+              T=const char *
+  ,            I=unsigned short
+          ]
+          c:\users\hp\documents\hl2sb-src\src\tier1\stringpool.cpp(31) : see reference to function template instantiation 'CUtlRBTree<const char *,unsigned short,bool (__cdecl *)(const T &,const T &),CUtlMemory<UtlRBTreeNode_t<T,I>,I>>::CUtlRBTree(int,int,bool (__cdecl *const &)(const T &,const T &))' being compiled
+          with
+          [
+              T=const char *
+  ,            I=unsigned short
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\stringpool.h(40) : see reference to class template instantiation 'CUtlRBTree<const char *,unsigned short,bool (__cdecl *)(const T &,const T &),CUtlMemory<UtlRBTreeNode_t<T,I>,I>>' being compiled
+          with
+          [
+              T=const char *
+  ,            I=unsigned short
+          ]
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(714): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (tier1.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (stringpool.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (stringpool.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
   utlbuffer.cpp
   utlbufferutil.cpp
   utlstring.cpp
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (strtools.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<UtlRBTreeNode_t<T,I>,I>::CUtlMemory(int,int)'
+          with
+          [
+              T=CUtlSymbolTable::CStringPoolIndex
+  ,            I=unsigned short
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlrbtree.h(385) : see reference to function template instantiation 'CUtlMemory<UtlRBTreeNode_t<T,I>,I>::CUtlMemory(int,int)' being compiled
+          with
+          [
+              T=CUtlSymbolTable::CStringPoolIndex
+  ,            I=unsigned short
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlrbtree.h(378) : while compiling class template member function 'CUtlRBTree<CUtlSymbolTable::CStringPoolIndex,unsigned short,CUtlSymbolTable::CLess,CUtlMemory<UtlRBTreeNode_t<T,I>,I>>::CUtlRBTree(int,int,const CUtlSymbolTable::CLess &)'
+          with
+          [
+              T=CUtlSymbolTable::CStringPoolIndex
+  ,            I=unsigned short
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlsymbol.h(149) : see reference to function template instantiation 'CUtlRBTree<CUtlSymbolTable::CStringPoolIndex,unsigned short,CUtlSymbolTable::CLess,CUtlMemory<UtlRBTreeNode_t<T,I>,I>>::CUtlRBTree(int,int,const CUtlSymbolTable::CLess &)' being compiled
+          with
+          [
+              T=CUtlSymbolTable::CStringPoolIndex
+  ,            I=unsigned short
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlsymbol.h(147) : see reference to class template instantiation 'CUtlRBTree<CUtlSymbolTable::CStringPoolIndex,unsigned short,CUtlSymbolTable::CLess,CUtlMemory<UtlRBTreeNode_t<T,I>,I>>' being compiled
+          with
+          [
+              T=CUtlSymbolTable::CStringPoolIndex
+  ,            I=unsigned short
+          ]
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (strtools.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (strtools.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
   utlsymbol.cpp
-  processor_detect.cpp
-  tier1.vcxproj -> C:\Users\hp\Documents\hl2sb-src\src\tier1\..\lib\public\.\tier1.lib
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (utlbinaryblock.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<unsigned char,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\utlbinaryblock.cpp(13) : see reference to function template instantiation 'CUtlMemory<unsigned char,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlbinaryblock.h(52) : see reference to class template instantiation 'CUtlMemory<unsigned char,int>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (utlbinaryblock.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbinaryblock.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(741): error C2027: use of undefined type 'type_info' (utlbinaryblock.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(695) : while compiling class template member function 'void CUtlMemory<unsigned char,int>::Grow(int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\utlbinaryblock.cpp(54) : see reference to function template instantiation 'void CUtlMemory<unsigned char,int>::Grow(int)' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(741): error C2228: left of '.name' must have class/struct/union (utlbinaryblock.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(741): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbinaryblock.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(747): error C2027: use of undefined type 'type_info' (utlbinaryblock.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(747): error C2228: left of '.name' must have class/struct/union (utlbinaryblock.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(747): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbinaryblock.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (uniqueid.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\datamap.h(424) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (uniqueid.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (uniqueid.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (utlbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<uint8,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\utlbuffer.cpp(199) : see reference to function template instantiation 'CUtlMemory<uint8,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlbuffer.h(396) : see reference to class template instantiation 'CUtlMemory<uint8,int>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (utlbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(461): error C2027: use of undefined type 'type_info' (utlbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(451) : while compiling class template member function 'void CUtlMemory<uint8,int>::Init(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\utlbuffer.cpp(201) : see reference to function template instantiation 'void CUtlMemory<uint8,int>::Init(int,int)' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(461): error C2228: left of '.name' must have class/struct/union (utlbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(461): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(491): error C2027: use of undefined type 'type_info' (utlbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(483) : while compiling class template member function 'void CUtlMemory<uint8,int>::ConvertToGrowableMemory(int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\utlbuffer.cpp(339) : see reference to function template instantiation 'void CUtlMemory<uint8,int>::ConvertToGrowableMemory(int)' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(491): error C2228: left of '.name' must have class/struct/union (utlbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(491): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(741): error C2027: use of undefined type 'type_info' (utlbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(695) : while compiling class template member function 'void CUtlMemory<uint8,int>::Grow(int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\utlbuffer.cpp(1508) : see reference to function template instantiation 'void CUtlMemory<uint8,int>::Grow(int)' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(741): error C2228: left of '.name' must have class/struct/union (utlbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(741): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(747): error C2027: use of undefined type 'type_info' (utlbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(747): error C2228: left of '.name' must have class/struct/union (utlbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(747): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(778): error C2027: use of undefined type 'type_info' (utlbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(759) : while compiling class template member function 'void CUtlMemory<uint8,int>::EnsureCapacity(int)'
+          c:\users\hp\documents\hl2sb-src\src\tier1\utlbuffer.cpp(347) : see reference to function template instantiation 'void CUtlMemory<uint8,int>::EnsureCapacity(int)' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(778): error C2228: left of '.name' must have class/struct/union (utlbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(778): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(783): error C2027: use of undefined type 'type_info' (utlbuffer.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(783): error C2228: left of '.name' must have class/struct/union (utlbuffer.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(783): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbuffer.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (utlbufferutil.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\datamap.h(424) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (utlbufferutil.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlbufferutil.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (utlsymbol.cpp)
+          c:\users\hp\documents\hl2sb-src\src\tier1\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<CUtlHashtableEntry<KeyT,ValueT>,int>::CUtlMemory(int,int)'
+          with
+          [
+              KeyT=CUtlStableHashtable<CUtlConstString,empty_t,DefaultHashFunctor<CUtlConstString>,DefaultEqualFunctor<CUtlConstString>,uint16,const char *>::IndirectIndex
+  ,            ValueT=empty_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlhashtable.h(158) : see reference to function template instantiation 'CUtlMemory<CUtlHashtableEntry<KeyT,ValueT>,int>::CUtlMemory(int,int)' being compiled
+          with
+          [
+              KeyT=CUtlStableHashtable<CUtlConstString,empty_t,DefaultHashFunctor<CUtlConstString>,DefaultEqualFunctor<CUtlConstString>,uint16,const char *>::IndirectIndex
+  ,            ValueT=empty_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlhashtable.h(124) : see reference to class template instantiation 'CUtlMemory<CUtlHashtableEntry<KeyT,ValueT>,int>' being compiled
+          with
+          [
+              KeyT=CUtlStableHashtable<CUtlConstString,empty_t,DefaultHashFunctor<CUtlConstString>,DefaultEqualFunctor<CUtlConstString>,uint16,const char *>::IndirectIndex
+  ,            ValueT=empty_t
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlhashtable.h(883) : see reference to class template instantiation 'CUtlHashtable<CUtlStableHashtable<CUtlConstString,empty_t,DefaultHashFunctor<KeyT>,DefaultEqualFunctor<KeyT>,uint16,const char *>::IndirectIndex,empty_t,CUtlStableHashtable<KeyT,empty_t,DefaultHashFunctor<KeyT>,DefaultEqualFunctor<KeyT>,uint16,const char *>::HashProxy,CUtlStableHashtable<KeyT,empty_t,DefaultHashFunctor<KeyT>,DefaultEqualFunctor<KeyT>,uint16,const char *>::EqualProxy,AlternateKeyT>' being compiled
+          with
+          [
+              KeyT=CUtlConstString
+  ,            AlternateKeyT=const char *
+          ]
+          c:\users\hp\documents\hl2sb-src\src\tier1\utlsymbol.cpp(293) : see reference to class template instantiation 'CUtlStableHashtable<CUtlConstString,empty_t,DefaultHashFunctor<KeyT>,DefaultEqualFunctor<KeyT>,uint16,const char *>' being compiled
+          with
+          [
+              KeyT=CUtlConstString
+          ]
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (utlsymbol.cpp)
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (utlsymbol.cpp)
+          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
+          No constructor could take the source type, or constructor overload resolution was ambiguous

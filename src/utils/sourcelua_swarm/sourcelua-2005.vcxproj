@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectName>sourcelua</ProjectName>
+    <ProjectGuid>{B6572CBE-7C7F-4FFF-94DE-AFBBBAB11C64}</ProjectGuid>
+    <RootNamespace>sourcelua</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.34714.143</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>true</PreLinkEventUseInBuild>
+    <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>true</PreLinkEventUseInBuild>
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command />
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\lua-5.1.4\src;..\..\lua-5.1.4\etc;..\..\common;public;..\..\public;public\tier0;..\..\public\tier0;..\..\public\tier1;game\server;..\..\game\server;game\shared;..\..\game\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;sourceluaONLY;_MBCS;COMPILER_MSVC;COMPILER_MSVC32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling />
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <BrowseInformation />
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ErrorReporting>Prompt</ErrorReporting>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)sourcelua.swarm.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lua-5.1.4\src;..\..\lib\common;..\..\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libc;libcd;libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(IntDir)$(TargetName).map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress> </BaseAddress>
+      <TargetMachine>MachineX86</TargetMachine>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
+    </Link>
+    <Xdcmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Xdcmake>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(OutDir)serverplugin_empty.bsc</OutputFile>
+    </Bscmake>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command />
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\lua-5.1.4\src;..\..\lua-5.1.4\etc;..\..\common;public;..\..\public;public\tier0;..\..\public\tier0;..\..\public\tier1;game\server;..\..\game\server;game\shared;..\..\game\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;sourceluaONLY;_MBCS;COMPILER_MSVC;COMPILER_MSVC32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling />
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <BrowseInformation />
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ErrorReporting>Prompt</ErrorReporting>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)sourcelua.swarm.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lua-5.1.4\src;..\..\lib\common;..\..\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libc;libcd;libcmtd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(IntDir)$(TargetName).map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <BaseAddress> </BaseAddress>
+      <TargetMachine>MachineX86</TargetMachine>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
+    </Link>
+    <Xdcmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Xdcmake>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(OutDir)serverplugin_empty.bsc</OutputFile>
+    </Bscmake>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\public\Color.h" />
+    <ClInclude Include="..\..\public\eiface.h" />
+    <ClInclude Include="..\..\public\engine\iserverplugin.h" />
+    <ClInclude Include="..\..\public\filesystem.h" />
+    <ClInclude Include="..\..\public\game\server\iplayerinfo.h" />
+    <ClInclude Include="..\..\public\igameevents.h" />
+    <ClInclude Include="..\..\public\tier0\basetypes.h" />
+    <ClInclude Include="..\..\public\tier0\dbg.h" />
+    <ClInclude Include="..\..\public\tier0\mem.h" />
+    <ClInclude Include="..\..\public\tier0\memalloc.h" />
+    <ClInclude Include="..\..\public\tier0\memdbgon.h" />
+    <ClInclude Include="..\..\public\tier1\interface.h" />
+    <ClInclude Include="..\..\public\tier1\KeyValues.h" />
+    <ClInclude Include="..\..\public\tier1\utlbuffer.h" />
+    <ClInclude Include="..\..\public\tier1\utlmemory.h" />
+    <ClInclude Include="..\..\public\tier1\utlvector.h" />
+    <ClInclude Include="..\..\public\vstdlib\ICommandLine.h" />
+    <ClInclude Include="..\..\public\vstdlib\strtools.h" />
+    <ClInclude Include="..\..\public\vstdlib\vstdlib.h" />
+    <ClInclude Include="game\server\basecombatcharacter.h" />
+    <ClInclude Include="game\server\baseentity.h" />
+    <ClInclude Include="game\server\lutil.h" />
+    <ClInclude Include="game\server\mapentities.h" />
+    <ClInclude Include="game\server\player.h" />
+    <ClInclude Include="game\server\util.h" />
+    <ClInclude Include="game\shared\baseentity_shared.h" />
+    <ClInclude Include="game\shared\lbasecombatweapon_shared.h" />
+    <ClInclude Include="game\shared\lbaseentity_shared.h" />
+    <ClInclude Include="game\shared\lbaseplayer_shared.h" />
+    <ClInclude Include="luamanager.h" />
+    <ClInclude Include="public\engine\liserverplugin.h" />
+    <ClInclude Include="public\lColor.h" />
+    <ClInclude Include="public\leiface.h" />
+    <ClInclude Include="public\lfilesystem.h" />
+    <ClInclude Include="public\lglobalvars_base.h" />
+    <ClInclude Include="public\licvar.h" />
+    <ClInclude Include="public\livoiceserver.h" />
+    <ClInclude Include="public\mathlib\lvector.h" />
+    <ClInclude Include="public\tier0\ldbg.h" />
+    <ClInclude Include="public\vstdlib\lrandom.h" />
+    <ClInclude Include="sigscan.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\public\tier0\memoverride.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="game\server\baseentity.cpp" />
+    <ClCompile Include="game\server\lutil.cpp" />
+    <ClCompile Include="game\server\mapentities.cpp" />
+    <ClCompile Include="game\server\player.cpp" />
+    <ClCompile Include="game\server\util.cpp" />
+    <ClCompile Include="game\shared\basecombatcharacter_shared.cpp" />
+    <ClCompile Include="game\shared\baseentity_shared.cpp" />
+    <ClCompile Include="game\shared\lbasecombatweapon_shared.cpp" />
+    <ClCompile Include="game\shared\lbaseentity_shared.cpp" />
+    <ClCompile Include="game\shared\lbaseplayer_shared.cpp" />
+    <ClCompile Include="luamanager.cpp" />
+    <ClCompile Include="public\engine\liserverplugin.cpp" />
+    <ClCompile Include="public\lColor.cpp" />
+    <ClCompile Include="public\leiface.cpp" />
+    <ClCompile Include="public\lfilesystem.cpp" />
+    <ClCompile Include="public\lglobalvars_base.cpp" />
+    <ClCompile Include="public\licvar.cpp" />
+    <ClCompile Include="public\livoiceserver.cpp" />
+    <ClCompile Include="public\mathlib\lvector.cpp" />
+    <ClCompile Include="public\tier0\ldbg.cpp" />
+    <ClCompile Include="public\tier1\lconvar.cpp" />
+    <ClCompile Include="public\vstdlib\lrandom.cpp" />
+    <ClCompile Include="sigscan.cpp" />
+    <ClCompile Include="sourcelua.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\lib\public\mathlib.lib" />
+    <Library Include="..\..\lib\public\tier0.lib" />
+    <Library Include="..\..\lib\public\tier1.lib" />
+    <Library Include="..\..\lib\public\tier2.lib" />
+    <Library Include="..\..\lib\public\vstdlib.lib" />
+    <Library Include="..\..\lua-5.1.4\src\lua51.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,7 @@
+﻿  Compiling pointeroverride.asm
+   Assembling: C:\Users\hp\Documents\hl2sb-src\src\public\tier0\pointeroverride.asm
+  Microsoft (R) Macro Assembler Version 12.00.40629.0
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  Running VPC CRC Check - client_hl2mp.vpc
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppCommon.targets(309,9): error MSB4030: "No (/WX)" is an invalid value for the "TreatWarningAsError" parameter of the "CL" task. The "TreatWarningAsError" parameter is of type "System.Boolean".

@@ -1,0 +1,534 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.Analysis.props(24,5): warning MSB4211: The property "MsvcAnalysisPluginPath" is being set to a value for the first time, but it was already consumed at "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CodeAnalysis.Extensions.props (33,5)".
+cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  sourcelua.cpp
+  sigscan.cpp
+  lrandom.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'sourcelua.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\utils\sourcelua\sigscan.cpp(1,10): error C1083: Cannot open include file: 'stdio.h': No such file or directory
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/vstdlib/lrandom.cpp')
+  
+  lconvar.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/tier1/lconvar.cpp')
+  
+  ldbg.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/tier0/ldbg.cpp')
+  
+  lvector.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\mathlib\vector.h(16,10): error C1083: Cannot open include file: 'math.h': No such file or directory
+  (compiling source file 'public/mathlib/lvector.cpp')
+  
+  livoiceserver.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/livoiceserver.cpp')
+  
+  licvar.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/licvar.cpp')
+  
+  lglobalvars_base.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\mathlib\vector.h(16,10): error C1083: Cannot open include file: 'math.h': No such file or directory
+  (compiling source file 'public/lglobalvars_base.cpp')
+  
+  lfilesystem.cpp
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luamanager.h(14,10): error C1083: Cannot open include file: 'lua.hpp': No such file or directory
+  (compiling source file 'public/lfilesystem.cpp')
+  
+  leiface.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/leiface.cpp')
+  
+  lColor.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier1\fmtstr.h(13,10): error C1083: Cannot open include file: 'stdio.h': No such file or directory
+  (compiling source file 'public/lColor.cpp')
+  
+  liserverplugin.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\mathlib\vector.h(16,10): error C1083: Cannot open include file: 'math.h': No such file or directory
+  (compiling source file 'public/engine/liserverplugin.cpp')
+  
+  luamanager.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'luamanager.cpp')
+  
+  lbaseplayer_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luamanager.h(14,10): error C1083: Cannot open include file: 'lua.hpp': No such file or directory
+  (compiling source file 'game/shared/lbaseplayer_shared.cpp')
+  
+  lbaseentity_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luamanager.h(14,10): error C1083: Cannot open include file: 'lua.hpp': No such file or directory
+  (compiling source file 'game/shared/lbaseentity_shared.cpp')
+  
+  lbasecombatweapon_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,42): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,53): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(20,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(20,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(20,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(20,45): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(20,56): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(23,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(23,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(23,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(23,39): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(23,50): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(24,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(24,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(24,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(24,46): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(24,57): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(27,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(27,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(27,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(27,39): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(27,50): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(28,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(28,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(28,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(28,46): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(28,57): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(31,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(31,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(31,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(31,39): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(31,50): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(34,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(34,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(34,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(34,38): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(34,49): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(37,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(37,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(37,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(37,41): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(37,52): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(38,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(38,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(38,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(38,48): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(38,59): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(41,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(41,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(41,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(41,33): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(41,44): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(44,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(44,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(44,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(44,38): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(44,49): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(47,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(47,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(47,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(47,36): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(47,47): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(50,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(50,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(50,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(50,34): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(50,45): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(53,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(53,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(53,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(53,38): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(53,49): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(56,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(56,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(56,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(56,44): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(56,55): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(59,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(59,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(59,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(59,43): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(59,54): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(62,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(62,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(62,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(62,32): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(62,43): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(65,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(65,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(65,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(65,31): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(65,42): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(68,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(68,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(68,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(68,40): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(68,51): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(71,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(71,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(71,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(71,34): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(71,45): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(74,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(74,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(74,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(74,38): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(74,49): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(77,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(77,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(77,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(77,33): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(77,44): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(80,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(80,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(80,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(80,38): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(80,49): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(83,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(83,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(83,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(83,36): error C2065: 'lua_State': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(83,47): error C2065: 'L': undeclared identifier
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(86,16): error C2199: syntax error: found 'int (' at global scope (was a declaration intended?)
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(86,16): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(86,1): error C2086: 'int LUALIB_API': redefinition
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(17,1):
+  see declaration of 'LUALIB_API'
+  
+C:\Users\hp\Documents\hl2sb-src\src\game\shared\luasrclib.h(86,1): error C1003: error count exceeds 100; stopping compilation
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+  baseentity_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/shared/baseentity_shared.cpp')
+  
+  basecombatcharacter_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/shared/basecombatcharacter_shared.cpp')
+  
+  util.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/util.cpp')
+  
+  Generating Code...
+  Compiling...
+  player.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/player.cpp')
+  
+  mapentities.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/mapentities.cpp')
+  
+  lutil.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/lutil.cpp')
+  
+  baseentity.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/baseentity.cpp')
+  
+  memoverride.cpp
+C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(31,10): error C1083: Cannot open include file: 'ctype.h': No such file or directory
+  (compiling source file '../../public/tier0/memoverride.cpp')
+  
+  Generating Code...

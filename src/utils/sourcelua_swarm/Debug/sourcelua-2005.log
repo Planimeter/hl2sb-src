@@ -1,0 +1,101 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.Analysis.props(24,5): warning MSB4211: The property "MsvcAnalysisPluginPath" is being set to a value for the first time, but it was already consumed at "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CodeAnalysis.Extensions.props (33,5)".
+cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  sourcelua.cpp
+C:\Users\hp\Documents\hl2sb-src\src\utils\sourcelua_swarm\sourcelua.cpp(9,10): error C1083: Cannot open include file: 'stdio.h': No such file or directory
+  sigscan.cpp
+C:\Users\hp\Documents\hl2sb-src\src\utils\sourcelua_swarm\sigscan.cpp(1,10): error C1083: Cannot open include file: 'stdio.h': No such file or directory
+  lrandom.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/vstdlib/lrandom.cpp')
+  
+  lconvar.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/tier1/lconvar.cpp')
+  
+  ldbg.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/tier0/ldbg.cpp')
+  
+  lvector.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\mathlib\vector.h(16,10): error C1083: Cannot open include file: 'math.h': No such file or directory
+  (compiling source file 'public/mathlib/lvector.cpp')
+  
+  livoiceserver.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/livoiceserver.cpp')
+  
+  licvar.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/licvar.cpp')
+  
+  lglobalvars_base.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\mathlib\vector.h(16,10): error C1083: Cannot open include file: 'math.h': No such file or directory
+  (compiling source file 'public/lglobalvars_base.cpp')
+  
+  lfilesystem.cpp
+C:\Users\hp\Documents\hl2sb-src\src\utils\sourcelua_swarm\LuaManager.h(20,10): error C1083: Cannot open include file: 'lua.hpp': No such file or directory
+  (compiling source file 'public/lfilesystem.cpp')
+  
+  leiface.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'public/leiface.cpp')
+  
+  lColor.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier1\fmtstr.h(13,10): error C1083: Cannot open include file: 'stdio.h': No such file or directory
+  (compiling source file 'public/lColor.cpp')
+  
+  liserverplugin.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\mathlib\vector.h(16,10): error C1083: Cannot open include file: 'math.h': No such file or directory
+  (compiling source file 'public/engine/liserverplugin.cpp')
+  
+  luamanager.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'luamanager.cpp')
+  
+  lbaseplayer_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\utils\sourcelua_swarm\LuaManager.h(20,10): error C1083: Cannot open include file: 'lua.hpp': No such file or directory
+  (compiling source file 'game/shared/lbaseplayer_shared.cpp')
+  
+  lbaseentity_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\mathlib\vector.h(16,10): error C1083: Cannot open include file: 'math.h': No such file or directory
+  (compiling source file 'game/shared/lbaseentity_shared.cpp')
+  
+  lbasecombatweapon_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\utils\sourcelua_swarm\LuaManager.h(20,10): error C1083: Cannot open include file: 'lua.hpp': No such file or directory
+  (compiling source file 'game/shared/lbasecombatweapon_shared.cpp')
+  
+  baseentity_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/shared/baseentity_shared.cpp')
+  
+  basecombatcharacter_shared.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/shared/basecombatcharacter_shared.cpp')
+  
+  util.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/util.cpp')
+  
+  Generating Code...
+  Compiling...
+  player.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/player.cpp')
+  
+  mapentities.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/mapentities.cpp')
+  
+  lutil.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/lutil.cpp')
+  
+  baseentity.cpp
+C:\Users\hp\Documents\hl2sb-src\src\public\tier0\wchartypes.h(61,10): error C1083: Cannot open include file: 'tchar.h': No such file or directory
+  (compiling source file 'game/server/baseentity.cpp')
+  
+  memoverride.cpp
+C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(31,10): error C1083: Cannot open include file: 'ctype.h': No such file or directory
+  (compiling source file '../../public/tier0/memoverride.cpp')
+  
+  Generating Code...

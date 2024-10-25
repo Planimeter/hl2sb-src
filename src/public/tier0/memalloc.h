@@ -30,7 +30,7 @@
 // Undefine this if using a compiler lacking threadsafe RTTI (like vc6)
 #define MEM_DEBUG_CLASSNAME 1
 
-#include <stddef.h>
+//#include <stddef.h>
 #if defined( OSX )
 #include <malloc/malloc.h>
 #endif
@@ -272,7 +272,7 @@ inline void *MemAlloc_ReallocAligned( void *ptr, size_t size, size_t align )
 		return ptr;
 
 	pResult = MemAlloc_AllocAligned( size, align );
-	memcpy( pResult, ptr, nOldSize - nOffset );
+	//memcpy( pResult, ptr, nOldSize - nOffset );
 	g_pMemAlloc->Free( pAlloc );
 	return pResult;
 }
@@ -382,7 +382,7 @@ public:
 
 	#pragma warning(disable:4290)
 	#pragma warning(push)
-	#include <typeinfo.h>
+	//#include <typeinfo.h>
 
 	// MEM_DEBUG_CLASSNAME is opt-in.
 	// Note: typeid().name() is not threadsafe, so if the project needs to access it in multiple threads
