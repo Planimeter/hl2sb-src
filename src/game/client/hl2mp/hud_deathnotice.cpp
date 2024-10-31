@@ -271,13 +271,7 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	// the event should be "player_death"
 	int killer = engine->GetPlayerForUserID( event->GetInt("attacker") );
 	int victim = engine->GetPlayerForUserID( event->GetInt("userid") );
-#ifdef LUA_SDK
-	const char *killername = event->GetString( "attackername" );
-#endif
 	const char *killedwith = event->GetString( "weapon" );
-#ifdef LUA_SDK
-	const char *killedwithname = event->GetString( "weaponname" );
-#endif
 
 	char fullkilledwith[128];
 	if ( killedwith && *killedwith )
@@ -310,25 +304,10 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	DeathNoticeItem deathMsg;
 	deathMsg.Killer.iEntIndex = killer;
 	deathMsg.Victim.iEntIndex = victim;
-#ifndef LUA_SDK
 	Q_strncpy( deathMsg.Killer.szName, killer_name, MAX_PLAYER_NAME_LENGTH );
-#else
-	if ( killer )
-	{
-		Q_strncpy( deathMsg.Killer.szName, killer_name, MAX_PLAYER_NAME_LENGTH );
-	}
-	else
-	{
-		Q_strncpy( deathMsg.Killer.szName, killername, MAX_PLAYER_NAME_LENGTH );
-	}
-#endif
 	Q_strncpy( deathMsg.Victim.szName, victim_name, MAX_PLAYER_NAME_LENGTH );
 	deathMsg.flDisplayTime = gpGlobals->curtime + hud_deathnotice_time.GetFloat();
-#ifndef LUA_SDK
 	deathMsg.iSuicide = ( !killer || killer == victim );
-#else
-	deathMsg.iSuicide = ( killer == victim );
-#endif
 
 	// Try and find the death identifier in the icon list
 	deathMsg.iconDeath = gHUD.GetIcon( fullkilledwith );
@@ -360,20 +339,10 @@ void CHudDeathNotice::FireGameEvent( IGameEvent * event )
 	{
 		Q_snprintf( sDeathMsg, sizeof( sDeathMsg ), "%s killed %s", deathMsg.Killer.szName, deathMsg.Victim.szName );
 
-#ifndef LUA_SDK
 		if ( fullkilledwith && *fullkilledwith && (*fullkilledwith > 13 ) )
-#else
-		if ( fullkilledwith && *fullkilledwith && (*fullkilledwith > 13 ) && Q_strcmp( deathMsg.Killer.szName, killedwithname ) )
-#endif
 		{
 			Q_strncat( sDeathMsg, VarArgs( " with %s.\n", fullkilledwith+6 ), sizeof( sDeathMsg ), COPY_ALL_CHARACTERS );
 		}
-#ifdef LUA_SDK
-		else
-		{
-			Q_strncat( sDeathMsg, "\n", sizeof( sDeathMsg ), COPY_ALL_CHARACTERS );
-		}
-#endif
 	}
 
 	Msg( "%s", sDeathMsg );

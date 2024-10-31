@@ -317,11 +317,7 @@ void C_SmokeTrail::Update( float fTimeDelta )
 		pParticle->m_vecVelocity.Random( -1.0f, 1.0f );
 		pParticle->m_vecVelocity *= random->RandomFloat( m_MinSpeed, m_MaxSpeed );
 
-		// Andrew; taking this out again fixes the smoke bug with the SMG
-		// grenade. Why was this needed in the first place?
-#ifndef HL2SB
 		pParticle->m_vecVelocity = pParticle->m_vecVelocity + GetAbsVelocity();
-#endif
 		
 		float flDirectedVel = random->RandomFloat( m_MinDirectedSpeed, m_MaxDirectedSpeed );
 		VectorMA( pParticle->m_vecVelocity, flDirectedVel, vecForward, pParticle->m_vecVelocity );

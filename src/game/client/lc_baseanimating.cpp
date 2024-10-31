@@ -328,7 +328,7 @@ static int CBaseAnimating_GetHitboxSetName (lua_State *L) {
 }
 
 static int CBaseAnimating_GetModelWidthScale (lua_State *L) {
-  //lua_pushnumber(L, luaL_checkanimating(L, 1)->GetModelWidthScale());
+  lua_pushnumber(L, luaL_checkanimating(L, 1)->GetModelWidthScale());
   return 1;
 }
 
@@ -588,7 +588,7 @@ static int CBaseAnimating_RemoveFromClientSideAnimationList (lua_State *L) {
 }
 
 static int CBaseAnimating_ResetEventsParity (lua_State *L) {
-  //luaL_checkanimating(L, 1)->ResetEventsParity();
+  luaL_checkanimating(L, 1)->ResetEventsParity();
   return 0;
 }
 
@@ -661,7 +661,7 @@ static int CBaseAnimating_SetHitboxSetByName (lua_State *L) {
 }
 
 static int CBaseAnimating_SetModelWidthScale (lua_State *L) {
-  //luaL_checkanimating(L, 1)->SetModelWidthScale(luaL_checknumber(L, 2));
+  luaL_checkanimating(L, 1)->SetModelWidthScale(luaL_checknumber(L, 2));
   return 0;
 }
 

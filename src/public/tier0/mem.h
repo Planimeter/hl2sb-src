@@ -12,7 +12,7 @@
 #pragma once
 #endif
 
-//#include <stddef.h>
+#include <stddef.h>
 #ifdef LINUX
 #undef offsetof
 #define offsetof(s,m)	(size_t)&(((s *)0)->m)

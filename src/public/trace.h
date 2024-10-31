@@ -61,13 +61,9 @@ public:
 
 	CBaseTrace() {}
 
-#if !defined ( LUA_SDK )
-	// HACKHACK: We only do this for Lua, but Lua classes which use traces will
-	// throw errors when we compile, so define this outside of the Lua SDK.
 private:
 	// No copy constructors allowed
 	CBaseTrace(const CBaseTrace& vOther);
-#endif
 };
 
 #endif // TRACE_H

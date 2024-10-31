@@ -181,7 +181,7 @@ static int CBasePlayer_GetDefaultFOV (lua_State *L) {
 }
 
 static int CBasePlayer_GetEFNoInterpParity (lua_State *L) {
-  //lua_pushinteger(L, luaL_checkplayer(L, 1)->GetEFNoInterpParity());
+  lua_pushinteger(L, luaL_checkplayer(L, 1)->GetEFNoInterpParity());
   return 1;
 }
 
@@ -399,7 +399,7 @@ static int CBasePlayer_HintMessage (lua_State *L) {
 }
 
 static int CBasePlayer_IncrementEFNoInterpParity (lua_State *L) {
-  //luaL_checkplayer(L, 1)->IncrementEFNoInterpParity();
+  luaL_checkplayer(L, 1)->IncrementEFNoInterpParity();
   return 0;
 }
 

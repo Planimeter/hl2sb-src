@@ -4032,11 +4032,7 @@ bool CNPC_Antlion::CorpseGib( const CTakeDamageInfo &info )
 void CNPC_Antlion::Touch( CBaseEntity *pOther )
 {
 	//See if the touching entity is a vehicle
-#ifdef HL2SB
-	CBasePlayer *pPlayer = ToBasePlayer( AI_GetNearestPlayer( GetAbsOrigin() ) );
-#else
 	CBasePlayer *pPlayer = ToBasePlayer( AI_GetSinglePlayer() );
-#endif
 	
 	// FIXME: Technically we'll want to check to see if a vehicle has touched us with the player OR NPC driver
 

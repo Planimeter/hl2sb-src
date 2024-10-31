@@ -88,29 +88,17 @@ void ClientPutInServer( edict_t *pEdict, const char *playername )
 {
 	// Allocate a CBaseTFPlayer for pev, and call spawn
 	CHL2MP_Player *pPlayer = CHL2MP_Player::CreatePlayer( "player", pEdict );
-#ifdef HL2SB
-	if( pPlayer )
-		pPlayer->SetPlayerName( playername );
-#else
 	pPlayer->SetPlayerName( playername );
-#endif
 }
 
 
 void ClientActive( edict_t *pEdict, bool bLoadGame )
 {
 	// Can't load games in CS!
-#ifndef HL2SB
 	Assert( !bLoadGame );
-#endif
 
 	CHL2MP_Player *pPlayer = ToHL2MPPlayer( CBaseEntity::Instance( pEdict ) );
-#ifdef HL2SB
-	if( pPlayer )
-		FinishClientPutInServer( pPlayer );
-#else
 	FinishClientPutInServer( pPlayer );
-#endif
 }
 
 
@@ -126,11 +114,7 @@ const char *GetGameDescription()
 	if ( g_pGameRules ) // this function may be called before the world has spawned, and the game rules initialized
 		return g_pGameRules->GetGameDescription();
 	else
-#ifndef HL2SB
 		return "Half-Life 2 Deathmatch";
-#else
-		return "Half-Life 2 Sandbox";
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -200,7 +184,7 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
 
-#if defined( DEBUG ) || defined( LUA_SDK )
+#ifdef DEBUG
 	extern void Bot_RunAll();
 	Bot_RunAll();
 #endif

@@ -109,7 +109,7 @@ static int filesystem_Disconnect (lua_State *L) {
 }
 
 static int filesystem_EnableWhitelistFileTracking (lua_State *L) {
-//  filesystem->EnableWhitelistFileTracking(luaL_checkboolean(L, 1));
+  filesystem->EnableWhitelistFileTracking(luaL_checkboolean(L, 1));
   return 0;
 }
 

@@ -79,15 +79,7 @@ public:
 	CHalfLife2Survival();
 	virtual ~CHalfLife2Survival() {}
 
-#endif
-#ifdef LUA_SDK
 	virtual void Think( void );
-#else
-#ifndef CLIENT_DLL
-	virtual void Think( void );
-#endif
-#endif
-#ifndef CLIENT_DLL
 	virtual void PlayerSpawn( CBasePlayer *pPlayer );
 	virtual bool IsAllowedToSpawn( CBaseEntity *pEntity );
 	virtual void CreateStandardEntities();
@@ -152,23 +144,10 @@ CHalfLife2Survival::CHalfLife2Survival()
 	m_bActive = false;
 }
 
-#endif
-#ifdef LUA_SDK
-void CHalfLife2Survival::Think( void )
-{
-#ifndef CLIENT_DLL
-
-#endif
-}
-#else
-#ifndef CLIENT_DLL
 void CHalfLife2Survival::Think( void )
 {
 
 }
-#endif
-#endif
-#ifndef CLIENT_DLL
 
 bool CHalfLife2Survival::IsAllowedToSpawn( CBaseEntity *pEntity )
 {

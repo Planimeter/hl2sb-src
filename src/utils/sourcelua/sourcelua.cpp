@@ -6,6 +6,10 @@
 //
 //===========================================================================//
 
+#include <stdio.h>
+
+
+#include <stdio.h>
 #include "interface.h"
 #ifdef SOURCELUA_2011
 #include "filesystem_passthruV19.h"
@@ -44,20 +48,6 @@
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
 #include "lColor.h"
-// Add these Lua includes to fix the SourceLua solution - Guest
-#include "..\shared\luamanager.h"
-#include "..\shared\luacachefile.h"
-#include "..\shared\luasrclib.h"
-// Now add Lua headers from the lua-5.15 dir
-// I recommend updating the lua to 5.4.7 to avoid issues - Guest
-#include "..\lua-5.1.5\etc\lua.hpp"
-#include "..\lua-5.1.5\src\lauxlib.h"
-#include "..\lua-5.1.5\src\lua.h"
-#include "..\lua-5.1.5\src\lualib.h"
-#include "..\lua-5.1.5\src\lauxlib.h"
-
-
-
 
 // Uncomment this to compile the sample TF2 plugin code, note: most of this is duplicated in serverplugin_tony, but kept here for reference!
 //#define SAMPLE_TF2_PLUGIN

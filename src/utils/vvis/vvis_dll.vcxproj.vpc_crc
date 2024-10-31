@@ -1,7 +1,7 @@
 [vpc crc file version 2]
-b9c20ec3 C:\Users\hp\Documents\hl2sb-src\src\devtools\bin\vpc.exe
+b9c20ec3 C:\Users\hp\Downloads\hl2sb-src-master\src\devtools\bin\vpc.exe
 _Nc_VS2013/vpcgame:hl2mp_
-119db1de vvis_dll.vpc
+4adcfd72 vvis_dll.vpc
 4832e67a ..\..\vpc_scripts\source_dll_base.vpc
 d752cf80 ..\..\vpc_scripts\platform_dirs.vpc
 6c4a5ff1 ..\..\vpc_scripts\source_base.vpc

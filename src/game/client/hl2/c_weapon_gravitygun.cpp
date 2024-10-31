@@ -11,7 +11,6 @@
 #include "beamdraw.h"
 #include "c_weapon__stubs.h"
 #include "clienteffectprecachesystem.h"
-#include "weapon_hl2mpbasehlmpcombatweapon.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -26,11 +25,6 @@ public:
 	C_BeamQuadratic();
 	void			Update( C_BaseEntity *pOwner );
 
-	const matrix3x4_t &C_BeamQuadratic::RenderableToWorldTransform( void )
-	{
-		return RenderableToWorldTransform();
-	}
-
 	// IClientRenderable
 	virtual const Vector&			GetRenderOrigin( void ) { return m_worldPosition; }
 	virtual const QAngle&			GetRenderAngles( void ) { return vec3_angle; }
@@ -42,12 +36,9 @@ public:
 	// Returns the bounds relative to the origin (render bounds)
 	virtual void	GetRenderBounds( Vector& mins, Vector& maxs )
 	{
-		ClearBounds( mins, maxs );
-		AddPointToBounds( vec3_origin, mins, maxs );
-		AddPointToBounds( m_targetPosition, mins, maxs );
-		AddPointToBounds( m_worldPosition, mins, maxs );
-		mins -= GetRenderOrigin();
-		maxs -= GetRenderOrigin();
+		// bogus.  But it should draw if you can see the end point
+		mins.Init(-32,-32,-32);
+		maxs.Init(32,32,32);
 	}
 
 	C_BaseEntity			*m_pOwner;
@@ -59,9 +50,9 @@ public:
 };
 
 
-class C_WeaponGravityGun : public C_BaseHL2MPCombatWeapon
+class C_WeaponGravityGun : public C_BaseCombatWeapon
 {
-	DECLARE_CLASS( C_WeaponGravityGun, C_BaseHL2MPCombatWeapon );
+	DECLARE_CLASS( C_WeaponGravityGun, C_BaseCombatWeapon );
 public:
 	C_WeaponGravityGun() {}
 
@@ -98,8 +89,6 @@ private:
 	C_WeaponGravityGun( const C_WeaponGravityGun & );
 
 	C_BeamQuadratic	m_beam;
-
-	DECLARE_ACTTABLE();
 };
 
 STUB_WEAPON_CLASS_IMPLEMENT( weapon_physgun, C_WeaponGravityGun );
@@ -111,25 +100,6 @@ IMPLEMENT_CLIENTCLASS_DT( C_WeaponGravityGun, DT_WeaponGravityGun, CWeaponGravit
 	RecvPropInt( RECVINFO_NAME(m_beam.m_glueTouching, m_glueTouching) ),
 	RecvPropInt( RECVINFO_NAME(m_beam.m_viewModelIndex, m_viewModelIndex) ),
 END_RECV_TABLE()
-
-acttable_t	C_WeaponGravityGun::m_acttable[] = 
-{
-	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_PHYSGUN,					false },
-	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_PHYSGUN,			false },
-
-	{ ACT_MP_RUN,						ACT_HL2MP_RUN_PHYSGUN,					false },
-	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_PHYSGUN,			false },
-
-	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
-	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
-
-	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
-	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
-
-	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_PHYSGUN,					false },
-};
-
-IMPLEMENT_ACTTABLE(C_WeaponGravityGun);
 
 
 C_BeamQuadratic::C_BeamQuadratic()
@@ -189,8 +159,7 @@ int	C_BeamQuadratic::DrawModel( int )
 	}
 
 	float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
-	CMatRenderContextPtr pRenderContext( materials );
-	pRenderContext->Bind( pMat );
+	materials->Bind( pMat );
 	DrawBeamQuadratic( points[0], points[1], points[2], 13, color, scrollOffset );
 	return 1;
 }

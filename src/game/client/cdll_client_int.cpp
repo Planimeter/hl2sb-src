@@ -141,6 +141,7 @@
 
 #if defined( TF_CLIENT_DLL )
 #include "econ/tool_items/custom_texture_cache.h"
+
 #endif
 
 #ifdef WORKSHOP_IMPORT_ENABLED
@@ -160,23 +161,6 @@ extern vgui::IInputInternal *g_InputInternal;
 // HPE_END
 //=============================================================================
 
-
-#ifdef LUA_SDK
-#include "luamanager.h"
-#include "luacachefile.h"
-#include "mountaddons.h"
-#endif
-
-#ifdef HL2SB
-#include "mountsteamcontent.h"
-#ifdef _WIN32
-// HACKHACK: this is dumb, and unsafe. Things that should be uninitialized at the
-// engine-level can kiss their deconstructors goodbye. See Shutdown for an
-// explanation.
-DLL_IMPORT BOOL STDCALL TerminateProcess(HANDLE hProcess, unsigned int uExitCode);
-DLL_IMPORT HANDLE STDCALL GetCurrentProcess(void);
-#endif
-#endif
 
 #ifdef PORTAL
 #include "PortalRender.h"
@@ -496,24 +480,6 @@ public:
 	virtual void GetPlayerTextColor(int entindex, int color[3])
 	{
 		color[0] = color[1] = color[2] = 128;
-
-#if defined ( LUA_SDK )
-		BEGIN_LUA_CALL_HOOK( "GetPlayerTextColor" );
-			lua_pushinteger( L, entindex );
-			lua_pushinteger( L, color[0] );
-			lua_pushinteger( L, color[1] );
-			lua_pushinteger( L, color[2] );
-		END_LUA_CALL_HOOK( 4, 3 );
-
-		if ( lua_isnumber( L, -3 ) )
-			color[2] = (int)lua_tointeger( L, -3 );
-		if ( lua_isnumber( L, -2 ) )
-			color[1] = (int)lua_tointeger( L, -2 );
-		if ( lua_isnumber( L, -1 ) )
-			color[0] = (int)lua_tointeger( L, -1 );
-
-		lua_pop( L, 3 );
-#endif
 	}
 
 	virtual void UpdateCursorState()
@@ -522,13 +488,6 @@ public:
 
 	virtual bool			CanShowSpeakerLabels()
 	{
-#if defined ( LUA_SDK )
-		BEGIN_LUA_CALL_HOOK( "CanShowSpeakerLabels" );
-		END_LUA_CALL_HOOK( 0, 1 );
-
-		RETURN_LUA_BOOLEAN();
-#endif
-
 		return true;
 	}
 };
@@ -610,7 +569,8 @@ void DisplayBoneSetupEnts()
 		if ( pEnt->m_Count >= 3 )
 		{
 			printInfo.color[0] = 1;
-			printInfo.color[1] = printInfo.color[2] = 0;
+			printInfo.color[1] = 0;
+			printInfo.color[2] = 0;
 		}
 		else if ( pEnt->m_Count == 2 )
 		{
@@ -620,7 +580,9 @@ void DisplayBoneSetupEnts()
 		}
 		else
 		{
-			printInfo.color[0] = printInfo.color[0] = printInfo.color[0] = 1;
+			printInfo.color[0] = 1;
+			printInfo.color[1] = 1;
+			printInfo.color[2] = 1;
 		}
 		engine->Con_NXPrintf( &printInfo, "%25s / %3d / %3d", pEnt->m_ModelName, pEnt->m_Count, pEnt->m_Index );
 		printInfo.index++;
@@ -1003,14 +965,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 	}
 
-#if defined ( HL2SB )
-	//Andrew; then mount everything the user wants to use.
-	MountUserContent();
-
-	// Finally, load all of the player's addons.
-	MountAddons();
-#endif
-
 	if ( CommandLine()->FindParm( "-textmode" ) )
 		g_bTextMode = true;
 
@@ -1042,13 +996,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 
 	vgui::VGui_InitMatSysInterfacesList( "ClientDLL", &appSystemFactory, 1 );
-
-#if defined ( LUA_SDK )
-	// Initialize the GameUI state
-	luasrc_init_gameui();
-
-	luasrc_dofolder( LGameUI, LUA_PATH_GAMEUI );
-#endif
 
 	// Add the client systems.	
 	
@@ -1227,10 +1174,6 @@ void CHLClient::Shutdown( void )
 	g_pSixenseInput = NULL;
 #endif
 
-#ifdef LUA_SDK
-	luasrc_shutdown_gameui();
-#endif
-
 	C_BaseAnimating::ShutdownBoneSetupThreadPool();
 	ClientWorldFactoryShutdown();
 
@@ -1271,11 +1214,6 @@ void CHLClient::Shutdown( void )
 	ShutdownFbx();
 #endif
 	
-#ifdef HL2SB
-	//Andrew; fixes the "CNet Encrypt:0" issue in 2007-based mods.
-	SteamAPI_Shutdown();
-#endif
-
 	// This call disconnects the VGui libraries which we rely on later in the shutdown path, so don't do it
 //	DisconnectTier3Libraries( );
 	DisconnectTier2Libraries( );
@@ -1638,46 +1576,6 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 		return;
 	g_bLevelInitialized = true;
 
-#if defined ( LUA_SDK )
-	lcf_recursivedeletefile( LUA_PATH_CACHE );
-
-	// Add the Lua environment.
-	// Andrew; unarchive the Lua Cache File
-	if ( gpGlobals->maxClients > 1 )
-	{
-		luasrc_ExtractLcf();
-	}
-
-	luasrc_init();
-
-	if ( gpGlobals->maxClients > 1 )
-	{
-		luasrc_dofolder( L, LUA_PATH_CACHE LUA_PATH_EXTENSIONS );
-		luasrc_dofolder( L, LUA_PATH_CACHE LUA_PATH_MODULES );
-		luasrc_dofolder( L, LUA_PATH_CACHE LUA_PATH_GAME_SHARED );
-		luasrc_dofolder( L, LUA_PATH_CACHE LUA_PATH_GAME_CLIENT );
-	}
-
-	luasrc_dofolder( L, LUA_PATH_EXTENSIONS );
-	luasrc_dofolder( L, LUA_PATH_MODULES );
-	luasrc_dofolder( L, LUA_PATH_GAME_SHARED );
-	luasrc_dofolder( L, LUA_PATH_GAME_CLIENT );
-
-	luasrc_LoadWeapons();
-	luasrc_LoadEntities();
-	// luasrc_LoadEffects();
-
-	//Andrew; loadup base gamemode.
-	luasrc_LoadGamemode( LUA_BASE_GAMEMODE );
-
-	luasrc_LoadGamemode( gamemode.GetString() );
-	luasrc_SetGamemode( gamemode.GetString() );
-
-	BEGIN_LUA_CALL_HOOK( "LevelInitPreEntity" );
-		lua_pushstring( L, pMapName );
-	END_LUA_CALL_HOOK( 1, 0 );
-#endif
-
 	input->LevelInit();
 
 	vieweffects->LevelInit();
@@ -1748,11 +1646,6 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 //-----------------------------------------------------------------------------
 void CHLClient::LevelInitPostEntity( )
 {
-#if defined ( LUA_SDK )
-	BEGIN_LUA_CALL_HOOK( "LevelInitPostEntity" );
-	END_LUA_CALL_HOOK( 0, 0 );
-#endif
-
 	IGameSystem::LevelInitPostEntityAllSystems();
 	C_PhysPropClientside::RecreateAll();
 	internalCenterPrint->Clear();
@@ -1787,14 +1680,6 @@ void CHLClient::LevelShutdown( void )
 		return;
 
 	g_bLevelInitialized = false;
-
-#if defined ( LUA_SDK )
-	if (g_bLuaInitialized)
-	{
-		BEGIN_LUA_CALL_HOOK( "LevelShutdown" );
-		END_LUA_CALL_HOOK( 0, 0 );
-	}
-#endif
 
 	// Disable abs recomputations when everything is shutting down
 	CBaseEntity::EnableAbsRecomputations( false );
@@ -1854,10 +1739,6 @@ void CHLClient::LevelShutdown( void )
 	// Shutdown the ragdoll recorder
 	CReplayRagdollRecorder::Instance().Shutdown();
 	CReplayRagdollCache::Instance().Shutdown();
-#endif
-
-#if defined( LUA_SDK )
-	luasrc_shutdown();
 #endif
 }
 
@@ -2684,8 +2565,8 @@ void CHLClient::ClientAdjustStartSoundParams( StartSoundParams_t& params )
 		// Halloween voice futzery?
 		else
 		{
-			float flHeadScale = 1.f;
-			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pEntity, flHeadScale, head_scale );
+			float flVoicePitchScale = 1.f;
+			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pEntity, flVoicePitchScale, voice_pitch_scale );
 
 			int iHalloweenVoiceSpell = 0;
 			CALL_ATTRIB_HOOK_INT_ON_OTHER( pEntity, iHalloweenVoiceSpell, halloween_voice_modulation );
@@ -2693,17 +2574,9 @@ void CHLClient::ClientAdjustStartSoundParams( StartSoundParams_t& params )
 			{
 				params.pitch *= 0.8f;
 			}
-			else if( flHeadScale != 1.f )
+			else if( flVoicePitchScale != 1.f )
 			{
-				// Big head, deep voice
-				if( flHeadScale > 1.f )
-				{
-					params.pitch *= 0.8f;
-				}
-				else	// Small head, high voice
-				{
-					params.pitch *= 1.3f;
-				}
+				params.pitch *= flVoicePitchScale;
 			}
 		}
 	}

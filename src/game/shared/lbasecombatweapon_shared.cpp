@@ -29,6 +29,8 @@ LUA_API lua_CBaseCombatWeapon *lua_toweapon (lua_State *L, int idx) {
   return dynamic_cast<lua_CBaseCombatWeapon *>(hWeapon->Get());
 }
 
+
+
 /*
 ** push functions (C -> stack)
 */

@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Library Include="..\..\lib\common\lzma.lib">
+      <Filter>Link Libraries</Filter>
+    </Library>
     <Library Include="..\..\lib\public\mathlib.lib">
       <Filter>Link Libraries</Filter>
     </Library>

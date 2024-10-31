@@ -29,7 +29,7 @@ static int surface_AddBitmapFontFile (lua_State *L) {
 }
 
 static int surface_AddCustomFontFile (lua_State *L) {
-//  lua_pushboolean(L, surface()->AddCustomFontFile(luaL_checkstring(L, 1)));
+  lua_pushboolean(L, surface()->AddCustomFontFile(luaL_checkstring(L, 1)));
   return 1;
 }
 

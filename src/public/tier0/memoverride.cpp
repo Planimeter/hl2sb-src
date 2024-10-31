@@ -18,20 +18,14 @@
 
 #include "tier0/dbg.h"
 #include "tier0/memalloc.h"
-#include "..\shared\luamanager.h"
-#include "..\shared\luacachefile.h"
-#include "..\shared\luasrclib.h"
-#include "..\lua-5.1.5\etc\lua.hpp"
-#include "luamanager.h"
+#include <string.h>
+#include <stdio.h>
 #include "memdbgoff.h"
 
 #ifdef _WIN32
 // ARG: crtdbg is necessary for certain definitions below,
 // but it also redefines malloc as a macro in release.
 // To disable this, we gotta define _DEBUG before including it.. BLEAH!
-
-// Guest: TODO
-// Fix the "crtdbg.h" file not being linked
 #define _DEBUG 1
 #include "crtdbg.h"
 #ifdef NDEBUG

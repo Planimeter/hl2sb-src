@@ -22,11 +22,11 @@ extern ConVar rr_debugresponses;
 
 //-----------------------------------------------------------------------------
 
-ConVar sk_ally_regen_time("sk_ally_regen_time", "0.3003", FCVAR_NONE, "Time taken for an ally to regenerate a point of health.");
-ConVar sv_npc_talker_maxdist("sv_npc_talker_maxdist", "1024", 0, "NPCs over this distance from the player won't attempt to speak.");
-ConVar ai_no_talk_delay("ai_no_talk_delay", "0");
+ConVar sk_ally_regen_time( "sk_ally_regen_time", "0.3003", FCVAR_NONE, "Time taken for an ally to regenerate a point of health." );
+ConVar sv_npc_talker_maxdist( "sv_npc_talker_maxdist", "1024", 0, "NPCs over this distance from the player won't attempt to speak." );
+ConVar ai_no_talk_delay( "ai_no_talk_delay", "0" );
 
-ConVar rr_debug_qa("rr_debug_qa", "0", FCVAR_NONE, "Set to 1 to see debug related to the Question & Answer system used to create conversations between allied NPCs.");
+ConVar rr_debug_qa( "rr_debug_qa", "0", FCVAR_NONE, "Set to 1 to see debug related to the Question & Answer system used to create conversations between allied NPCs.");
 
 //-----------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ ConceptInfo_t g_ConceptInfos[] =
 	{	TLK_USE,			SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
 	{ 	TLK_STARTFOLLOW,	SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
 	{ 	TLK_STOPFOLLOW,		SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
-	{ 	TLK_JOINPLAYER,		SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
+	{ 	TLK_JOINPLAYER,		SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},	
 	{ 	TLK_STOP,			SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
 	{ 	TLK_NOSHOOT,		SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
 	{ 	TLK_PLHURT1,		SPEECH_IMPORTANT, 	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
@@ -98,7 +98,7 @@ ConceptInfo_t g_ConceptInfos[] =
 	{ 	TLK_SPOTTED_HEADCRAB_LEAVING_ZOMBIE,SPEECH_IMPORTANT, 	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
 	{ 	TLK_DANGER_ZOMBINE_GRENADE,			SPEECH_IMPORTANT, 	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
 	{ 	TLK_BALLSOCKETED,					SPEECH_IMPORTANT, 	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
-
+		
 	// Darkness mode
 	{ 	TLK_DARKNESS_LOSTPLAYER, SPEECH_IMPORTANT,-1,	-1,		-1,		-1,		 -1,	-1,		AICF_DEFAULT,	},
 	{ 	TLK_DARKNESS_FOUNDPLAYER, SPEECH_IMPORTANT,-1,	-1,		-1,		-1,		 -1,	-1,		AICF_DEFAULT,	},
@@ -124,36 +124,36 @@ ConceptInfo_t g_ConceptInfos[] =
 	{ 	TLK_LEAD_IDLE,		SPEECH_IMPORTANT,-1,	-1,		-1,		-1,		 -1,	-1,		AICF_DEFAULT,	},
 
 	// Passenger behaviour
-	{ TLK_PASSENGER_NEW_RADAR_CONTACT,		SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},
+	{ TLK_PASSENGER_NEW_RADAR_CONTACT,		SPEECH_IMPORTANT,	-1,		-1,		-1,		-1,		-1,		-1,		AICF_DEFAULT,	},	
 };
 
 //-----------------------------------------------------------------------------
 
-bool ConceptStringLessFunc(const string_t& lhs, const string_t& rhs)
-{
-	return CaselessStringLessThan(STRING(lhs), STRING(rhs));
+bool ConceptStringLessFunc( const string_t &lhs, const string_t &rhs )	
+{ 
+	return CaselessStringLessThan( STRING(lhs), STRING(rhs) ); 
 }
 
 //-----------------------------------------------------------------------------
 
-class CConceptInfoMap : public CUtlMap<AIConcept_t, ConceptInfo_t*> {
+class CConceptInfoMap : public CUtlMap<AIConcept_t, ConceptInfo_t *> {
 public:
 	CConceptInfoMap() :
-		CUtlMap<AIConcept_t, ConceptInfo_t*>(CaselessStringLessThan)
-	{
-		for (int i = 0; i < ARRAYSIZE(g_ConceptInfos); i++)
-		{
-			Insert(g_ConceptInfos[i].concept, &g_ConceptInfos[i]);
-		}
-	}
+	  CUtlMap<AIConcept_t, ConceptInfo_t *>( CaselessStringLessThan )
+	  {
+		  for ( int i = 0; i < ARRAYSIZE(g_ConceptInfos); i++ )
+		  {
+			  Insert( g_ConceptInfos[i].concept, &g_ConceptInfos[i] );
+		  }
+	  }
 };
 
 static CConceptInfoMap g_ConceptInfoMap;
 
 CAI_AllySpeechManager::CAI_AllySpeechManager()
 {
-	m_ConceptTimers.SetLessFunc(ConceptStringLessFunc);
-	Assert(!gm_pSpeechManager);
+	m_ConceptTimers.SetLessFunc( ConceptStringLessFunc );
+	Assert( !gm_pSpeechManager );
 	gm_pSpeechManager = this;
 }
 
@@ -164,144 +164,144 @@ CAI_AllySpeechManager::~CAI_AllySpeechManager()
 
 void CAI_AllySpeechManager::Spawn()
 {
-	Assert(g_ConceptInfoMap.Count() != 0);
-	for (int i = 0; i < ARRAYSIZE(g_ConceptInfos); i++)
-		m_ConceptTimers.Insert(AllocPooledString(g_ConceptInfos[i].concept), CSimpleSimTimer());
+	Assert( g_ConceptInfoMap.Count() != 0 );
+	for ( int i = 0; i < ARRAYSIZE(g_ConceptInfos); i++ )
+		m_ConceptTimers.Insert( AllocPooledString( g_ConceptInfos[i].concept ), CSimpleSimTimer() );
 }
 
-void CAI_AllySpeechManager::AddCustomConcept(const ConceptInfo_t& conceptInfo)
+void CAI_AllySpeechManager::AddCustomConcept( const ConceptInfo_t &conceptInfo )
 {
-	Assert(g_ConceptInfoMap.Count() != 0);
-	Assert(m_ConceptTimers.Count() != 0);
+	Assert( g_ConceptInfoMap.Count() != 0 );
+	Assert( m_ConceptTimers.Count() != 0 );
 
-	if (g_ConceptInfoMap.Find(conceptInfo.concept) == g_ConceptInfoMap.InvalidIndex())
+	if ( g_ConceptInfoMap.Find( conceptInfo.concept ) == g_ConceptInfoMap.InvalidIndex() )
 	{
-		g_ConceptInfoMap.Insert(conceptInfo.concept, new ConceptInfo_t(conceptInfo));
+		g_ConceptInfoMap.Insert( conceptInfo.concept, new ConceptInfo_t( conceptInfo ) );
 	}
 
-	if (m_ConceptTimers.Find(AllocPooledString(conceptInfo.concept)) == m_ConceptTimers.InvalidIndex())
+	if ( m_ConceptTimers.Find( AllocPooledString(conceptInfo.concept) ) == m_ConceptTimers.InvalidIndex() )
 	{
-		m_ConceptTimers.Insert(AllocPooledString(conceptInfo.concept), CSimpleSimTimer());
+		m_ConceptTimers.Insert( AllocPooledString( conceptInfo.concept ), CSimpleSimTimer() );
 	}
 }
 
-ConceptCategoryInfo_t* CAI_AllySpeechManager::GetConceptCategoryInfo(ConceptCategory_t category)
+ConceptCategoryInfo_t *CAI_AllySpeechManager::GetConceptCategoryInfo( ConceptCategory_t category )
 {
 	return &g_ConceptCategoryInfos[category];
 }
 
-ConceptInfo_t* CAI_AllySpeechManager::GetConceptInfo(AIConcept_t concept)
+ConceptInfo_t *CAI_AllySpeechManager::GetConceptInfo( AIConcept_t concept )
 {
-	int iResult = g_ConceptInfoMap.Find(concept);
+	int iResult = g_ConceptInfoMap.Find( concept );
 
-	return (iResult != g_ConceptInfoMap.InvalidIndex()) ? g_ConceptInfoMap[iResult] : NULL;
+	return ( iResult != g_ConceptInfoMap.InvalidIndex() ) ? g_ConceptInfoMap[iResult] : NULL;
 }
 
-void CAI_AllySpeechManager::OnSpokeConcept(CAI_PlayerAlly* pPlayerAlly, AIConcept_t concept, AI_Response* response)
+void CAI_AllySpeechManager::OnSpokeConcept( CAI_PlayerAlly *pPlayerAlly, AIConcept_t concept, AI_Response *response )
 {
-	ConceptInfo_t* pConceptInfo = GetConceptInfo(concept);
-	ConceptCategory_t		category = (pConceptInfo) ? pConceptInfo->category : SPEECH_IDLE;
-	ConceptCategoryInfo_t* pCategoryInfo = GetConceptCategoryInfo(category);
+	ConceptInfo_t *			pConceptInfo	= GetConceptInfo( concept );
+	ConceptCategory_t		category		= ( pConceptInfo ) ? pConceptInfo->category : SPEECH_IDLE;
+	ConceptCategoryInfo_t *	pCategoryInfo	= GetConceptCategoryInfo( category );
 
-	if (pConceptInfo)
+	if ( pConceptInfo )
 	{
-		if (pConceptInfo->flags & AICF_PROPAGATE_SPOKEN)
+		if ( pConceptInfo->flags & AICF_PROPAGATE_SPOKEN ) 
 		{
-			CAI_BaseNPC** ppAIs = g_AI_Manager.AccessAIs();
-			CAI_PlayerAlly* pTalker;
-			for (int i = 0; i < g_AI_Manager.NumAIs(); i++)
+			CAI_BaseNPC **ppAIs = g_AI_Manager.AccessAIs();
+			CAI_PlayerAlly *pTalker;
+			for ( int i = 0; i < g_AI_Manager.NumAIs(); i++ )
 			{
-				pTalker = dynamic_cast<CAI_PlayerAlly*>(ppAIs[i]);
+				pTalker = dynamic_cast<CAI_PlayerAlly *>(ppAIs[i]);
 
-				if (pTalker && pTalker != pPlayerAlly &&
-					(pTalker->GetAbsOrigin() - pPlayerAlly->GetAbsOrigin()).LengthSqr() < Square(TALKRANGE_MIN * 2) &&
-					pPlayerAlly->FVisible(pTalker))
+				if ( pTalker && pTalker != pPlayerAlly && 
+					 (pTalker->GetAbsOrigin() - pPlayerAlly->GetAbsOrigin()).LengthSqr() < Square(TALKRANGE_MIN * 2) && 
+					 pPlayerAlly->FVisible( pTalker ) )
 				{
 					// Tell this guy he's already said the concept to the player, too.
-					pTalker->GetExpresser()->SetSpokeConcept(concept, NULL, false);
+					pTalker->GetExpresser()->SetSpokeConcept( concept, NULL, false );
 				}
 			}
 		}
 	}
 
-	if (!ai_no_talk_delay.GetBool())
+	if ( !ai_no_talk_delay.GetBool() )
 	{
-		if (pConceptInfo && pConceptInfo->minGlobalCategoryDelay != -1)
+		if ( pConceptInfo && pConceptInfo->minGlobalCategoryDelay != -1 )
 		{
-			Assert(pConceptInfo->maxGlobalCategoryDelay != -1);
-			SetCategoryDelay(pConceptInfo->category, pConceptInfo->minGlobalCategoryDelay, pConceptInfo->maxGlobalCategoryDelay);
+			Assert( pConceptInfo->maxGlobalCategoryDelay != -1 );
+			SetCategoryDelay( pConceptInfo->category, pConceptInfo->minGlobalCategoryDelay, pConceptInfo->maxGlobalCategoryDelay );
 		}
-		else if (pCategoryInfo->maxGlobalDelay > 0)
+		else if ( pCategoryInfo->maxGlobalDelay > 0 )
 		{
-			SetCategoryDelay(category, pCategoryInfo->minGlobalDelay, pCategoryInfo->maxGlobalDelay);
-		}
-
-		if (pConceptInfo && pConceptInfo->minPersonalCategoryDelay != -1)
-		{
-			Assert(pConceptInfo->maxPersonalCategoryDelay != -1);
-			pPlayerAlly->SetCategoryDelay(pConceptInfo->category, pConceptInfo->minPersonalCategoryDelay, pConceptInfo->maxPersonalCategoryDelay);
-		}
-		else if (pCategoryInfo->maxPersonalDelay > 0)
-		{
-			pPlayerAlly->SetCategoryDelay(category, pCategoryInfo->minPersonalDelay, pCategoryInfo->maxPersonalDelay);
+			SetCategoryDelay( category, pCategoryInfo->minGlobalDelay, pCategoryInfo->maxGlobalDelay );
 		}
 
-		if (pConceptInfo && pConceptInfo->minConceptDelay != -1)
+		if ( pConceptInfo && pConceptInfo->minPersonalCategoryDelay != -1 )
 		{
-			Assert(pConceptInfo->maxConceptDelay != -1);
-			char iConceptTimer = m_ConceptTimers.Find(MAKE_STRING(concept));
-			if (iConceptTimer != m_ConceptTimers.InvalidIndex())
-				m_ConceptTimers[iConceptTimer].Set(pConceptInfo->minConceptDelay, pConceptInfo->minConceptDelay);
+			Assert( pConceptInfo->maxPersonalCategoryDelay != -1 );
+			pPlayerAlly->SetCategoryDelay( pConceptInfo->category, pConceptInfo->minPersonalCategoryDelay, pConceptInfo->maxPersonalCategoryDelay );
+		}
+		else if ( pCategoryInfo->maxPersonalDelay > 0 )
+		{
+			pPlayerAlly->SetCategoryDelay( category, pCategoryInfo->minPersonalDelay, pCategoryInfo->maxPersonalDelay );
+		}
+
+		if ( pConceptInfo && pConceptInfo->minConceptDelay != -1 )
+		{
+			Assert( pConceptInfo->maxConceptDelay != -1 );
+			char iConceptTimer = m_ConceptTimers.Find( MAKE_STRING(concept) );
+			if ( iConceptTimer != m_ConceptTimers.InvalidIndex() )
+				m_ConceptTimers[iConceptTimer].Set( pConceptInfo->minConceptDelay, pConceptInfo->minConceptDelay );
 		}
 	}
 }
 
-void CAI_AllySpeechManager::SetCategoryDelay(ConceptCategory_t category, float minDelay, float maxDelay)
-{
-	if (category != SPEECH_PRIORITY)
-		m_ConceptCategoryTimers[category].Set(minDelay, maxDelay);
+void CAI_AllySpeechManager::SetCategoryDelay( ConceptCategory_t category, float minDelay, float maxDelay )	
+{ 
+	if ( category != SPEECH_PRIORITY )
+		m_ConceptCategoryTimers[category].Set( minDelay, maxDelay ); 
 }
 
-bool CAI_AllySpeechManager::CategoryDelayExpired(ConceptCategory_t category)
-{
-	if (category == SPEECH_PRIORITY)
+bool CAI_AllySpeechManager::CategoryDelayExpired( ConceptCategory_t category )										
+{ 
+	if ( category == SPEECH_PRIORITY )
 		return true;
-	return m_ConceptCategoryTimers[category].Expired();
+	return m_ConceptCategoryTimers[category].Expired(); 
 }
 
-bool CAI_AllySpeechManager::ConceptDelayExpired(AIConcept_t concept)
+bool CAI_AllySpeechManager::ConceptDelayExpired( AIConcept_t concept )
 {
-	char iConceptTimer = m_ConceptTimers.Find(MAKE_STRING(concept));
-	if (iConceptTimer != m_ConceptTimers.InvalidIndex())
+	char iConceptTimer = m_ConceptTimers.Find( MAKE_STRING(concept) );
+	if ( iConceptTimer != m_ConceptTimers.InvalidIndex() )
 		return m_ConceptTimers[iConceptTimer].Expired();
 	return true;
 }
 
 //-----------------------------------------------------------------------------
 
-LINK_ENTITY_TO_CLASS(ai_ally_speech_manager, CAI_AllySpeechManager);
+LINK_ENTITY_TO_CLASS( ai_ally_speech_manager, CAI_AllySpeechManager );
 
-BEGIN_DATADESC(CAI_AllySpeechManager)
+BEGIN_DATADESC( CAI_AllySpeechManager )
 
-DEFINE_EMBEDDED_AUTO_ARRAY(m_ConceptCategoryTimers),
-DEFINE_UTLMAP(m_ConceptTimers, FIELD_STRING, FIELD_EMBEDDED),
+	DEFINE_EMBEDDED_AUTO_ARRAY(m_ConceptCategoryTimers),
+	DEFINE_UTLMAP( m_ConceptTimers, FIELD_STRING, FIELD_EMBEDDED ),
 
 END_DATADESC()
 
 //-----------------------------------------------------------------------------
 
-CAI_AllySpeechManager* CAI_AllySpeechManager::gm_pSpeechManager;
+CAI_AllySpeechManager *CAI_AllySpeechManager::gm_pSpeechManager;
 
 //-----------------------------------------------------------------------------
 
-CAI_AllySpeechManager* GetAllySpeechManager()
+CAI_AllySpeechManager *GetAllySpeechManager()
 {
-	if (!CAI_AllySpeechManager::gm_pSpeechManager)
+	if ( !CAI_AllySpeechManager::gm_pSpeechManager )
 	{
-		CreateEntityByName("ai_ally_speech_manager");
-		Assert(CAI_AllySpeechManager::gm_pSpeechManager);
-		if (CAI_AllySpeechManager::gm_pSpeechManager)
-			DispatchSpawn(CAI_AllySpeechManager::gm_pSpeechManager);
+		CreateEntityByName( "ai_ally_speech_manager" );
+		Assert( CAI_AllySpeechManager::gm_pSpeechManager );
+		if ( CAI_AllySpeechManager::gm_pSpeechManager )
+			DispatchSpawn( CAI_AllySpeechManager::gm_pSpeechManager );
 	}
 
 	return CAI_AllySpeechManager::gm_pSpeechManager;
@@ -313,74 +313,74 @@ CAI_AllySpeechManager* GetAllySpeechManager()
 //
 //-----------------------------------------------------------------------------
 
-BEGIN_DATADESC(CAI_PlayerAlly)
+BEGIN_DATADESC( CAI_PlayerAlly )
 
-DEFINE_EMBEDDED(m_PendingResponse),
-DEFINE_STDSTRING(m_PendingConcept),
-DEFINE_FIELD(m_TimePendingSet, FIELD_TIME),
-DEFINE_FIELD(m_hTalkTarget, FIELD_EHANDLE),
-DEFINE_FIELD(m_flNextRegenTime, FIELD_TIME),
-DEFINE_FIELD(m_flTimePlayerStartStare, FIELD_TIME),
-DEFINE_FIELD(m_hPotentialSpeechTarget, FIELD_EHANDLE),
-DEFINE_FIELD(m_flNextIdleSpeechTime, FIELD_TIME),
-DEFINE_FIELD(m_iQARandomNumber, FIELD_INTEGER),
-DEFINE_FIELD(m_hSpeechFilter, FIELD_EHANDLE),
-DEFINE_EMBEDDED_AUTO_ARRAY(m_ConceptCategoryTimers),
+	DEFINE_EMBEDDED( m_PendingResponse ),
+	DEFINE_STDSTRING( m_PendingConcept ),
+	DEFINE_FIELD( m_TimePendingSet, FIELD_TIME ),
+	DEFINE_FIELD( m_hTalkTarget, FIELD_EHANDLE ),
+	DEFINE_FIELD( m_flNextRegenTime, FIELD_TIME ),
+	DEFINE_FIELD( m_flTimePlayerStartStare, FIELD_TIME ),
+	DEFINE_FIELD( m_hPotentialSpeechTarget, FIELD_EHANDLE ),
+	DEFINE_FIELD( m_flNextIdleSpeechTime, FIELD_TIME ),
+	DEFINE_FIELD( m_iQARandomNumber, FIELD_INTEGER ),
+	DEFINE_FIELD( m_hSpeechFilter, FIELD_EHANDLE ),
+	DEFINE_EMBEDDED_AUTO_ARRAY(m_ConceptCategoryTimers),
 
-DEFINE_KEYFIELD(m_bGameEndAlly, FIELD_BOOLEAN, "GameEndAlly"),
-DEFINE_FIELD(m_bCanSpeakWhileScripting, FIELD_BOOLEAN),
+	DEFINE_KEYFIELD( m_bGameEndAlly, FIELD_BOOLEAN, "GameEndAlly" ),
+	DEFINE_FIELD( m_bCanSpeakWhileScripting, FIELD_BOOLEAN ),
 
-DEFINE_FIELD(m_flHealthAccumulator, FIELD_FLOAT),
-DEFINE_FIELD(m_flTimeLastRegen, FIELD_TIME),
+	DEFINE_FIELD( m_flHealthAccumulator, FIELD_FLOAT ),
+	DEFINE_FIELD( m_flTimeLastRegen, FIELD_TIME ),
 
-// Inputs
-DEFINE_INPUTFUNC(FIELD_VOID, "IdleRespond", InputIdleRespond),
-DEFINE_INPUTFUNC(FIELD_STRING, "SpeakResponseConcept", InputSpeakResponseConcept),
-DEFINE_INPUTFUNC(FIELD_VOID, "MakeGameEndAlly", InputMakeGameEndAlly),
-DEFINE_INPUTFUNC(FIELD_VOID, "MakeRegularAlly", InputMakeRegularAlly),
-DEFINE_INPUTFUNC(FIELD_INTEGER, "AnswerQuestion", InputAnswerQuestion),
-DEFINE_INPUTFUNC(FIELD_INTEGER, "AnswerQuestionHello", InputAnswerQuestionHello),
-DEFINE_INPUTFUNC(FIELD_VOID, "EnableSpeakWhileScripting", InputEnableSpeakWhileScripting),
-DEFINE_INPUTFUNC(FIELD_VOID, "DisableSpeakWhileScripting", InputDisableSpeakWhileScripting),
+	// Inputs
+	DEFINE_INPUTFUNC( FIELD_VOID, "IdleRespond", InputIdleRespond ),
+	DEFINE_INPUTFUNC( FIELD_STRING,	"SpeakResponseConcept",	InputSpeakResponseConcept ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "MakeGameEndAlly", InputMakeGameEndAlly ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "MakeRegularAlly", InputMakeRegularAlly ),
+	DEFINE_INPUTFUNC( FIELD_INTEGER, "AnswerQuestion", InputAnswerQuestion ),
+	DEFINE_INPUTFUNC( FIELD_INTEGER, "AnswerQuestionHello", InputAnswerQuestionHello ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "EnableSpeakWhileScripting", InputEnableSpeakWhileScripting ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "DisableSpeakWhileScripting", InputDisableSpeakWhileScripting ),
 
 END_DATADESC()
 
-CBaseEntity* CreatePlayerLoadSave(Vector vOrigin, float flDuration, float flHoldTime, float flLoadTime);
-ConVar npc_ally_deathmessage("npc_ally_deathmessage", "1", FCVAR_CHEAT);
+CBaseEntity *CreatePlayerLoadSave( Vector vOrigin, float flDuration, float flHoldTime, float flLoadTime );
+ConVar npc_ally_deathmessage( "npc_ally_deathmessage", "1", FCVAR_CHEAT );
 
-void CAI_PlayerAlly::InputMakeGameEndAlly(inputdata_t& inputdata)
+void CAI_PlayerAlly::InputMakeGameEndAlly( inputdata_t &inputdata )
 {
 	m_bGameEndAlly = true;
 }
 
-void CAI_PlayerAlly::InputMakeRegularAlly(inputdata_t& inputdata)
+void CAI_PlayerAlly::InputMakeRegularAlly( inputdata_t &inputdata )
 {
 	m_bGameEndAlly = false;
 }
 
-void CAI_PlayerAlly::DisplayDeathMessage(void)
+void CAI_PlayerAlly::DisplayDeathMessage( void )
 {
-	if (m_bGameEndAlly == false)
+	if ( m_bGameEndAlly == false )
 		return;
 
-	if (npc_ally_deathmessage.GetBool() == 0)
+	if ( npc_ally_deathmessage.GetBool() == 0 )
 		return;
 
-	CBaseEntity* pPlayer = AI_GetSinglePlayer();
+	CBaseEntity *pPlayer = AI_GetSinglePlayer();
 
-	if (pPlayer)
+	if ( pPlayer )	
 	{
-		UTIL_ShowMessage(GetDeathMessageText(), ToBasePlayer(pPlayer));
+		UTIL_ShowMessage( GetDeathMessageText(), ToBasePlayer( pPlayer ) );
 		ToBasePlayer(pPlayer)->NotifySinglePlayerGameEnding();
 	}
 
-	CBaseEntity* pReload = CreatePlayerLoadSave(GetAbsOrigin(), 1.5f, 8.0f, 4.5f);
+	CBaseEntity *pReload = CreatePlayerLoadSave( GetAbsOrigin(), 1.5f, 8.0f, 4.5f );
 
-	if (pReload)
+	if ( pReload )
 	{
-		pReload->SetRenderColor(0, 0, 0, 255);
+		pReload->SetRenderColor( 0, 0, 0, 255 );
 
-		g_EventQueue.AddEvent(pReload, "Reload", 1.5f, pReload, pReload);
+		g_EventQueue.AddEvent( pReload, "Reload", 1.5f, pReload, pReload );
 	}
 
 	// clear any pending autosavedangerous
@@ -391,100 +391,100 @@ void CAI_PlayerAlly::DisplayDeathMessage(void)
 //-----------------------------------------------------------------------------
 // NPCs derived from CAI_PlayerAlly should call this in precache()
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::TalkInit(void)
+void CAI_PlayerAlly::TalkInit( void )
 {
-}
+}	
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::GatherConditions(void)
+void CAI_PlayerAlly::GatherConditions( void )
 {
 	BaseClass::GatherConditions();
-
-	if (!HasCondition(COND_SEE_PLAYER))
+	
+	if ( !HasCondition( COND_SEE_PLAYER ) )
 	{
-		SetCondition(COND_TALKER_CLIENTUNSEEN);
+		SetCondition( COND_TALKER_CLIENTUNSEEN );
 	}
 
-	CBasePlayer* pLocalPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
 
-	if (!pLocalPlayer)
+	if ( !pLocalPlayer )
 	{
-		if (AI_IsSinglePlayer())
-			SetCondition(COND_TALKER_PLAYER_DEAD);
+		if ( AI_IsSinglePlayer() )
+			SetCondition( COND_TALKER_PLAYER_DEAD );
 		return;
 	}
 
-	if (!pLocalPlayer->IsAlive())
+	if ( !pLocalPlayer->IsAlive() )
 	{
-		SetCondition(COND_TALKER_PLAYER_DEAD);
+		SetCondition( COND_TALKER_PLAYER_DEAD );
 	}
-
-	if (HasCondition(COND_SEE_PLAYER))
+	
+	if ( HasCondition( COND_SEE_PLAYER ) )
 	{
-
+				
 		bool bPlayerIsLooking = false;
-		if ((pLocalPlayer->GetAbsOrigin() - GetAbsOrigin()).Length2DSqr() < Square(TALKER_STARE_DIST))
+		if ( ( pLocalPlayer->GetAbsOrigin() - GetAbsOrigin() ).Length2DSqr() < Square(TALKER_STARE_DIST) )
 		{
-			if (pLocalPlayer->FInViewCone(EyePosition()))
+			if ( pLocalPlayer->FInViewCone( EyePosition() ) )
 			{
-				if (pLocalPlayer->GetSmoothedVelocity().LengthSqr() < Square(100))
+				if ( pLocalPlayer->GetSmoothedVelocity().LengthSqr() < Square( 100 ) )
 					bPlayerIsLooking = true;
 			}
 		}
-
-		if (bPlayerIsLooking)
+		
+		if ( bPlayerIsLooking )
 		{
-			SetCondition(COND_TALKER_PLAYER_STARING);
-			if (m_flTimePlayerStartStare == 0)
+			SetCondition( COND_TALKER_PLAYER_STARING );
+			if ( m_flTimePlayerStartStare == 0 )
 				m_flTimePlayerStartStare = gpGlobals->curtime;
 		}
 		else
 		{
 			m_flTimePlayerStartStare = 0;
-			ClearCondition(COND_TALKER_PLAYER_STARING);
+			ClearCondition( COND_TALKER_PLAYER_STARING );
 		}
 	}
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::GatherEnemyConditions(CBaseEntity* pEnemy)
+void CAI_PlayerAlly::GatherEnemyConditions( CBaseEntity *pEnemy )
 {
-	BaseClass::GatherEnemyConditions(pEnemy);
-	if (GetLastEnemyTime() == 0 || gpGlobals->curtime - GetLastEnemyTime() > 30)
+	BaseClass::GatherEnemyConditions( pEnemy );
+	if ( GetLastEnemyTime() == 0 || gpGlobals->curtime - GetLastEnemyTime() > 30 )
 	{
 #ifdef HL2_DLL
-		if (HasCondition(COND_SEE_ENEMY) && (pEnemy->Classify() != CLASS_BULLSEYE))
+		if ( HasCondition( COND_SEE_ENEMY ) && ( pEnemy->Classify() != CLASS_BULLSEYE ) )
 		{
-			if (Classify() == CLASS_PLAYER_ALLY_VITAL && hl2_episodic.GetBool())
+			if( Classify() == CLASS_PLAYER_ALLY_VITAL && hl2_episodic.GetBool() )
 			{
-				CBasePlayer* pPlayer = AI_GetSinglePlayer();
+				CBasePlayer *pPlayer = AI_GetSinglePlayer();
 
-				if (pPlayer)
+				if( pPlayer )
 				{
-
+				
 					// If I can see the player, and the player would see this enemy if he turned around...
-					if (!pPlayer->FInViewCone(pEnemy) && FVisible(pPlayer) && pPlayer->FVisible(pEnemy))
+					if( !pPlayer->FInViewCone(pEnemy) && FVisible( pPlayer ) && pPlayer->FVisible(pEnemy) )
 					{
 						Vector2D vecPlayerView = pPlayer->EyeDirection2D().AsVector2D();
-						Vector2D vecToEnemy = (pEnemy->GetAbsOrigin() - pPlayer->GetAbsOrigin()).AsVector2D();
-						Vector2DNormalize(vecToEnemy);
-
-						if (DotProduct2D(vecPlayerView, vecToEnemy) <= -0.75)
+						Vector2D vecToEnemy = ( pEnemy->GetAbsOrigin() - pPlayer->GetAbsOrigin() ).AsVector2D();
+						Vector2DNormalize( vecToEnemy );
+						
+						if( DotProduct2D(vecPlayerView, vecToEnemy) <= -0.75 )
 						{
-							SpeakIfAllowed(TLK_WATCHOUT, "dangerloc:behind");
+							SpeakIfAllowed( TLK_WATCHOUT, "dangerloc:behind" );
 							return;
 						}
 					}
 				}
 			}
-			SpeakIfAllowed(TLK_STARTCOMBAT);
+			SpeakIfAllowed( TLK_STARTCOMBAT );
 		}
 #else
-		if (HasCondition(COND_SEE_ENEMY))
+		if ( HasCondition( COND_SEE_ENEMY ) )
 		{
-			SpeakIfAllowed(TLK_STARTCOMBAT);
+			SpeakIfAllowed( TLK_STARTCOMBAT );
 		}
 #endif //HL2_DLL
 	}
@@ -492,18 +492,18 @@ void CAI_PlayerAlly::GatherEnemyConditions(CBaseEntity* pEnemy)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::OnStateChange(NPC_STATE OldState, NPC_STATE NewState)
+void CAI_PlayerAlly::OnStateChange( NPC_STATE OldState, NPC_STATE NewState )
 {
-	BaseClass::OnStateChange(OldState, NewState);
+	BaseClass::OnStateChange( OldState, NewState );
 
-	if (OldState == NPC_STATE_COMBAT)
+	if ( OldState == NPC_STATE_COMBAT )
 	{
 		DeferAllIdleSpeech();
 	}
-
-	if (GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT)
+ 
+	if ( GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT )
 	{
-		m_flNextIdleSpeechTime = gpGlobals->curtime + RandomFloat(5, 10);
+		m_flNextIdleSpeechTime = gpGlobals->curtime + RandomFloat(5,10);
 	}
 	else
 	{
@@ -513,51 +513,51 @@ void CAI_PlayerAlly::OnStateChange(NPC_STATE OldState, NPC_STATE NewState)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::PrescheduleThink(void)
+void CAI_PlayerAlly::PrescheduleThink( void )
 {
 	BaseClass::PrescheduleThink();
 
 #ifdef HL2_DLL
 	// Vital allies regenerate
-	if (GetHealth() >= GetMaxHealth())
+	if( GetHealth() >= GetMaxHealth() )
 	{
 		// Avoid huge deltas on first regeneration of health after long period of time at full health.
 		m_flTimeLastRegen = gpGlobals->curtime;
 	}
-	else if (ShouldRegenerateHealth())
+	else if ( ShouldRegenerateHealth() )
 	{
 		float flDelta = gpGlobals->curtime - m_flTimeLastRegen;
 		float flHealthPerSecond = 1.0f / sk_ally_regen_time.GetFloat();
 
 		float flHealthRegen = flHealthPerSecond * flDelta;
 
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if ( g_pGameRules->IsSkillLevel(SKILL_HARD) )
 			flHealthRegen *= 0.5f;
-		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		else if ( g_pGameRules->IsSkillLevel(SKILL_EASY) )
 			flHealthRegen *= 1.5f;
 
 		m_flTimeLastRegen = gpGlobals->curtime;
 
-		TakeHealth(flHealthRegen, DMG_GENERIC);
+		TakeHealth( flHealthRegen, DMG_GENERIC );
 	}
 
 #ifdef HL2_EPISODIC
-	if ((GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT)
-		&& !HasCondition(COND_RECEIVED_ORDERS) && !IsInAScript())
+	if ( (GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT) 
+		 && !HasCondition(COND_RECEIVED_ORDERS) && !IsInAScript() )
 	{
-		if (m_flNextIdleSpeechTime && m_flNextIdleSpeechTime < gpGlobals->curtime)
+		if ( m_flNextIdleSpeechTime && m_flNextIdleSpeechTime < gpGlobals->curtime )
 		{
 			AISpeechSelection_t selection;
 
-			if (SelectNonCombatSpeech(&selection))
+			if ( SelectNonCombatSpeech( &selection ) )
 			{
-				SetSpeechTarget(selection.hSpeechTarget);
-				SpeakDispatchResponse(selection.concept.c_str(), selection.Response);
-				m_flNextIdleSpeechTime = gpGlobals->curtime + RandomFloat(20, 30);
+				SetSpeechTarget( selection.hSpeechTarget );
+				SpeakDispatchResponse( selection.concept.c_str(), selection.Response );
+				m_flNextIdleSpeechTime = gpGlobals->curtime + RandomFloat( 20,30 );
 			}
 			else
 			{
-				m_flNextIdleSpeechTime = gpGlobals->curtime + RandomFloat(10, 20);
+				m_flNextIdleSpeechTime = gpGlobals->curtime + RandomFloat( 10,20 );
 			}
 		}
 	}
@@ -568,20 +568,20 @@ void CAI_PlayerAlly::PrescheduleThink(void)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-int CAI_PlayerAlly::SelectSchedule(void)
+int CAI_PlayerAlly::SelectSchedule( void )
 {
-	if (!HasCondition(COND_RECEIVED_ORDERS))
+	if ( !HasCondition(COND_RECEIVED_ORDERS) )
 	{
 		// sustained light wounds?
-		if (m_iHealth <= m_iMaxHealth * 0.75 && IsAllowedToSpeak(TLK_WOUND) && !GetExpresser()->SpokeConcept(TLK_WOUND))
+		if ( m_iHealth <= m_iMaxHealth * 0.75 && IsAllowedToSpeak( TLK_WOUND ) && !GetExpresser()->SpokeConcept(TLK_WOUND) )
 		{
 			CTakeDamageInfo info;
-			PainSound(info);
+			PainSound( info );
 		}
 		// sustained heavy wounds?
-		else if (m_iHealth <= m_iMaxHealth * 0.5 && IsAllowedToSpeak(TLK_MORTAL))
+		else if ( m_iHealth <= m_iMaxHealth * 0.5 && IsAllowedToSpeak( TLK_MORTAL) )
 		{
-			Speak(TLK_MORTAL);
+			Speak( TLK_MORTAL );
 		}
 	}
 
@@ -590,12 +590,12 @@ int CAI_PlayerAlly::SelectSchedule(void)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::SelectSpeechResponse(AIConcept_t concept, const char* pszModifiers, CBaseEntity* pTarget, AISpeechSelection_t* pSelection)
+bool CAI_PlayerAlly::SelectSpeechResponse( AIConcept_t concept, const char *pszModifiers, CBaseEntity *pTarget, AISpeechSelection_t *pSelection )
 {
-	if (IsAllowedToSpeak(concept))
+	if ( IsAllowedToSpeak( concept ) )
 	{
-		bool result = SpeakFindResponse(pSelection->Response, concept, pszModifiers);
-		if (result)
+		bool result = SpeakFindResponse( pSelection->Response, concept, pszModifiers );
+		if ( result )
 		{
 			pSelection->concept = concept;
 			pSelection->hSpeechTarget = pTarget;
@@ -608,7 +608,7 @@ bool CAI_PlayerAlly::SelectSpeechResponse(AIConcept_t concept, const char* pszMo
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::SetPendingSpeech(AIConcept_t concept, AI_Response& Response)
+void CAI_PlayerAlly::SetPendingSpeech( AIConcept_t concept, AI_Response &Response )
 {
 	m_PendingResponse = Response;
 	m_PendingConcept = concept;
@@ -626,25 +626,25 @@ void CAI_PlayerAlly::ClearPendingSpeech()
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
-bool CAI_PlayerAlly::SelectIdleSpeech(AISpeechSelection_t* pSelection)
+bool CAI_PlayerAlly::SelectIdleSpeech( AISpeechSelection_t *pSelection )
 {
-	if (!IsOkToSpeak(SPEECH_IDLE))
+	if ( !IsOkToSpeak( SPEECH_IDLE ) )
 		return false;
 
-	CBasePlayer* pTarget = assert_cast<CBasePlayer*>(FindSpeechTarget(AIST_PLAYERS | AIST_FACING_TARGET));
-	if (pTarget)
+	CBasePlayer *pTarget = assert_cast<CBasePlayer *>(FindSpeechTarget( AIST_PLAYERS | AIST_FACING_TARGET ));
+	if ( pTarget )
 	{
-		if (SelectSpeechResponse(TLK_HELLO, NULL, pTarget, pSelection))
+		if ( SelectSpeechResponse( TLK_HELLO, NULL, pTarget, pSelection ) )
 			return true;
-
-		if (GetTimePlayerStaring() > 6 && !IsMoving())
+		
+		if ( GetTimePlayerStaring() > 6 && !IsMoving() )
 		{
-			if (SelectSpeechResponse(TLK_STARE, NULL, pTarget, pSelection))
+			if ( SelectSpeechResponse( TLK_STARE, NULL, pTarget, pSelection ) )
 				return true;
 		}
 
-		int chance = (IsMoving()) ? 20 : 2;
-		if (ShouldSpeakRandom(TLK_IDLE, chance) && SelectSpeechResponse(TLK_IDLE, NULL, pTarget, pSelection))
+		int chance = ( IsMoving() ) ? 20 : 2;
+		if ( ShouldSpeakRandom( TLK_IDLE, chance ) && SelectSpeechResponse( TLK_IDLE, NULL, pTarget, pSelection ) )
 			return true;
 	}
 	return false;
@@ -653,25 +653,25 @@ bool CAI_PlayerAlly::SelectIdleSpeech(AISpeechSelection_t* pSelection)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::SelectAlertSpeech(AISpeechSelection_t* pSelection)
+bool CAI_PlayerAlly::SelectAlertSpeech( AISpeechSelection_t *pSelection )
 {
 #ifdef HL2_EPISODIC
-	CBasePlayer* pTarget = assert_cast<CBasePlayer*>(FindSpeechTarget(AIST_PLAYERS | AIST_FACING_TARGET));
-	if (pTarget)
+	CBasePlayer *pTarget = assert_cast<CBasePlayer *>(FindSpeechTarget( AIST_PLAYERS | AIST_FACING_TARGET ));
+	if ( pTarget )
 	{
-		if (pTarget->IsAlive())
+		if ( pTarget->IsAlive() )
 		{
 			float flHealthPerc = ((float)pTarget->m_iHealth / (float)pTarget->m_iMaxHealth);
-			if (flHealthPerc < 1.0)
+			if ( flHealthPerc < 1.0 )
 			{
-				if (SelectSpeechResponse(TLK_PLHURT, NULL, pTarget, pSelection))
+				if ( SelectSpeechResponse( TLK_PLHURT, NULL, pTarget, pSelection ) )
 					return true;
 			}
 		}
 	}
 #endif
 
-	return SelectIdleSpeech(pSelection);
+	return SelectIdleSpeech( pSelection );
 }
 
 //-----------------------------------------------------------------------------
@@ -679,20 +679,20 @@ bool CAI_PlayerAlly::SelectAlertSpeech(AISpeechSelection_t* pSelection)
 
 bool CAI_PlayerAlly::SelectInterjection()
 {
-	if (HasPendingSpeech())
+	if ( HasPendingSpeech() )
 		return false;
 
-	if (HasCondition(COND_RECEIVED_ORDERS))
+	if ( HasCondition(COND_RECEIVED_ORDERS) )
 		return false;
 
-	if (GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT)
+	if ( GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT )
 	{
 		AISpeechSelection_t selection;
 
-		if (SelectIdleSpeech(&selection))
+		if ( SelectIdleSpeech( &selection ) )
 		{
-			SetSpeechTarget(selection.hSpeechTarget);
-			SpeakDispatchResponse(selection.concept.c_str(), selection.Response);
+			SetSpeechTarget( selection.hSpeechTarget );
+			SpeakDispatchResponse( selection.concept.c_str(), selection.Response );
 			return true;
 		}
 	}
@@ -705,31 +705,31 @@ bool CAI_PlayerAlly::SelectInterjection()
 
 bool CAI_PlayerAlly::SelectPlayerUseSpeech()
 {
-	if (IsOkToSpeakInResponseToPlayer())
+	if( IsOkToSpeakInResponseToPlayer() )
 	{
-		if (Speak(TLK_USE))
+		if ( Speak( TLK_USE ) )
 			DeferAllIdleSpeech();
 		else
-			return Speak((!GetExpresser()->SpokeConcept(TLK_HELLO)) ? TLK_HELLO : TLK_IDLE);
-	}
+			return Speak( ( !GetExpresser()->SpokeConcept( TLK_HELLO ) ) ? TLK_HELLO : TLK_IDLE );
+	}	
 	return false;
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::SelectQuestionAndAnswerSpeech(AISpeechSelection_t* pSelection)
+bool CAI_PlayerAlly::SelectQuestionAndAnswerSpeech( AISpeechSelection_t *pSelection )
 {
-	if (!IsOkToSpeak(SPEECH_IDLE))
+	if ( !IsOkToSpeak( SPEECH_IDLE ) )
 		return false;
 
-	if (IsMoving())
+	if ( IsMoving() )
 		return false;
 
 	// if there is a friend nearby to speak to, play sentence, set friend's response time, return
-	CAI_PlayerAlly* pFriend = dynamic_cast<CAI_PlayerAlly*>(FindSpeechTarget(AIST_NPCS));
-	if (pFriend && !pFriend->IsMoving() && !pFriend->HasSpawnFlags(SF_NPC_GAG))
-		return SelectQuestionFriend(pFriend, pSelection);
+	CAI_PlayerAlly *pFriend = dynamic_cast<CAI_PlayerAlly *>(FindSpeechTarget( AIST_NPCS ));
+	if ( pFriend && !pFriend->IsMoving() && !pFriend->HasSpawnFlags(SF_NPC_GAG) )
+		return SelectQuestionFriend( pFriend, pSelection );
 
 	return false;
 }
@@ -737,33 +737,33 @@ bool CAI_PlayerAlly::SelectQuestionAndAnswerSpeech(AISpeechSelection_t* pSelecti
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::PostSpeakDispatchResponse(AIConcept_t concept, AI_Response* response)
+void CAI_PlayerAlly::PostSpeakDispatchResponse( AIConcept_t concept, AI_Response *response )
 {
 #ifdef HL2_EPISODIC
-	CAI_AllySpeechManager* pSpeechManager = GetAllySpeechManager();
-	ConceptInfo_t* pConceptInfo = pSpeechManager->GetConceptInfo(concept);
-	if (pConceptInfo && (pConceptInfo->flags & AICF_QUESTION) && GetSpeechTarget())
+	CAI_AllySpeechManager *pSpeechManager = GetAllySpeechManager();
+	ConceptInfo_t *pConceptInfo	= pSpeechManager->GetConceptInfo( concept );
+	if ( pConceptInfo && (pConceptInfo->flags & AICF_QUESTION) && GetSpeechTarget() )
 	{
 		bool bSaidHelloToNPC = !Q_strcmp(concept, "TLK_HELLO_NPC");
 
 		float duration = GetExpresser()->GetSemaphoreAvailableTime(this) - gpGlobals->curtime;
 
-		if (rr_debug_qa.GetBool())
+		if ( rr_debug_qa.GetBool() )
 		{
-			if (bSaidHelloToNPC)
+			if ( bSaidHelloToNPC )
 			{
-				Warning("Q&A: '%s' said Hello to '%s' (concept %s)\n", GetDebugName(), GetSpeechTarget()->GetDebugName(), concept);
+				Warning("Q&A: '%s' said Hello to '%s' (concept %s)\n", GetDebugName(), GetSpeechTarget()->GetDebugName(), concept );
 			}
 			else
 			{
-				Warning("Q&A: '%s' questioned '%s' (concept %s)\n", GetDebugName(), GetSpeechTarget()->GetDebugName(), concept);
+				Warning("Q&A: '%s' questioned '%s' (concept %s)\n", GetDebugName(), GetSpeechTarget()->GetDebugName(), concept );
 			}
-			NDebugOverlay::HorzArrow(GetAbsOrigin(), GetSpeechTarget()->GetAbsOrigin(), 8, 0, 255, 0, 64, true, duration);
+			NDebugOverlay::HorzArrow( GetAbsOrigin(), GetSpeechTarget()->GetAbsOrigin(), 8, 0, 255, 0, 64, true, duration );
 		}
 
 		// If we spoke a Question, tell our friend to answer
-		const char* pszInput;
-		if (bSaidHelloToNPC)
+		const char *pszInput;
+		if ( bSaidHelloToNPC )
 		{
 			pszInput = "AnswerQuestionHello";
 		}
@@ -774,29 +774,29 @@ void CAI_PlayerAlly::PostSpeakDispatchResponse(AIConcept_t concept, AI_Response*
 
 		// Set the input parameter to the random number we used to find the Question
 		variant_t value;
-		value.SetInt(m_iQARandomNumber);
-		g_EventQueue.AddEvent(GetSpeechTarget(), pszInput, value, duration + .2, this, this);
+		value.SetInt( m_iQARandomNumber );
+		g_EventQueue.AddEvent( GetSpeechTarget(), pszInput, value, duration + .2, this, this );
 
-		if (GetSpeechTarget()->MyNPCPointer())
+		if ( GetSpeechTarget()->MyNPCPointer() )
 		{
-			AddLookTarget(GetSpeechTarget()->MyNPCPointer(), 1.0, duration + random->RandomFloat(0.4, 1.2), 0.5);
-			GetSpeechTarget()->MyNPCPointer()->AddLookTarget(this, 1.0, duration + random->RandomFloat(0.4, 1), 0.7);
+			AddLookTarget( GetSpeechTarget()->MyNPCPointer(), 1.0, duration + random->RandomFloat( 0.4, 1.2 ), 0.5 );
+			GetSpeechTarget()->MyNPCPointer()->AddLookTarget( this, 1.0, duration + random->RandomFloat( 0.4, 1 ), 0.7 );
 		}
 
 		// Don't let anyone else butt in.
-		DeferAllIdleSpeech(random->RandomFloat(TALKER_DEFER_IDLE_SPEAK_MIN, TALKER_DEFER_IDLE_SPEAK_MAX), GetSpeechTarget()->MyNPCPointer());
+		DeferAllIdleSpeech( random->RandomFloat( TALKER_DEFER_IDLE_SPEAK_MIN, TALKER_DEFER_IDLE_SPEAK_MAX ), GetSpeechTarget()->MyNPCPointer() );
 	}
-	else if (pConceptInfo && (pConceptInfo->flags & AICF_ANSWER) && GetSpeechTarget())
+	else if ( pConceptInfo && (pConceptInfo->flags & AICF_ANSWER) && GetSpeechTarget() )
 	{
 		float duration = GetExpresser()->GetSemaphoreAvailableTime(this) - gpGlobals->curtime;
-		if (rr_debug_qa.GetBool())
+		if ( rr_debug_qa.GetBool() )
 		{
-			NDebugOverlay::HorzArrow(GetAbsOrigin(), GetSpeechTarget()->GetAbsOrigin(), 8, 0, 255, 0, 64, true, duration);
+			NDebugOverlay::HorzArrow( GetAbsOrigin(), GetSpeechTarget()->GetAbsOrigin(), 8, 0, 255, 0, 64, true, duration );
 		}
-		if (GetSpeechTarget()->MyNPCPointer())
+		if ( GetSpeechTarget()->MyNPCPointer() )
 		{
-			AddLookTarget(GetSpeechTarget()->MyNPCPointer(), 1.0, duration + random->RandomFloat(0, 0.3), 0.5);
-			GetSpeechTarget()->MyNPCPointer()->AddLookTarget(this, 1.0, duration + random->RandomFloat(0.2, 0.5), 0.7);
+			AddLookTarget( GetSpeechTarget()->MyNPCPointer(), 1.0, duration + random->RandomFloat( 0, 0.3 ), 0.5 );
+			GetSpeechTarget()->MyNPCPointer()->AddLookTarget( this, 1.0, duration + random->RandomFloat( 0.2, 0.5 ), 0.7 );
 		}
 	}
 
@@ -807,68 +807,68 @@ void CAI_PlayerAlly::PostSpeakDispatchResponse(AIConcept_t concept, AI_Response*
 //-----------------------------------------------------------------------------
 // Purpose: Find a concept to question a nearby friend
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::SelectQuestionFriend(CBaseEntity* pFriend, AISpeechSelection_t* pSelection)
+bool CAI_PlayerAlly::SelectQuestionFriend( CBaseEntity *pFriend, AISpeechSelection_t *pSelection )
 {
-	if (!ShouldSpeakRandom(TLK_QUESTION, 3))
+	if ( !ShouldSpeakRandom( TLK_QUESTION, 3 ) )
 		return false;
 
 	// Tell the response rules who we're trying to question
 	m_hPotentialSpeechTarget = pFriend;
-	m_iQARandomNumber = RandomInt(0, 100);
+	m_iQARandomNumber = RandomInt(0,100);
 
 	// If we haven't said hello, say hello first.
 	// Only ever say hello to NPCs other than my type.
-	if (!GetExpresser()->SpokeConcept(TLK_HELLO_NPC) && !FClassnameIs(this, pFriend->GetClassname()))
+	if ( !GetExpresser()->SpokeConcept( TLK_HELLO_NPC  ) && !FClassnameIs( this, pFriend->GetClassname()) )
 	{
-		if (SelectSpeechResponse(TLK_HELLO_NPC, NULL, pFriend, pSelection))
+		if ( SelectSpeechResponse( TLK_HELLO_NPC, NULL, pFriend, pSelection ) )
 			return true;
 
-		GetExpresser()->SetSpokeConcept(TLK_HELLO_NPC, NULL);
+		GetExpresser()->SetSpokeConcept( TLK_HELLO_NPC, NULL );
 	}
 
-	return SelectSpeechResponse(TLK_QUESTION, NULL, pFriend, pSelection);
+	return SelectSpeechResponse( TLK_QUESTION, NULL, pFriend, pSelection );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Find a concept to answer our friend's question
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::SelectAnswerFriend(CBaseEntity* pFriend, AISpeechSelection_t* pSelection, bool bRespondingToHello)
+bool CAI_PlayerAlly::SelectAnswerFriend( CBaseEntity *pFriend, AISpeechSelection_t *pSelection, bool bRespondingToHello )
 {
 	// Tell the response rules who we're trying to answer
 	m_hPotentialSpeechTarget = pFriend;
 
-	if (bRespondingToHello)
+	if ( bRespondingToHello )
 	{
-		if (SelectSpeechResponse(TLK_ANSWER_HELLO, NULL, pFriend, pSelection))
+		if ( SelectSpeechResponse( TLK_ANSWER_HELLO, NULL, pFriend, pSelection ) )
 			return true;
 	}
 
-	return SelectSpeechResponse(TLK_ANSWER, NULL, pFriend, pSelection);
+	return SelectSpeechResponse( TLK_ANSWER, NULL, pFriend, pSelection );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::InputAnswerQuestion(inputdata_t& inputdata)
+void CAI_PlayerAlly::InputAnswerQuestion( inputdata_t &inputdata )
 {
-	AnswerQuestion(dynamic_cast<CAI_PlayerAlly*>(inputdata.pActivator), inputdata.value.Int(), false);
+	AnswerQuestion( dynamic_cast<CAI_PlayerAlly *>(inputdata.pActivator), inputdata.value.Int(), false );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::InputAnswerQuestionHello(inputdata_t& inputdata)
+void CAI_PlayerAlly::InputAnswerQuestionHello( inputdata_t &inputdata )
 {
-	AnswerQuestion(dynamic_cast<CAI_PlayerAlly*>(inputdata.pActivator), inputdata.value.Int(), true);
+	AnswerQuestion( dynamic_cast<CAI_PlayerAlly *>(inputdata.pActivator), inputdata.value.Int(), true );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::AnswerQuestion(CAI_PlayerAlly* pQuestioner, int iQARandomNum, bool bAnsweringHello)
+void CAI_PlayerAlly::AnswerQuestion( CAI_PlayerAlly *pQuestioner, int iQARandomNum, bool bAnsweringHello )
 {
 	// Original questioner may have died
-	if (!pQuestioner)
+	if ( !pQuestioner )
 		return;
 
 	AISpeechSelection_t selection;
@@ -877,56 +877,56 @@ void CAI_PlayerAlly::AnswerQuestion(CAI_PlayerAlly* pQuestioner, int iQARandomNu
 	m_iQARandomNumber = iQARandomNum;
 
 	// The activator is the person we're responding to
-	if (SelectAnswerFriend(pQuestioner, &selection, bAnsweringHello))
+ 	if ( SelectAnswerFriend( pQuestioner, &selection, bAnsweringHello ) )
 	{
-		if (rr_debug_qa.GetBool())
+		if ( rr_debug_qa.GetBool() )
 		{
-			if (bAnsweringHello)
+			if ( bAnsweringHello )
 			{
-				Warning("Q&A: '%s' answered the Hello from '%s'\n", GetDebugName(), pQuestioner->GetDebugName());
+				Warning("Q&A: '%s' answered the Hello from '%s'\n", GetDebugName(), pQuestioner->GetDebugName() );
 			}
 			else
 			{
-				Warning("Q&A: '%s' answered the Question from '%s'\n", GetDebugName(), pQuestioner->GetDebugName());
+				Warning("Q&A: '%s' answered the Question from '%s'\n", GetDebugName(), pQuestioner->GetDebugName() );
 			}
 		}
 
-		SetSpeechTarget(selection.hSpeechTarget);
-		SpeakDispatchResponse(selection.concept.c_str(), selection.Response);
+		SetSpeechTarget( selection.hSpeechTarget );
+		SpeakDispatchResponse( selection.concept.c_str(), selection.Response );
 
 		// Prevent idle speech for a while
-		DeferAllIdleSpeech(random->RandomFloat(TALKER_DEFER_IDLE_SPEAK_MIN, TALKER_DEFER_IDLE_SPEAK_MAX), GetSpeechTarget()->MyNPCPointer());
+		DeferAllIdleSpeech( random->RandomFloat( TALKER_DEFER_IDLE_SPEAK_MIN, TALKER_DEFER_IDLE_SPEAK_MAX ), GetSpeechTarget()->MyNPCPointer() );
 	}
-	else if (rr_debug_qa.GetBool())
+	else if ( rr_debug_qa.GetBool() )
 	{
-		Warning("Q&A: '%s' couldn't answer '%s'\n", GetDebugName(), pQuestioner->GetDebugName());
+		Warning("Q&A: '%s' couldn't answer '%s'\n", GetDebugName(), pQuestioner->GetDebugName() );
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Output : int
 //-----------------------------------------------------------------------------
-int CAI_PlayerAlly::SelectNonCombatSpeech(AISpeechSelection_t* pSelection)
+int CAI_PlayerAlly::SelectNonCombatSpeech( AISpeechSelection_t *pSelection )
 {
 	bool bResult = false;
 
-#ifdef HL2_EPISODIC
+	#ifdef HL2_EPISODIC
 	// See if we can Q&A first
-	if (GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT)
+	if ( GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT )
 	{
-		bResult = SelectQuestionAndAnswerSpeech(pSelection);
+		bResult = SelectQuestionAndAnswerSpeech( pSelection );
 	}
-#endif // HL2_EPISODIC
+	#endif // HL2_EPISODIC
 
-	if (!bResult)
+	if ( !bResult )
 	{
-		if (GetState() == NPC_STATE_ALERT)
+		if ( GetState() == NPC_STATE_ALERT ) 
 		{
-			bResult = SelectAlertSpeech(pSelection);
+			bResult = SelectAlertSpeech( pSelection );
 		}
 		else
 		{
-			bResult = SelectIdleSpeech(pSelection);
+			bResult = SelectIdleSpeech( pSelection );
 		}
 	}
 
@@ -937,117 +937,117 @@ int CAI_PlayerAlly::SelectNonCombatSpeech(AISpeechSelection_t* pSelection)
 //-----------------------------------------------------------------------------
 int CAI_PlayerAlly::SelectNonCombatSpeechSchedule()
 {
-	if (!HasPendingSpeech())
+	if ( !HasPendingSpeech() )
 	{
 		AISpeechSelection_t selection;
 
-		if (SelectNonCombatSpeech(&selection))
+		if ( SelectNonCombatSpeech( &selection ) )
 		{
-			SetSpeechTarget(selection.hSpeechTarget);
-			SetPendingSpeech(selection.concept.c_str(), selection.Response);
+			SetSpeechTarget( selection.hSpeechTarget );
+			SetPendingSpeech( selection.concept.c_str(), selection.Response );
 		}
 	}
-
-	if (HasPendingSpeech())
+	
+	if ( HasPendingSpeech() )
 	{
-		if (m_TimePendingSet == gpGlobals->curtime || IsAllowedToSpeak(m_PendingConcept.c_str()))
+		if ( m_TimePendingSet == gpGlobals->curtime || IsAllowedToSpeak( m_PendingConcept.c_str() ) )
 			return SCHED_TALKER_SPEAK_PENDING_IDLE;
 	}
-
+	
 	return SCHED_NONE;
-}
+} 
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-int CAI_PlayerAlly::TranslateSchedule(int schedule)
+int CAI_PlayerAlly::TranslateSchedule( int schedule )
 {
-	if ((GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT) &&
-		ConditionInterruptsSchedule(schedule, COND_IDLE_INTERRUPT) &&
-		!HasCondition(COND_RECEIVED_ORDERS))
+	if ( ( GetState() == NPC_STATE_IDLE || GetState() == NPC_STATE_ALERT ) && 
+		 ConditionInterruptsSchedule( schedule, COND_IDLE_INTERRUPT ) &&
+		 !HasCondition(COND_RECEIVED_ORDERS) )
 	{
 		int speechSchedule = SelectNonCombatSpeechSchedule();
-		if (speechSchedule != SCHED_NONE)
+		if ( speechSchedule != SCHED_NONE )
 			return speechSchedule;
 	}
 
-	switch (schedule)
+	switch( schedule )
 	{
 	case SCHED_CHASE_ENEMY_FAILED:
-	{
-		int baseType = BaseClass::TranslateSchedule(schedule);
-		if (baseType != SCHED_CHASE_ENEMY_FAILED)
-			return baseType;
-
-		return SCHED_TAKE_COVER_FROM_ENEMY;
-	}
-	break;
-	}
-	return BaseClass::TranslateSchedule(schedule);
-}
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-void CAI_PlayerAlly::OnStartSchedule(int schedule)
-{
-	if (schedule == SCHED_HIDE_AND_RELOAD)
-		SpeakIfAllowed(TLK_HIDEANDRELOAD);
-	BaseClass::OnStartSchedule(schedule);
-}
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-void CAI_PlayerAlly::StartTask(const Task_t* pTask)
-{
-	switch (pTask->iTask)
-	{
-	case TASK_MOVE_AWAY_PATH:
-	{
-		if (HasCondition(COND_PLAYER_PUSHING) && AI_IsSinglePlayer())
 		{
-			// @TODO (toml 10-22-04): cope with multiplayer push
-			GetMotor()->SetIdealYawToTarget(UTIL_GetLocalPlayer()->WorldSpaceCenter());
+			int baseType = BaseClass::TranslateSchedule(schedule);
+			if ( baseType != SCHED_CHASE_ENEMY_FAILED )
+				return baseType;
+
+			return SCHED_TAKE_COVER_FROM_ENEMY;
 		}
-		BaseClass::StartTask(pTask);
 		break;
 	}
+	return BaseClass::TranslateSchedule( schedule );
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CAI_PlayerAlly::OnStartSchedule( int schedule )
+{
+	if ( schedule == SCHED_HIDE_AND_RELOAD )
+		SpeakIfAllowed( TLK_HIDEANDRELOAD );
+	BaseClass::OnStartSchedule( schedule );
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CAI_PlayerAlly::StartTask( const Task_t *pTask )
+{
+	switch ( pTask->iTask )
+	{
+	case TASK_MOVE_AWAY_PATH:
+		{
+			if ( HasCondition( COND_PLAYER_PUSHING ) && AI_IsSinglePlayer() )
+			{
+				// @TODO (toml 10-22-04): cope with multiplayer push
+				GetMotor()->SetIdealYawToTarget( UTIL_GetLocalPlayer()->WorldSpaceCenter() );
+			}
+			BaseClass::StartTask( pTask );
+			break;
+		}
 
 	case TASK_PLAY_SCRIPT:
-		SetSpeechTarget(NULL);
-		BaseClass::StartTask(pTask);
+		SetSpeechTarget( NULL );
+		BaseClass::StartTask( pTask );
 		break;
 
 	case TASK_TALKER_SPEAK_PENDING:
-		if (!m_PendingConcept.empty())
+		if ( !m_PendingConcept.empty() )
 		{
-			SpeakDispatchResponse(m_PendingConcept.c_str(), m_PendingResponse);
+			SpeakDispatchResponse( m_PendingConcept.c_str(), m_PendingResponse );
 			m_PendingConcept.erase();
 			TaskComplete();
 		}
 		else
 		{
-			TaskFail(FAIL_NO_SOUND);
+			TaskFail( FAIL_NO_SOUND );
 		}
 		break;
 
 	default:
-		BaseClass::StartTask(pTask);
+		BaseClass::StartTask( pTask );
 	}
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::RunTask(const Task_t* pTask)
+void CAI_PlayerAlly::RunTask( const Task_t *pTask )
 {
-	BaseClass::RunTask(pTask);
+	BaseClass::RunTask( pTask );
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::TaskFail(AI_TaskFailureCode_t code)
+void CAI_PlayerAlly::TaskFail( AI_TaskFailureCode_t code )
 {
-	if (IsCurSchedule(SCHED_TALKER_SPEAK_PENDING_IDLE, false))
+	if ( IsCurSchedule( SCHED_TALKER_SPEAK_PENDING_IDLE, false ) )
 		ClearPendingSpeech();
-	BaseClass::TaskFail(code);
+	BaseClass::TaskFail( code );
 }
 
 //-----------------------------------------------------------------------------
@@ -1059,94 +1059,94 @@ void CAI_PlayerAlly::ClearTransientConditions()
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::Touch(CBaseEntity* pOther)
+void CAI_PlayerAlly::Touch( CBaseEntity *pOther )
 {
-	BaseClass::Touch(pOther);
+	BaseClass::Touch( pOther );
 
 	// Did the player touch me?
-	if (pOther->IsPlayer())
+	if ( pOther->IsPlayer() )
 	{
 		// Ignore if pissed at player
-		if (m_afMemory & bits_MEMORY_PROVOKED)
+		if ( m_afMemory & bits_MEMORY_PROVOKED )
 			return;
 
 		// Stay put during speech
-		if (GetExpresser()->IsSpeaking())
+		if ( GetExpresser()->IsSpeaking() )
 			return;
-
-		TestPlayerPushing(pOther);
+			
+		TestPlayerPushing( pOther );
 	}
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::OnKilledNPC(CBaseCombatCharacter* pKilled)
+void CAI_PlayerAlly::OnKilledNPC( CBaseCombatCharacter *pKilled )
 {
-	if (pKilled)
+	if ( pKilled )
 	{
-		if (!pKilled->IsNPC() ||
-			(pKilled->MyNPCPointer()->GetLastPlayerDamageTime() == 0 ||
-				gpGlobals->curtime - pKilled->MyNPCPointer()->GetLastPlayerDamageTime() > 5))
+		if ( !pKilled->IsNPC() || 
+			( pKilled->MyNPCPointer()->GetLastPlayerDamageTime() == 0 ||
+			  gpGlobals->curtime - pKilled->MyNPCPointer()->GetLastPlayerDamageTime() > 5 ) )
 		{
-			SpeakIfAllowed(TLK_ENEMY_DEAD);
+			SpeakIfAllowed( TLK_ENEMY_DEAD );
 		}
 	}
 }
 
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::TraceAttack(const CTakeDamageInfo& info, const Vector& vecDir, trace_t* ptr, CDmgAccumulator* pAccumulator)
+void CAI_PlayerAlly::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
-	const char* pszHitLocCriterion = NULL;
+	const char *pszHitLocCriterion = NULL;
 
-	if (ptr->hitgroup == HITGROUP_LEFTLEG || ptr->hitgroup == HITGROUP_RIGHTLEG)
+	if ( ptr->hitgroup == HITGROUP_LEFTLEG || ptr->hitgroup == HITGROUP_RIGHTLEG )
 	{
 		pszHitLocCriterion = "shotloc:leg";
 	}
-	else if (ptr->hitgroup == HITGROUP_LEFTARM || ptr->hitgroup == HITGROUP_RIGHTARM)
+	else if ( ptr->hitgroup == HITGROUP_LEFTARM || ptr->hitgroup == HITGROUP_RIGHTARM )
 	{
 		pszHitLocCriterion = "shotloc:arm";
 	}
-	else if (ptr->hitgroup == HITGROUP_STOMACH)
+	else if ( ptr->hitgroup == HITGROUP_STOMACH )
 	{
 		pszHitLocCriterion = "shotloc:gut";
 	}
 
 	// set up the speech modifiers
-	CFmtStrN<128> modifiers("%s,damageammo:%s", pszHitLocCriterion, info.GetAmmoName());
+	CFmtStrN<128> modifiers( "%s,damageammo:%s", pszHitLocCriterion, info.GetAmmoName() );
 
-	SpeakIfAllowed(TLK_SHOT, modifiers);
+	SpeakIfAllowed( TLK_SHOT, modifiers );
 
-	BaseClass::TraceAttack(info, vecDir, ptr, pAccumulator);
+	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-int CAI_PlayerAlly::OnTakeDamage_Alive(const CTakeDamageInfo& info)
+int CAI_PlayerAlly::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 {
 	CTakeDamageInfo subInfo = info;
 	// Vital allies never take more than 25% of their health in a single hit (except for physics damage)
 #ifdef HL2_DLL
 	// Don't do damage reduction for DMG_GENERIC. This allows SetHealth inputs to still do full damage.
-	if (subInfo.GetDamageType() != DMG_GENERIC)
+	if ( subInfo.GetDamageType() != DMG_GENERIC )
 	{
-		if (Classify() == CLASS_PLAYER_ALLY_VITAL && !(subInfo.GetDamageType() & DMG_CRUSH))
+		if ( Classify() == CLASS_PLAYER_ALLY_VITAL && !(subInfo.GetDamageType() & DMG_CRUSH) )
 		{
 			float flDamage = subInfo.GetDamage();
-			if (flDamage > (GetMaxHealth() * 0.25))
+			if ( flDamage > ( GetMaxHealth() * 0.25 ) )
 			{
-				flDamage = (GetMaxHealth() * 0.25);
-				subInfo.SetDamage(flDamage);
+				flDamage = ( GetMaxHealth() * 0.25 );
+				subInfo.SetDamage( flDamage );
 			}
 		}
 	}
 #endif
 
-	return BaseClass::OnTakeDamage_Alive(subInfo);
+	return BaseClass::OnTakeDamage_Alive( subInfo );
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-int CAI_PlayerAlly::TakeHealth(float flHealth, int bitsDamageType)
+int CAI_PlayerAlly::TakeHealth( float flHealth, int bitsDamageType )
 {
 	int intPortion;
 	float floatPortion;
@@ -1156,44 +1156,44 @@ int CAI_PlayerAlly::TakeHealth(float flHealth, int bitsDamageType)
 
 	m_flHealthAccumulator += floatPortion;
 
-	while (m_flHealthAccumulator > 1.0f)
+	while ( m_flHealthAccumulator > 1.0f )
 	{
 		m_flHealthAccumulator -= 1.0f;
 		intPortion += 1;
 	}
 
-	return BaseClass::TakeHealth(((float)intPortion), bitsDamageType);
+	return BaseClass::TakeHealth( ((float)intPortion), bitsDamageType );
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::Event_Killed(const CTakeDamageInfo& info)
+void CAI_PlayerAlly::Event_Killed( const CTakeDamageInfo &info )
 {
 	// notify the player
-	if (IsInPlayerSquad())
+	if ( IsInPlayerSquad() )
 	{
-		CBasePlayer* player = AI_GetSinglePlayer();
-		if (player)
+		CBasePlayer *player = AI_GetSinglePlayer();
+		if ( player )
 		{
 			variant_t emptyVariant;
-			player->AcceptInput("OnSquadMemberKilled", this, this, emptyVariant, 0);
+			player->AcceptInput( "OnSquadMemberKilled", this, this, emptyVariant, 0 );
 		}
 	}
 
-	if (GetSpeechSemaphore(this)->GetOwner() == this)
-		GetSpeechSemaphore(this)->Release();
+	if ( GetSpeechSemaphore( this )->GetOwner() == this )
+		GetSpeechSemaphore( this )->Release();
 
-	CAI_PlayerAlly* pMourner = dynamic_cast<CAI_PlayerAlly*>(FindSpeechTarget(AIST_NPCS));
-	if (pMourner)
+	CAI_PlayerAlly *pMourner = dynamic_cast<CAI_PlayerAlly *>(FindSpeechTarget( AIST_NPCS ));
+	if ( pMourner )
 	{
-		pMourner->SpeakIfAllowed(TLK_ALLY_KILLED);
+		pMourner->SpeakIfAllowed( TLK_ALLY_KILLED );
 	}
 
-	SetTarget(NULL);
+	SetTarget( NULL );
 	// Don't finish that sentence
 	SentenceStop();
-	SetUse(NULL);
-	BaseClass::Event_Killed(info);
+	SetUse( NULL );
+	BaseClass::Event_Killed( info );
 
 	DisplayDeathMessage();
 }
@@ -1207,15 +1207,15 @@ bool CAI_PlayerAlly::CreateVPhysics()
 }
 
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::PainSound(const CTakeDamageInfo& info)
+void CAI_PlayerAlly::PainSound( const CTakeDamageInfo &info )
 {
-	SpeakIfAllowed(TLK_WOUND);
+	SpeakIfAllowed( TLK_WOUND );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Implemented to look at talk target
 //-----------------------------------------------------------------------------
-CBaseEntity* CAI_PlayerAlly::EyeLookTarget(void)
+CBaseEntity *CAI_PlayerAlly::EyeLookTarget( void )
 {
 	// FIXME: this should be in the VCD
 	// FIXME: this is dead code
@@ -1229,105 +1229,105 @@ CBaseEntity* CAI_PlayerAlly::EyeLookTarget(void)
 //-----------------------------------------------------------------------------
 // Purpose: returns who we're talking to for vcd's
 //-----------------------------------------------------------------------------
-CBaseEntity* CAI_PlayerAlly::FindNamedEntity(const char* pszName, IEntityFindFilter* pFilter)
+CBaseEntity *CAI_PlayerAlly::FindNamedEntity( const char *pszName, IEntityFindFilter *pFilter )
 {
-	if (!stricmp(pszName, "!speechtarget"))
+	if ( !stricmp( pszName, "!speechtarget" ))
 	{
 		return GetSpeechTarget();
 	}
 
-	if (!stricmp(pszName, "!friend"))
+	if ( !stricmp( pszName, "!friend" ))
 	{
-		return FindSpeechTarget(AIST_NPCS);
+		return FindSpeechTarget( AIST_NPCS );
 	}
 
 
-	return BaseClass::FindNamedEntity(pszName, pFilter);
+	return BaseClass::FindNamedEntity( pszName, pFilter );
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::IsValidSpeechTarget(int flags, CBaseEntity* pEntity)
+bool CAI_PlayerAlly::IsValidSpeechTarget( int flags, CBaseEntity *pEntity )
 {
-	if (pEntity == this)
+	if ( pEntity == this )
 		return false;
 
-	if (!(flags & AIST_IGNORE_RELATIONSHIP))
+	if ( !(flags & AIST_IGNORE_RELATIONSHIP) )
 	{
-		if (pEntity->IsPlayer())
+		if ( pEntity->IsPlayer() )
 		{
-			if (!IsPlayerAlly((CBasePlayer*)pEntity))
+			if ( !IsPlayerAlly( (CBasePlayer *)pEntity ) )
 				return false;
 		}
 		else
 		{
-			if (IRelationType(pEntity) != D_LI)
+			if ( IRelationType( pEntity ) != D_LI )
 				return false;
 		}
-	}
+	}		
 
-	if (!pEntity->IsAlive())
+	if ( !pEntity->IsAlive() )
 		// don't dead people
 		return false;
 
 	// Ignore no-target entities
-	if (pEntity->GetFlags() & FL_NOTARGET)
+	if ( pEntity->GetFlags() & FL_NOTARGET )
 		return false;
 
-	CAI_BaseNPC* pNPC = pEntity->MyNPCPointer();
-	if (pNPC)
+	CAI_BaseNPC *pNPC = pEntity->MyNPCPointer();
+	if ( pNPC )
 	{
 		// If not a NPC for some reason, or in a script.
-		if ((pNPC->m_NPCState == NPC_STATE_SCRIPT || pNPC->m_NPCState == NPC_STATE_PRONE))
+		if ( (pNPC->m_NPCState == NPC_STATE_SCRIPT || pNPC->m_NPCState == NPC_STATE_PRONE))
 			return false;
 
-		if (pNPC->IsInAScript())
+		if ( pNPC->IsInAScript() )
 			return false;
 
 		// Don't bother people who don't want to be bothered
-		if (!pNPC->CanBeUsedAsAFriend())
+		if ( !pNPC->CanBeUsedAsAFriend() )
 			return false;
 	}
-
-	if (flags & AIST_FACING_TARGET)
+	
+	if ( flags & AIST_FACING_TARGET )
 	{
-		if (pEntity->IsPlayer())
-			return HasCondition(COND_SEE_PLAYER);
-		else if (!FInViewCone(pEntity))
+		if ( pEntity->IsPlayer() )
+			return HasCondition( COND_SEE_PLAYER );
+		else if ( !FInViewCone( pEntity ) )
 			return false;
 	}
 
-	return FVisible(pEntity);
+	return FVisible( pEntity );
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-CBaseEntity* CAI_PlayerAlly::FindSpeechTarget(int flags)
+CBaseEntity *CAI_PlayerAlly::FindSpeechTarget( int flags )
 {
-	const Vector& vAbsOrigin = GetAbsOrigin();
-	float 			closestDistSq = FLT_MAX;
-	CBaseEntity* pNearest = NULL;
+	const Vector &	vAbsOrigin 		= GetAbsOrigin();
+	float 			closestDistSq 	= FLT_MAX;
+	CBaseEntity *	pNearest 		= NULL;
 	float			distSq;
 	int				i;
-
-	if (flags & AIST_PLAYERS)
+	
+	if ( flags & AIST_PLAYERS )
 	{
-		for (i = 1; i <= gpGlobals->maxClients; i++)
+		for ( i = 1; i <= gpGlobals->maxClients; i++ )
 		{
-			CBaseEntity* pPlayer = UTIL_PlayerByIndex(i);
-			if (pPlayer)
+			CBaseEntity *pPlayer = UTIL_PlayerByIndex( i );
+			if ( pPlayer )
 			{
-				distSq = (vAbsOrigin - pPlayer->GetAbsOrigin()).LengthSqr();
-
-				if (distSq > Square(TALKRANGE_MIN))
+				distSq = ( vAbsOrigin - pPlayer->GetAbsOrigin() ).LengthSqr();
+				
+				if ( distSq > Square(TALKRANGE_MIN) )
+					continue;
+					
+				if ( !(flags & AIST_ANY_QUALIFIED) && distSq > closestDistSq )
 					continue;
 
-				if (!(flags & AIST_ANY_QUALIFIED) && distSq > closestDistSq)
-					continue;
-
-				if (IsValidSpeechTarget(flags, pPlayer))
+				if ( IsValidSpeechTarget( flags, pPlayer ) )
 				{
-					if (flags & AIST_ANY_QUALIFIED)
+					if ( flags & AIST_ANY_QUALIFIED )
 						return pPlayer;
 
 					closestDistSq = distSq;
@@ -1336,24 +1336,24 @@ CBaseEntity* CAI_PlayerAlly::FindSpeechTarget(int flags)
 			}
 		}
 	}
-
-	if (flags & AIST_NPCS)
+	
+	if ( flags & AIST_NPCS )
 	{
-		for (i = 0; i < g_AI_Manager.NumAIs(); i++)
+		for ( i = 0; i < g_AI_Manager.NumAIs(); i++ )
 		{
-			CAI_BaseNPC* pNPC = (g_AI_Manager.AccessAIs())[i];
+			CAI_BaseNPC *pNPC = (g_AI_Manager.AccessAIs())[i];
 
-			distSq = (vAbsOrigin - pNPC->GetAbsOrigin()).LengthSqr();
-
-			if (distSq > Square(TALKRANGE_MIN))
+			distSq = ( vAbsOrigin - pNPC->GetAbsOrigin() ).LengthSqr();
+			
+			if ( distSq > Square(TALKRANGE_MIN) )
+				continue;
+				
+			if ( !(flags & AIST_ANY_QUALIFIED) && distSq > closestDistSq )
 				continue;
 
-			if (!(flags & AIST_ANY_QUALIFIED) && distSq > closestDistSq)
-				continue;
-
-			if (IsValidSpeechTarget(flags, pNPC))
+			if ( IsValidSpeechTarget( flags, pNPC ) )
 			{
-				if (flags & AIST_ANY_QUALIFIED)
+				if ( flags & AIST_ANY_QUALIFIED )
 					return pNPC;
 
 				closestDistSq = distSq;
@@ -1367,116 +1367,116 @@ CBaseEntity* CAI_PlayerAlly::FindSpeechTarget(int flags)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::CanPlaySentence(bool fDisregardState)
-{
-	if (fDisregardState)
-		return BaseClass::CanPlaySentence(fDisregardState);
-	return IsOkToSpeak();
+bool CAI_PlayerAlly::CanPlaySentence( bool fDisregardState ) 
+{ 
+	if ( fDisregardState )
+		return BaseClass::CanPlaySentence( fDisregardState );
+	return IsOkToSpeak(); 
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-int CAI_PlayerAlly::PlayScriptedSentence(const char* pszSentence, float delay, float volume, soundlevel_t soundlevel, bool bConcurrent, CBaseEntity* pListener)
+int CAI_PlayerAlly::PlayScriptedSentence( const char *pszSentence, float delay, float volume, soundlevel_t soundlevel, bool bConcurrent, CBaseEntity *pListener )
 {
-	ClearCondition(COND_PLAYER_PUSHING);	// Forget about moving!  I've got something to say!
-	int sentenceIndex = BaseClass::PlayScriptedSentence(pszSentence, delay, volume, soundlevel, bConcurrent, pListener);
-	SetSpeechTarget(pListener);
-
+	ClearCondition( COND_PLAYER_PUSHING );	// Forget about moving!  I've got something to say!
+	int sentenceIndex = BaseClass::PlayScriptedSentence( pszSentence, delay, volume, soundlevel, bConcurrent, pListener );
+	SetSpeechTarget( pListener );
+	
 	return sentenceIndex;
 }
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-void CAI_PlayerAlly::DeferAllIdleSpeech(float flDelay, CAI_BaseNPC* pIgnore)
+void CAI_PlayerAlly::DeferAllIdleSpeech( float flDelay, CAI_BaseNPC *pIgnore )
 {
-	CAI_AllySpeechManager* pSpeechManager = GetAllySpeechManager();
-	if (flDelay == -1)
+	CAI_AllySpeechManager *pSpeechManager = GetAllySpeechManager();
+	if ( flDelay == -1 )
 	{
-		ConceptCategoryInfo_t* pCategoryInfo = pSpeechManager->GetConceptCategoryInfo(SPEECH_IDLE);
-		pSpeechManager->SetCategoryDelay(SPEECH_IDLE, pCategoryInfo->minGlobalDelay, pCategoryInfo->maxGlobalDelay);
+		ConceptCategoryInfo_t *pCategoryInfo = pSpeechManager->GetConceptCategoryInfo( SPEECH_IDLE );
+		pSpeechManager->SetCategoryDelay( SPEECH_IDLE, pCategoryInfo->minGlobalDelay, pCategoryInfo->maxGlobalDelay );
 	}
 	else
-		pSpeechManager->SetCategoryDelay(SPEECH_IDLE, flDelay);
+		pSpeechManager->SetCategoryDelay( SPEECH_IDLE, flDelay );
 }
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-bool CAI_PlayerAlly::IsOkToSpeak(ConceptCategory_t category, bool fRespondingToPlayer)
+bool CAI_PlayerAlly::IsOkToSpeak( ConceptCategory_t category, bool fRespondingToPlayer )
 {
-	CAI_AllySpeechManager* pSpeechManager = GetAllySpeechManager();
-
+	CAI_AllySpeechManager *pSpeechManager = GetAllySpeechManager();
+	
 	// if not alive, certainly don't speak
-	if (!IsAlive())
+	if ( !IsAlive() )
 		return false;
 
-	if (m_spawnflags & SF_NPC_GAG)
+	if ( m_spawnflags & SF_NPC_GAG )
 		return false;
 
 	// Don't speak if playing a script.
-	if ((m_NPCState == NPC_STATE_SCRIPT) && !m_bCanSpeakWhileScripting)
+	if ( ( m_NPCState == NPC_STATE_SCRIPT ) && !m_bCanSpeakWhileScripting )
 		return false;
 
 	// Don't speak if being eaten by a barnacle
-	if (IsEFlagSet(EFL_IS_BEING_LIFTED_BY_BARNACLE))
+	if ( IsEFlagSet( EFL_IS_BEING_LIFTED_BY_BARNACLE ) )
 		return false;
 
-	if (IsInAScript() && !m_bCanSpeakWhileScripting)
+	if ( IsInAScript() && !m_bCanSpeakWhileScripting )
 		return false;
 
-	if (!fRespondingToPlayer)
+	if ( !fRespondingToPlayer )
 	{
-		if (!pSpeechManager->CategoryDelayExpired(category) || !CategoryDelayExpired(category))
+		if ( !pSpeechManager->CategoryDelayExpired( category ) || !CategoryDelayExpired( category ) )
 			return false;
 	}
 
-	if (category == SPEECH_IDLE)
+	if ( category == SPEECH_IDLE )
 	{
-		if (GetState() != NPC_STATE_IDLE && GetState() != NPC_STATE_ALERT)
+		if ( GetState() != NPC_STATE_IDLE && GetState() != NPC_STATE_ALERT )
 			return false;
-		if (GetSpeechFilter() && GetSpeechFilter()->GetIdleModifier() < 0.001)
+		if ( GetSpeechFilter() && GetSpeechFilter()->GetIdleModifier() < 0.001 )
 			return false;
 	}
 
 	// if player is not in pvs, don't speak
-	if (!UTIL_FindClientInPVS(edict()))
+	if ( !UTIL_FindClientInPVS(edict()) )
 		return false;
 
-	if (category != SPEECH_PRIORITY)
+	if ( category != SPEECH_PRIORITY )
 	{
 		// if someone else is talking, don't speak
-		if (!GetExpresser()->SemaphoreIsAvailable(this))
+		if ( !GetExpresser()->SemaphoreIsAvailable( this ) )
 			return false;
 
-		if (fRespondingToPlayer)
+		if ( fRespondingToPlayer )
 		{
-			if (!GetExpresser()->CanSpeakAfterMyself())
+			if ( !GetExpresser()->CanSpeakAfterMyself() )
 				return false;
 		}
 		else
 		{
-			if (!GetExpresser()->CanSpeak())
+			if ( !GetExpresser()->CanSpeak() )
 				return false;
 		}
 
 		// Don't talk if we're too far from the player
-		CBaseEntity* pPlayer = AI_GetSinglePlayer();
-		if (pPlayer)
+		CBaseEntity *pPlayer = AI_GetSinglePlayer();
+		if ( pPlayer )
 		{
 			float flDist = sv_npc_talker_maxdist.GetFloat();
 			flDist *= flDist;
-			if ((pPlayer->WorldSpaceCenter() - WorldSpaceCenter()).LengthSqr() > flDist)
+			if ( (pPlayer->WorldSpaceCenter() - WorldSpaceCenter()).LengthSqr() > flDist )
 				return false;
 		}
 	}
 
-	if (fRespondingToPlayer)
+	if ( fRespondingToPlayer )
 	{
 		// If we're responding to the player, don't respond if the scene has speech in it
-		if (IsRunningScriptedSceneWithSpeechAndNotPaused(this))
+		if ( IsRunningScriptedSceneWithSpeechAndNotPaused( this ) )
 		{
-			if (rr_debugresponses.GetInt() > 0)
+			if( rr_debugresponses.GetInt() > 0 )
 			{
-				DevMsg("%s not allowed to speak because they are in a scripted scene\n", GetDebugName());
+				DevMsg("%s not allowed to speak because they are in a scripted scene\n", GetDebugName() );
 			}
 
 			return false;
@@ -1485,11 +1485,11 @@ bool CAI_PlayerAlly::IsOkToSpeak(ConceptCategory_t category, bool fRespondingToP
 	else
 	{
 		// If we're not responding to the player, don't talk if running a logic_choreo
-		if (IsRunningScriptedSceneAndNotPaused(this))
+		if ( IsRunningScriptedSceneAndNotPaused( this ) )
 		{
-			if (rr_debugresponses.GetInt() > 0)
+			if( rr_debugresponses.GetInt() > 0 )
 			{
-				DevMsg("%s not allowed to speak because they are in a scripted scene\n", GetDebugName());
+				DevMsg("%s not allowed to speak because they are in a scripted scene\n", GetDebugName() );
 			}
 
 			return false;
@@ -1501,128 +1501,128 @@ bool CAI_PlayerAlly::IsOkToSpeak(ConceptCategory_t category, bool fRespondingToP
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-bool CAI_PlayerAlly::IsOkToSpeak(void)
+bool CAI_PlayerAlly::IsOkToSpeak( void )
 {
-	return IsOkToSpeak(SPEECH_IDLE);
+	return IsOkToSpeak( SPEECH_IDLE );
 }
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-bool CAI_PlayerAlly::IsOkToCombatSpeak(void)
+bool CAI_PlayerAlly::IsOkToCombatSpeak( void )
 {
-	return IsOkToSpeak(SPEECH_IMPORTANT);
+	return IsOkToSpeak( SPEECH_IMPORTANT );
 }
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-bool CAI_PlayerAlly::IsOkToSpeakInResponseToPlayer(void)
+bool CAI_PlayerAlly::IsOkToSpeakInResponseToPlayer( void )
 {
-	return IsOkToSpeak(SPEECH_IMPORTANT, true);
+	return IsOkToSpeak( SPEECH_IMPORTANT, true );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Return true if I should speak based on the chance & the speech filter's modifier
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::ShouldSpeakRandom(AIConcept_t concept, int iChance)
+bool CAI_PlayerAlly::ShouldSpeakRandom( AIConcept_t concept, int iChance )
 {
-	CAI_AllySpeechManager* pSpeechManager = GetAllySpeechManager();
-	ConceptInfo_t* pInfo = pSpeechManager->GetConceptInfo(concept);
-	ConceptCategory_t		category = (pInfo) ? pInfo->category : SPEECH_IDLE;
+	CAI_AllySpeechManager *	pSpeechManager	= GetAllySpeechManager();
+	ConceptInfo_t *			pInfo			= pSpeechManager->GetConceptInfo( concept );
+	ConceptCategory_t		category		= ( pInfo ) ? pInfo->category : SPEECH_IDLE;
 
-	if (GetSpeechFilter())
+	if ( GetSpeechFilter() )
 	{
-		if (category == SPEECH_IDLE)
+		if ( category == SPEECH_IDLE )
 		{
 			float flModifier = GetSpeechFilter()->GetIdleModifier();
-			if (flModifier < 0.001)
+			if ( flModifier < 0.001 )
 				return false;
-
-			iChance = floor((float)iChance / flModifier);
+				
+			iChance = floor( (float)iChance / flModifier );
 		}
 	}
-
-	if (iChance < 1)
+	
+	if ( iChance < 1 )
 		return false;
 
-	if (iChance == 1)
+	if ( iChance == 1 )
 		return true;
-
-	return (random->RandomInt(1, iChance) == 1);
+		
+	return (random->RandomInt(1,iChance) == 1);
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::IsAllowedToSpeak(AIConcept_t concept, bool bRespondingToPlayer)
-{
-	CAI_AllySpeechManager* pSpeechManager = GetAllySpeechManager();
-	ConceptInfo_t* pInfo = pSpeechManager->GetConceptInfo(concept);
-	ConceptCategory_t		category = (pInfo) ? pInfo->category : SPEECH_IDLE;
+bool CAI_PlayerAlly::IsAllowedToSpeak( AIConcept_t concept, bool bRespondingToPlayer ) 
+{ 
+	CAI_AllySpeechManager *	pSpeechManager	= GetAllySpeechManager();
+	ConceptInfo_t *			pInfo			= pSpeechManager->GetConceptInfo( concept );
+	ConceptCategory_t		category		= ( pInfo ) ? pInfo->category : SPEECH_IDLE;
 
-	if (!IsOkToSpeak(category, bRespondingToPlayer))
+	if ( !IsOkToSpeak( category, bRespondingToPlayer ) )
 		return false;
 
-	if (GetSpeechFilter() && GetSpeechFilter()->NeverSayHello())
+	if ( GetSpeechFilter() && GetSpeechFilter()->NeverSayHello() )
 	{
-		if (CompareConcepts(concept, TLK_HELLO))
+		if ( CompareConcepts( concept, TLK_HELLO ) )
 			return false;
-		if (CompareConcepts(concept, TLK_HELLO_NPC))
+		if ( CompareConcepts( concept, TLK_HELLO_NPC ) )
 			return false;
 	}
-
-	if (!pSpeechManager->ConceptDelayExpired(concept))
+			
+	if ( !pSpeechManager->ConceptDelayExpired( concept ) )
 		return false;
 
-	if ((pInfo && pInfo->flags & AICF_SPEAK_ONCE) && GetExpresser()->SpokeConcept(concept))
+	if ( ( pInfo && pInfo->flags & AICF_SPEAK_ONCE ) && GetExpresser()->SpokeConcept( concept ) )
 		return false;
 
-	if (!GetExpresser()->CanSpeakConcept(concept))
+	if ( !GetExpresser()->CanSpeakConcept( concept ) )
 		return false;
-
+	
 	return true;
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::SpeakIfAllowed(AIConcept_t concept, const char* modifiers, bool bRespondingToPlayer, char* pszOutResponseChosen, size_t bufsize)
-{
-	if (IsAllowedToSpeak(concept, bRespondingToPlayer))
+bool CAI_PlayerAlly::SpeakIfAllowed( AIConcept_t concept, const char *modifiers, bool bRespondingToPlayer, char *pszOutResponseChosen, size_t bufsize ) 
+{ 
+	if ( IsAllowedToSpeak( concept, bRespondingToPlayer ) )
 	{
-		return Speak(concept, modifiers, pszOutResponseChosen, bufsize);
+		return Speak( concept, modifiers, pszOutResponseChosen, bufsize );
 	}
 	return false;
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::ModifyOrAppendCriteria(AI_CriteriaSet& set)
+void CAI_PlayerAlly::ModifyOrAppendCriteria( AI_CriteriaSet& set )
 {
-	BaseClass::ModifyOrAppendCriteria(set);
+	BaseClass::ModifyOrAppendCriteria( set );
 
-	if (m_hPotentialSpeechTarget)
+	if ( m_hPotentialSpeechTarget )
 	{
-		set.AppendCriteria("speechtarget", m_hPotentialSpeechTarget->GetClassname());
-		set.AppendCriteria("speechtargetname", STRING(m_hPotentialSpeechTarget->GetEntityName()));
-		set.AppendCriteria("randomnum", UTIL_VarArgs("%d", m_iQARandomNumber));
+		set.AppendCriteria( "speechtarget", m_hPotentialSpeechTarget->GetClassname() );
+		set.AppendCriteria( "speechtargetname", STRING(m_hPotentialSpeechTarget->GetEntityName()) );
+		set.AppendCriteria( "randomnum", UTIL_VarArgs("%d", m_iQARandomNumber) );
 	}
 
 	// Do we have a speech filter? If so, append it's criteria too
-	if (GetSpeechFilter())
+	if ( GetSpeechFilter() )
 	{
-		GetSpeechFilter()->AppendContextToCriteria(set);
+		GetSpeechFilter()->AppendContextToCriteria( set );
 	}
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::OnSpokeConcept(AIConcept_t concept, AI_Response* response)
+void CAI_PlayerAlly::OnSpokeConcept( AIConcept_t concept, AI_Response *response )
 {
-	CAI_AllySpeechManager* pSpeechManager = GetAllySpeechManager();
-	pSpeechManager->OnSpokeConcept(this, concept, response);
+	CAI_AllySpeechManager *pSpeechManager = GetAllySpeechManager();
+	pSpeechManager->OnSpokeConcept( this, concept, response );
 
-	if (response != NULL && (response->GetParams()->flags & AI_ResponseParams::RG_WEAPONDELAY))
+	if( response != NULL && (response->GetParams()->flags & AI_ResponseParams::RG_WEAPONDELAY) )
 	{
 		// Stop shooting, as instructed, so that my speech can be heard.
-		GetShotRegulator()->FireNoEarlierThan(gpGlobals->curtime + response->GetWeaponDelay());
+		GetShotRegulator()->FireNoEarlierThan( gpGlobals->curtime + response->GetWeaponDelay() );
 	}
 }
 
@@ -1631,30 +1631,30 @@ void CAI_PlayerAlly::OnSpokeConcept(AIConcept_t concept, AI_Response* response)
 void CAI_PlayerAlly::OnStartSpeaking()
 {
 	// If you say anything, don't greet the player - you may have already spoken to them
-	if (!GetExpresser()->SpokeConcept(TLK_HELLO))
+	if ( !GetExpresser()->SpokeConcept( TLK_HELLO ) )
 	{
-		GetExpresser()->SetSpokeConcept(TLK_HELLO, NULL);
+		GetExpresser()->SetSpokeConcept( TLK_HELLO, NULL );
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Mapmaker input to force this NPC to speak a response rules concept
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::InputSpeakResponseConcept(inputdata_t& inputdata)
+void CAI_PlayerAlly::InputSpeakResponseConcept( inputdata_t &inputdata )
 {
-	SpeakMapmakerInterruptConcept(inputdata.value.StringID());
+	SpeakMapmakerInterruptConcept( inputdata.value.StringID() );
 }
 
 
 //-----------------------------------------------------------------------------
 // Allows mapmakers to override NPC_STATE_SCRIPT or IsScripting() for responses.
 //-----------------------------------------------------------------------------
-void CAI_PlayerAlly::InputEnableSpeakWhileScripting(inputdata_t& inputdata)
+void CAI_PlayerAlly::InputEnableSpeakWhileScripting( inputdata_t &inputdata )
 {
 	m_bCanSpeakWhileScripting = true;
 }
 
-void CAI_PlayerAlly::InputDisableSpeakWhileScripting(inputdata_t& inputdata)
+void CAI_PlayerAlly::InputDisableSpeakWhileScripting( inputdata_t &inputdata )
 {
 	m_bCanSpeakWhileScripting = false;
 }
@@ -1663,23 +1663,23 @@ void CAI_PlayerAlly::InputDisableSpeakWhileScripting(inputdata_t& inputdata)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::SpeakMapmakerInterruptConcept(string_t iszConcept)
+bool CAI_PlayerAlly::SpeakMapmakerInterruptConcept( string_t iszConcept )
 {
 	// Let behaviors override
-	if (BaseClass::SpeakMapmakerInterruptConcept(iszConcept))
+	if ( BaseClass::SpeakMapmakerInterruptConcept(iszConcept) )
 		return false;
 
 	if (!IsOkToSpeakInResponseToPlayer())
 		return false;
 
-	Speak(STRING(iszConcept));
+	Speak( STRING(iszConcept) );
 	return true;
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::CanRespondToEvent(const char* ResponseConcept)
+bool CAI_PlayerAlly::CanRespondToEvent( const char *ResponseConcept )
 {
 	return true;
 }
@@ -1687,27 +1687,27 @@ bool CAI_PlayerAlly::CanRespondToEvent(const char* ResponseConcept)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool CAI_PlayerAlly::RespondedTo(const char* ResponseConcept, bool bForce, bool bCancelScene)
+bool CAI_PlayerAlly::RespondedTo( const char *ResponseConcept, bool bForce, bool bCancelScene )
 {
-	if (bForce)
+	if ( bForce )
 	{
 		// We're being forced to respond to the event, probably because it's the
 		// player dying or something equally important. 
-		AI_Response response;
-		bool result = SpeakFindResponse(response, ResponseConcept, NULL);
-		if (result)
+		AI_Response response; 
+		bool result = SpeakFindResponse( response, ResponseConcept, NULL );
+		if ( result )
 		{
 			// We've got something to say. Stop any scenes we're in, and speak the response.
-			if (bCancelScene)
-				RemoveActorFromScriptedScenes(this, false);
+			if ( bCancelScene )
+				RemoveActorFromScriptedScenes( this, false );
 
-			return SpeakDispatchResponse(ResponseConcept, response);
+			return SpeakDispatchResponse( ResponseConcept, response );
 		}
 
 		return false;
 	}
 
-	if (SpeakIfAllowed(ResponseConcept, NULL, true))
+	if ( SpeakIfAllowed( ResponseConcept, NULL, true ) )
 		return true;
 
 	return false;
@@ -1719,78 +1719,78 @@ bool CAI_PlayerAlly::RespondedTo(const char* ResponseConcept, bool bForce, bool 
 //
 //-----------------------------------------------------------------------------
 
-AI_BEGIN_CUSTOM_NPC(talk_monster_base, CAI_PlayerAlly)
+AI_BEGIN_CUSTOM_NPC(talk_monster_base,CAI_PlayerAlly)
 
-DECLARE_TASK(TASK_TALKER_SPEAK_PENDING)
+	DECLARE_TASK(TASK_TALKER_SPEAK_PENDING)
 
-DECLARE_CONDITION(COND_TALKER_CLIENTUNSEEN)
-DECLARE_CONDITION(COND_TALKER_PLAYER_DEAD)
-DECLARE_CONDITION(COND_TALKER_PLAYER_STARING)
+	DECLARE_CONDITION(COND_TALKER_CLIENTUNSEEN)
+	DECLARE_CONDITION(COND_TALKER_PLAYER_DEAD)
+	DECLARE_CONDITION(COND_TALKER_PLAYER_STARING)
 
-//=========================================================
-// > SCHED_TALKER_SPEAK_PENDING_IDLE
-//=========================================================
-DEFINE_SCHEDULE
-(
-	SCHED_TALKER_SPEAK_PENDING_IDLE,
+	//=========================================================
+	// > SCHED_TALKER_SPEAK_PENDING_IDLE
+	//=========================================================
+	DEFINE_SCHEDULE 
+	(
+		SCHED_TALKER_SPEAK_PENDING_IDLE,
 
-	"	Tasks"
-	"		TASK_TALKER_SPEAK_PENDING		0"
-	"		TASK_STOP_MOVING				0"
-	"		TASK_SET_ACTIVITY				ACTIVITY:ACT_IDLE"
-	"		TASK_WAIT_FOR_SPEAK_FINISH		0"
-	"		TASK_WAIT_RANDOM			0.5"
-	""
-	"	Interrupts"
-	"		COND_NEW_ENEMY"
-	"		COND_LIGHT_DAMAGE"
-	"		COND_HEAVY_DAMAGE"
-	"		COND_HEAR_DANGER"
-	"		COND_HEAR_COMBAT"
-	"		COND_PLAYER_PUSHING"
-	"		COND_GIVE_WAY"
-)
+		"	Tasks"
+		"		TASK_TALKER_SPEAK_PENDING		0"
+		"		TASK_STOP_MOVING				0"
+		"		TASK_SET_ACTIVITY				ACTIVITY:ACT_IDLE"
+		"		TASK_WAIT_FOR_SPEAK_FINISH		0"
+		"		TASK_WAIT_RANDOM			0.5"
+		""
+		"	Interrupts"
+		"		COND_NEW_ENEMY"
+		"		COND_LIGHT_DAMAGE"
+		"		COND_HEAVY_DAMAGE"
+		"		COND_HEAR_DANGER"
+		"		COND_HEAR_COMBAT"
+		"		COND_PLAYER_PUSHING"
+		"		COND_GIVE_WAY"
+	)
 
-//=========================================================
-// > SCHED_TALKER_SPEAK_PENDING_ALERT
-//=========================================================
-DEFINE_SCHEDULE
-(
-	SCHED_TALKER_SPEAK_PENDING_ALERT,
+	//=========================================================
+	// > SCHED_TALKER_SPEAK_PENDING_ALERT
+	//=========================================================
+	DEFINE_SCHEDULE 
+	(
+		SCHED_TALKER_SPEAK_PENDING_ALERT,
 
-	"	Tasks"
-	"		TASK_TALKER_SPEAK_PENDING		0"
-	"		TASK_STOP_MOVING				0"
-	"		TASK_SET_ACTIVITY				ACTIVITY:ACT_IDLE"
-	"		TASK_WAIT_FOR_SPEAK_FINISH		0"
-	"		TASK_WAIT_RANDOM				0.5"
-	""
-	"	Interrupts"
-	"		COND_NEW_ENEMY"
-	"		COND_LIGHT_DAMAGE"
-	"		COND_HEAVY_DAMAGE"
-	"		COND_HEAR_DANGER"
-	"		COND_PLAYER_PUSHING"
-	"		COND_GIVE_WAY"
-)
+		"	Tasks"
+		"		TASK_TALKER_SPEAK_PENDING		0"
+		"		TASK_STOP_MOVING				0"
+		"		TASK_SET_ACTIVITY				ACTIVITY:ACT_IDLE"
+		"		TASK_WAIT_FOR_SPEAK_FINISH		0"
+		"		TASK_WAIT_RANDOM				0.5"
+		""
+		"	Interrupts"
+		"		COND_NEW_ENEMY"
+		"		COND_LIGHT_DAMAGE"
+		"		COND_HEAVY_DAMAGE"
+		"		COND_HEAR_DANGER"
+		"		COND_PLAYER_PUSHING"
+		"		COND_GIVE_WAY"
+	)
 
-//=========================================================
-// > SCHED_TALKER_SPEAK_PENDING_COMBAT
-//=========================================================
-DEFINE_SCHEDULE
-(
-	SCHED_TALKER_SPEAK_PENDING_COMBAT,
+	//=========================================================
+	// > SCHED_TALKER_SPEAK_PENDING_COMBAT
+	//=========================================================
+	DEFINE_SCHEDULE 
+	(
+		SCHED_TALKER_SPEAK_PENDING_COMBAT,
 
-	"	Tasks"
-	"		TASK_TALKER_SPEAK_PENDING		0"
-	"		TASK_STOP_MOVING				0"
-	"		TASK_SET_ACTIVITY				ACTIVITY:ACT_IDLE"
-	"		TASK_WAIT_FOR_SPEAK_FINISH		0"
-	""
-	"	Interrupts"
-	"		COND_HEAVY_DAMAGE"
-	"		COND_HEAR_DANGER"
-)
+		"	Tasks"
+		"		TASK_TALKER_SPEAK_PENDING		0"
+		"		TASK_STOP_MOVING				0"
+		"		TASK_SET_ACTIVITY				ACTIVITY:ACT_IDLE"
+		"		TASK_WAIT_FOR_SPEAK_FINISH		0"
+		""
+		"	Interrupts"
+		"		COND_HEAVY_DAMAGE"
+		"		COND_HEAR_DANGER"
+	)
 
 AI_END_CUSTOM_NPC()
 

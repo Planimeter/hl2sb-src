@@ -34,11 +34,6 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#ifdef HL2SB
-ConVar    sk_plr_dmg_stunstick	( "sk_plr_dmg_stunstick","0",FCVAR_REPLICATED );
-ConVar    sk_npc_dmg_stunstick	( "sk_npc_dmg_stunstick","0",FCVAR_REPLICATED );
-#endif
-
 extern ConVar metropolice_move_and_melee;
 
 #define	STUNSTICK_RANGE				75.0f
@@ -166,10 +161,6 @@ acttable_t	CWeaponStunStick::m_acttable[] =
 	{ ACT_HL2MP_GESTURE_RANGE_ATTACK,	ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE,	false },
 	{ ACT_HL2MP_GESTURE_RELOAD,			ACT_HL2MP_GESTURE_RELOAD_MELEE,			false },
 	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_MELEE,					false },
-#ifdef HL2SB
-	{ ACT_MELEE_ATTACK1,	ACT_MELEE_ATTACK_SWING,	true },
-	{ ACT_IDLE_ANGRY,		ACT_IDLE_ANGRY_MELEE,	true },
-#endif
 };
 
 IMPLEMENT_ACTTABLE(CWeaponStunStick);
@@ -222,14 +213,7 @@ void CWeaponStunStick::Precache()
 //-----------------------------------------------------------------------------
 float CWeaponStunStick::GetDamageForActivity( Activity hitActivity )
 {
-#ifndef HL2SB
 	return 40.0f;
-#else
-	if ( ( GetOwner() != NULL ) && ( GetOwner()->IsPlayer() ) )
-		return sk_plr_dmg_stunstick.GetFloat();
-	
-	return sk_npc_dmg_stunstick.GetFloat();
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -373,37 +357,7 @@ void CWeaponStunStick::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseComba
 
 				CBasePlayer *pPlayer = ToBasePlayer( pHurt );
 
-#ifdef HL2SB
-				CNPC_MetroPolice *pCop = dynamic_cast<CNPC_MetroPolice *>(pOperator);
-#endif
 				bool bFlashed = false;
-
-#ifdef HL2SB
-				if ( pCop != NULL && pPlayer != NULL )
-				{
-					// See if we need to knock out this target
-					if ( pCop->ShouldKnockOutTarget( pHurt ) )
-					{
-						float yawKick = random->RandomFloat( -48, -24 );
-
-						//Kick the player angles
-						pPlayer->ViewPunch( QAngle( -16, yawKick, 2 ) );
-
-						color32 white = {255,255,255,255};
-						UTIL_ScreenFade( pPlayer, white, 0.2f, 1.0f, FFADE_OUT|FFADE_PURGE|FFADE_STAYOUT );
-						bFlashed = true;
-						
-						pCop->KnockOutTarget( pHurt );
-
-						break;
-					}
-					else
-					{
-						// Notify that we've stunned a target
-						pCop->StunnedTarget( pHurt );
-					}
-				}
-#endif
 				
 				// Punch angles
 				if ( pPlayer != NULL && !(pPlayer->GetFlags() & FL_GODMODE) )

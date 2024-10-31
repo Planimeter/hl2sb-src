@@ -5,20 +5,27 @@
   
   Running VPC CRC Check - server_hl2mp.vpc
   stdafx.cpp
-c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info'
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(750): error C2027: use of undefined type 'type_info'
           c:\users\hp\documents\hl2sb-src\src\game\server\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<char *,int>::CUtlMemory(int,int)'
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<char *,int>::CUtlMemory(int,int)' being compiled
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(553) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(747) : while compiling class template member function 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(915) : see reference to function template instantiation 'void CUtlVector<char *,CUtlMemory<char *,int>>::GrowVector(int)' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(908) : while compiling class template member function 'int CUtlVector<char *,CUtlMemory<char *,int>>::InsertBefore(int,const T &)'
+          with
+          [
+              T=char *
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(895) : see reference to function template instantiation 'int CUtlVector<char *,CUtlMemory<char *,int>>::InsertBefore(int,const T &)' being compiled
+          with
+          [
+              T=char *
+          ]
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(558) : while compiling class template member function 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)'
           c:\users\hp\documents\hl2sb-src\src\public\datamap.h(424) : see reference to function template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>::CUtlVector(int,int)' being compiled
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1176) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1188) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
-c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union
-c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &'
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1212) : see reference to class template instantiation 'CUtlVector<char *,CUtlMemory<char *,int>>' being compiled
+          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(1224) : see reference to class template instantiation 'CUtlVectorAutoPurge<char *>' being compiled
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(750): error C2228: left of '.name' must have class/struct/union
+c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(750): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &'
           Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
           No constructor could take the source type, or constructor overload resolution was ambiguous
-          c:\users\hp\documents\hl2sb-src\src\game\server\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
-          c:\users\hp\documents\hl2sb-src\src\game\server\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
-          c:\users\hp\documents\hl2sb-src\src\game\server\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
           c:\users\hp\documents\hl2sb-src\src\game\server\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
           c:\users\hp\documents\hl2sb-src\src\game\server\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'

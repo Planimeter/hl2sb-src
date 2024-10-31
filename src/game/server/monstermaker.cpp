@@ -632,11 +632,7 @@ CNPCSpawnDestination *CTemplateNPCMaker::FindSpawnDestination()
 {
 	CNPCSpawnDestination *pDestinations[ MAX_DESTINATION_ENTS ];
 	CBaseEntity *pEnt = NULL;
-#ifdef HL2SB
-	CBasePlayer *pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#endif
 	int	count = 0;
 
 	if( !pPlayer )

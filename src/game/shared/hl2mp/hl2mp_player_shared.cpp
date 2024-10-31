@@ -15,18 +15,8 @@
 #include "hl2mp_player.h"
 #endif
 
-#include "hl2mp_gamerules.h"
-
 #include "engine/IEngineSound.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
-
-#include "luamanager.h"
-#include "lhl2mp_player_shared.h"
-#include "mathlib/lvector.h"
-#include "lvphysics_interface.h"
-
-// memdbgon must be the last include file in a .cpp file!!!
-#include "tier0/memdbgon.h"
 
 extern ConVar sv_footsteps;
 
@@ -80,18 +70,6 @@ Vector CHL2MP_Player::GetAttackSpread( CBaseCombatWeapon *pWeapon, CBaseEntity *
 //-----------------------------------------------------------------------------
 void CHL2MP_Player::PlayStepSound( Vector &vecOrigin, surfacedata_t *psurface, float fvol, bool force )
 {
-#if defined( LUA_SDK )
-	BEGIN_LUA_CALL_HOOK( "PlayerPlayStepSound" );
-		lua_pushhl2mpplayer( L, this );
-		lua_pushvector( L, vecOrigin );
-		lua_pushsurfacedata( L, psurface );
-		lua_pushnumber( L, fvol );
-		lua_pushboolean( L, force );
-	END_LUA_CALL_HOOK( 5, 1 );
-
-	RETURN_LUA_NONE();
-#endif
-
 	if ( gpGlobals->maxClients > 1 && !sv_footsteps.GetFloat() )
 		return;
 

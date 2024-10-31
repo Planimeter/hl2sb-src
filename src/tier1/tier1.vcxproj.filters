@@ -7,6 +7,9 @@
     <Filter Include="Header Files\Internal Header Files">
       <UniqueIdentifier>{82D97A15-B2F0-1D81-D6D4-97637C1216E9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LZMA Decompression Support">
+      <UniqueIdentifier>{BAA2CA47-48EC-E49B-706F-953F912E0812}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{BA03E055-4FA2-FCE3-8A1C-D348547D379C}</UniqueIdentifier>
     </Filter>
@@ -215,8 +218,17 @@
     <ClInclude Include="snappy-stubs-internal.h">
       <Filter>Header Files\Internal Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\utils\lzma\C\7zTypes.h">
+      <Filter>LZMA Decompression Support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\utils\lzma\C\LzmaDec.h">
+      <Filter>LZMA Decompression Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\utils\lzma\C\LzmaDec.c">
+      <Filter>LZMA Decompression Support</Filter>
+    </ClCompile>
     <ClCompile Include="bitbuf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -305,6 +317,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="strtools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="strtools_unicode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tier1.cpp">

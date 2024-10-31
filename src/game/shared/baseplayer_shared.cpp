@@ -53,13 +53,6 @@
 
 // NVNT haptic utils
 #include "haptics/haptic_utils.h"
-
-#ifdef LUA_SDK
-#include "luamanager.h"
-#include "lbaseplayer_shared.h"
-#include "mathlib/lvector.h"
-#endif
-
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -349,7 +342,7 @@ Vector CBasePlayer::EyePosition( )
 #ifdef CLIENT_DLL
 		if ( IsObserver() )
 		{
-			if ( GetObserverMode() == OBS_MODE_CHASE )
+			if ( GetObserverMode() == OBS_MODE_CHASE || GetObserverMode() == OBS_MODE_POI )
 			{
 				if ( IsLocalPlayer() )
 				{
@@ -1042,7 +1035,7 @@ void CBasePlayer::SelectItem( const char *pstr, int iSubType )
 	// Make sure the current weapon can be holstered
 	if ( GetActiveWeapon() )
 	{
-		if ( !GetActiveWeapon()->CanHolster() )
+		if ( !GetActiveWeapon()->CanHolster() && !pItem->ForceWeaponSwitch() )
 			return;
 
 		ResetAutoaim( );
@@ -1281,12 +1274,6 @@ CBaseEntity *CBasePlayer::FindUseEntity()
 //-----------------------------------------------------------------------------
 void CBasePlayer::PlayerUse ( void )
 {
-#if defined ( LUA_SDK )
-	BEGIN_LUA_CALL_HOOK( "PlayerUse" );
-		lua_pushplayer( L, this );
-	END_LUA_CALL_HOOK( 1, 0 );
-#endif
-
 #ifdef GAME_DLL
 	// Was use pressed or released?
 	if ( ! ((m_nButtons | m_afButtonPressed | m_afButtonReleased) & IN_USE) )
@@ -1651,24 +1638,6 @@ void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& f
 
 	// calc current FOV
 	fov = GetFOV();
-
-#if defined( LUA_SDK )
-	BEGIN_LUA_CALL_HOOK( "CalcPlayerView" );
-		lua_pushplayer( L, this );
-		lua_pushvector( L, eyeOrigin );
-		lua_pushangle( L, eyeAngles );
-		lua_pushnumber( L, fov );
-	END_LUA_CALL_HOOK( 4, 3 );
-
-	if ( lua_isuserdata( L, -3 ) && luaL_checkudata( L, -3, "Vector" ) )
-		VectorCopy( luaL_checkvector( L, -3 ), eyeOrigin );
-	if ( lua_isuserdata( L, -2 ) && luaL_checkudata( L, -2, "QAngle" ) )
-		VectorCopy( luaL_checkangle( L, -2 ), eyeAngles );
-	if ( lua_isnumber( L, -1 ) )
-		fov = luaL_checknumber( L, -1 );
-
-	lua_pop( L, 3 );
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1734,6 +1703,7 @@ void CBasePlayer::CalcObserverView( Vector& eyeOrigin, QAngle& eyeAngles, float&
 		case OBS_MODE_IN_EYE	:	CalcInEyeCamView( eyeOrigin, eyeAngles, fov );
 									break;
 
+		case OBS_MODE_POI		: // PASSTIME
 		case OBS_MODE_CHASE		:	CalcChaseCamView( eyeOrigin, eyeAngles, fov  );
 									break;
 

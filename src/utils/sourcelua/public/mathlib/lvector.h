@@ -6,12 +6,6 @@
 //
 //=============================================================================//
 
-#include "..\shared\luamanager.h"
-#include "..\shared\luacachefile.h"
-#include "..\shared\luasrclib.h"
-#include "..\lua-5.1.5\etc\lua.hpp"
-#include "luamanager.h"
-
 #ifndef LVECTOR_H
 #define LVECTOR_H
 

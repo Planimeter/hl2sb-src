@@ -62,18 +62,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
-      <Command>if EXIST ..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName) for /f "delims=" %%A in ('attrib "..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName)"') do set valveTmpIsReadOnly="%%A"
-set valveTmpIsReadOnlyLetter=%valveTmpIsReadOnly:~6,1%
-if "%valveTmpIsReadOnlyLetter%"=="R" del /q "$(TargetDir)"$(TargetFileName)
-if exist "..\..\devtools\bin\vpc.exe" "..\..\devtools\bin\vpc.exe" -crc2 "client_hl2mp.vcxproj"
-if ERRORLEVEL 1 exit /b 1
-</Command>
+      <Command>if EXIST ..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName) for /f &quot;delims=&quot; %%A in (&apos;attrib &quot;..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName)&quot;&apos;) do set valveTmpIsReadOnly=&quot;%%A&quot;&#x0D;&#x0A;set valveTmpIsReadOnlyLetter=%valveTmpIsReadOnly:~6,1%&#x0D;&#x0A;if &quot;%valveTmpIsReadOnlyLetter%&quot;==&quot;R&quot; del /q &quot;$(TargetDir)&quot;$(TargetFileName)&#x0D;&#x0A;if exist &quot;..\..\devtools\bin\vpc.exe&quot; &quot;..\..\devtools\bin\vpc.exe&quot; -crc2 &quot;client_hl2mp.vcxproj&quot;&#x0D;&#x0A;if ERRORLEVEL 1 exit /b 1&#x0D;&#x0A;</Command>
     </PreBuildEvent>
     <ClCompile>
       <AdditionalOptions>/Zm200 /Gw /Zc:inline</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\game\client\generated_proto_mod_hl2mp;..\..\thirdparty\protobuf-2.3.0\src;..\..\lua-5.1.5\src;..\..\lua-5.1.5\etc;..\..\open-steamworks\Open Steamworks;.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;..\..\thirdparty\sixensesdk\include;.\scripted_controls;.\hl2;.\hl2\elements;..\..\game\shared\hl2;..\..\game\shared\Multiplayer;..\..\game\shared\episodic;hl2mp\ui;.\hl2mp;..\..\game\shared\hl2mp;.\hl2;.\hl2\elements;..\..\game\shared\hl2</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;_HAS_ITERATOR_DEBUGGING=0;WIN32;_WIN32;_DEBUG;DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=client;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;LUA_SDK;HL2SB;ARGG;fopen=dont_use_fopen;HL2MP;HL2_CLIENT_DLL;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=HL2MP;PROJECTDIR=C:\Users\hp\Documents\hl2sb-src\src\game\client;_DLL_EXT=.dll;SOURCE1=1;VPCGAME=hl2mp</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\game\client\generated_proto_mod_hl2mp;..\..\thirdparty\protobuf-2.3.0\src;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;..\..\thirdparty\sixensesdk\include;hl2mp\ui;.\hl2mp;..\..\game\shared\hl2mp;.\hl2;.\hl2\elements;..\..\game\shared\hl2</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;_HAS_ITERATOR_DEBUGGING=0;WIN32;_WIN32;_DEBUG;DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=client;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;fopen=dont_use_fopen;HL2MP;HL2_CLIENT_DLL;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=HL2MP;PROJECTDIR=C:\Users\hp\Downloads\hl2sb-src-master\src\game\client;_DLL_EXT=.dll;SOURCE1=1;VPCGAME=hl2mp</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -118,8 +113,7 @@ if ERRORLEVEL 1 exit /b 1
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(IntDir)/$(TargetName).pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <BaseAddress>
-      </BaseAddress>
+      <BaseAddress> </BaseAddress>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -137,31 +131,14 @@ if ERRORLEVEL 1 exit /b 1
     </Bscmake>
     <PostBuildEvent>
       <Message>Publishing to ..\..\..\game\mod_hl2mp\bin\.</Message>
-      <Command>if not exist "..\..\..\game\mod_hl2mp\bin\." mkdir "..\..\..\game\mod_hl2mp\bin\."
-copy "$(TargetDir)$(TargetFileName)" "..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName)"
-if ERRORLEVEL 1 goto BuildEventFailed
-if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\game\mod_hl2mp\bin\.\$(TargetName).map
-copy "$(TargetDir)$(TargetName).pdb" ..\..\..\game\mod_hl2mp\bin\.\$(TargetName).pdb
-if ERRORLEVEL 1 goto BuildEventFailed
-goto BuildEventOK
-:BuildEventFailed
-echo *** ERROR! PostBuildStep FAILED for $(ProjectName)! EXE or DLL is probably running. ***
-del /q "$(TargetDir)$(TargetFileName)"
-exit 1
-:BuildEventOK
-</Command>
+      <Command>if not exist &quot;..\..\..\game\mod_hl2mp\bin\.&quot; mkdir &quot;..\..\..\game\mod_hl2mp\bin\.&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName)&quot;&#x0D;&#x0A;if ERRORLEVEL 1 goto BuildEventFailed&#x0D;&#x0A;if exist &quot;$(TargetDir)$(TargetName).map&quot; copy &quot;$(TargetDir)$(TargetName).map&quot; ..\..\..\game\mod_hl2mp\bin\.\$(TargetName).map&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName).pdb&quot; ..\..\..\game\mod_hl2mp\bin\.\$(TargetName).pdb&#x0D;&#x0A;if ERRORLEVEL 1 goto BuildEventFailed&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo *** ERROR! PostBuildStep FAILED for $(ProjectName)! EXE or DLL is probably running. ***&#x0D;&#x0A;del /q &quot;$(TargetDir)$(TargetFileName)&quot;&#x0D;&#x0A;exit 1&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;</Command>
     </PostBuildEvent>
     <CustomBuildStep>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PreBuildEvent>
-      <Command>if EXIST ..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName) for /f "delims=" %%A in ('attrib "..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName)"') do set valveTmpIsReadOnly="%%A"
-set valveTmpIsReadOnlyLetter=%valveTmpIsReadOnly:~6,1%
-if "%valveTmpIsReadOnlyLetter%"=="R" del /q "$(TargetDir)"$(TargetFileName)
-if exist "..\..\devtools\bin\vpc.exe" "..\..\devtools\bin\vpc.exe" -crc2 "client_hl2mp.vcxproj"
-if ERRORLEVEL 1 exit /b 1
-</Command>
+      <Command>if EXIST ..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName) for /f &quot;delims=&quot; %%A in (&apos;attrib &quot;..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName)&quot;&apos;) do set valveTmpIsReadOnly=&quot;%%A&quot;&#x0D;&#x0A;set valveTmpIsReadOnlyLetter=%valveTmpIsReadOnly:~6,1%&#x0D;&#x0A;if &quot;%valveTmpIsReadOnlyLetter%&quot;==&quot;R&quot; del /q &quot;$(TargetDir)&quot;$(TargetFileName)&#x0D;&#x0A;if exist &quot;..\..\devtools\bin\vpc.exe&quot; &quot;..\..\devtools\bin\vpc.exe&quot; -crc2 &quot;client_hl2mp.vcxproj&quot;&#x0D;&#x0A;if ERRORLEVEL 1 exit /b 1&#x0D;&#x0A;</Command>
     </PreBuildEvent>
     <ClCompile>
       <AdditionalOptions>/Zm200 /Zo /Gw /Zc:inline</AdditionalOptions>
@@ -169,8 +146,8 @@ if ERRORLEVEL 1 exit /b 1
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\game\client\generated_proto_mod_hl2mp;..\..\thirdparty\protobuf-2.3.0\src;..\..\lua-5.1.5\src;..\..\lua-5.1.5\etc;..\..\open-steamworks\Open Steamworks;.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;..\..\thirdparty\sixensesdk\include;.\scripted_controls;.\hl2;.\hl2\elements;..\..\game\shared\hl2;..\..\game\shared\Multiplayer;..\..\game\shared\episodic;hl2mp\ui;.\hl2mp;..\..\game\shared\hl2mp;.\hl2;.\hl2\elements;..\..\game\shared\hl2</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;WIN32;_WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=client;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;LUA_SDK;HL2SB;ARGG;fopen=dont_use_fopen;HL2MP;HL2_CLIENT_DLL;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=HL2MP;PROJECTDIR=C:\Users\hp\Documents\hl2sb-src\src\game\client;_DLL_EXT=.dll;SOURCE1=1;VPCGAME=hl2mp</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\game\client\generated_proto_mod_hl2mp;..\..\thirdparty\protobuf-2.3.0\src;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;..\..\thirdparty\sixensesdk\include;hl2mp\ui;.\hl2mp;..\..\game\shared\hl2mp;.\hl2;.\hl2\elements;..\..\game\shared\hl2</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;WIN32;_WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=client;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;fopen=dont_use_fopen;HL2MP;HL2_CLIENT_DLL;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=HL2MP;PROJECTDIR=C:\Users\hp\Downloads\hl2sb-src-master\src\game\client;_DLL_EXT=.dll;SOURCE1=1;VPCGAME=hl2mp</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -189,7 +166,7 @@ if ERRORLEVEL 1 exit /b 1
       <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
       <BrowseInformation>false</BrowseInformation>
       <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>No (/WX)</TreatWarningAsError>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>CompileAsCpp</CompileAs>
       <UseFullPaths>true</UseFullPaths>
@@ -217,8 +194,7 @@ if ERRORLEVEL 1 exit /b 1
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
-      <BaseAddress>
-      </BaseAddress>
+      <BaseAddress> </BaseAddress>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -236,19 +212,7 @@ if ERRORLEVEL 1 exit /b 1
     </Bscmake>
     <PostBuildEvent>
       <Message>Publishing to ..\..\..\game\mod_hl2mp\bin\.</Message>
-      <Command>if not exist "..\..\..\game\mod_hl2mp\bin\." mkdir "..\..\..\game\mod_hl2mp\bin\."
-copy "$(TargetDir)$(TargetFileName)" "..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName)"
-if ERRORLEVEL 1 goto BuildEventFailed
-if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\game\mod_hl2mp\bin\.\$(TargetName).map
-copy "$(TargetDir)$(TargetName).pdb" ..\..\..\game\mod_hl2mp\bin\.\$(TargetName).pdb
-if ERRORLEVEL 1 goto BuildEventFailed
-goto BuildEventOK
-:BuildEventFailed
-echo *** ERROR! PostBuildStep FAILED for $(ProjectName)! EXE or DLL is probably running. ***
-del /q "$(TargetDir)$(TargetFileName)"
-exit 1
-:BuildEventOK
-</Command>
+      <Command>if not exist &quot;..\..\..\game\mod_hl2mp\bin\.&quot; mkdir &quot;..\..\..\game\mod_hl2mp\bin\.&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;..\..\..\game\mod_hl2mp\bin\.\$(TargetFileName)&quot;&#x0D;&#x0A;if ERRORLEVEL 1 goto BuildEventFailed&#x0D;&#x0A;if exist &quot;$(TargetDir)$(TargetName).map&quot; copy &quot;$(TargetDir)$(TargetName).map&quot; ..\..\..\game\mod_hl2mp\bin\.\$(TargetName).map&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName).pdb&quot; ..\..\..\game\mod_hl2mp\bin\.\$(TargetName).pdb&#x0D;&#x0A;if ERRORLEVEL 1 goto BuildEventFailed&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo *** ERROR! PostBuildStep FAILED for $(ProjectName)! EXE or DLL is probably running. ***&#x0D;&#x0A;del /q &quot;$(TargetDir)$(TargetFileName)&quot;&#x0D;&#x0A;exit 1&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;</Command>
     </PostBuildEvent>
     <CustomBuildStep>
     </CustomBuildStep>
@@ -260,7 +224,6 @@ exit 1
     <Library Include="..\..\lib\common\libcurl.lib" />
     <Library Include="..\..\lib\public\libprotobuf.lib" />
     <Library Include="..\..\lib\public\libz.lib" />
-    <Library Include="..\..\lib\public\lua51.lib" />
     <Library Include="..\..\lib\public\mathlib.lib" />
     <Library Include="..\..\lib\public\matsys_controls.lib" />
     <Library Include="..\..\lib\public\particles.lib" />
@@ -328,12 +291,6 @@ exit 1
     <ClInclude Include="..\..\game\shared\ipredictionsystem.h" />
     <ClInclude Include="..\..\game\shared\itempents.h" />
     <ClInclude Include="..\..\game\shared\IVehicle.h" />
-    <ClInclude Include="..\..\game\shared\lbaseplayer_shared.h" />
-    <ClInclude Include="..\..\game\shared\leffect_dispatch_data.h" />
-    <ClInclude Include="..\..\game\shared\limovehelper.h" />
-    <ClInclude Include="..\..\game\shared\lshareddefs.h" />
-    <ClInclude Include="..\..\game\shared\ltakedamageinfo.h" />
-    <ClInclude Include="..\..\game\shared\luasrclib.h" />
     <ClInclude Include="..\..\game\shared\mapdata_shared.h" />
     <ClInclude Include="..\..\game\shared\mapentities_shared.h" />
     <ClInclude Include="..\..\game\shared\movevars_shared.h" />
@@ -541,9 +498,7 @@ exit 1
     <ClInclude Include="ivmodemanager.h" />
     <ClInclude Include="kbutton.h" />
     <ClInclude Include="..\..\common\language.h" />
-    <ClInclude Include="lc_recipientfilter.h" />
     <ClInclude Include="lerp_functions.h" />
-    <ClInclude Include="..\..\public\lvphysics_interface.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="movehelper_client.h" />
     <ClInclude Include="mumble.h" />
@@ -739,24 +694,7 @@ exit 1
     <ClInclude Include="..\..\public\tier1\KeyValues.h" />
     <ClInclude Include="..\..\public\tier0\l2cache.h" />
     <ClInclude Include="..\..\public\vgui_controls\Label.h" />
-    <ClInclude Include="..\..\public\lcmodel.h" />
-    <ClInclude Include="..\..\public\lColor.h" />
-    <ClInclude Include="..\..\public\vgui_controls\lControls.h" />
-    <ClInclude Include="..\..\public\tier1\lconvar.h" />
-    <ClInclude Include="..\..\public\vgui_controls\lEditablePanel.h" />
-    <ClInclude Include="..\..\public\lfilesystem.h" />
-    <ClInclude Include="..\..\public\lgametrace.h" />
-    <ClInclude Include="..\..\public\licvar.h" />
-    <ClInclude Include="..\..\public\materialsystem\limaterial.h" />
-    <ClInclude Include="..\..\public\vgui\LIScheme.h" />
-    <ClInclude Include="..\..\public\SoundEmitterSystem\lisoundemittersystembase.h" />
     <ClInclude Include="..\..\public\vgui_controls\ListPanel.h" />
-    <ClInclude Include="..\..\public\tier1\LKeyValues.h" />
-    <ClInclude Include="..\..\public\lnetworkstringtabledefs.h" />
-    <ClInclude Include="..\..\public\vgui_controls\lPanel.h" />
-    <ClInclude Include="..\..\public\mathlib\lvector.h" />
-    <ClInclude Include="..\..\public\vgui\LVGUI.h" />
-    <ClInclude Include="..\..\public\mathlib\lvmatrix.h" />
     <ClInclude Include="..\..\public\mathlib\mathlib.h" />
     <ClInclude Include="..\..\public\tier0\mem.h" />
     <ClInclude Include="..\..\public\tier0\memalloc.h" />
@@ -894,7 +832,6 @@ exit 1
     <ClInclude Include="..\..\game\shared\hl2mp\hl2mp_gamerules.h" />
     <ClInclude Include="..\..\game\shared\hl2mp\hl2mp_player_shared.h" />
     <ClInclude Include="..\..\game\shared\hl2mp\hl2mp_weapon_parse.h" />
-    <ClInclude Include="..\..\game\shared\hl2mp\lhl2mp_player_shared.h" />
     <ClInclude Include="hl2mp\ui\backgroundpanel.h" />
     <ClInclude Include="hl2mp\hl2mp_hud_chat.h" />
     <ClInclude Include="hl2mp\ui\hl2mpclientscoreboard.h" />
@@ -902,16 +839,10 @@ exit 1
     <ClInclude Include="..\..\game\shared\hl2mp\weapon_ar2.h" />
     <ClInclude Include="..\..\game\shared\hl2mp\weapon_hl2mpbase.h" />
     <ClInclude Include="..\..\game\shared\hl2mp\weapon_hl2mpbase_machinegun.h" />
-    <ClInclude Include="..\..\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.h" />
     <ClInclude Include="..\..\game\shared\hl2mp\weapon_hl2mpbasehlmpcombatweapon.h" />
     <ClInclude Include="..\..\game\shared\hl2mp\weapon_physcannon.h" />
     <ClInclude Include="..\..\game\shared\hl2mp\weapon_rpg.h" />
     <ClInclude Include="..\..\game\shared\hl2mp\weapon_slam.h" />
-    <ClInclude Include="..\..\game\shared\basescripted.h" />
-    <ClInclude Include="lc_baseanimating.h" />
-    <ClInclude Include="..\..\public\steam\listeamfriends.h" />
-    <ClInclude Include="..\..\game\shared\luacachefile.h" />
-    <ClInclude Include="..\..\game\shared\luamanager.h" />
     <ClInclude Include="sixense\in_sixense.h" />
     <ClInclude Include="sixense\in_sixense_gesture_bindings.h" />
     <ClInclude Include="..\..\game\shared\sixense\sixense_convars_extern.h" />
@@ -1442,7 +1373,6 @@ exit 1
     <ClCompile Include="..\..\game\shared\hl2mp\hl2mp_gamerules.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\hl2mp_player_shared.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\hl2mp_weapon_parse.cpp" />
-    <ClCompile Include="..\..\game\shared\hl2mp\lhl2mp_player_shared.cpp" />
     <ClCompile Include="hl2mp\ui\backgroundpanel.cpp" />
     <ClCompile Include="hl2mp\hl2mp_hud_chat.cpp" />
     <ClCompile Include="hl2mp\hl2mp_hud_target_id.cpp" />
@@ -1457,7 +1387,6 @@ exit 1
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_frag.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_hl2mpbase.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_hl2mpbase_machinegun.cpp" />
-    <ClCompile Include="..\..\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_hl2mpbasebasebludgeon.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_hl2mpbasehlmpcombatweapon.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_physcannon.cpp" />
@@ -1467,59 +1396,6 @@ exit 1
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_slam.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_smg1.cpp" />
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_stunstick.cpp" />
-    <ClCompile Include="..\..\game\shared\basescripted.cpp" />
-    <ClCompile Include="..\..\game\shared\lbasecombatweapon_shared.cpp" />
-    <ClCompile Include="..\..\game\shared\lbaseentity_shared.cpp" />
-    <ClCompile Include="..\..\game\shared\lbaseplayer_shared.cpp" />
-    <ClCompile Include="..\..\public\lbspflags.cpp" />
-    <ClCompile Include="lc_baseanimating.cpp" />
-    <ClCompile Include="lc_baseentity.cpp" />
-    <ClCompile Include="lc_baseplayer.cpp" />
-    <ClCompile Include="..\..\public\lcdll_int.cpp" />
-    <ClCompile Include="lcdll_util.cpp" />
-    <ClCompile Include="..\..\public\lColor.cpp" />
-    <ClCompile Include="..\..\public\tier1\lconvar.cpp" />
-    <ClCompile Include="..\..\public\tier0\ldbg.cpp" />
-    <ClCompile Include="..\..\public\vgui_controls\lEditablePanel.cpp" />
-    <ClCompile Include="..\..\game\shared\leffect_dispatch_data.cpp" />
-    <ClCompile Include="..\..\public\lfilesystem.cpp" />
-    <ClCompile Include="..\..\public\lgametrace.cpp" />
-    <ClCompile Include="..\..\public\lglobalvars_base.cpp" />
-    <ClCompile Include="liclientshadowmgr.cpp" />
-    <ClCompile Include="..\..\public\tier1\liconvar.cpp" />
-    <ClCompile Include="..\..\public\licvar.cpp" />
-    <ClCompile Include="..\..\public\lienginevgui.cpp" />
-    <ClCompile Include="..\..\public\vgui\LIInput.cpp" />
-    <ClCompile Include="..\..\public\materialsystem\limaterial.cpp" />
-    <ClCompile Include="..\..\game\shared\limovehelper.cpp" />
-    <ClCompile Include="..\..\game\shared\lin_buttons.cpp" />
-    <ClCompile Include="..\..\game\shared\lipredictionsystem.cpp" />
-    <ClCompile Include="..\..\public\vgui\LIScheme.cpp" />
-    <ClCompile Include="..\..\public\SoundEmitterSystem\lisoundemittersystembase.cpp" />
-    <ClCompile Include="..\..\public\steam\listeamfriends.cpp" />
-    <ClCompile Include="..\..\public\vgui\LISurface.cpp" />
-    <ClCompile Include="..\..\public\engine\livdebugoverlay.cpp" />
-    <ClCompile Include="..\..\public\tier1\LKeyValues.cpp" />
-    <ClCompile Include="..\..\public\mathlib\lmathlib.cpp" />
-    <ClCompile Include="..\..\public\lnetworkstringtabledefs.cpp" />
-    <ClCompile Include="..\..\public\vgui_controls\lPanel.cpp" />
-    <ClCompile Include="..\..\public\vphysics\lperformance.cpp" />
-    <ClCompile Include="lprediction.cpp" />
-    <ClCompile Include="..\..\public\vstdlib\lrandom.cpp" />
-    <ClCompile Include="..\..\game\shared\lshareddefs.cpp" />
-    <ClCompile Include="..\..\game\shared\lsrcinit.cpp" />
-    <ClCompile Include="..\..\public\steam\lsteam_api.cpp" />
-    <ClCompile Include="..\..\game\shared\ltakedamageinfo.cpp" />
-    <ClCompile Include="..\..\game\shared\luacachefile.cpp" />
-    <ClCompile Include="..\..\game\shared\luamanager.cpp" />
-    <ClCompile Include="..\..\game\shared\lutil_shared.cpp" />
-    <ClCompile Include="..\..\public\mathlib\lvector.cpp" />
-    <ClCompile Include="..\..\public\vgui\LVGUI.cpp" />
-    <ClCompile Include="..\..\public\vgui_controls\lvgui_controls.cpp" />
-    <ClCompile Include="..\..\public\mathlib\lvmatrix.cpp" />
-    <ClCompile Include="..\..\public\lvphysics_interface.cpp" />
-    <ClCompile Include="..\..\public\XUnzip.cpp" />
-    <ClCompile Include="..\..\public\zip_utils.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -1599,23 +1475,19 @@ exit 1
   <ItemGroup>
     <CustomBuild Include="..\..\public\tier0\pointeroverride.asm">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling pointeroverride.asm</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VCInstallDir)bin\ml.exe" /safeseh /c /Cp /Zi /Fo"$(IntDir)\%(Filename).obj" "%(FullPath)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">&quot;$(VCInstallDir)bin\ml.exe&quot; /safeseh /c /Cp /Zi /Fo&quot;$(IntDir)\%(Filename).obj&quot; &quot;%(FullPath)&quot;</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(Filename).obj</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling pointeroverride.asm</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VCInstallDir)bin\ml.exe" /safeseh /c /Cp /Zi /Fo"$(IntDir)\%(Filename).obj" "%(FullPath)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">&quot;$(VCInstallDir)bin\ml.exe&quot; /safeseh /c /Cp /Zi /Fo&quot;$(IntDir)\%(Filename).obj&quot; &quot;%(FullPath)&quot;</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(Filename).obj</Outputs>
     </CustomBuild>
     <CustomBuild Include="client_hl2mp.vpc">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Running VPC CRC Check - client_hl2mp.vpc</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">if exist "..\..\devtools\bin\vpc.exe" "..\..\devtools\bin\vpc.exe" -crc2 "client_hl2mp.vcxproj"
-if ERRORLEVEL 1 exit /b 1
-echo crc_complete &gt; C:\Users\hp\Documents\hl2sb-src\src\game\client\client_hl2mp.vpc.sentinel</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\hp\Documents\hl2sb-src\src\game\client\client_hl2mp.vpc.sentinel</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">if exist &quot;..\..\devtools\bin\vpc.exe&quot; &quot;..\..\devtools\bin\vpc.exe&quot; -crc2 &quot;client_hl2mp.vcxproj&quot;&#x0D;&#x0A;if ERRORLEVEL 1 exit /b 1&#x0D;&#x0A;echo crc_complete &gt; C:\Users\hp\Downloads\hl2sb-src-master\src\game\client\client_hl2mp.vpc.sentinel</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\hp\Downloads\hl2sb-src-master\src\game\client\client_hl2mp.vpc.sentinel</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Running VPC CRC Check - client_hl2mp.vpc</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">if exist "..\..\devtools\bin\vpc.exe" "..\..\devtools\bin\vpc.exe" -crc2 "client_hl2mp.vcxproj"
-if ERRORLEVEL 1 exit /b 1
-echo crc_complete &gt; C:\Users\hp\Documents\hl2sb-src\src\game\client\client_hl2mp.vpc.sentinel</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\hp\Documents\hl2sb-src\src\game\client\client_hl2mp.vpc.sentinel</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">if exist &quot;..\..\devtools\bin\vpc.exe&quot; &quot;..\..\devtools\bin\vpc.exe&quot; -crc2 &quot;client_hl2mp.vcxproj&quot;&#x0D;&#x0A;if ERRORLEVEL 1 exit /b 1&#x0D;&#x0A;echo crc_complete &gt; C:\Users\hp\Downloads\hl2sb-src-master\src\game\client\client_hl2mp.vpc.sentinel</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\hp\Downloads\hl2sb-src-master\src\game\client\client_hl2mp.vpc.sentinel</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

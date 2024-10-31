@@ -29,10 +29,6 @@
 #include "tier0/dbg.h"
 #include "cdll_int.h"
 #include <vgui/IPanel.h>
-#ifdef LUA_SDK
-#include "luamanager.h"
-#include "lbaseplayer_shared.h"
-#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -233,14 +229,6 @@ void CVoiceStatus::DrawHeadLabels()
 		C_BasePlayer *pPlayer = dynamic_cast<C_BasePlayer*>(pClient);
 		if( !pPlayer )
 			continue;
-
-#if defined ( LUA_SDK )
-		BEGIN_LUA_CALL_HOOK( "DrawHeadLabels" );
-			lua_pushplayer( L, pPlayer );
-		END_LUA_CALL_HOOK( 1, 1 );
-
-		RETURN_LUA_NONE();
-#endif
 
 		// Don't show an icon for dead or spectating players (ie: invisible entities).
 		if( pPlayer->IsPlayerDead() )

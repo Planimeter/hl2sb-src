@@ -28,19 +28,19 @@
 // CHintCriteria
 //==================================================
 
-CHintCriteria::CHintCriteria(void)
+CHintCriteria::CHintCriteria( void )
 {
 	m_iFirstHintType = HINT_NONE;
 	m_iLastHintType = HINT_NONE;
-	m_strGroup = NULL_STRING;
-	m_iFlags = 0;
+	m_strGroup		= NULL_STRING;
+	m_iFlags		= 0;
 	m_HintTypes.Purge();
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Destructor
 //-----------------------------------------------------------------------------
-CHintCriteria::~CHintCriteria(void)
+CHintCriteria::~CHintCriteria( void )
 {
 	m_zoneInclude.Purge();
 	m_zoneExclude.Purge();
@@ -51,7 +51,7 @@ CHintCriteria::~CHintCriteria(void)
 // Purpose: Sets the hint type for this search criteria
 // Input  : nHintType - the hint type for this search criteria
 //-----------------------------------------------------------------------------
-void CHintCriteria::SetHintType(int nHintType)
+void CHintCriteria::SetHintType( int nHintType )
 {
 	m_iFirstHintType = nHintType;
 	m_iLastHintType = HINT_NONE;
@@ -61,9 +61,9 @@ void CHintCriteria::SetHintType(int nHintType)
 //-----------------------------------------------------------------------------
 // Purpose: Add another type of hint that matches the search criteria
 //-----------------------------------------------------------------------------
-void CHintCriteria::AddHintType(int hintType)
+void CHintCriteria::AddHintType( int hintType )
 {
-	m_HintTypes.AddToTail(hintType);
+	m_HintTypes.AddToTail( hintType );
 }
 
 int CHintCriteria::NumHintTypes() const
@@ -71,24 +71,24 @@ int CHintCriteria::NumHintTypes() const
 	return m_HintTypes.Count();
 }
 
-int	CHintCriteria::GetHintType(int idx) const
+int	CHintCriteria::GetHintType( int idx ) const
 {
-	return m_HintTypes[idx];
+	return m_HintTypes[ idx ];
 }
 
 bool CHintCriteria::MatchesSingleHintType() const
-{
-	if (m_HintTypes.Count() != 0)
+{ 
+	if ( m_HintTypes.Count() != 0 )
 	{
 		return false;
 	}
 
-	if (m_iFirstHintType != HINT_ANY &&
-		m_iLastHintType == HINT_NONE)
+	if ( m_iFirstHintType != HINT_ANY && 
+		    m_iLastHintType == HINT_NONE )
 	{
 		return true;
 	}
-
+	
 	return false;
 }
 
@@ -96,28 +96,28 @@ bool CHintCriteria::MatchesSingleHintType() const
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool CHintCriteria::MatchesHintType(int hintType) const
+bool CHintCriteria::MatchesHintType( int hintType ) const
 {
 	int c = m_HintTypes.Count();
-	for (int i = 0; i < c; ++i)
+ 	for ( int i = 0; i < c; ++i )
 	{
-		if (m_HintTypes[i] == hintType)
+		if ( m_HintTypes[i] == hintType )
 			return true;
 	}
 
 	// See if we're trying to filter the nodes
-	if (GetFirstHintType() != HINT_ANY)
+	if ( GetFirstHintType() != HINT_ANY )
 	{
-		if (GetLastHintType() == HINT_NONE)
+		if( GetLastHintType() == HINT_NONE )
 		{
 			// Searching for a single type of hint.
-			if (GetFirstHintType() != hintType)
+			if( GetFirstHintType() != hintType )
 				return false;
 		}
 		else
 		{
 			// This search is for a range of hint types.
-			if (hintType < GetFirstHintType() || hintType > GetLastHintType())
+			if( hintType < GetFirstHintType() || hintType > GetLastHintType() )
 				return false;
 		}
 
@@ -130,11 +130,11 @@ bool CHintCriteria::MatchesHintType(int hintType) const
 //-----------------------------------------------------------------------------
 // Allows us to search for nodes within a range of consecutive types.
 //-----------------------------------------------------------------------------
-void CHintCriteria::SetHintTypeRange(int firstType, int lastType)
+void CHintCriteria::SetHintTypeRange( int firstType, int lastType )
 {
-	if (lastType < firstType)
+	if( lastType < firstType )
 	{
-		DevMsg(2, "Hint Type Range is backwards - Fixing up.\n");
+		DevMsg( 2, "Hint Type Range is backwards - Fixing up.\n" );
 
 		int temp;
 
@@ -152,7 +152,7 @@ void CHintCriteria::SetHintTypeRange(int firstType, int lastType)
 // Purpose: 
 // Input  : bitmask - 
 //-----------------------------------------------------------------------------
-void CHintCriteria::SetFlag(int bitmask)
+void CHintCriteria::SetFlag( int bitmask )
 {
 	m_iFlags |= bitmask;
 }
@@ -161,7 +161,7 @@ void CHintCriteria::SetFlag(int bitmask)
 // Purpose: 
 // Input  : bitmask - 
 //-----------------------------------------------------------------------------
-void CHintCriteria::ClearFlag(int bitmask)
+void CHintCriteria::ClearFlag( int bitmask )
 {
 	m_iFlags &= ~bitmask;
 }
@@ -170,7 +170,7 @@ void CHintCriteria::ClearFlag(int bitmask)
 // Purpose: 
 // Input  : group - 
 //-----------------------------------------------------------------------------
-void CHintCriteria::SetGroup(string_t group)
+void CHintCriteria::SetGroup( string_t group )
 {
 	m_strGroup = group;
 }
@@ -181,11 +181,11 @@ void CHintCriteria::SetGroup(string_t group)
 //			&position - the origin point of the zone
 //			radius - the radius of the zone
 //-----------------------------------------------------------------------------
-void CHintCriteria::AddZone(zoneList_t& list, const Vector& position, float radius)
+void CHintCriteria::AddZone( zoneList_t &list, const Vector &position, float radius )
 {
 	int id = list.AddToTail();
-	list[id].position = position;
-	list[id].radiussqr = radius * radius;
+	list[id].position	= position;
+	list[id].radiussqr	= radius*radius;
 }
 
 //-----------------------------------------------------------------------------
@@ -193,9 +193,9 @@ void CHintCriteria::AddZone(zoneList_t& list, const Vector& position, float radi
 // Input  : &position - the origin point of the zone
 //			radius - the radius of the zone
 //-----------------------------------------------------------------------------
-void CHintCriteria::AddIncludePosition(const Vector& position, float radius)
+void CHintCriteria::AddIncludePosition( const Vector &position, float radius )
 {
-	AddZone(m_zoneInclude, position, radius);
+	AddZone( m_zoneInclude, position, radius );
 }
 
 //-----------------------------------------------------------------------------
@@ -203,9 +203,9 @@ void CHintCriteria::AddIncludePosition(const Vector& position, float radius)
 // Input  : &position - the origin point of the zone
 //			radius - the radius of the zone
 //-----------------------------------------------------------------------------
-void CHintCriteria::AddExcludePosition(const Vector& position, float radius)
+void CHintCriteria::AddExcludePosition( const Vector &position, float radius )
 {
-	AddZone(m_zoneExclude, position, radius);
+	AddZone( m_zoneExclude, position, radius );
 }
 
 //-----------------------------------------------------------------------------
@@ -214,14 +214,14 @@ void CHintCriteria::AddExcludePosition(const Vector& position, float radius)
 //			&testPosition - position to test with
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-inline bool CHintCriteria::InZone(const zoneList_t& zone, const Vector& testPosition) const
+inline bool CHintCriteria::InZone( const zoneList_t &zone, const Vector &testPosition ) const
 {
 	int	numZones = zone.Count();
 
 	//Iterate through all zones in the list
-	for (int i = 0; i < numZones; i++)
+	for ( int i = 0; i < numZones; i++ )
 	{
-		if (((zone[i].position) - testPosition).LengthSqr() < (zone[i].radiussqr))
+		if ( ((zone[i].position) - testPosition).LengthSqr() < (zone[i].radiussqr) )
 			return true;
 	}
 
@@ -233,9 +233,9 @@ inline bool CHintCriteria::InZone(const zoneList_t& zone, const Vector& testPosi
 // Input  : &testPosition - position to test with
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-bool CHintCriteria::InIncludedZone(const Vector& testPosition) const
+bool CHintCriteria::InIncludedZone( const Vector &testPosition ) const
 {
-	return InZone(m_zoneInclude, testPosition);
+	return InZone( m_zoneInclude, testPosition );
 }
 
 //-----------------------------------------------------------------------------
@@ -243,28 +243,28 @@ bool CHintCriteria::InIncludedZone(const Vector& testPosition) const
 // Input  : &testPosition - position to test with
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-bool CHintCriteria::InExcludedZone(const Vector& testPosition) const
+bool CHintCriteria::InExcludedZone( const Vector &testPosition ) const
 {
-	return InZone(m_zoneExclude, testPosition);
+	return InZone( m_zoneExclude, testPosition );
 }
 
 //-----------------------------------------------------------------------------
 // Init static variables
 //-----------------------------------------------------------------------------
 CAIHintVector CAI_HintManager::gm_AllHints;
-CUtlMap< int, CAIHintVector >	CAI_HintManager::gm_TypedHints(0, 0, DefLessFunc(int));
-CAI_Hint* CAI_HintManager::gm_pLastFoundHints[CAI_HintManager::HINT_HISTORY];
+CUtlMap< int,  CAIHintVector >	CAI_HintManager::gm_TypedHints( 0, 0, DefLessFunc( int ) );
+CAI_Hint*	CAI_HintManager::gm_pLastFoundHints[ CAI_HintManager::HINT_HISTORY ];
 int			CAI_HintManager::gm_nFoundHintIndex = 0;
 
-CAI_Hint* CAI_HintManager::AddFoundHint(CAI_Hint* hint)
+CAI_Hint *CAI_HintManager::AddFoundHint( CAI_Hint *hint )
 {
-	if (hint)
+	if ( hint )
 	{
-		CAI_HintManager::gm_nFoundHintIndex = (CAI_HintManager::gm_nFoundHintIndex + 1) & CAI_HintManager::HINT_HISTORY_MASK;
-		gm_pLastFoundHints[CAI_HintManager::gm_nFoundHintIndex] = hint;
+		CAI_HintManager::gm_nFoundHintIndex = ( CAI_HintManager::gm_nFoundHintIndex + 1 ) & CAI_HintManager::HINT_HISTORY_MASK;
+		gm_pLastFoundHints[ CAI_HintManager::gm_nFoundHintIndex ] = hint;
 	}
 	return hint;
-
+	
 }
 
 int CAI_HintManager::GetFoundHintCount()
@@ -272,63 +272,63 @@ int CAI_HintManager::GetFoundHintCount()
 	return CAI_HintManager::HINT_HISTORY;
 }
 
-CAI_Hint* CAI_HintManager::GetFoundHint(int index)
+CAI_Hint *CAI_HintManager::GetFoundHint( int index )
 {
-	return gm_pLastFoundHints[(CAI_HintManager::gm_nFoundHintIndex + index) & CAI_HintManager::HINT_HISTORY_MASK];
+	return gm_pLastFoundHints[ ( CAI_HintManager::gm_nFoundHintIndex + index ) & CAI_HintManager::HINT_HISTORY_MASK ];
 }
 
-CAI_Hint* CAI_HintManager::GetLastFoundHint()
+CAI_Hint *CAI_HintManager::GetLastFoundHint()
 {
-	for (int i = 0; i < CAI_HintManager::HINT_HISTORY; ++i)
+	for ( int i = 0; i < CAI_HintManager::HINT_HISTORY; ++i )
 	{
 		// Walk backward
-		int slot = ((CAI_HintManager::gm_nFoundHintIndex - i) & CAI_HintManager::HINT_HISTORY_MASK);
-		if (gm_pLastFoundHints[slot])
-			return gm_pLastFoundHints[slot];
+		int slot = ( ( CAI_HintManager::gm_nFoundHintIndex - i ) & CAI_HintManager::HINT_HISTORY_MASK );
+		if ( gm_pLastFoundHints[ slot ] )
+			return gm_pLastFoundHints[ slot ];
 	}
 	return NULL;
 }
 
 void CAI_HintManager::ResetFoundHints()
 {
-	Q_memset(gm_pLastFoundHints, 0, sizeof(gm_pLastFoundHints));
+	Q_memset( gm_pLastFoundHints, 0, sizeof( gm_pLastFoundHints ) );
 	CAI_HintManager::gm_nFoundHintIndex = 0;
 }
 
-bool CAI_HintManager::IsInFoundHintList(CAI_Hint* hint)
+bool CAI_HintManager::IsInFoundHintList( CAI_Hint *hint )
 {
-	for (int i = 0; i < CAI_HintManager::HINT_HISTORY; ++i)
+	for ( int i = 0; i < CAI_HintManager::HINT_HISTORY; ++i )
 	{
-		if (gm_pLastFoundHints[i] == hint)
+		if ( gm_pLastFoundHints[ i ] == hint )
 			return true;
 	}
 	return false;
 }
 
 //-----------------------------------------------------------------------------
-int CAI_HintManager::FindAllHints(CAI_BaseNPC* pNPC, const Vector& position, const CHintCriteria& hintCriteria, CUtlVector<CAI_Hint*>* pResult)
+int CAI_HintManager::FindAllHints( CAI_BaseNPC *pNPC, const Vector &position, const CHintCriteria &hintCriteria, CUtlVector<CAI_Hint *> *pResult )
 {
 	//  If we have no hints, bail
 	int c = CAI_HintManager::gm_AllHints.Count();
-	if (!c)
+	if ( !c )
 		return NULL;
 
 	// Remove the nearest flag. It makes now sense with random.
-	bool hadNearest = hintCriteria.HasFlag(bits_HINT_NODE_NEAREST);
-	(const_cast<CHintCriteria&>(hintCriteria)).ClearFlag(bits_HINT_NODE_NEAREST);
+	bool hadNearest = hintCriteria.HasFlag( bits_HINT_NODE_NEAREST );
+	(const_cast<CHintCriteria &>(hintCriteria)).ClearFlag( bits_HINT_NODE_NEAREST );
 
 	//  Now loop till we find a valid hint or return to the start
-	CAI_Hint* pTestHint;
-	for (int i = 0; i < c; ++i)
+	CAI_Hint *pTestHint;
+	for ( int i = 0; i < c; ++i )
 	{
-		pTestHint = CAI_HintManager::gm_AllHints[i];
-		Assert(pTestHint);
-		if (pTestHint->HintMatchesCriteria(pNPC, hintCriteria, position, NULL))
-			pResult->AddToTail(pTestHint);
+		pTestHint = CAI_HintManager::gm_AllHints[ i ];
+		Assert( pTestHint );
+		if ( pTestHint->HintMatchesCriteria( pNPC, hintCriteria, position, NULL ) )
+			pResult->AddToTail( pTestHint );
 	}
 
-	if (hadNearest)
-		(const_cast<CHintCriteria&>(hintCriteria)).SetFlag(bits_HINT_NODE_NEAREST);
+	if ( hadNearest )
+		(const_cast<CHintCriteria &>(hintCriteria)).SetFlag( bits_HINT_NODE_NEAREST );
 
 	return pResult->Count();
 }
@@ -342,14 +342,14 @@ int CAI_HintManager::FindAllHints(CAI_BaseNPC* pNPC, const Vector& position, con
 //			flMaxDist - 
 // Output : CAI_Hint
 //-----------------------------------------------------------------------------
-CAI_Hint* CAI_HintManager::FindHintRandom(CAI_BaseNPC* pNPC, const Vector& position, const CHintCriteria& hintCriteria)
+CAI_Hint *CAI_HintManager::FindHintRandom( CAI_BaseNPC *pNPC, const Vector &position, const CHintCriteria &hintCriteria )
 {
-	CUtlVector<CAI_Hint*> hintList;
+	CUtlVector<CAI_Hint *> hintList;
 
-	if (FindAllHints(pNPC, position, hintCriteria, &hintList) > 0)
+	if ( FindAllHints( pNPC, position, hintCriteria, &hintList ) > 0 )
 	{
 		// Pick one randomly
-		return (CAI_HintManager::AddFoundHint(hintList[random->RandomInt(0, hintList.Size() - 1)]));
+		return ( CAI_HintManager::AddFoundHint( hintList[ random->RandomInt( 0, hintList.Size() - 1 ) ]  ) );
 	}
 
 	// start at the top of the list for the next search
@@ -359,12 +359,12 @@ CAI_Hint* CAI_HintManager::FindHintRandom(CAI_BaseNPC* pNPC, const Vector& posit
 
 // #define HINT_PROFILING 1
 #if defined( HINT_PROFILING )
-static void AppendTimer(int idx, char* buf, size_t bufsize, CFastTimer& timer)
+static void AppendTimer( int idx, char *buf, size_t bufsize, CFastTimer& timer )
 {
-	char s[32];
-	Q_snprintf(s, sizeof(s), "%d %6.3f ms", idx, timer.GetDuration().GetMillisecondsF());
+	char s[ 32 ];
+	Q_snprintf( s, sizeof( s ), "%d %6.3f ms", idx, timer.GetDuration().GetMillisecondsF() );
 
-	Q_strncat(buf, s, bufsize);
+	Q_strncat( buf, s, bufsize );
 }
 #endif
 
@@ -373,78 +373,78 @@ static void AppendTimer(int idx, char* buf, size_t bufsize, CFastTimer& timer)
 // Input  : *hintCriteria - 
 // Output : CAI_Hint
 //-----------------------------------------------------------------------------
-CAI_Hint* CAI_HintManager::FindHint(CAI_BaseNPC* pNPC, const Vector& position, const CHintCriteria& hintCriteria)
+CAI_Hint *CAI_HintManager::FindHint( CAI_BaseNPC *pNPC, const Vector &position, const CHintCriteria &hintCriteria )
 {
 #if defined( HINT_PROFILING )
 	CFastTimer timer;
 	timer.Start();
 #endif
 	bool singleType = hintCriteria.MatchesSingleHintType();
-	bool lookingForNearest = hintCriteria.HasFlag(bits_HINT_NODE_NEAREST);
+	bool lookingForNearest = hintCriteria.HasFlag( bits_HINT_NODE_NEAREST );
 	bool bIgnoreHintType = true;
 
-	CUtlVector< CAIHintVector* > lists;
-	if (singleType)
+	CUtlVector< CAIHintVector * > lists;
+	if ( singleType )
 	{
-		int slot = CAI_HintManager::gm_TypedHints.Find(hintCriteria.GetFirstHintType());
-		if (slot != CAI_HintManager::gm_TypedHints.InvalidIndex())
+		int slot = CAI_HintManager::gm_TypedHints.Find( hintCriteria.GetFirstHintType() );
+		if ( slot != CAI_HintManager::gm_TypedHints.InvalidIndex() )
 		{
-			lists.AddToTail(&CAI_HintManager::gm_TypedHints[slot]);
+			lists.AddToTail( &CAI_HintManager::gm_TypedHints[ slot ] );
 		}
 	}
 	else
 	{
 		int typeCount = hintCriteria.NumHintTypes();
-		if (typeCount > 0)
+		if ( typeCount > 0 )
 		{
-			for (int listType = 0; listType < typeCount; ++listType)
+			for ( int listType = 0; listType < typeCount; ++listType )
 			{
-				int slot = CAI_HintManager::gm_TypedHints.Find(hintCriteria.GetHintType(listType));
-				if (slot != CAI_HintManager::gm_TypedHints.InvalidIndex())
+				int slot = CAI_HintManager::gm_TypedHints.Find( hintCriteria.GetHintType( listType ) );
+				if ( slot != CAI_HintManager::gm_TypedHints.InvalidIndex() )
 				{
-					lists.AddToTail(&CAI_HintManager::gm_TypedHints[slot]);
+					lists.AddToTail( &CAI_HintManager::gm_TypedHints[ slot ] );
 				}
 			}
 		}
 		else
 		{
 			// Still need to check hint type in this case
-			lists.AddToTail(&CAI_HintManager::gm_AllHints);
+			lists.AddToTail( &CAI_HintManager::gm_AllHints );
 			bIgnoreHintType = false;
 		}
 	}
 
-	CAI_Hint* pBestHint = NULL;
+	CAI_Hint *pBestHint	= NULL;
 
 	int visited = 0;
 
 	int listCount = lists.Count();
 
-	if (listCount == 0)
+	if ( listCount == 0 )
 		return NULL;
-
+	
 	// Try the fast match path
 	int i, count;
 	// Start with hint after the last one used
-	CAI_Hint* pTestHint = NULL;
+	CAI_Hint *pTestHint = NULL;
 
 	float flBestDistance = MAX_TRACE_LENGTH;
 
-	if (!lookingForNearest)
+	if ( !lookingForNearest )
 	{
 		// Fast check of previous results
 		count = CAI_HintManager::GetFoundHintCount();
-		for (i = 0; i < count; ++i)
+		for ( i = 0; i < count; ++i )
 		{
-			pTestHint = CAI_HintManager::GetFoundHint(i);
-			if (pTestHint)
+			pTestHint = CAI_HintManager::GetFoundHint( i );
+			if ( pTestHint )
 			{
-				Assert(dynamic_cast<CAI_Hint*>(pTestHint) != NULL);
+				Assert( dynamic_cast<CAI_Hint *>(pTestHint) != NULL );
 				++visited;
-				if (pTestHint->HintMatchesCriteria(pNPC, hintCriteria, position, &flBestDistance))
+				if ( pTestHint->HintMatchesCriteria( pNPC, hintCriteria, position, &flBestDistance ) )
 				{
 #if defined( HINT_PROFILING )
-					Msg("fast result visited %d\n", visited);
+					Msg( "fast result visited %d\n", visited );
 #endif
 					return pTestHint;
 				}
@@ -455,62 +455,62 @@ CAI_Hint* CAI_HintManager::FindHint(CAI_BaseNPC* pNPC, const Vector& position, c
 	// Longer search, reset best distance
 	flBestDistance = MAX_TRACE_LENGTH;
 
-	for (int listNum = 0; listNum < listCount; ++listNum)
+	for ( int listNum = 0; listNum < listCount; ++listNum )
 	{
-		CAIHintVector* list = lists[listNum];
+		CAIHintVector *list = lists[ listNum ];
 		count = list->Count();
 		// -------------------------------------------
 		//  If we have no hints, bail
 		// -------------------------------------------
-		if (!count)
+		if ( !count )
 			continue;
 
 		//  Now loop till we find a valid hint or return to the start
-		for (i = 0; i < count; ++i)
+		for ( i = 0 ; i < count; ++i )
 		{
-			pTestHint = list->Element(i);
-			Assert(pTestHint);
+			pTestHint = list->Element( i );
+			Assert( pTestHint );
 
 			++visited;
 
-			Assert(dynamic_cast<CAI_Hint*>(pTestHint) != NULL);
-			if (pTestHint->HintMatchesCriteria(pNPC, hintCriteria, position, &flBestDistance, false, bIgnoreHintType))
+			Assert( dynamic_cast<CAI_Hint *>(pTestHint) != NULL );
+			if ( pTestHint->HintMatchesCriteria( pNPC, hintCriteria, position, &flBestDistance, false, bIgnoreHintType ) )
 			{
 				// If we were searching for the nearest, just note that this is now the nearest node
-				if (lookingForNearest)
+				if ( lookingForNearest )
 				{
 					pBestHint = pTestHint;
 				}
-				else
+				else 
 				{
 					// If we're not looking for the nearest, we're done
-					CAI_HintManager::AddFoundHint(pTestHint);
+					CAI_HintManager::AddFoundHint( pTestHint );
 #if defined( HINT_PROFILING )
-					Msg("visited %d\n", visited);
+					Msg( "visited %d\n", visited );
 #endif
 					return pTestHint;
 				}
 			}
-		}
+		} 
 	}
 	// Return the nearest node that we found
-	if (pBestHint)
+	if ( pBestHint )
 	{
-		CAI_HintManager::AddFoundHint(pBestHint);
+		CAI_HintManager::AddFoundHint( pBestHint );
 	}
-
+	
 #if defined( HINT_PROFILING )
 	timer.End();
 
-	Msg("visited %d\n", visited);
-	if (!pBestHint)
+	Msg( "visited %d\n", visited );
+	if ( !pBestHint )
 	{
-		Msg("%i search failed for [%d] at pos %.3f %.3f %.3f [%.4f msec ~ %.4f msec per node]\n",
+		Msg( "%i search failed for [%d] at pos %.3f %.3f %.3f [%.4f msec ~ %.4f msec per node]\n",
 			gpGlobals->tickcount,
 			pNPC ? pNPC->entindex() : -1,
 			position.x, position.y, position.z,
 			timer.GetDuration().GetMillisecondsF(),
-			timer.GetDuration().GetMillisecondsF() / MAX((float)visited, 1.0f));
+			timer.GetDuration().GetMillisecondsF()/MAX( (float)visited, 1.0f ) );
 	}
 #endif
 	return pBestHint;
@@ -530,53 +530,53 @@ CAI_Hint* CAI_HintManager::FindHint(CAI_BaseNPC* pNPC, const Vector& position, c
 // Output : Returns pointer to hint node if available hint node was found that matches the
 //			given criterea that this NPC also cares about. Otherwise, returns NULL
 //-----------------------------------------------------------------------------
-CAI_Hint* CAI_HintManager::FindHint(CAI_BaseNPC* pNPC, Hint_e nHintType, int nFlags, float flMaxDist, const Vector* pMaxDistFrom)
+CAI_Hint* CAI_HintManager::FindHint( CAI_BaseNPC *pNPC, Hint_e nHintType, int nFlags, float flMaxDist, const Vector *pMaxDistFrom )
 {
-	assert(pNPC != NULL);
-	if (pNPC == NULL)
+	assert( pNPC != NULL );
+	if ( pNPC == NULL )
 		return NULL;
 
 	CHintCriteria	hintCriteria;
-	hintCriteria.SetHintType(nHintType);
-	hintCriteria.SetFlag(nFlags);
+	hintCriteria.SetHintType( nHintType );
+	hintCriteria.SetFlag( nFlags );
 
 	// Using the NPC's hint group?
-	if (nFlags & bits_HINT_NODE_USE_GROUP)
+	if ( nFlags & bits_HINT_NODE_USE_GROUP )
 	{
-		hintCriteria.SetGroup(pNPC->GetHintGroup());
+		hintCriteria.SetGroup( pNPC->GetHintGroup() );
 	}
 
 	// Add the search position
-	Vector vecPosition = (pMaxDistFrom != NULL) ? (*pMaxDistFrom) : pNPC->GetAbsOrigin();
-	hintCriteria.AddIncludePosition(vecPosition, flMaxDist);
+	Vector vecPosition = ( pMaxDistFrom != NULL ) ? (*pMaxDistFrom) : pNPC->GetAbsOrigin();
+	hintCriteria.AddIncludePosition( vecPosition, flMaxDist );
 
 	// If asking for a random node, use random logic instead
-	if (nFlags & bits_HINT_NODE_RANDOM)
-		return FindHintRandom(pNPC, vecPosition, hintCriteria);
+	if ( nFlags & bits_HINT_NODE_RANDOM )
+		return FindHintRandom( pNPC, vecPosition, hintCriteria );
 
-	return FindHint(pNPC, vecPosition, hintCriteria);
+	return FindHint( pNPC, vecPosition, hintCriteria );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Position only search
 // Output : CAI_Hint
 //-----------------------------------------------------------------------------
-CAI_Hint* CAI_HintManager::FindHint(const Vector& position, const CHintCriteria& hintCriteria)
+CAI_Hint *CAI_HintManager::FindHint( const Vector &position, const CHintCriteria &hintCriteria )
 {
-	return FindHint(NULL, position, hintCriteria);
+	return FindHint( NULL, position, hintCriteria );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: NPC only search
 // Output : CAI_Hint
 //-----------------------------------------------------------------------------
-CAI_Hint* CAI_HintManager::FindHint(CAI_BaseNPC* pNPC, const CHintCriteria& hintCriteria)
+CAI_Hint *CAI_HintManager::FindHint( CAI_BaseNPC *pNPC, const CHintCriteria &hintCriteria )
 {
-	assert(pNPC != NULL);
-	if (pNPC == NULL)
+	assert( pNPC != NULL );
+	if ( pNPC == NULL )
 		return NULL;
 
-	return FindHint(pNPC, pNPC->GetAbsOrigin(), hintCriteria);
+	return FindHint( pNPC, pNPC->GetAbsOrigin(), hintCriteria );
 }
 
 //------------------------------------------------------------------------------
@@ -584,28 +584,28 @@ CAI_Hint* CAI_HintManager::FindHint(CAI_BaseNPC* pNPC, const CHintCriteria& hint
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
-CAI_Hint* CAI_HintManager::CreateHint(HintNodeData* pNodeData, const char* pMapData)
+CAI_Hint* CAI_HintManager::CreateHint( HintNodeData *pNodeData, const char *pMapData )
 {
 	// Reset last found hint if new node is added
 	CAI_HintManager::ResetFoundHints();
 
-	CAI_Hint* pHint = (CAI_Hint*)CreateEntityByName("ai_hint");
-	if (pHint)
-	{
+	CAI_Hint *pHint = (CAI_Hint*)CreateEntityByName("ai_hint");
+	if ( pHint )
+	{	
 		// First, parse the mapdata chunk we were passed
-		if (pMapData)
+		if ( pMapData )
 		{
-			CEntityMapData entData((char*)pMapData);
-			pHint->ParseMapData(&entData);
+			CEntityMapData entData( (char*)pMapData );
+			pHint->ParseMapData( &entData );
 
 			// Restore the desired classname (parsing the mapdata stomps it)
-			pHint->SetClassname("ai_hint");
+			pHint->SetClassname( "ai_hint" );
 		}
 
-		pHint->SetName(pNodeData->strEntityName);
-		pHint->SetAbsOrigin(pNodeData->vecPosition);
-		memcpy(&(pHint->m_NodeData), pNodeData, sizeof(HintNodeData));
-		DispatchSpawn(pHint);
+		pHint->SetName( pNodeData->strEntityName );
+		pHint->SetAbsOrigin( pNodeData->vecPosition );
+		memcpy( &(pHint->m_NodeData), pNodeData, sizeof(HintNodeData) );
+		DispatchSpawn( pHint );
 
 		return pHint;
 	}
@@ -614,56 +614,56 @@ CAI_Hint* CAI_HintManager::CreateHint(HintNodeData* pNodeData, const char* pMapD
 }
 
 //------------------------------------------------------------------------------
-void CAI_HintManager::AddHint(CAI_Hint* pHint)
+void CAI_HintManager::AddHint( CAI_Hint *pHint )
 {
 	// ---------------------------------
 	//  Add to linked list of hints
 	// ---------------------------------
-	CAI_HintManager::gm_AllHints.AddToTail(pHint);
-	CAI_HintManager::AddHintByType(pHint);
+	CAI_HintManager::gm_AllHints.AddToTail( pHint );
+	CAI_HintManager::AddHintByType( pHint );
 }
 
-void CAI_Hint::SetHintType(int hintType, bool force /*= false*/)
+void CAI_Hint::SetHintType( int hintType, bool force /*= false*/ )
 {
-	if (!force && hintType == m_NodeData.nHintType)
+	if ( !force && hintType == m_NodeData.nHintType )
 		return;
 
-	CAI_HintManager::RemoveHintByType(this);
+	CAI_HintManager::RemoveHintByType( this );
 	m_NodeData.nHintType = hintType;
-	CAI_HintManager::AddHintByType(this);
+	CAI_HintManager::AddHintByType( this );
 }
 
-void CAI_HintManager::AddHintByType(CAI_Hint* pHint)
+void CAI_HintManager::AddHintByType( CAI_Hint *pHint )
 {
 	Hint_e type = pHint->HintType();
 
-	int slot = CAI_HintManager::gm_TypedHints.Find(type);
-	if (slot == CAI_HintManager::gm_TypedHints.InvalidIndex())
+	int slot = CAI_HintManager::gm_TypedHints.Find( type );
+	if ( slot == CAI_HintManager::gm_TypedHints.InvalidIndex() )
 	{
-		slot = CAI_HintManager::gm_TypedHints.Insert(type);
+		slot = CAI_HintManager::gm_TypedHints.Insert( type);
 	}
-	CAI_HintManager::gm_TypedHints[slot].AddToTail(pHint);
+	CAI_HintManager::gm_TypedHints[ slot ].AddToTail( pHint );
 }
 
-void CAI_HintManager::RemoveHintByType(CAI_Hint* pHintToRemove)
+void CAI_HintManager::RemoveHintByType( CAI_Hint *pHintToRemove )
 {
-	int slot = CAI_HintManager::gm_TypedHints.Find(pHintToRemove->HintType());
-	if (slot != CAI_HintManager::gm_TypedHints.InvalidIndex())
+	int slot = CAI_HintManager::gm_TypedHints.Find( pHintToRemove->HintType() );
+	if ( slot != CAI_HintManager::gm_TypedHints.InvalidIndex() )
 	{
-		CAI_HintManager::gm_TypedHints[slot].FindAndRemove(pHintToRemove);
+		CAI_HintManager::gm_TypedHints[ slot ].FindAndRemove( pHintToRemove );
 	}
 }
 
 //------------------------------------------------------------------------------
-void CAI_HintManager::RemoveHint(CAI_Hint* pHintToRemove)
+void CAI_HintManager::RemoveHint( CAI_Hint *pHintToRemove )
 {
 	// --------------------------------------
 	//  Remove from linked list of hints
 	// --------------------------------------
-	gm_AllHints.FindAndRemove(pHintToRemove);
-	RemoveHintByType(pHintToRemove);
+	gm_AllHints.FindAndRemove( pHintToRemove );
+	RemoveHintByType( pHintToRemove );
 
-	if (CAI_HintManager::IsInFoundHintList(pHintToRemove))
+	if ( CAI_HintManager::IsInFoundHintList( pHintToRemove ) )
 	{
 		CAI_HintManager::ResetFoundHints();
 	}
@@ -674,49 +674,49 @@ void CAI_HintManager::RemoveHint(CAI_Hint* pHintToRemove)
 // Input  : *token - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CAI_HintManager::GetFlags(const char* token)
+int CAI_HintManager::GetFlags( const char *token )
 {
-	int len = strlen(token);
-	if (len <= 0)
+	int len = strlen( token );
+	if ( len <= 0 )
 	{
 		return bits_HINT_NODE_NONE;
 	}
 
-	char* lowercase = (char*)_alloca(len + 1);
-	Q_strncpy(lowercase, token, len + 1);
-	strlwr(lowercase);
+	char *lowercase = (char *)_alloca( len + 1 );
+	Q_strncpy( lowercase, token, len+1 );
+	strlwr( lowercase );
 
-	if (strstr("none", lowercase))
+	if ( strstr( "none", lowercase ) )
 	{
 		return bits_HINT_NODE_NONE;
 	}
 
 	int bits = 0;
 
-	if (strstr("visible", lowercase))
+	if ( strstr( "visible", lowercase ) )
 	{
 		bits |= bits_HINT_NODE_VISIBLE;
 	}
 
-	if (strstr("nearest", lowercase))
+	if ( strstr( "nearest", lowercase ) )
 	{
 		bits |= bits_HINT_NODE_NEAREST;
 	}
 
-	if (strstr("random", lowercase))
+	if ( strstr( "random", lowercase ) )
 	{
 		bits |= bits_HINT_NODE_RANDOM;
 	}
 
 	// Can't be nearest and random, defer to nearest
-	if ((bits & bits_HINT_NODE_NEAREST) &&
-		(bits & bits_HINT_NODE_RANDOM))
+	if ( ( bits & bits_HINT_NODE_NEAREST ) &&
+		 ( bits & bits_HINT_NODE_RANDOM ) )
 	{
 		// Remove random
 		bits &= ~bits_HINT_NODE_RANDOM;
 
-		DevMsg("HINTFLAGS:%s, inconsistent, the nearest node is never a random hint node, treating as nearest request!\n",
-			token);
+		DevMsg( "HINTFLAGS:%s, inconsistent, the nearest node is never a random hint node, treating as nearest request!\n",
+			token );
 	}
 
 	return bits;
@@ -725,32 +725,32 @@ int CAI_HintManager::GetFlags(const char* token)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-CAI_Hint* CAI_HintManager::GetFirstHint(AIHintIter_t* pIter)
-{
-	if (!gm_AllHints.Count())
+CAI_Hint *CAI_HintManager::GetFirstHint( AIHintIter_t *pIter )					
+{ 
+	if ( !gm_AllHints.Count() )
 	{
 		*pIter = (AIHintIter_t)gm_AllHints.InvalidIndex();
 		return NULL;
 	}
-	*pIter = (AIHintIter_t)0;
-	return gm_AllHints[0];
+	*pIter = (AIHintIter_t)0; 
+	return gm_AllHints[0]; 
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-CAI_Hint* CAI_HintManager::GetNextHint(AIHintIter_t* pIter)
+CAI_Hint *CAI_HintManager::GetNextHint(  AIHintIter_t *pIter )
 {
-	if ((int)*pIter != gm_AllHints.InvalidIndex())
+	if ( (int)*pIter != gm_AllHints.InvalidIndex() )
 	{
-		int i = ((int)*pIter) + 1;
-		if (gm_AllHints.Count() <= i)
+		int i = ( (int)*pIter ) + 1;
+		if ( gm_AllHints.Count() <= i )
 		{
 			*pIter = (AIHintIter_t)gm_AllHints.InvalidIndex();
 			return NULL;
 		}
-		*pIter = (AIHintIter_t)i;
-		return gm_AllHints[i];
+		*pIter = (AIHintIter_t)i; 
+		return gm_AllHints[i]; 
 	}
 	return NULL;
 }
@@ -761,16 +761,16 @@ CAI_Hint* CAI_HintManager::GetNextHint(AIHintIter_t* pIter)
 void CAI_HintManager::DumpHints()
 {
 	AIHintIter_t iter;
-	CAI_Hint* pCurHint = GetFirstHint(&iter);
+	CAI_Hint *pCurHint = GetFirstHint( &iter );
 	while (pCurHint)
 	{
-		const Vector& v = pCurHint->GetAbsOrigin();
-		Msg("(%.1f, %.1f, %.1f) -- Node ID: %d; WC id %d; type %d\n",
-			v.x, v.y, v.z,
-			pCurHint->GetNodeId(),
-			pCurHint->GetWCId(),
-			pCurHint->HintType());
-		pCurHint = GetNextHint(&iter);
+		const Vector &v = pCurHint->GetAbsOrigin();
+		Msg( "(%.1f, %.1f, %.1f) -- Node ID: %d; WC id %d; type %d\n",
+				v.x, v.y, v.z,
+				pCurHint->GetNodeId(),
+				pCurHint->GetWCId(),
+				pCurHint->HintType() );
+		pCurHint = GetNextHint( &iter );
 	}
 }
 
@@ -781,21 +781,21 @@ void CAI_HintManager::ValidateHints()
 {
 #ifdef _DEBUG
 	int nTyped = 0;
-	FOR_EACH_VEC(gm_AllHints, i)
+	FOR_EACH_VEC( gm_AllHints, i )
 	{
-		Assert(dynamic_cast<CAI_Hint*>(gm_AllHints[i]) != NULL);
+		Assert( dynamic_cast<CAI_Hint *>(gm_AllHints[i]) != NULL );
 	}
 
-	for (int i = gm_TypedHints.FirstInorder(); i != gm_TypedHints.InvalidIndex(); i = gm_TypedHints.NextInorder(i))
+	for ( int i = gm_TypedHints.FirstInorder(); i != gm_TypedHints.InvalidIndex(); i = gm_TypedHints.NextInorder( i ) )
 	{
-		FOR_EACH_VEC(gm_TypedHints[i], j)
+		FOR_EACH_VEC( gm_TypedHints[i], j )
 		{
 			nTyped++;
-			Assert(dynamic_cast<CAI_Hint*>(gm_TypedHints[i][j]) != NULL);
+			Assert( dynamic_cast<CAI_Hint *>(gm_TypedHints[i][j]) != NULL );
 		}
 	}
 
-	Assert(gm_AllHints.Count() == nTyped);
+	Assert( gm_AllHints.Count() == nTyped );
 #endif
 }
 
@@ -807,12 +807,12 @@ void CAI_HintManager::ValidateHints()
 void CAI_HintManager::DrawHintOverlays(float flDrawDuration)
 {
 	int c = gm_AllHints.Count();
-	for (int i = 0; i < c; ++i)
+	for ( int i = 0; i < c; ++i )
 	{
-		CAI_Hint* pHint = gm_AllHints[i];
-		int		r = 0;
-		int		g = 0;
-		int		b = 255;
+        CAI_Hint *pHint = gm_AllHints[ i ];
+		int		r		= 0;
+		int		g		= 0;
+		int		b		= 255;
 		Vector	vHintPos;
 
 		if (pHint->m_NodeData.nNodeID != NO_NODE)
@@ -824,10 +824,10 @@ void CAI_HintManager::DrawHintOverlays(float flDrawDuration)
 			vHintPos = pHint->GetAbsOrigin();
 		}
 
-		if (pHint->GetNodeId() != NO_NODE)
-			NDebugOverlay::Text(vHintPos + Vector(0, 6, 8), CFmtStr("(%d), (%d)", pHint->HintType(), pHint->GetNodeId()), true, flDrawDuration);
+		if ( pHint->GetNodeId() != NO_NODE )
+			NDebugOverlay::Text( vHintPos + Vector(0,6,8), CFmtStr("(%d), (%d)", pHint->HintType(), pHint->GetNodeId()), true, flDrawDuration );
 		else
-			NDebugOverlay::Text(vHintPos + Vector(0, 6, 8), CFmtStr("(%d)", pHint->HintType()), true, flDrawDuration);
+			NDebugOverlay::Text( vHintPos + Vector(0,6,8), CFmtStr("(%d)", pHint->HintType()), true, flDrawDuration );
 
 		// If node is currently locked
 		if (pHint->m_NodeData.iDisabled)
@@ -846,13 +846,13 @@ void CAI_HintManager::DrawHintOverlays(float flDrawDuration)
 			if (pOwner)
 			{
 				char owner[255];
-				Q_strncpy(owner, pOwner->GetDebugName(), sizeof(owner));
+				Q_strncpy(owner,pOwner->GetDebugName(),sizeof(owner));
 				Vector loc = vHintPos;
-				loc.x += 6;
-				loc.y += 6;
-				loc.z += 6;
-				NDebugOverlay::Text(loc, owner, true, flDrawDuration);
-				NDebugOverlay::Line(vHintPos, pOwner->WorldSpaceCenter(), 128, 128, 128, false, 0);
+				loc.x+=6;
+				loc.y+=6;
+				loc.z+=6;
+				NDebugOverlay::Text( loc, owner, true, flDrawDuration );
+				NDebugOverlay::Line( vHintPos, pOwner->WorldSpaceCenter(), 128, 128, 128, false, 0);
 			}
 		}
 		else if (pHint->IsLocked())
@@ -862,55 +862,55 @@ void CAI_HintManager::DrawHintOverlays(float flDrawDuration)
 			b = 10;
 		}
 
-		NDebugOverlay::Box(vHintPos, Vector(-3, -3, -3), Vector(3, 3, 3), r, g, b, 0, flDrawDuration);
+		NDebugOverlay::Box(vHintPos, Vector(-3,-3,-3), Vector(3,3,3), r,g,b,0,flDrawDuration);
 
 		// Draw line in facing direction
-		Vector offsetDir = 12.0 * Vector(cos(DEG2RAD(pHint->Yaw())), sin(DEG2RAD(pHint->Yaw())), 0);
-		NDebugOverlay::Line(vHintPos, vHintPos + offsetDir, r, g, b, false, flDrawDuration);
+		Vector offsetDir	= 12.0 * Vector(cos(DEG2RAD(pHint->Yaw())),sin(DEG2RAD(pHint->Yaw())),0);
+		NDebugOverlay::Line(vHintPos, vHintPos+offsetDir, r,g,b,false,flDrawDuration);
 	}
 }
 
 //##################################################################
 // > CAI_Hint
 //##################################################################
-LINK_ENTITY_TO_CLASS(ai_hint, CAI_Hint);
+LINK_ENTITY_TO_CLASS( ai_hint, CAI_Hint );
 
-BEGIN_DATADESC(CAI_Hint)
+BEGIN_DATADESC( CAI_Hint )
 
-DEFINE_EMBEDDED(m_NodeData),
-//				m_nTargetNodeID (reset on load)
+	DEFINE_EMBEDDED( m_NodeData ),
+	//				m_nTargetNodeID (reset on load)
 
-DEFINE_FIELD(m_hHintOwner, FIELD_EHANDLE),
-DEFINE_FIELD(m_flNextUseTime, FIELD_TIME),
-DEFINE_FIELD(m_vecForward, FIELD_VECTOR),
-DEFINE_KEYFIELD(m_nodeFOV, FIELD_FLOAT, "nodeFOV"),
+	DEFINE_FIELD(	 m_hHintOwner,		FIELD_EHANDLE),
+	DEFINE_FIELD(	 m_flNextUseTime,	FIELD_TIME),
+	DEFINE_FIELD(	 m_vecForward,		FIELD_VECTOR),
+	DEFINE_KEYFIELD( m_nodeFOV,			FIELD_FLOAT,	"nodeFOV" ),
 
-DEFINE_THINKFUNC(EnableThink),
+	DEFINE_THINKFUNC( EnableThink ),
 
-// Inputs
-DEFINE_INPUTFUNC(FIELD_VOID, "EnableHint", InputEnableHint),
-DEFINE_INPUTFUNC(FIELD_VOID, "DisableHint", InputDisableHint),
+	// Inputs
+	DEFINE_INPUTFUNC( FIELD_VOID,		"EnableHint",		InputEnableHint ),
+	DEFINE_INPUTFUNC( FIELD_VOID,		"DisableHint",		InputDisableHint ),
 
-// Outputs
-DEFINE_OUTPUT(m_OnNPCStartedUsing, "OnNPCStartedUsing"),
-DEFINE_OUTPUT(m_OnNPCStoppedUsing, "OnNPCStoppedUsing"),
+	// Outputs
+	DEFINE_OUTPUT( m_OnNPCStartedUsing,	"OnNPCStartedUsing" ),
+	DEFINE_OUTPUT( m_OnNPCStoppedUsing,	"OnNPCStoppedUsing" ),
 
-END_DATADESC();
+END_DATADESC( );
 
 //------------------------------------------------------------------------------
 // Purpose : 
 //------------------------------------------------------------------------------
-void CAI_Hint::InputEnableHint(inputdata_t& inputdata)
+void CAI_Hint::InputEnableHint( inputdata_t &inputdata )
 {
-	m_NodeData.iDisabled = false;
+	m_NodeData.iDisabled		= false;
 }
 
 //------------------------------------------------------------------------------
 // Purpose :
 //------------------------------------------------------------------------------
-void CAI_Hint::InputDisableHint(inputdata_t& inputdata)
+void CAI_Hint::InputDisableHint( inputdata_t &inputdata )
 {
-	m_NodeData.iDisabled = true;
+	m_NodeData.iDisabled		= true;
 }
 
 
@@ -919,30 +919,30 @@ void CAI_Hint::InputDisableHint(inputdata_t& inputdata)
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
-void CAI_Hint::Spawn(void)
+void CAI_Hint::Spawn( void )
 {
 	// Cache off the forward vector
-	GetVectors(&m_vecForward, NULL, NULL);
+	GetVectors( &m_vecForward, NULL, NULL );
 
-	if (m_nodeFOV != 360)
+	if( m_nodeFOV != 360 )
 	{
 		// As a micro-optimization, leave the FOV at 360 to save us
 		// a dot product later when checking node FOV.
-		m_nodeFOV = cos(DEG2RAD(m_nodeFOV / 2));
+		m_nodeFOV = cos( DEG2RAD(m_nodeFOV/2) );
 	}
 
-	SetSolid(SOLID_NONE);
+	SetSolid( SOLID_NONE );
 }
 
 void CAI_Hint::Activate()
 {
 	BaseClass::Activate();
-	CAI_HintManager::AddHint(this);
+	CAI_HintManager::AddHint( this );
 }
 
-void CAI_Hint::UpdateOnRemove(void)
+void CAI_Hint::UpdateOnRemove( void )
 {
-	CAI_HintManager::RemoveHint(this);
+	CAI_HintManager::RemoveHint( this );
 	BaseClass::UpdateOnRemove();
 }
 
@@ -954,11 +954,11 @@ void CAI_Hint::UpdateOnRemove(void)
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
-void CAI_Hint::GetPosition(CBaseCombatCharacter* pBCC, Vector* vPosition)
+void CAI_Hint::GetPosition(CBaseCombatCharacter *pBCC, Vector *vPosition)
 {
-	if (m_NodeData.nNodeID != NO_NODE)
+	if ( m_NodeData.nNodeID != NO_NODE )
 	{
-		*vPosition = g_pBigAINet->GetNodePosition(pBCC, m_NodeData.nNodeID);
+		*vPosition = g_pBigAINet->GetNodePosition( pBCC, m_NodeData.nNodeID );
 	}
 	else
 	{
@@ -971,11 +971,11 @@ void CAI_Hint::GetPosition(CBaseCombatCharacter* pBCC, Vector* vPosition)
 // Input  : hull - 
 //			*vPosition - 
 //-----------------------------------------------------------------------------
-void CAI_Hint::GetPosition(Hull_t hull, Vector* vPosition)
+void CAI_Hint::GetPosition( Hull_t hull, Vector *vPosition )
 {
-	if (m_NodeData.nNodeID != NO_NODE)
+	if ( m_NodeData.nNodeID != NO_NODE )
 	{
-		*vPosition = g_pBigAINet->GetNodePosition(hull, m_NodeData.nNodeID);
+		*vPosition = g_pBigAINet->GetNodePosition( hull, m_NodeData.nNodeID );
 	}
 	else
 	{
@@ -991,9 +991,9 @@ void CAI_Hint::GetPosition(Hull_t hull, Vector* vPosition)
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
-Vector CAI_Hint::GetDirection()
+Vector CAI_Hint::GetDirection( )
 {
-	return UTIL_YawToVector(Yaw());
+	return UTIL_YawToVector( Yaw() );
 }
 
 //------------------------------------------------------------------------------
@@ -1008,7 +1008,7 @@ float CAI_Hint::Yaw(void)
 {
 	if (m_NodeData.nNodeID != NO_NODE)
 	{
-		return g_pBigAINet->GetNodeYaw(m_NodeData.nNodeID);
+		return g_pBigAINet->GetNodeYaw(m_NodeData.nNodeID );
 	}
 	else
 	{
@@ -1032,44 +1032,44 @@ bool CAI_Hint::IsViewable(void)
 		return false;
 	}
 
-	switch (HintType())
+	switch( HintType() )
 	{
 	case HINT_WORLD_VISUALLY_INTERESTING:
 	case HINT_WORLD_VISUALLY_INTERESTING_DONT_AIM:
 	case HINT_WORLD_VISUALLY_INTERESTING_STEALTH:
 		return true;
 	}
-
+	
 	return false;
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CAI_Hint::IsInNodeFOV(CBaseEntity* pOther)
+bool CAI_Hint::IsInNodeFOV( CBaseEntity *pOther )
 {
-	if (m_nodeFOV == 360)
+	if( m_nodeFOV == 360 )
 	{
 		return true;
 	}
 
 #if 0 
-	NDebugOverlay::Line(GetAbsOrigin(), GetAbsOrigin() + m_vecForward * 16, 255, 255, 0, false, 1);
+	NDebugOverlay::Line( GetAbsOrigin(), GetAbsOrigin() + m_vecForward * 16, 255, 255, 0, false, 1 );
 #endif
 
 	Vector vecToNPC = pOther->GetAbsOrigin() - GetAbsOrigin();
-	VectorNormalize(vecToNPC);
-	float flDot = DotProduct(vecToNPC, m_vecForward);
+	VectorNormalize( vecToNPC );
+	float flDot = DotProduct( vecToNPC, m_vecForward );
 
-	if (flDot > m_nodeFOV)
+	if( flDot > m_nodeFOV )
 	{
 #if 0 
-		NDebugOverlay::Line(GetAbsOrigin(), pOther->GetAbsOrigin(), 0, 255, 0, false, 1);
+		NDebugOverlay::Line( GetAbsOrigin(), pOther->GetAbsOrigin(), 0, 255, 0, false, 1 );
 #endif
 		return true;
 	}
 
 #if 0 
-	NDebugOverlay::Line(GetAbsOrigin(), pOther->GetAbsOrigin(), 255, 0, 0, false, 1);
+	NDebugOverlay::Line( GetAbsOrigin(), pOther->GetAbsOrigin(), 255, 0, 0, false, 1 );
 #endif
 
 	return false;
@@ -1079,9 +1079,9 @@ bool CAI_Hint::IsInNodeFOV(CBaseEntity* pOther)
 // Purpose: Locks the node for use by an AI for hints
 // Output : Returns true if the node was available for locking, false on failure.
 //-----------------------------------------------------------------------------
-bool CAI_Hint::Lock(CBaseEntity* pNPC)
+bool CAI_Hint::Lock( CBaseEntity* pNPC )
 {
-	if (m_hHintOwner != pNPC && m_hHintOwner != NULL)
+	if ( m_hHintOwner != pNPC && m_hHintOwner != NULL )
 		return false;
 	m_hHintOwner = pNPC;
 	return true;
@@ -1092,9 +1092,9 @@ bool CAI_Hint::Lock(CBaseEntity* pNPC)
 // Purpose: Unlocks the node, making it available for hint use by other AIs.
 //			after the given delay time
 //-----------------------------------------------------------------------------
-void CAI_Hint::Unlock(float delay)
+void CAI_Hint::Unlock( float delay )
 {
-	m_hHintOwner = NULL;
+	m_hHintOwner	= NULL;
 	m_flNextUseTime = gpGlobals->curtime + delay;
 }
 
@@ -1103,7 +1103,7 @@ void CAI_Hint::Unlock(float delay)
 // Input  :
 // Output :
 //-----------------------------------------------------------------------------
-bool CAI_Hint::IsLockedBy(CBaseEntity* pNPC)
+bool CAI_Hint::IsLockedBy(  CBaseEntity *pNPC )
 {
 	return (m_hHintOwner == pNPC);
 };
@@ -1113,7 +1113,7 @@ bool CAI_Hint::IsLockedBy(CBaseEntity* pNPC)
 // Input  :
 // Output :
 //-----------------------------------------------------------------------------
-bool CAI_Hint::IsLocked(void)
+bool CAI_Hint::IsLocked( void )
 {
 	if (m_NodeData.iDisabled)
 	{
@@ -1124,7 +1124,7 @@ bool CAI_Hint::IsLocked(void)
 	{
 		return true;
 	}
-
+	
 	if (m_hHintOwner != NULL)
 	{
 		return true;
@@ -1135,126 +1135,126 @@ bool CAI_Hint::IsLocked(void)
 //-----------------------------------------------------------------------------
 // Purpose: Return true if pTestHint passes the criteria specified in hintCriteria
 //-----------------------------------------------------------------------------
-bool CAI_Hint::HintMatchesCriteria(CAI_BaseNPC* pNPC, const CHintCriteria& hintCriteria, const Vector& position, float* flNearestDistance, bool bIgnoreLock, bool bIgnoreHintType)
+bool CAI_Hint::HintMatchesCriteria( CAI_BaseNPC *pNPC, const CHintCriteria &hintCriteria, const Vector &position, float *flNearestDistance, bool bIgnoreLock, bool bIgnoreHintType )
 {
 	// Cannot be locked
-	if (!bIgnoreLock && IsLocked())
+	if ( !bIgnoreLock && IsLocked() )
 	{
-		REPORTFAILURE("Node is locked.");
+		REPORTFAILURE( "Node is locked." );
 		return false;
 	}
 
-	if (!bIgnoreHintType && !hintCriteria.MatchesHintType(HintType()))
+	if ( !bIgnoreHintType && !hintCriteria.MatchesHintType( HintType() ) )
 	{
 		return false;
 	}
 
-	if (GetMinState() > NPC_STATE_IDLE || GetMaxState() < NPC_STATE_COMBAT)
+	if ( GetMinState() > NPC_STATE_IDLE || GetMaxState() < NPC_STATE_COMBAT )
 	{
-		if (pNPC && (pNPC->GetState() < GetMinState() || pNPC->GetState() > GetMaxState()))
+		if ( pNPC && ( pNPC->GetState() < GetMinState() || pNPC->GetState() > GetMaxState() ) )
 		{
-			REPORTFAILURE("NPC not in correct state.");
+			REPORTFAILURE( "NPC not in correct state." );
 			return false;
 		}
 	}
 
 	// See if we're filtering by group name
-	if (hintCriteria.GetGroup() != NULL_STRING)
+	if ( hintCriteria.GetGroup() != NULL_STRING )
 	{
-		AssertIsValidString(GetGroup());
-		AssertIsValidString(hintCriteria.GetGroup());
-		if (GetGroup() == NULL_STRING || GetGroup() != hintCriteria.GetGroup())
+		AssertIsValidString( GetGroup() );
+		AssertIsValidString( hintCriteria.GetGroup() );
+		if ( GetGroup() == NULL_STRING || GetGroup() != hintCriteria.GetGroup() )
 		{
-			Assert(GetGroup() == NULL_STRING || strcmp(STRING(GetGroup()), STRING(hintCriteria.GetGroup())) != 0);
-			REPORTFAILURE("Doesn't match NPC hint group.");
+			Assert(GetGroup() == NULL_STRING || strcmp( STRING(GetGroup()), STRING(hintCriteria.GetGroup())) != 0 );
+			REPORTFAILURE( "Doesn't match NPC hint group." );
 			return false;
 		}
 	}
 
 	// If we're watching for include zones, test it
-	if ((hintCriteria.HasIncludeZones()) && (hintCriteria.InIncludedZone(GetAbsOrigin()) == false))
+	if ( ( hintCriteria.HasIncludeZones() ) && ( hintCriteria.InIncludedZone( GetAbsOrigin() ) == false ) )
 	{
-		REPORTFAILURE("Not inside include zones.");
+		REPORTFAILURE( "Not inside include zones." );
 		return false;
 	}
 
 	// If we're watching for exclude zones, test it
-	if ((hintCriteria.HasExcludeZones()) && (hintCriteria.InExcludedZone(GetAbsOrigin())))
+	if ( ( hintCriteria.HasExcludeZones() ) && ( hintCriteria.InExcludedZone( GetAbsOrigin() ) ) )
 	{
-		REPORTFAILURE("Inside exclude zones.");
+		REPORTFAILURE( "Inside exclude zones." );
 		return false;
 	}
 
 	// See if the class handles this hint type
-	if ((pNPC != NULL) && (pNPC->FValidateHintType(this) == false))
+	if ( ( pNPC != NULL ) && ( pNPC->FValidateHintType( this ) == false ) )
 	{
-		REPORTFAILURE("NPC doesn't know how to handle that type.");
+		REPORTFAILURE( "NPC doesn't know how to handle that type." );
 		return false;
 	}
 
-	if (hintCriteria.HasFlag(bits_HINT_NPC_IN_NODE_FOV))
+	if ( hintCriteria.HasFlag(bits_HINT_NPC_IN_NODE_FOV) )
 	{
-		if (pNPC == NULL)
+		if ( pNPC == NULL )
 		{
-			AssertMsg(0, "Hint node attempted to verify NPC in node FOV without NPC!\n");
+			AssertMsg(0,"Hint node attempted to verify NPC in node FOV without NPC!\n");
 		}
 		else
 		{
-			if (!IsInNodeFOV(pNPC))
+			if( !IsInNodeFOV(pNPC) )
 			{
-				REPORTFAILURE("NPC Not in hint's FOV");
+				REPORTFAILURE( "NPC Not in hint's FOV" );
 				return false;
 			}
 		}
 	}
 
-	if (hintCriteria.HasFlag(bits_HINT_NODE_IN_AIMCONE))
+	if ( hintCriteria.HasFlag( bits_HINT_NODE_IN_AIMCONE ) )
 	{
-		if (pNPC == NULL)
+		if ( pNPC == NULL )
 		{
-			AssertMsg(0, "Hint node attempted to find node in aimcone without specifying NPC!\n");
+			AssertMsg( 0, "Hint node attempted to find node in aimcone without specifying NPC!\n" );
 		}
 		else
 		{
-			if (!pNPC->FInAimCone(GetAbsOrigin()))
+			if( !pNPC->FInAimCone( GetAbsOrigin() ) )
 			{
-				REPORTFAILURE("Hint isn't in NPC's aimcone");
+				REPORTFAILURE( "Hint isn't in NPC's aimcone" );
 				return false;
 			}
 		}
 	}
 
-	if (hintCriteria.HasFlag(bits_HINT_NODE_IN_VIEWCONE))
+	if ( hintCriteria.HasFlag( bits_HINT_NODE_IN_VIEWCONE ) )
 	{
-		if (pNPC == NULL)
+		if ( pNPC == NULL )
 		{
-			AssertMsg(0, "Hint node attempted to find node in viewcone without specifying NPC!\n");
+			AssertMsg( 0, "Hint node attempted to find node in viewcone without specifying NPC!\n" );
 		}
 		else
 		{
-			if (!pNPC->FInViewCone(this))
+			if( !pNPC->FInViewCone( this ) )
 			{
-				REPORTFAILURE("Hint isn't in NPC's viewcone");
+				REPORTFAILURE( "Hint isn't in NPC's viewcone" );
 				return false;
 			}
 		}
 	}
 
-	if (hintCriteria.HasFlag(bits_HINT_NOT_CLOSE_TO_ENEMY))
+	if ( hintCriteria.HasFlag( bits_HINT_NOT_CLOSE_TO_ENEMY ) )
 	{
-		if (pNPC == NULL)
+		if ( pNPC == NULL )
 		{
-			AssertMsg(0, "Hint node attempted to find node not close to enemy without specifying NPC!\n");
+			AssertMsg( 0, "Hint node attempted to find node not close to enemy without specifying NPC!\n" );
 		}
 		else
 		{
-			if (pNPC->GetEnemy())
+			if( pNPC->GetEnemy() )
 			{
-				float flDistHintToEnemySqr = GetAbsOrigin().DistToSqr(pNPC->GetEnemy()->GetAbsOrigin());
+				float flDistHintToEnemySqr = GetAbsOrigin().DistToSqr( pNPC->GetEnemy()->GetAbsOrigin() ) ;
 
-				if (flDistHintToEnemySqr < Square(30.0f * 12.0f))
+				if( flDistHintToEnemySqr < Square( 30.0f * 12.0f ) )
 				{
-					REPORTFAILURE("Hint takes NPC close to Enemy");
+					REPORTFAILURE( "Hint takes NPC close to Enemy" );
 					return false;
 				}
 			}
@@ -1262,23 +1262,23 @@ bool CAI_Hint::HintMatchesCriteria(CAI_BaseNPC* pNPC, const CHintCriteria& hintC
 	}
 
 	{
-		AI_PROFILE_SCOPE(HINT_FVisible);
+		AI_PROFILE_SCOPE( HINT_FVisible );
 		// See if we're requesting a visible node
-		if (hintCriteria.HasFlag(bits_HINT_NODE_VISIBLE))
+		if ( hintCriteria.HasFlag( bits_HINT_NODE_VISIBLE ) )
 		{
-			if (pNPC == NULL)
+			if ( pNPC == NULL )
 			{
 				//NOTENOTE: If you're hitting this, you've asked for a visible node without specifing an NPC!
-				AssertMsg(0, "Hint node attempted to find visible node without specifying NPC!\n");
+				AssertMsg( 0, "Hint node attempted to find visible node without specifying NPC!\n" );
 			}
 			else
 			{
-				if (m_NodeData.nNodeID == NO_NODE)
+				if( m_NodeData.nNodeID == NO_NODE )
 				{
 					// This is just an info_hint, not a node.
-					if (!pNPC->FVisible(this))
+					if( !pNPC->FVisible( this ) )
 					{
-						REPORTFAILURE("Hint isn't visible to NPC.");
+						REPORTFAILURE( "Hint isn't visible to NPC." );
 						return false;
 					}
 				}
@@ -1287,11 +1287,11 @@ bool CAI_Hint::HintMatchesCriteria(CAI_BaseNPC* pNPC, const CHintCriteria& hintC
 					// This hint associated with a node.
 					trace_t tr;
 					Vector vHintPos;
-					GetPosition(pNPC, &vHintPos);
-					AI_TraceLine(pNPC->EyePosition(), vHintPos + pNPC->GetViewOffset(), MASK_NPCSOLID_BRUSHONLY, pNPC, COLLISION_GROUP_NONE, &tr);
-					if (tr.fraction != 1.0f)
+					GetPosition(pNPC,&vHintPos);
+					AI_TraceLine ( pNPC->EyePosition(), vHintPos + pNPC->GetViewOffset(), MASK_NPCSOLID_BRUSHONLY, pNPC, COLLISION_GROUP_NONE, &tr );
+					if ( tr.fraction != 1.0f )
 					{
-						REPORTFAILURE("Node isn't visible to NPC.");
+						REPORTFAILURE( "Node isn't visible to NPC." );
 						return false;
 					}
 				}
@@ -1300,40 +1300,40 @@ bool CAI_Hint::HintMatchesCriteria(CAI_BaseNPC* pNPC, const CHintCriteria& hintC
 	}
 
 	// Check for clear if requested
-	if (hintCriteria.HasFlag(bits_HINT_NODE_CLEAR))
+	if ( hintCriteria.HasFlag( bits_HINT_NODE_CLEAR ) )
 	{
-		if (pNPC == NULL)
+		if ( pNPC == NULL )
 		{
 			//NOTENOTE: If you're hitting this, you've asked for a clear node without specifing an NPC!
-			AssertMsg(0, "Hint node attempted to find clear node without specifying NPC!\n");
+			AssertMsg( 0, "Hint node attempted to find clear node without specifying NPC!\n" );
 		}
 		else
 		{
 			trace_t tr;
 			// Can my bounding box fit there?
-			AI_TraceHull(GetAbsOrigin(), GetAbsOrigin(), pNPC->WorldAlignMins(), pNPC->WorldAlignMaxs(),
-				MASK_SOLID, pNPC, COLLISION_GROUP_NONE, &tr);
+			AI_TraceHull ( GetAbsOrigin(), GetAbsOrigin(), pNPC->WorldAlignMins(), pNPC->WorldAlignMaxs(), 
+				MASK_SOLID, pNPC, COLLISION_GROUP_NONE, &tr );
 
-			if (tr.fraction != 1.0)
+			if ( tr.fraction != 1.0 )
 			{
-				REPORTFAILURE("Node isn't clear.");
+				REPORTFAILURE( "Node isn't clear." );
 				return false;
 			}
 		}
 	}
 
 	// See if this is our next, closest node
-	if (hintCriteria.HasFlag(bits_HINT_NODE_NEAREST))
+	if ( hintCriteria.HasFlag( bits_HINT_NODE_NEAREST ) )
 	{
-		Assert(flNearestDistance);
+		Assert( flNearestDistance );
 
 		// Calculate our distance
 		float distance = (GetAbsOrigin() - position).Length();
 
 		// Must be closer than the current best
-		if (distance > *flNearestDistance)
+		if ( distance > *flNearestDistance )
 		{
-			REPORTFAILURE("Not the nearest node.");
+			REPORTFAILURE( "Not the nearest node." );
 			return false;
 		}
 
@@ -1341,54 +1341,54 @@ bool CAI_Hint::HintMatchesCriteria(CAI_BaseNPC* pNPC, const CHintCriteria& hintC
 		*flNearestDistance = distance;
 	}
 
-	if (hintCriteria.HasFlag(bits_HINT_HAS_LOS_TO_PLAYER | bits_HAS_EYEPOSITION_LOS_TO_PLAYER))
+	if ( hintCriteria.HasFlag(bits_HINT_HAS_LOS_TO_PLAYER|bits_HAS_EYEPOSITION_LOS_TO_PLAYER) )
 	{
-		CBasePlayer* pPlayer = AI_GetSinglePlayer();
+		CBasePlayer *pPlayer = AI_GetSinglePlayer();
 
-		if (pPlayer != NULL)
+		if( pPlayer != NULL )
 		{
-			Vector vecDest = GetAbsOrigin();
+			Vector vecDest = GetAbsOrigin(); 
 
-			if (hintCriteria.HasFlag(bits_HAS_EYEPOSITION_LOS_TO_PLAYER))
+			if( hintCriteria.HasFlag(bits_HAS_EYEPOSITION_LOS_TO_PLAYER) )
 			{
 				vecDest += pNPC->GetDefaultEyeOffset();
 			}
 
-			if (!pPlayer->FVisible(vecDest))
+			if( !pPlayer->FVisible(vecDest) )
 			{
-				REPORTFAILURE("Do not have LOS to player");
+				REPORTFAILURE( "Do not have LOS to player" );
 				return false;
 			}
 		}
 	}
 
 	// Must either be visible or not if requested
-	if (hintCriteria.HasFlag(bits_HINT_NODE_NOT_VISIBLE_TO_PLAYER | bits_HINT_NODE_VISIBLE_TO_PLAYER))
+	if ( hintCriteria.HasFlag( bits_HINT_NODE_NOT_VISIBLE_TO_PLAYER|bits_HINT_NODE_VISIBLE_TO_PLAYER ) )
 	{
 		bool bWasSeen = false;
 		// Test all potential seers
-		for (int i = 1; i <= gpGlobals->maxClients; i++)
+		for ( int i = 1; i <= gpGlobals->maxClients; i++ )
 		{
-			CBasePlayer* pPlayer = UTIL_PlayerByIndex(i);
-
-			if (pPlayer)
+			CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+			
+			if ( pPlayer )
 			{
 				// Only spawn if the player's looking away from me
 				Vector vLookDir = pPlayer->EyeDirection3D();
 				Vector vTargetDir = GetAbsOrigin() - pPlayer->EyePosition();
 				VectorNormalize(vTargetDir);
 
-				float fDotPr = DotProduct(vLookDir, vTargetDir);
-				if (fDotPr > 0)
+				float fDotPr = DotProduct(vLookDir,vTargetDir);
+				if ( fDotPr > 0 )
 				{
 					trace_t tr;
-					UTIL_TraceLine(pPlayer->EyePosition(), GetAbsOrigin(), MASK_SOLID_BRUSHONLY, pPlayer, COLLISION_GROUP_NONE, &tr);
-
-					if (tr.fraction == 1.0)
+					UTIL_TraceLine( pPlayer->EyePosition(), GetAbsOrigin(), MASK_SOLID_BRUSHONLY, pPlayer, COLLISION_GROUP_NONE, &tr);
+					
+					if ( tr.fraction == 1.0 )
 					{
-						if (hintCriteria.HasFlag(bits_HINT_NODE_NOT_VISIBLE_TO_PLAYER))
+						if ( hintCriteria.HasFlag( bits_HINT_NODE_NOT_VISIBLE_TO_PLAYER ) )
 						{
-							REPORTFAILURE("Node is visible to player.");
+							REPORTFAILURE( "Node is visible to player." );
 							return false;
 						}
 						bWasSeen = true;
@@ -1397,9 +1397,9 @@ bool CAI_Hint::HintMatchesCriteria(CAI_BaseNPC* pNPC, const CHintCriteria& hintC
 			}
 		}
 
-		if (!bWasSeen && hintCriteria.HasFlag(bits_HINT_NODE_VISIBLE_TO_PLAYER))
+		if ( !bWasSeen && hintCriteria.HasFlag( bits_HINT_NODE_VISIBLE_TO_PLAYER ) )
 		{
-			REPORTFAILURE("Node isn't visible to player.");
+			REPORTFAILURE( "Node isn't visible to player." );
 			return false;
 		}
 	}
@@ -1412,24 +1412,24 @@ bool CAI_Hint::HintMatchesCriteria(CAI_BaseNPC* pNPC, const CHintCriteria& hintC
 // Input  :
 // Output : Current text offset from the top
 //-----------------------------------------------------------------------------
-int CAI_Hint::DrawDebugTextOverlays(void)
+int CAI_Hint::DrawDebugTextOverlays(void) 
 {
 	int text_offset = BaseClass::DrawDebugTextOverlays();
 
-	if (m_debugOverlays & OVERLAY_TEXT_BIT)
+	if (m_debugOverlays & OVERLAY_TEXT_BIT) 
 	{
 		char tempstr[512];
-		Q_snprintf(tempstr, sizeof(tempstr), "%s (%i)", GetHintTypeDescription(HintType()), HintType());
-		EntityText(text_offset, tempstr, 0);
+		Q_snprintf(tempstr,sizeof(tempstr),"%s (%i)", GetHintTypeDescription( HintType() ), HintType());
+		EntityText(text_offset,tempstr,0);
 		text_offset++;
-		Q_snprintf(tempstr, sizeof(tempstr), "delay %f", MAX(0.0f, m_flNextUseTime - gpGlobals->curtime));
-		EntityText(text_offset, tempstr, 0);
+		Q_snprintf(tempstr,sizeof(tempstr),"delay %f", MAX( 0.0f, m_flNextUseTime - gpGlobals->curtime ) ) ;
+		EntityText(text_offset,tempstr,0);
 		text_offset++;
 
-		if (m_NodeData.iDisabled)
+		if ( m_NodeData.iDisabled )
 		{
-			Q_snprintf(tempstr, sizeof(tempstr), "DISABLED");
-			EntityText(text_offset, tempstr, 0);
+			Q_snprintf(tempstr,sizeof(tempstr),"DISABLED" );
+			EntityText(text_offset,tempstr,0);
 			text_offset++;
 		}
 
@@ -1444,7 +1444,7 @@ int CAI_Hint::DrawDebugTextOverlays(void)
 //-----------------------------------------------------------------------------
 CAI_Hint::CAI_Hint(void)
 {
-	m_flNextUseTime = 0;
+	m_flNextUseTime	= 0;
 	m_nTargetNodeID = NO_NODE;
 }
 
@@ -1462,34 +1462,34 @@ CAI_Hint::~CAI_Hint(void)
 //  see if it's truly suitable ( e.g., in the same air/ground network of nodes? )
 // Output : C_AINode *
 //-----------------------------------------------------------------------------
-CAI_Node* CAI_Hint::GetNode(void)
+CAI_Node *CAI_Hint::GetNode( void )
 {
-	if (m_NodeData.nNodeID != NO_NODE)
+	if ( m_NodeData.nNodeID != NO_NODE )
 	{
-		return g_pBigAINet->GetNode(m_NodeData.nNodeID, false);
+		return g_pBigAINet->GetNode( m_NodeData.nNodeID, false );
 	}
 	return NULL;
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CAI_Hint::DisableForSeconds(float flSeconds)
+void CAI_Hint::DisableForSeconds( float flSeconds )
 {
-	Unlock(flSeconds);
+	Unlock( flSeconds );
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 void CAI_Hint::EnableThink()
 {
-	SetDisabled(false);
-	SetThink(NULL);
+	SetDisabled( false );
+	SetThink( NULL );
 }
 
 void CAI_Hint::FixupTargetNode()
 {
-	if (m_NodeData.nTargetWCNodeID != -1)
-		m_nTargetNodeID = g_pAINetworkManager->GetEditOps()->GetNodeIdFromWCId(m_NodeData.nTargetWCNodeID);
+	if ( m_NodeData.nTargetWCNodeID != -1 )
+		m_nTargetNodeID = g_pAINetworkManager->GetEditOps()->GetNodeIdFromWCId( m_NodeData.nTargetWCNodeID );
 	else
 		m_nTargetNodeID = NO_NODE;
 }
@@ -1498,44 +1498,44 @@ void CAI_Hint::OnRestore()
 {
 	BaseClass::OnRestore();
 
-	m_NodeData.nNodeID = g_pAINetworkManager->GetEditOps()->GetNodeIdFromWCId(m_NodeData.nWCNodeID);
+	m_NodeData.nNodeID = g_pAINetworkManager->GetEditOps()->GetNodeIdFromWCId( m_NodeData.nWCNodeID );
 	FixupTargetNode();
 
-	CAI_Node* pNode = GetNode();
-
-	if (!pNode)
+	CAI_Node *pNode = GetNode();
+	
+	if ( !pNode )
 	{
-		if (m_NodeData.nWCNodeID > 0)
+		if ( m_NodeData.nWCNodeID > 0 )
 			DevMsg("Warning: AI hint has incorrect or no AI node\n");
 	}
 	else
 	{
 		m_NodeData.vecPosition = pNode->GetOrigin();
-		Teleport(&m_NodeData.vecPosition, NULL, NULL);
-		pNode->SetHint(this);
+		Teleport( &m_NodeData.vecPosition, NULL, NULL );
+		pNode->SetHint( this );
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAI_Hint::NPCStartedUsing(CAI_BaseNPC* pNPC)
+void CAI_Hint::NPCStartedUsing( CAI_BaseNPC *pNPC )
 {
-	m_OnNPCStartedUsing.Set(pNPC, pNPC, this);
+	m_OnNPCStartedUsing.Set( pNPC, pNPC, this );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAI_Hint::NPCStoppedUsing(CAI_BaseNPC* pNPC)
+void CAI_Hint::NPCStoppedUsing( CAI_BaseNPC *pNPC )
 {
-	m_OnNPCStoppedUsing.Set(pNPC, pNPC, this);
+	m_OnNPCStoppedUsing.Set( pNPC, pNPC, this );
 }
 
 
 CON_COMMAND(ai_dump_hints, "")
 {
-	if (!UTIL_IsCommandIssuedByServerAdmin())
+	if ( !UTIL_IsCommandIssuedByServerAdmin() )
 		return;
 
 	CAI_HintManager::ValidateHints();
@@ -1548,10 +1548,10 @@ CON_COMMAND(ai_dump_hints, "")
 // hints - these MUST coincide with the HINTS listed under Hint_e
 //
 //-----------------------------------------------------------------------------
-struct hinttypedescs_t
+struct hinttypedescs_t 
 {
 	Hint_e iType;
-	const char* pszDesc;
+	const char *pszDesc;
 };
 hinttypedescs_t g_pszHintDescriptions[] =
 {
@@ -1600,7 +1600,7 @@ hinttypedescs_t g_pszHintDescriptions[] =
 
 	//{	HINT_NOT_USED_ROLLER_PATROL_POINT, "Obsolete / Unused"	},
 	//{	HINT_NOT_USED_ROLLER_CLEANUP_POINT, "Obsolete / Unused"	},
-
+	
 	//{	HINT_NOT_USED_PSTORM_ROCK_SPAWN, "Obsolete / Unused"	},
 
 	{	HINT_CROW_FLYTO_POINT, "Crow: Flyto Point"	},
@@ -1626,11 +1626,11 @@ hinttypedescs_t g_pszHintDescriptions[] =
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char* GetHintTypeDescription(Hint_e iHintType)
+const char *GetHintTypeDescription( Hint_e iHintType )
 {
-	for (int i = 0; i < ARRAYSIZE(g_pszHintDescriptions); i++)
+	for ( int i = 0; i < ARRAYSIZE(g_pszHintDescriptions); i++ )
 	{
-		if (g_pszHintDescriptions[i].iType == iHintType)
+		if ( g_pszHintDescriptions[i].iType == iHintType )
 			return g_pszHintDescriptions[i].pszDesc;
 	}
 
@@ -1640,27 +1640,27 @@ const char* GetHintTypeDescription(Hint_e iHintType)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char* GetHintTypeDescription(CAI_Hint* pHint)
+const char *GetHintTypeDescription( CAI_Hint *pHint )
 {
-	return GetHintTypeDescription(pHint->HintType());
+	return GetHintTypeDescription( pHint->HintType() );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Debug command to drop hints into the world
 //-----------------------------------------------------------------------------
-void CC_ai_drop_hint(const CCommand& args)
+void CC_ai_drop_hint( const CCommand &args )
 {
-	CBasePlayer* pPlayer = ToBasePlayer(UTIL_GetCommandClient());
-	if (!pPlayer)
+	CBasePlayer *pPlayer = ToBasePlayer( UTIL_GetCommandClient() );
+	if ( !pPlayer )
 		return;
 
-	if (args.ArgC() < 2)
+	if ( args.ArgC() < 2 )
 	{
 		Msg("Invalid hint type specified. Format: ai_drop_hint <hint type>\nValid hint types:\n");
 
-		for (int i = 0; i < ARRAYSIZE(g_pszHintDescriptions); i++)
+		for ( int i = 0; i < ARRAYSIZE(g_pszHintDescriptions); i++ )
 		{
-			Msg("%d : %s\n", g_pszHintDescriptions[i].iType, g_pszHintDescriptions[i].pszDesc);
+			Msg("%d : %s\n", g_pszHintDescriptions[i].iType, g_pszHintDescriptions[i].pszDesc );
 		}
 		return;
 	}
@@ -1668,7 +1668,7 @@ void CC_ai_drop_hint(const CCommand& args)
 	HintNodeData nodeData;
 	nodeData.strEntityName = MAKE_STRING("ai_drop_hint");
 	nodeData.vecPosition = pPlayer->EyePosition();
-	nodeData.nHintType = atoi(args[1]);
+	nodeData.nHintType = atoi( args[1] );
 	nodeData.nNodeID = NO_NODE;
 	nodeData.strGroup = NULL_STRING;
 	nodeData.iDisabled = false;
@@ -1676,12 +1676,12 @@ void CC_ai_drop_hint(const CCommand& args)
 	nodeData.fIgnoreFacing = HIF_DEFAULT;
 	nodeData.minState = NPC_STATE_IDLE;
 	nodeData.maxState = NPC_STATE_COMBAT;
-	CAI_Hint* pHint = CAI_HintManager::CreateHint(&nodeData, NULL);
-	if (pHint)
+	CAI_Hint *pHint = CAI_HintManager::CreateHint( &nodeData, NULL );
+	if ( pHint )
 	{
-		((CBaseEntity*)pHint)->Activate();
-		pHint->KeyValue("nodeFOV", "360");
-		pHint->m_debugOverlays |= (OVERLAY_TEXT_BIT | OVERLAY_BBOX_BIT);
+		((CBaseEntity *)pHint)->Activate();
+		pHint->KeyValue( "nodeFOV", "360" );
+		pHint->m_debugOverlays |= (OVERLAY_TEXT_BIT | OVERLAY_BBOX_BIT); 
 	}
 }
-ConCommand ai_drop_hint("ai_drop_hint", CC_ai_drop_hint, "Drop an ai_hint at the player's current eye position.", FCVAR_CHEAT);
+ConCommand ai_drop_hint( "ai_drop_hint", CC_ai_drop_hint, "Drop an ai_hint at the player's current eye position.", FCVAR_CHEAT );

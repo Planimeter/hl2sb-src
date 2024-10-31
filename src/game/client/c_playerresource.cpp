@@ -131,10 +131,7 @@ const char *C_PlayerResource::GetPlayerName( int iIndex )
 {
 	if ( iIndex < 1 || iIndex > MAX_PLAYERS )
 	{
-		// Andrew; In HL2SB, we could be an NPC calling into this code
-#ifndef HL2SB
 		Assert( false );
-#endif
 		return PLAYER_ERROR_NAME;
 	}
 	
@@ -161,10 +158,7 @@ int C_PlayerResource::GetTeam(int iIndex )
 {
 	if ( iIndex < 1 || iIndex > MAX_PLAYERS )
 	{
-		// Andrew; In HL2SB, we could be an NPC calling into this code
-#ifndef HL2SB
 		Assert( false );
-#endif
 		return 0;
 	}
 	else

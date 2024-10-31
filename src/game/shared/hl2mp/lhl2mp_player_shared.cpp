@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //
 //=============================================================================//
-//#define lhl2mp_player_shared_cpp
+#define lhl2mp_player_shared_cpp
 
 #include "cbase.h"
 
@@ -98,9 +98,8 @@ static int CHL2MP_Player_CanSprint (lua_State *L) {
 }
 
 static int CHL2MP_Player_DoAnimationEvent (lua_State *L) {
-//  luaL_checkhl2mpplayer(L, 1)->DoAnimationEvent((PlayerAnimEvent_t)luaL_checkint(L, 2), luaL_optinteger(L, 3, 0));
-// Comment these as a tempoary fix for the time being - GuestSneezeOSDev
-    return 0;
+  luaL_checkhl2mpplayer(L, 1)->DoAnimationEvent((PlayerAnimEvent_t)luaL_checkint(L, 2), luaL_optinteger(L, 3, 0));
+  return 0;
 }
 
 static int CHL2MP_Player___index (lua_State *L) {
@@ -116,9 +115,9 @@ static int CHL2MP_Player___index (lua_State *L) {
   }
   const char *field = luaL_checkstring(L, 2);
 #ifdef CLIENT_DLL
- // if (Q_strcmp(field, "m_fNextThinkPushAway") == 0)
- //   lua_pushnumber(L, pPlayer->m_fNextThinkPushAway);
- // Comment these as a tempoary fix for the time being - GuestSneezeOSDev
+  if (Q_strcmp(field, "m_fNextThinkPushAway") == 0)
+    lua_pushnumber(L, pPlayer->m_fNextThinkPushAway);
+  else {
 #endif
     if (pPlayer->m_nTableReference != LUA_NOREF) {
       lua_getref(L, pPlayer->m_nTableReference);
@@ -166,9 +165,8 @@ static int CHL2MP_Player___index (lua_State *L) {
 #ifdef CLIENT_DLL
   }
 #endif
-//  return 1;
-//}
-// Comment these as a tempoary fix for the time being - GuestSneezeOSDev
+  return 1;
+}
 
 static int CHL2MP_Player___newindex (lua_State *L) {
   CHL2MP_Player *pPlayer = lua_tohl2mpplayer(L, 1);
@@ -183,10 +181,9 @@ static int CHL2MP_Player___newindex (lua_State *L) {
   }
   const char *field = luaL_checkstring(L, 2);
 #ifdef CLIENT_DLL
-//  if (Q_strcmp(field, "m_fNextThinkPushAway") == 0)
-//    pPlayer->m_fNextThinkPushAway = luaL_checknumber(L, 3);
-//  else {
-// Comment these as a tempoary fix for the time being - GuestSneezeOSDev
+  if (Q_strcmp(field, "m_fNextThinkPushAway") == 0)
+    pPlayer->m_fNextThinkPushAway = luaL_checknumber(L, 3);
+  else {
 #endif
     if (pPlayer->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
@@ -199,9 +196,8 @@ static int CHL2MP_Player___newindex (lua_State *L) {
 #ifdef CLIENT_DLL
   }
 #endif
-//  return 0;
-//}
-// Comment these as a tempoary fix for the time being - GuestSneezeOSDev
+  return 0;
+}
 
 static int CHL2MP_Player___eq (lua_State *L) {
   lua_pushboolean(L, lua_tohl2mpplayer(L, 1) == lua_tohl2mpplayer(L, 2));

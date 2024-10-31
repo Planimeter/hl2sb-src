@@ -13,11 +13,8 @@
 
 #include "convar.h"
 #include "tier1/utldict.h"
+#include "../../luamanager.h"
 #include "lconvar.h"
-#include "..\shared\luamanager.h"
-#include "..\shared\luacachefile.h"
-#include "..\shared\luasrclib.h"
-#include "..\lua-5.1.5\etc\lua.hpp"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

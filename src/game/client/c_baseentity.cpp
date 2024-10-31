@@ -40,10 +40,6 @@
 #include "cdll_bounded_cvars.h"
 #include "inetchannelinfo.h"
 #include "proto_version.h"
-#ifdef LUA_SDK
-#include "luamanager.h"
-#include "mathlib/lvector.h"
-#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -988,9 +984,6 @@ C_BaseEntity::~C_BaseEntity()
 #endif
 	RemoveFromInterpolationList();
 	RemoveFromTeleportList();
-#if defined( LUA_SDK )
-	lua_unref( L, m_nTableReference );
-#endif
 }
 
 void C_BaseEntity::Clear( void )
@@ -1157,6 +1150,13 @@ bool C_BaseEntity::InitializeAsClientEntityByIndex( int iIndex, RenderGroup_t re
 	return true;
 }
 
+void C_BaseEntity::TrackAngRotation( bool bTrack )
+{
+	if ( bTrack )
+		AddVar( &m_angRotation, &m_iv_angRotation, LATCH_SIMULATION_VAR );
+	else
+		RemoveVar( &m_angRotation, false );
+}
 
 void C_BaseEntity::Term()
 {
@@ -1627,43 +1627,11 @@ int C_BaseEntity::GetSoundSourceIndex() const
 //-----------------------------------------------------------------------------
 const Vector& C_BaseEntity::GetRenderOrigin( void )
 {
-#ifdef LUA_SDK
-	if ( m_nTableReference != LUA_NOREF )
-	{
-		lua_getref( L, m_nTableReference );
-		lua_getfield( L, -1, "m_vecRenderOrigin" );
-		lua_remove( L, -2 );
-		if ( lua_isuserdata( L, -1 ) && luaL_checkudata( L, -1, "Vector" ) )
-		{
-			const Vector& res = luaL_checkvector( L, -1 );
-			lua_pop( L, 1 );
-			return res;
-		}
-		lua_pop( L, 1 );
-	}
-#endif
-
 	return GetAbsOrigin();
 }
 
 const QAngle& C_BaseEntity::GetRenderAngles( void )
 {
-#ifdef LUA_SDK
-	if ( m_nTableReference != LUA_NOREF )
-	{
-		lua_getref( L, m_nTableReference );
-		lua_getfield( L, -1, "m_angRenderAngles" );
-		lua_remove( L, -2 );
-		if ( lua_isuserdata( L, -1 ) && luaL_checkudata( L, -1, "QAngle" ) )
-		{
-			const QAngle& res = luaL_checkangle( L, -1 );
-			lua_pop( L, 1 );
-			return res;
-		}
-		lua_pop( L, 1 );
-	}
-#endif
-
 	return GetAbsAngles();
 }
 
@@ -2498,37 +2466,36 @@ void C_BaseEntity::UnlinkFromHierarchy()
 void C_BaseEntity::ValidateModelIndex( void )
 {
 #ifdef TF_CLIENT_DLL
+	if ( IsLocalPlayerUsingVisionFilterFlags( TF_VISION_FILTER_HALLOWEEN ) )
+	{
+		if ( m_nModelIndexOverrides[VISION_MODE_HALLOWEEN] > 0 )
+		{
+			SetModelByIndex( m_nModelIndexOverrides[VISION_MODE_HALLOWEEN] );
+			return;
+		}
+	}
+		
+	if ( IsLocalPlayerUsingVisionFilterFlags( TF_VISION_FILTER_PYRO ) )
+	{
+		if ( m_nModelIndexOverrides[VISION_MODE_PYRO] > 0 )
+		{
+			SetModelByIndex( m_nModelIndexOverrides[VISION_MODE_PYRO] );
+			return;
+		}
+	}
+
+	if ( IsLocalPlayerUsingVisionFilterFlags( TF_VISION_FILTER_ROME ) )
+	{
+		if ( m_nModelIndexOverrides[VISION_MODE_ROME] > 0 )
+		{
+			SetModelByIndex( m_nModelIndexOverrides[VISION_MODE_ROME] );
+			return;
+		}
+	}
+
 	if ( m_nModelIndexOverrides[VISION_MODE_NONE] > 0 ) 
 	{
-		if ( IsLocalPlayerUsingVisionFilterFlags( TF_VISION_FILTER_HALLOWEEN ) )
-		{
-			if ( m_nModelIndexOverrides[VISION_MODE_HALLOWEEN] > 0 )
-			{
-				SetModelByIndex( m_nModelIndexOverrides[VISION_MODE_HALLOWEEN] );
-				return;
-			}
-		}
-		
-		if ( IsLocalPlayerUsingVisionFilterFlags( TF_VISION_FILTER_PYRO ) )
-		{
-			if ( m_nModelIndexOverrides[VISION_MODE_PYRO] > 0 )
-			{
-				SetModelByIndex( m_nModelIndexOverrides[VISION_MODE_PYRO] );
-				return;
-			}
-		}
-
-		if ( IsLocalPlayerUsingVisionFilterFlags( TF_VISION_FILTER_ROME ) )
-		{
-			if ( m_nModelIndexOverrides[VISION_MODE_ROME] > 0 )
-			{
-				SetModelByIndex( m_nModelIndexOverrides[VISION_MODE_ROME] );
-				return;
-			}
-		}
-
 		SetModelByIndex( m_nModelIndexOverrides[VISION_MODE_NONE] );		
-
 		return;
 	}
 #endif
@@ -2660,14 +2627,6 @@ void C_BaseEntity::PostDataUpdate( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 void C_BaseEntity::OnDataUnchangedInPVS()
 {
-	Interp_RestoreToLastNetworked( GetVarMapping() );
-
-	// For non-predicted and non-client only ents, we need to latch network values into the interpolation histories
-	if ( !GetPredictable() && !IsClientCreated() )
-	{
-		OnLatchInterpolatedVariables( LATCH_SIMULATION_VAR );
-	}
-
 	Assert( m_hNetworkMoveParent.Get() || !m_hNetworkMoveParent.IsValid() );
 	HierarchySetParent(m_hNetworkMoveParent);
 	
@@ -4805,13 +4764,6 @@ const char *C_BaseEntity::GetClassname( void )
 	static char outstr[ 256 ];
 	outstr[ 0 ] = 0;
 	bool gotname = false;
-#if defined ( LUA_SDK )
-	if ( m_iClassname && m_iClassname[ 0 ] )
-	{
-		Q_snprintf( outstr, sizeof( outstr ), "%s", m_iClassname );
-		gotname = true;
-	}
-#endif
 #ifndef NO_ENTITY_PREDICTION
 	if ( GetPredDescMap() )
 	{
@@ -6354,6 +6306,9 @@ bool C_BaseEntity::ValidateEntityAttachedToPlayer( bool &bShouldRetry )
 		if ( FStrEq( pszModel, "models/flag/briefcase.mdl" ) )
 			return true;
 
+		if ( FStrEq( pszModel, "models/passtime/ball/passtime_ball.mdl" ) )
+			return true;
+
 		if ( FStrEq( pszModel, "models/props_doomsday/australium_container.mdl" ) )
 			return true;
 
@@ -6368,6 +6323,13 @@ bool C_BaseEntity::ValidateEntityAttachedToPlayer( bool &bShouldRetry )
 			return true;
 
 		if ( FStrEq( pszModel, "models/props_moonbase/powersupply_flag.mdl" ) )
+			return true;
+
+		// The Halloween 2014 doomsday flag replacement
+		if ( FStrEq( pszModel, "models/flag/ticket_case.mdl" ) )
+			return true;
+
+		if ( FStrEq( pszModel, "models/weapons/c_models/c_grapple_proj/c_grapple_proj.mdl" ) )
 			return true;
 	}
 

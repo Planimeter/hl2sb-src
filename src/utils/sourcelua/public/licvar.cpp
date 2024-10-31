@@ -8,11 +8,7 @@
 
 #include "Color.h"
 #include "convar.h"
-#include "..\shared\luamanager.h"
-#include "..\shared\luacachefile.h"
-#include "..\shared\luasrclib.h"
-#include "..\lua-5.1.5\etc\lua.hpp"
-#include "luamanager.h"
+#include "../luamanager.h"
 #include "lColor.h"
 #include "lconvar.h"
 

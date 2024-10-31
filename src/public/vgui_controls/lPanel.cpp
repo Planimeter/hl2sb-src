@@ -76,7 +76,7 @@ LUALIB_API VPANEL luaL_checkvpanel (lua_State *L, int narg) {
     luaL_argerror(L, narg, "Panel expected, got INVALID_PANEL");
   PHandle hPanel;
   hPanel.Set(d);
-  //return ivgui()->HandleToPanel(hPanel.m_iPanelID);
+  return ivgui()->HandleToPanel(hPanel.m_iPanelID);
 }
 
 

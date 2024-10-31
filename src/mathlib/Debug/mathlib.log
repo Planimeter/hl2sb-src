@@ -18,44 +18,7 @@
   spherical.cpp
   sse.cpp
   sseconst.cpp
-c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2027: use of undefined type 'type_info' (polyhedron.cpp)
-          c:\users\hp\documents\hl2sb-src\src\mathlib\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(414) : while compiling class template member function 'CUtlMemory<T,int>::CUtlMemory(int,int)'
-          with
-          [
-              T=unsigned char
-          ]
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(555) : see reference to function template instantiation 'CUtlMemory<T,int>::CUtlMemory(int,int)' being compiled
-          with
-          [
-              T=unsigned char
-          ]
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(619) : while compiling class template member function 'unsigned char *CUtlMemory<T,int>::Base(void)'
-          with
-          [
-              T=unsigned char
-          ]
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(75) : see reference to function template instantiation 'unsigned char *CUtlMemory<T,int>::Base(void)' being compiled
-          with
-          [
-              T=unsigned char
-          ]
-          c:\users\hp\documents\hl2sb-src\src\public\tier1\utlvector.h(174) : see reference to class template instantiation 'CUtlMemory<T,int>' being compiled
-          with
-          [
-              T=unsigned char
-          ]
-          c:\users\hp\documents\hl2sb-src\src\mathlib\polyhedron.cpp(124) : see reference to class template instantiation 'CUtlVector<unsigned char,CUtlMemory<T,int>>' being compiled
-          with
-          [
-              T=unsigned char
-          ]
-c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2228: left of '.name' must have class/struct/union (polyhedron.cpp)
-c:\users\hp\documents\hl2sb-src\src\public\tier1\utlmemory.h(422): error C2664: 'CMemAllocAttributeAlloction::CMemAllocAttributeAlloction(const CMemAllocAttributeAlloction &)' : cannot convert argument 1 from 'int' to 'const CMemAllocAttributeAlloction &' (polyhedron.cpp)
-          Reason: cannot convert from 'int' to 'const CMemAllocAttributeAlloction'
-          No constructor could take the source type, or constructor overload resolution was ambiguous
-          c:\users\hp\documents\hl2sb-src\src\mathlib\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
-          c:\users\hp\documents\hl2sb-src\src\mathlib\predefined c++ types (compiler internal)(127) : see declaration of 'type_info'
   ssenoise.cpp
   vector.cpp
   vmatrix.cpp
+  mathlib.vcxproj -> C:\Users\hp\Downloads\hl2sb-src-master\src\mathlib\..\lib\public\.\mathlib.lib

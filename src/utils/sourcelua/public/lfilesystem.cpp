@@ -7,11 +7,7 @@
 
 #define lfilesystem_cpp
 
-#include "..\shared\luamanager.h"
-#include "..\shared\luacachefile.h"
-#include "..\shared\luasrclib.h"
-#include "..\lua-5.1.5\etc\lua.hpp"
-#include "luamanager.h"
+#include "../luamanager.h"
 #include "filesystem.h"
 
 // memdbgon must be the last include file in a .cpp file!!!

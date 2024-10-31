@@ -455,11 +455,7 @@ void CPropJeepEpisodic::Spawn( void )
 
 	SetBlocksLOS( false );
 
-#ifdef HL2SB
-	CBasePlayer	*pPlayer = UTIL_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer	*pPlayer = UTIL_GetLocalPlayer();
-#endif
 	if ( pPlayer != NULL )
 	{
 		pPlayer->m_Local.m_iHideHUD |= HIDEHUD_VEHICLE_CROSSHAIR;
@@ -722,21 +718,8 @@ void CPropJeepEpisodic::CreateCargoTrigger( void )
 //-----------------------------------------------------------------------------
 void CPropJeepEpisodic::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
 {
-#ifdef HL2SB
-	// Andrew; don't skip giving ammo with the jeep if we're the buggy
-	if ( !strcmp( STRING( GetModelName() ), "models/buggy.mdl" ) )
-	{
-		BaseClass::Use( pActivator, pCaller, useType, value );
-	}
-	else
-	{
-		// Fall back and get in the vehicle instead, skip giving ammo
-		BaseClass::BaseClass::Use( pActivator, pCaller, useType, value );
-	}
-#else
 	// Fall back and get in the vehicle instead, skip giving ammo
 	BaseClass::BaseClass::Use( pActivator, pCaller, useType, value );
-#endif
 }
 
 #define	MIN_WHEEL_DUST_SPEED	5
@@ -971,11 +954,7 @@ void CPropJeepEpisodic::UpdateRadar( bool forceUpdate )
 
 	//Msg("Server detected %d objects\n", m_iNumRadarContacts );
 
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 	CSingleUserRecipientFilter filter(pPlayer);
 	UserMessageBegin( filter, "UpdateJalopyRadar" );
 	WRITE_BYTE( 0 ); // end marker
@@ -1150,11 +1129,7 @@ CBaseEntity *CPropJeepEpisodic::OnFailedPhysGunPickup( Vector vPhysgunPos )
 	{
 		// Player's forward direction
 		Vector vecPlayerForward;
-#ifdef HL2SB
-		CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 		if ( pPlayer == NULL )
 			return NULL;
 
@@ -1379,12 +1354,6 @@ void CPropJeepEpisodic::DriveVehicle( float flFrameTime, CUserCmd *ucmd, int iBu
 //-----------------------------------------------------------------------------
 void CPropJeepEpisodic::CreateHazardLights( void )
 {
-	// How about no.
-#ifdef HL2SB
-	if ( strcmp( STRING( GetModelName() ), "models/vehicle.mdl" ) )
-		return;
-#endif
-
 	static const char *s_szAttach[NUM_HAZARD_LIGHTS] =
 	{
 		"rearlight_r",
@@ -1621,11 +1590,7 @@ int	CPropJeepEpisodic::DrawDebugTextOverlays( void )
 void CPropJeepEpisodic::InputOutsideTransition( inputdata_t &inputdata )
 {
 	// Teleport into the new map
-#ifdef HL2SB
-	CBasePlayer *pPlayer = AI_GetNearestPlayer( GetAbsOrigin() );
-#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-#endif
 	Vector vecTeleportPos;
 	QAngle vecTeleportAngles;
 

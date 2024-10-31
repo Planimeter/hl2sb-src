@@ -30,6 +30,9 @@
     <Library Include="..\..\lib\public\bitmap.lib">
       <Filter>Link Libraries</Filter>
     </Library>
+    <Library Include="..\..\lib\common\lzma.lib">
+      <Filter>Link Libraries</Filter>
+    </Library>
     <Library Include="..\..\lib\public\mathlib.lib">
       <Filter>Link Libraries</Filter>
     </Library>
