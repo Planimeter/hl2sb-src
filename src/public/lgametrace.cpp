@@ -4,7 +4,7 @@
 //
 //=============================================================================//
 
-#define lgametrace_cpp
+//#define lgametrace_cpp
 
 #include "cbase.h"
 #include "luamanager.h"
@@ -94,6 +94,7 @@ static int CGameTrace_IsDispSurfaceWalkable (lua_State *L) {
   return 1;
 }
 
+/*
 static int CGameTrace___index (lua_State *L) {
   trace_t tr = luaL_checktrace(L, 1);
   const char *field = luaL_checkstring(L, 2);
@@ -130,6 +131,7 @@ static int CGameTrace___index (lua_State *L) {
   }
   return 1;
 }
+*/
 
 static int CGameTrace___newindex (lua_State *L) {
   const char *field = luaL_checkstring(L, 2);
@@ -176,7 +178,7 @@ static const luaL_Reg CGameTracemeta[] = {
   {"IsDispSurfaceProp1", CGameTrace_IsDispSurfaceProp1},
   {"IsDispSurfaceProp2", CGameTrace_IsDispSurfaceProp2},
   {"IsDispSurfaceWalkable", CGameTrace_IsDispSurfaceWalkable},
-  {"__index", CGameTrace___index},
+  //{"__index", CGameTrace___index},
   {"__newindex", CGameTrace___newindex},
   {"__tostring", CGameTrace___tostring},
   {NULL, NULL}

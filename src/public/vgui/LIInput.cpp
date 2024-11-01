@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define LIInput_cpp
+//#define LIInput_cpp
 
 #include <cbase.h>
 #include "vgui/iinput.h"

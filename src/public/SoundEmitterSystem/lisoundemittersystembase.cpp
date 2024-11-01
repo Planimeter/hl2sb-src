@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define lisoundemittersystembase_cpp
+//#define lisoundemittersystembase_cpp
 
 #include "cbase.h"
 #include "luamanager.h"

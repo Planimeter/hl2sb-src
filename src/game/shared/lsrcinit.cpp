@@ -6,7 +6,7 @@
 //===========================================================================//
 
 
-#define lsrcinit_cpp
+//#define lsrcinit_cpp
 
 #include "cbase.h"
 #include "lua.hpp"

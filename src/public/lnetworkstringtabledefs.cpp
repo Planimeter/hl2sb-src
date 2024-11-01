@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lnetworkstringtabledefs_cpp
+//#define lnetworkstringtabledefs_cpp
 
 #include "cbase.h"
 #include "networkstringtabledefs.h"

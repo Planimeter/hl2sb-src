@@ -5,7 +5,7 @@
 //			- Manages the player's flashlight effect.
 //
 //===========================================================================//
-#define lc_baseplayer_cpp
+//#define lc_baseplayer_cpp
 
 #include "cbase.h"
 #include "c_baseplayer.h"

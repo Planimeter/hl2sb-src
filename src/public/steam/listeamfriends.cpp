@@ -1,11 +1,10 @@
-
 //====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
 //
 // Purpose: interface to friends data in Steam
 //
 //=============================================================================
 
-#define listeamfriends_cpp
+//#define listeamfriends_cpp
 
 #include "cbase.h"
 #include "lua.hpp"

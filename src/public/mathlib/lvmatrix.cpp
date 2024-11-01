@@ -23,7 +23,7 @@
 // v = C * v;
 //=============================================================================
 
-#define lvmatrix_cpp
+//#define lvmatrix_cpp
 
 #include "cbase.h"
 #include <string.h>
@@ -78,8 +78,9 @@ static int VMatrix_ApplyRotation (lua_State *L) {
 }
 
 static int VMatrix_As3x4 (lua_State *L) {
-  lua_pushmatrix(L, luaL_checkvmatrix(L, 1).As3x4());
-  return 1;
+  //lua_pushmatrix(L, luaL_checkvmatrix(L, 1).As3x4());
+	// Comment tempoarily - Guest
+	  return 1;
 }
 
 static int VMatrix_Base (lua_State *L) {

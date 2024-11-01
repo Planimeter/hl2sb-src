@@ -4,7 +4,7 @@
 //
 // $NoKeywords: $
 //===========================================================================//
-#define lc_baseanimating_cpp
+//#define lc_baseanimating_cpp
 
 #include "cbase.h"
 #include "luamanager.h"
@@ -328,7 +328,7 @@ static int CBaseAnimating_GetHitboxSetName (lua_State *L) {
 }
 
 static int CBaseAnimating_GetModelWidthScale (lua_State *L) {
-  lua_pushnumber(L, luaL_checkanimating(L, 1)->GetModelWidthScale());
+  //lua_pushnumber(L, luaL_checkanimating(L, 1)->GetModelWidthScale());
   return 1;
 }
 
@@ -588,7 +588,7 @@ static int CBaseAnimating_RemoveFromClientSideAnimationList (lua_State *L) {
 }
 
 static int CBaseAnimating_ResetEventsParity (lua_State *L) {
-  luaL_checkanimating(L, 1)->ResetEventsParity();
+  //luaL_checkanimating(L, 1)->ResetEventsParity();
   return 0;
 }
 
@@ -661,7 +661,7 @@ static int CBaseAnimating_SetHitboxSetByName (lua_State *L) {
 }
 
 static int CBaseAnimating_SetModelWidthScale (lua_State *L) {
-  luaL_checkanimating(L, 1)->SetModelWidthScale(luaL_checknumber(L, 2));
+  //luaL_checkanimating(L, 1)->SetModelWidthScale(luaL_checknumber(L, 2));
   return 0;
 }
 
@@ -813,8 +813,8 @@ static int CBaseAnimating___index (lua_State *L) {
 	lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
 	return lua_error(L);
   }
-  if (pEntity->m_nTableReference != LUA_NOREF) {
-    lua_getref(L, pEntity->m_nTableReference);
+  //if (pEntity->m_nTableReference != LUA_NOREF) {
+    //lua_getref(L, pEntity->m_nTableReference);
     lua_pushvalue(L, 2);
     lua_gettable(L, -2);
     if (lua_isnil(L, -1)) {
@@ -829,23 +829,10 @@ static int CBaseAnimating___index (lua_State *L) {
         lua_gettable(L, -2);
       }
     }
-  }
-  else {
-    lua_getmetatable(L, 1);
-    lua_pushvalue(L, 2);
-    lua_gettable(L, -2);
-    if (lua_isnil(L, -1)) {
-      lua_pop(L, 2);
-      luaL_getmetatable(L, "CBaseEntity");
-      lua_pushvalue(L, 2);
-      lua_gettable(L, -2);
-    }
-  }
-  return 1;
-}
+//  }
 
-static int CBaseAnimating___newindex (lua_State *L) {
-  CBaseAnimating *pEntity = lua_toanimating(L, 1);
+//static int CBaseAnimating___newindex (lua_State *L) {
+//  CBaseAnimating *pEntity = lua_toanimating(L, 1);
   if (pEntity == NULL) {  /* avoid extra test when d is not 0 */
     lua_Debug ar1;
     lua_getstack(L, 1, &ar1);
@@ -857,41 +844,37 @@ static int CBaseAnimating___newindex (lua_State *L) {
   }
   const char *field = luaL_checkstring(L, 2);
   if (Q_strcmp(field, "m_bClientSideAnimation") == 0)
-    pEntity->m_bClientSideAnimation = luaL_checkboolean(L, 3);
-  else if (Q_strcmp(field, "m_bLastClientSideFrameReset") == 0)
-    pEntity->m_bLastClientSideFrameReset = luaL_checkboolean(L, 3);
-  else if (Q_strcmp(field, "m_nBody") == 0)
     pEntity->m_nBody = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nHitboxSet") == 0)
     pEntity->m_nHitboxSet = luaL_checkint(L, 3);
   else if (Q_strcmp(field, "m_nSkin") == 0)
     pEntity->m_nSkin = luaL_checkint(L, 3);
   else {
-    if (pEntity->m_nTableReference == LUA_NOREF) {
+    //if (pEntity->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
-      pEntity->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+      //pEntity->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
-    lua_getref(L, pEntity->m_nTableReference);
+    //lua_getref(L, pEntity->m_nTableReference);
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, field);
 	lua_pop(L, 1);
-  }
-  return 0;
-}
+//  }
+  //return 0;
+//}
 
-static int CBaseAnimating___eq (lua_State *L) {
+//static int CBaseAnimating___eq (lua_State *L) {
   lua_pushboolean(L, lua_toanimating(L, 1) == lua_toanimating(L, 2));
   return 1;
-}
+//}
 
-static int CBaseAnimating___tostring (lua_State *L) {
-  CBaseAnimating *pEntity = lua_toanimating(L, 1);
+//static int CBaseAnimating___tostring (lua_State *L) {
+//  CBaseAnimating *pEntity = lua_toanimating(L, 1);
   if (pEntity == NULL)
     lua_pushstring(L, "NULL");
   else
     lua_pushfstring(L, "CBaseAnimating: %d \"%s\"", pEntity->entindex(), pEntity->GetClassname());
   return 1;
-}
+//}
 
 
 static const luaL_Reg CBaseAnimatingmeta[] = {
@@ -1031,9 +1014,11 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
   {"VPhysicsGetObjectList", CBaseAnimating_VPhysicsGetObjectList},
   {"VPhysicsUpdate", CBaseAnimating_VPhysicsUpdate},
   {"__index", CBaseAnimating___index},
+  /*
   {"__newindex", CBaseAnimating___newindex},
   {"__eq", CBaseAnimating___eq},
   {"__tostring", CBaseAnimating___tostring},
+   */
   {NULL, NULL}
 };
 
@@ -1041,7 +1026,7 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
 /*
 ** Open CBaseAnimating object
 */
-LUALIB_API int luaopen_CBaseAnimating (lua_State *L) {
+//LUALIB_API int luaopen_CBaseAnimating (lua_State *L) {
   luaL_newmetatable(L, LUA_BASEANIMATINGLIBNAME);
   luaL_register(L, NULL, CBaseAnimatingmeta);
   lua_pushstring(L, "entity");
@@ -1049,3 +1034,5 @@ LUALIB_API int luaopen_CBaseAnimating (lua_State *L) {
   return 1;
 }
 
+
+// Fix

@@ -4,7 +4,7 @@
 //
 //===========================================================================//
 
-#define lbaseentity_shared_cpp
+//#define lbaseentity_shared_cpp
 
 #include "cbase.h"
 #ifdef CLIENT_DLL
@@ -530,11 +530,13 @@ static int CBaseEntity_GetPredictionRandomSeed (lua_State *L) {
 }
 
 static int CBaseEntity_GetRefTable (lua_State *L) {
-  CBaseEntity *pEntity = luaL_checkentity(L, 1);
-  if (pEntity->m_nTableReference == LUA_NOREF)
+//  CBaseEntity *pEntity = luaL_checkentity(L, 1);
+  //if (pEntity->m_nTableReference == LUA_NOREF)
+    // Comment as a tempoary solution - Guest
     lua_pushnil(L);
-  else
-    lua_getref(L, pEntity->m_nTableReference);
+   // lua_getref(L, pEntity->m_nTableReference);
+      // Comment as a tempoary solution - Guest
+
   return 1;
 }
 
@@ -579,8 +581,10 @@ static int CBaseEntity_GetTextureFrameIndex (lua_State *L) {
 }
 
 static int CBaseEntity_GetTouchTrace (lua_State *L) {
-  trace_t tr = CBaseEntity::GetTouchTrace();
-  lua_pushtrace(L, tr);
+  //trace_t tr = CBaseEntity::GetTouchTrace();
+  //lua_pushtrace(L, tr);
+      // Comment as a tempoary solution - Guest
+
   return 1;
 }
 
@@ -780,7 +784,8 @@ static int CBaseEntity_IsTransparent (lua_State *L) {
 }
 
 static int CBaseEntity_IsWeapon (lua_State *L) {
-  lua_pushboolean(L, luaL_checkentity(L, 1)->IsWeapon());
+  //lua_pushboolean(L, luaL_checkentity(L, 1)->IsWeapon());
+  // Comment as a tempoary solution - Guest
   return 1;
 }
 
@@ -1364,384 +1369,389 @@ static int CBaseEntity_WorldToEntitySpace (lua_State *L) {
   return 0;
 }
 
-static int CBaseEntity___index (lua_State *L) {
-  CBaseEntity *pEntity = lua_toentity(L, 1);
-  if (pEntity == NULL) {  /* avoid extra test when d is not 0 */
-    lua_Debug ar1;
-    lua_getstack(L, 1, &ar1);
-    lua_getinfo(L, "fl", &ar1);
-    lua_Debug ar2;
-    lua_getinfo(L, ">S", &ar2);
-	lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
-	return lua_error(L);
-  }
-  const char *field = luaL_checkstring(L, 2);
-  if (Q_strcmp(field, "m_bAllowPrecache") == 0)
-    lua_pushboolean(L, pEntity->m_bAllowPrecache);
-  else if (Q_strcmp(field, "m_flAnimTime") == 0)
-    lua_pushnumber(L, pEntity->m_flAnimTime);
-  else if (Q_strcmp(field, "m_flSimulationTime") == 0)
-    lua_pushnumber(L, pEntity->m_flSimulationTime);
-  else if (Q_strcmp(field, "m_flSpeed") == 0)
-    lua_pushnumber(L, pEntity->m_flSpeed);
-  else if (Q_strcmp(field, "m_iClassname") == 0)
-    lua_pushstring(L, STRING( pEntity->m_iClassname ));
-  else if (Q_strcmp(field, "m_iHealth") == 0)
-    lua_pushinteger(L, pEntity->m_iHealth);
-  else if (Q_strcmp(field, "m_nLastThinkTick") == 0)
-    lua_pushinteger(L, pEntity->m_nLastThinkTick);
-  else if (Q_strcmp(field, "m_nModelIndex") == 0)
-    lua_pushinteger(L, pEntity->m_nModelIndex);
-  else if (Q_strcmp(field, "touchStamp") == 0)
-    lua_pushinteger(L, pEntity->touchStamp);
-  else if (pEntity->m_nTableReference != LUA_NOREF) {
-    lua_getref(L, pEntity->m_nTableReference);
+static int CBaseEntity___index(lua_State* L) {
+    CBaseEntity* pEntity = lua_toentity(L, 1);
+    if (pEntity == NULL) {  /* avoid extra test when d is not 0 */
+        lua_Debug ar1;
+        lua_getstack(L, 1, &ar1);
+        lua_getinfo(L, "fl", &ar1);
+        lua_Debug ar2;
+        lua_getinfo(L, ">S", &ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* field = luaL_checkstring(L, 2);
+    if (Q_strcmp(field, "m_bAllowPrecache") == 0)
+        lua_pushboolean(L, pEntity->m_bAllowPrecache);
+    else if (Q_strcmp(field, "m_flAnimTime") == 0)
+        lua_pushnumber(L, pEntity->m_flAnimTime);
+    else if (Q_strcmp(field, "m_flSimulationTime") == 0)
+        lua_pushnumber(L, pEntity->m_flSimulationTime);
+    else if (Q_strcmp(field, "m_flSpeed") == 0)
+        lua_pushnumber(L, pEntity->m_flSpeed);
+    else if (Q_strcmp(field, "m_iClassname") == 0)
+        lua_pushstring(L, STRING(pEntity->m_iClassname));
+    else if (Q_strcmp(field, "m_iHealth") == 0)
+        lua_pushinteger(L, pEntity->m_iHealth);
+    else if (Q_strcmp(field, "m_nLastThinkTick") == 0)
+        lua_pushinteger(L, pEntity->m_nLastThinkTick);
+    else if (Q_strcmp(field, "m_nModelIndex") == 0)
+        lua_pushinteger(L, pEntity->m_nModelIndex);
+    else if (Q_strcmp(field, "touchStamp") == 0)
+        lua_pushinteger(L, pEntity->touchStamp);
+    //else if (pEntity->m_nTableReference != LUA_NOREF) {
+      //lua_getref(L, pEntity->m_nTableReference);
+      // Comment as a tempoary solution - Guest
     lua_getfield(L, -1, field);
     if (lua_isnil(L, -1)) {
-      lua_pop(L, 2);
-      lua_getmetatable(L, 1);
-      lua_getfield(L, -1, field);
+        lua_pop(L, 2);
+        lua_getmetatable(L, 1);
+        lua_getfield(L, -1, field);
     }
-  }
-  else {
-    lua_getmetatable(L, 1);
-    lua_getfield(L, -1, field);
-  }
-  return 1;
-}
+    //  }
+      //else {
+        //lua_getmetatable(L, 1);
+        //lua_getfield(L, -1, field);
+      //}
+      //return 1;
+    //}
 
-static int CBaseEntity___newindex (lua_State *L) {
-  CBaseEntity *pEntity = lua_toentity(L, 1);
-  if (pEntity == NULL) {  /* avoid extra test when d is not 0 */
-    lua_Debug ar1;
-    lua_getstack(L, 1, &ar1);
-    lua_getinfo(L, "fl", &ar1);
-    lua_Debug ar2;
-    lua_getinfo(L, ">S", &ar2);
-	lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
-	return lua_error(L);
-  }
-  const char *field = luaL_checkstring(L, 2);
-  if (Q_strcmp(field, "m_bAllowPrecache") == 0)
-    pEntity->m_bAllowPrecache = luaL_checkboolean(L, 3);
-  else if (Q_strcmp(field, "m_flAnimTime") == 0)
-    pEntity->m_flAnimTime = luaL_checknumber(L, 3);
-  else if (Q_strcmp(field, "m_flSimulationTime") == 0)
-    pEntity->m_flSimulationTime = luaL_checknumber(L, 3);
-  else if (Q_strcmp(field, "m_flSpeed") == 0)
-    pEntity->m_flSpeed = luaL_checknumber(L, 3);
-  else if (Q_strcmp(field, "m_iClassname") == 0)
-    pEntity->m_iClassname = MAKE_STRING( luaL_checkstring(L, 3) );
-  else if (Q_strcmp(field, "m_iHealth") == 0)
-    pEntity->m_iHealth = luaL_checkint(L, 3);
-  else if (Q_strcmp(field, "m_nLastThinkTick") == 0)
-    pEntity->m_nLastThinkTick = luaL_checkint(L, 3);
-  else if (Q_strcmp(field, "m_nModelIndex") == 0)
-    pEntity->m_nModelIndex = luaL_checkint(L, 3);
-  else if (Q_strcmp(field, "touchStamp") == 0)
-    pEntity->touchStamp = luaL_checkint(L, 3);
-  else {
-    if (pEntity->m_nTableReference == LUA_NOREF) {
-      lua_newtable(L);
-      pEntity->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    //static int CBaseEntity___newindex (lua_State *L) {
+//    CBaseEntity* pEntity = lua_toentity(L, 1);
+    if (pEntity == NULL) {  /* avoid extra test when d is not 0 */
+        lua_Debug ar1;
+        lua_getstack(L, 1, &ar1);
+        lua_getinfo(L, "fl", &ar1);
+        lua_Debug ar2;
+        lua_getinfo(L, ">S", &ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+        //}
+        const char* field = luaL_checkstring(L, 2);
+        if (Q_strcmp(field, "m_bAllowPrecache") == 0)
+            pEntity->m_bAllowPrecache = luaL_checkboolean(L, 3);
+        else if (Q_strcmp(field, "m_flAnimTime") == 0)
+            pEntity->m_flAnimTime = luaL_checknumber(L, 3);
+        else if (Q_strcmp(field, "m_flSimulationTime") == 0)
+            pEntity->m_flSimulationTime = luaL_checknumber(L, 3);
+        else if (Q_strcmp(field, "m_flSpeed") == 0)
+            pEntity->m_flSpeed = luaL_checknumber(L, 3);
+        else if (Q_strcmp(field, "m_iClassname") == 0)
+            pEntity->m_iClassname = MAKE_STRING(luaL_checkstring(L, 3));
+        else if (Q_strcmp(field, "m_iHealth") == 0)
+            pEntity->m_iHealth = luaL_checkint(L, 3);
+        else if (Q_strcmp(field, "m_nLastThinkTick") == 0)
+            pEntity->m_nLastThinkTick = luaL_checkint(L, 3);
+        else if (Q_strcmp(field, "m_nModelIndex") == 0)
+            pEntity->m_nModelIndex = luaL_checkint(L, 3);
+        else if (Q_strcmp(field, "touchStamp") == 0)
+            pEntity->touchStamp = luaL_checkint(L, 3);
+        else {
+            //if (pEntity->m_nTableReference == LUA_NOREF) {
+              //lua_newtable(L);
+              //pEntity->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
+        }
+        //lua_getref(L, pEntity->m_nTableReference);
+        lua_pushvalue(L, 3);
+        lua_setfield(L, -2, field);
+        lua_pop(L, 1);
+//    }
+    //return 0;
+  //}
+
+  //static int CBaseEntity___eq (lua_State *L) {
+    lua_pushboolean(L, lua_toentity(L, 1) == lua_toentity(L, 2));
+    return 1;
+    //}
+
+    //static int CBaseEntity___tostring (lua_State *L) {
+    CBaseEntity* pEntity = lua_toentity(L, 1);
+    if (pEntity == NULL)
+        lua_pushstring(L, "NULL");
+    else
+        lua_pushfstring(L, "CBaseEntity: %d %s", pEntity->entindex(), pEntity->GetClassname());
+    return 1;
+    //}
+
+
+    static const luaL_Reg CBaseEntitymeta[] = {
+      {"Activate", CBaseEntity_Activate},
+      {"AddDataObjectType", CBaseEntity_AddDataObjectType},
+      {"AddEffects", CBaseEntity_AddEffects},
+      {"AddEFlags", CBaseEntity_AddEFlags},
+      {"AddFlag", CBaseEntity_AddFlag},
+      {"AddSolidFlags", CBaseEntity_AddSolidFlags},
+      {"ApplyAbsVelocityImpulse", CBaseEntity_ApplyAbsVelocityImpulse},
+      {"ApplyLocalAngularVelocityImpulse", CBaseEntity_ApplyLocalAngularVelocityImpulse},
+      {"BlocksLOS", CBaseEntity_BlocksLOS},
+      {"BloodColor", CBaseEntity_BloodColor},
+      {"BoundingRadius", CBaseEntity_BoundingRadius},
+      {"ChangeTeam", CBaseEntity_ChangeTeam},
+      {"ClearEffects", CBaseEntity_ClearEffects},
+      {"ClearFlags", CBaseEntity_ClearFlags},
+      {"CollisionRulesChanged", CBaseEntity_CollisionRulesChanged},
+      {"ComputeAbsDirection", CBaseEntity_ComputeAbsDirection},
+      {"ComputeAbsPosition", CBaseEntity_ComputeAbsPosition},
+      {"ComputeWorldSpaceSurroundingBox", CBaseEntity_ComputeWorldSpaceSurroundingBox},
+      {"CreateDataObject", CBaseEntity_CreateDataObject},
+      {"CreatePredictedEntityByName", CBaseEntity_CreatePredictedEntityByName},
+      {"CreateVPhysics", CBaseEntity_CreateVPhysics},
+      {"DamageDecal", CBaseEntity_DamageDecal},
+      {"DecalTrace", CBaseEntity_DecalTrace},
+      {"DestroyAllDataObjects", CBaseEntity_DestroyAllDataObjects},
+      {"DestroyDataObject", CBaseEntity_DestroyDataObject},
+      {"DispatchTraceAttack", CBaseEntity_DispatchTraceAttack},
+      {"DoImpactEffect", CBaseEntity_DoImpactEffect},
+      {"EarPosition", CBaseEntity_EarPosition},
+      {"EmitSound", CBaseEntity_EmitSound},
+      {"EmitAmbientSound", CBaseEntity_EmitAmbientSound},
+      {"EndGroundContact", CBaseEntity_EndGroundContact},
+      {"EndTouch", CBaseEntity_EndTouch},
+      {"entindex", CBaseEntity_entindex},
+      {"EntityToWorldSpace", CBaseEntity_EntityToWorldSpace},
+      {"EyeAngles", CBaseEntity_EyeAngles},
+      {"EyePosition", CBaseEntity_EyePosition},
+      {"FireBullets", CBaseEntity_FireBullets},
+      {"FirstMoveChild", CBaseEntity_FirstMoveChild},
+      {"FollowEntity", CBaseEntity_FollowEntity},
+      {"GenderExpandString", CBaseEntity_GenderExpandString},
+      {"GetAbsAngles", CBaseEntity_GetAbsAngles},
+      {"GetAbsOrigin", CBaseEntity_GetAbsOrigin},
+      {"GetAbsVelocity", CBaseEntity_GetAbsVelocity},
+      {"GetAnimTime", CBaseEntity_GetAnimTime},
+      {"GetBaseAnimating", CBaseEntity_GetBaseAnimating},
+      {"GetBaseEntity", CBaseEntity_GetBaseEntity},
+      {"GetBaseVelocity", CBaseEntity_GetBaseVelocity},
+      {"GetCheckUntouch", CBaseEntity_GetCheckUntouch},
+      {"GetClassname", CBaseEntity_GetClassname},
+      {"GetCollisionGroup", CBaseEntity_GetCollisionGroup},
+      {"GetDataObject", CBaseEntity_GetDataObject},
+      {"GetDebugName", CBaseEntity_GetDebugName},
+      {"GetDLLType", CBaseEntity_GetDLLType},
+      {"GetEffectEntity", CBaseEntity_GetEffectEntity},
+      {"GetEffects", CBaseEntity_GetEffects},
+      {"GetEFlags", CBaseEntity_GetEFlags},
+      {"GetElasticity", CBaseEntity_GetElasticity},
+      {"GetFirstThinkTick", CBaseEntity_GetFirstThinkTick},
+      {"GetFlags", CBaseEntity_GetFlags},
+      {"GetFollowedEntity", CBaseEntity_GetFollowedEntity},
+      {"GetGravity", CBaseEntity_GetGravity},
+      {"GetGroundChangeTime", CBaseEntity_GetGroundChangeTime},
+      {"GetGroundEntity", CBaseEntity_GetGroundEntity},
+      {"GetHealth", CBaseEntity_GetHealth},
+      {"GetKeyValue", CBaseEntity_GetKeyValue},
+      {"GetLastThink", CBaseEntity_GetLastThink},
+      {"GetLastThinkTick", CBaseEntity_GetLastThinkTick},
+      {"GetLocalAngles", CBaseEntity_GetLocalAngles},
+      {"GetLocalAngularVelocity", CBaseEntity_GetLocalAngularVelocity},
+      {"GetLocalOrigin", CBaseEntity_GetLocalOrigin},
+      {"GetLocalVelocity", CBaseEntity_GetLocalVelocity},
+      {"GetMaxHealth", CBaseEntity_GetMaxHealth},
+      {"GetModelIndex", CBaseEntity_GetModelIndex},
+      {"GetModelName", CBaseEntity_GetModelName},
+      {"GetMoveParent", CBaseEntity_GetMoveParent},
+      {"GetMoveType", CBaseEntity_GetMoveType},
+      {"GetOwnerEntity", CBaseEntity_GetOwnerEntity},
+      {"GetParametersForSound", CBaseEntity_GetParametersForSound},
+      {"GetPredictionPlayer", CBaseEntity_GetPredictionPlayer},
+      {"GetPredictionRandomSeed", CBaseEntity_GetPredictionRandomSeed},
+      {"GetSimulatingPlayer", CBaseEntity_GetSimulatingPlayer},
+      {"GetSimulationTime", CBaseEntity_GetSimulationTime},
+      {"GetSolid", CBaseEntity_GetSolid},
+      {"GetSolidFlags", CBaseEntity_GetSolidFlags},
+      {"GetSoundDuration", CBaseEntity_GetSoundDuration},
+      {"GetSoundSourceIndex", CBaseEntity_GetSoundSourceIndex},
+      {"GetTeamNumber", CBaseEntity_GetTeamNumber},
+      {"GetTextureFrameIndex", CBaseEntity_GetTextureFrameIndex},
+      {"GetTouchTrace", CBaseEntity_GetTouchTrace},
+      {"GetTracerAttachment", CBaseEntity_GetTracerAttachment},
+      {"GetTracerType", CBaseEntity_GetTracerType},
+      {"GetVectors", CBaseEntity_GetVectors},
+      {"GetViewOffset", CBaseEntity_GetViewOffset},
+      {"GetWaterLevel", CBaseEntity_GetWaterLevel},
+      {"GetWaterType", CBaseEntity_GetWaterType},
+      {"HasDataObjectType", CBaseEntity_HasDataObjectType},
+      {"HasNPCsOnIt", CBaseEntity_HasNPCsOnIt},
+      {"ImpactTrace", CBaseEntity_ImpactTrace},
+      {"InSameTeam", CBaseEntity_InSameTeam},
+      {"IsAbsQueriesValid", CBaseEntity_IsAbsQueriesValid},
+      {"IsAIWalkable", CBaseEntity_IsAIWalkable},
+      {"IsAlive", CBaseEntity_IsAlive},
+      {"IsAnimatedEveryTick", CBaseEntity_IsAnimatedEveryTick},
+      {"IsBaseObject", CBaseEntity_IsBaseObject},
+      {"IsBaseTrain", CBaseEntity_IsBaseTrain},
+      {"IsBSPModel", CBaseEntity_IsBSPModel},
+      {"IsClient", CBaseEntity_IsClient},
+      {"IsCurrentlyTouching", CBaseEntity_IsCurrentlyTouching},
+      {"IsDormant", CBaseEntity_IsDormant},
+      {"IsEffectActive", CBaseEntity_IsEffectActive},
+      {"IsEFlagSet", CBaseEntity_IsEFlagSet},
+      {"IsFloating", CBaseEntity_IsFloating},
+      {"IsFollowingEntity", CBaseEntity_IsFollowingEntity},
+      {"IsInWorld", CBaseEntity_IsInWorld},
+      {"IsMarkedForDeletion", CBaseEntity_IsMarkedForDeletion},
+      {"IsNPC", CBaseEntity_IsNPC},
+      {"IsPlayer", CBaseEntity_IsPlayer},
+      {"IsPlayerSimulated", CBaseEntity_IsPlayerSimulated},
+      {"IsPointSized", CBaseEntity_IsPointSized},
+      {"IsPrecacheAllowed", CBaseEntity_IsPrecacheAllowed},
+      {"IsServer", CBaseEntity_IsServer},
+      {"IsSimulatedEveryTick", CBaseEntity_IsSimulatedEveryTick},
+      {"IsSimulatingOnAlternateTicks", CBaseEntity_IsSimulatingOnAlternateTicks},
+      {"IsSolid", CBaseEntity_IsSolid},
+      {"IsSolidFlagSet", CBaseEntity_IsSolidFlagSet},
+      {"IsStandable", CBaseEntity_IsStandable},
+      {"IsTransparent", CBaseEntity_IsTransparent},
+      {"IsWeapon", CBaseEntity_IsWeapon},
+      {"KeyValue", CBaseEntity_KeyValue},
+      {"LocalEyeAngles", CBaseEntity_LocalEyeAngles},
+      {"NextMovePeer", CBaseEntity_NextMovePeer},
+      {"ObjectCaps", CBaseEntity_ObjectCaps},
+      {"OnRestore", CBaseEntity_OnRestore},
+      {"PhysicsCheckForEntityUntouch", CBaseEntity_PhysicsCheckForEntityUntouch},
+      {"PhysicsCheckWater", CBaseEntity_PhysicsCheckWater},
+      {"PhysicsCheckWaterTransition", CBaseEntity_PhysicsCheckWaterTransition},
+      {"PhysicsImpact", CBaseEntity_PhysicsImpact},
+      {"PhysicsMarkEntitiesAsTouching", CBaseEntity_PhysicsMarkEntitiesAsTouching},
+      {"PhysicsNotifyOtherOfGroundRemoval", CBaseEntity_PhysicsNotifyOtherOfGroundRemoval},
+      {"PhysicsNotifyOtherOfUntouch", CBaseEntity_PhysicsNotifyOtherOfUntouch},
+      {"PhysicsRemoveGroundList", CBaseEntity_PhysicsRemoveGroundList},
+      {"PhysicsRemoveTouchedList", CBaseEntity_PhysicsRemoveTouchedList},
+      {"PhysicsSimulate", CBaseEntity_PhysicsSimulate},
+      {"PhysicsSolidMaskForEntity", CBaseEntity_PhysicsSolidMaskForEntity},
+      {"PhysicsStartGroundContact", CBaseEntity_PhysicsStartGroundContact},
+      {"Precache", CBaseEntity_Precache},
+      {"PrecacheModel", CBaseEntity_PrecacheModel},
+      {"PrecacheScriptSound", CBaseEntity_PrecacheScriptSound},
+      {"PrecacheSound", CBaseEntity_PrecacheSound},
+      {"PrefetchScriptSound", CBaseEntity_PrefetchScriptSound},
+      {"PrefetchSound", CBaseEntity_PrefetchSound},
+      {"RegisterThinkContext", CBaseEntity_RegisterThinkContext},
+      {"Remove", CBaseEntity_Remove},
+      {"RemoveAllDecals", CBaseEntity_RemoveAllDecals},
+      {"RemoveDataObjectType", CBaseEntity_RemoveDataObjectType},
+      {"RemoveEffects", CBaseEntity_RemoveEffects},
+      {"RemoveEFlags", CBaseEntity_RemoveEFlags},
+      {"RemoveFlag", CBaseEntity_RemoveFlag},
+      {"RemoveSolidFlags", CBaseEntity_RemoveSolidFlags},
+      {"SetAbsAngles", CBaseEntity_SetAbsAngles},
+      {"SetAbsOrigin", CBaseEntity_SetAbsOrigin},
+      {"SetAbsQueriesValid", CBaseEntity_SetAbsQueriesValid},
+      {"SetAbsVelocity", CBaseEntity_SetAbsVelocity},
+      {"SetAIWalkable", CBaseEntity_SetAIWalkable},
+      {"SetAllowPrecache", CBaseEntity_SetAllowPrecache},
+      {"SetAnimatedEveryTick", CBaseEntity_SetAnimatedEveryTick},
+      {"SetAnimTime", CBaseEntity_SetAnimTime},
+      {"SetBaseVelocity", CBaseEntity_SetBaseVelocity},
+      {"SetBlocksLOS", CBaseEntity_SetBlocksLOS},
+      {"SetCheckUntouch", CBaseEntity_SetCheckUntouch},
+      {"SetClassname", CBaseEntity_SetClassname},
+      {"SetCollisionBounds", CBaseEntity_SetCollisionBounds},
+      {"SetCollisionGroup", CBaseEntity_SetCollisionGroup},
+      {"SetEffectEntity", CBaseEntity_SetEffectEntity},
+      {"SetEffects", CBaseEntity_SetEffects},
+      {"SetEFlags", CBaseEntity_SetEFlags},
+      {"SetFriction", CBaseEntity_SetFriction},
+      {"SetGravity", CBaseEntity_SetGravity},
+      {"SetGroundChangeTime", CBaseEntity_SetGroundChangeTime},
+      {"SetGroundEntity", CBaseEntity_SetGroundEntity},
+      {"SetHealth", CBaseEntity_SetHealth},
+      {"SetLocalAngles", CBaseEntity_SetLocalAngles},
+      {"SetLocalAngularVelocity", CBaseEntity_SetLocalAngularVelocity},
+      {"SetLocalOrigin", CBaseEntity_SetLocalOrigin},
+      {"SetLocalVelocity", CBaseEntity_SetLocalVelocity},
+      {"SetModel", CBaseEntity_SetModel},
+      {"SetModelIndex", CBaseEntity_SetModelIndex},
+      {"SetModelName", CBaseEntity_SetModelName},
+      {"SetMoveCollide", CBaseEntity_SetMoveCollide},
+      {"SetMoveType", CBaseEntity_SetMoveType},
+      {"SetNextThink", CBaseEntity_SetNextThink},
+      {"SetOwnerEntity", CBaseEntity_SetOwnerEntity},
+      {"SetParent", CBaseEntity_SetParent},
+      {"SetPlayerSimulated", CBaseEntity_SetPlayerSimulated},
+      {"SetPredictionEligible", CBaseEntity_SetPredictionEligible},
+      {"SetPredictionPlayer", CBaseEntity_SetPredictionPlayer},
+      {"SetRenderColor", CBaseEntity_SetRenderColor},
+      {"SetRenderColorA", CBaseEntity_SetRenderColorA},
+      {"SetRenderColorB", CBaseEntity_SetRenderColorB},
+      {"SetRenderColorG", CBaseEntity_SetRenderColorG},
+      {"SetRenderColorR", CBaseEntity_SetRenderColorR},
+      {"SetSimulatedEveryTick", CBaseEntity_SetSimulatedEveryTick},
+      {"SetSimulationTime", CBaseEntity_SetSimulationTime},
+      {"SetSize", CBaseEntity_SetSize},
+      {"SetSolid", CBaseEntity_SetSolid},
+      {"SetSolidFlags", CBaseEntity_SetSolidFlags},
+      {"SetTextureFrameIndex", CBaseEntity_SetTextureFrameIndex},
+      {"SetViewOffset", CBaseEntity_SetViewOffset},
+      {"SetWaterLevel", CBaseEntity_SetWaterLevel},
+      {"SetWaterType", CBaseEntity_SetWaterType},
+      {"ShouldCollide", CBaseEntity_ShouldCollide},
+      {"ShouldSavePhysics", CBaseEntity_ShouldSavePhysics},
+      {"Spawn", CBaseEntity_Spawn},
+      {"StartGroundContact", CBaseEntity_StartGroundContact},
+      {"StartTouch", CBaseEntity_StartTouch},
+      {"StopFollowingEntity", CBaseEntity_StopFollowingEntity},
+      {"SUB_Remove", CBaseEntity_SUB_Remove},
+      {"Think", CBaseEntity_Think},
+      {"ToggleFlag", CBaseEntity_ToggleFlag},
+      {"Touch", CBaseEntity_Touch},
+      {"TraceBleed", CBaseEntity_TraceBleed},
+      {"UnsetPlayerSimulated", CBaseEntity_UnsetPlayerSimulated},
+      {"UpdateOnRemove", CBaseEntity_UpdateOnRemove},
+      {"VPhysicsDestroyObject", CBaseEntity_VPhysicsDestroyObject},
+      {"VPhysicsGetObject", CBaseEntity_VPhysicsGetObject},
+      {"VPhysicsGetObjectList", CBaseEntity_VPhysicsGetObjectList},
+      {"VPhysicsInitNormal", CBaseEntity_VPhysicsInitNormal},
+      {"VPhysicsInitStatic", CBaseEntity_VPhysicsInitStatic},
+      {"VPhysicsIsFlesh", CBaseEntity_VPhysicsIsFlesh},
+      {"VPhysicsSetObject", CBaseEntity_VPhysicsSetObject},
+      {"VPhysicsUpdate", CBaseEntity_VPhysicsUpdate},
+      {"WakeRestingObjects", CBaseEntity_WakeRestingObjects},
+      {"WorldAlignMaxs", CBaseEntity_WorldAlignMaxs},
+      {"WorldAlignMins", CBaseEntity_WorldAlignMins},
+      {"WorldAlignSize", CBaseEntity_WorldAlignSize},
+      {"WorldSpaceCenter", CBaseEntity_WorldSpaceCenter},
+      {"WorldToEntitySpace", CBaseEntity_WorldToEntitySpace},
+      {"__index", CBaseEntity___index},
+      /*
+      {"__newindex", CBaseEntity___newindex},
+      {"__eq", CBaseEntity___eq},
+      {"__tostring", CBaseEntity___tostring},
+      */
+      {NULL, NULL}
+    };
+
+
+    //static int luasrc_CreateEntityByName(lua_State * L) {
+        lua_pushentity(L, CreateEntityByName(luaL_checkstring(L, 1)));
+        return 1;
+    //}
+
+
+    static const luaL_Reg CBaseEntity_funcs[] = {
+      //{"CreateEntityByName", luasrc_CreateEntityByName},
+      {NULL, NULL}
+    };
+
+
+    /*
+    ** Open CBaseEntity object
+    */
+    LUALIB_API int luaopen_CBaseEntity_shared(lua_State* L); {
+        luaL_getmetatable(L, LUA_BASEENTITYLIBNAME);
+        if (lua_isnoneornil(L, -1)) {
+            lua_pop(L, 1);
+            luaL_newmetatable(L, LUA_BASEENTITYLIBNAME);
+        }
+        luaL_register(L, NULL, CBaseEntitymeta);
+        lua_pushstring(L, "entity");
+        lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
+        //luaL_register(L, "_G", CBaseEntity_funcs);
+        lua_pop(L, 1);
+        lua_pushentity(L, NULL);
+        lua_setglobal(L, "NULL");  /* set global NULL */
+        return 1;
     }
-    lua_getref(L, pEntity->m_nTableReference);
-    lua_pushvalue(L, 3);
-    lua_setfield(L, -2, field);
-	lua_pop(L, 1);
-  }
-  return 0;
 }
 
-static int CBaseEntity___eq (lua_State *L) {
-  lua_pushboolean(L, lua_toentity(L, 1) == lua_toentity(L, 2));
-  return 1;
-}
-
-static int CBaseEntity___tostring (lua_State *L) {
-  CBaseEntity *pEntity = lua_toentity(L, 1);
-  if (pEntity == NULL)
-    lua_pushstring(L, "NULL");
-  else
-    lua_pushfstring(L, "CBaseEntity: %d %s", pEntity->entindex(), pEntity->GetClassname());
-  return 1;
-}
-
-
-static const luaL_Reg CBaseEntitymeta[] = {
-  {"Activate", CBaseEntity_Activate},
-  {"AddDataObjectType", CBaseEntity_AddDataObjectType},
-  {"AddEffects", CBaseEntity_AddEffects},
-  {"AddEFlags", CBaseEntity_AddEFlags},
-  {"AddFlag", CBaseEntity_AddFlag},
-  {"AddSolidFlags", CBaseEntity_AddSolidFlags},
-  {"ApplyAbsVelocityImpulse", CBaseEntity_ApplyAbsVelocityImpulse},
-  {"ApplyLocalAngularVelocityImpulse", CBaseEntity_ApplyLocalAngularVelocityImpulse},
-  {"BlocksLOS", CBaseEntity_BlocksLOS},
-  {"BloodColor", CBaseEntity_BloodColor},
-  {"BoundingRadius", CBaseEntity_BoundingRadius},
-  {"ChangeTeam", CBaseEntity_ChangeTeam},
-  {"ClearEffects", CBaseEntity_ClearEffects},
-  {"ClearFlags", CBaseEntity_ClearFlags},
-  {"CollisionRulesChanged", CBaseEntity_CollisionRulesChanged},
-  {"ComputeAbsDirection", CBaseEntity_ComputeAbsDirection},
-  {"ComputeAbsPosition", CBaseEntity_ComputeAbsPosition},
-  {"ComputeWorldSpaceSurroundingBox", CBaseEntity_ComputeWorldSpaceSurroundingBox},
-  {"CreateDataObject", CBaseEntity_CreateDataObject},
-  {"CreatePredictedEntityByName", CBaseEntity_CreatePredictedEntityByName},
-  {"CreateVPhysics", CBaseEntity_CreateVPhysics},
-  {"DamageDecal", CBaseEntity_DamageDecal},
-  {"DecalTrace", CBaseEntity_DecalTrace},
-  {"DestroyAllDataObjects", CBaseEntity_DestroyAllDataObjects},
-  {"DestroyDataObject", CBaseEntity_DestroyDataObject},
-  {"DispatchTraceAttack", CBaseEntity_DispatchTraceAttack},
-  {"DoImpactEffect", CBaseEntity_DoImpactEffect},
-  {"EarPosition", CBaseEntity_EarPosition},
-  {"EmitSound", CBaseEntity_EmitSound},
-  {"EmitAmbientSound", CBaseEntity_EmitAmbientSound},
-  {"EndGroundContact", CBaseEntity_EndGroundContact},
-  {"EndTouch", CBaseEntity_EndTouch},
-  {"entindex", CBaseEntity_entindex},
-  {"EntityToWorldSpace", CBaseEntity_EntityToWorldSpace},
-  {"EyeAngles", CBaseEntity_EyeAngles},
-  {"EyePosition", CBaseEntity_EyePosition},
-  {"FireBullets", CBaseEntity_FireBullets},
-  {"FirstMoveChild", CBaseEntity_FirstMoveChild},
-  {"FollowEntity", CBaseEntity_FollowEntity},
-  {"GenderExpandString", CBaseEntity_GenderExpandString},
-  {"GetAbsAngles", CBaseEntity_GetAbsAngles},
-  {"GetAbsOrigin", CBaseEntity_GetAbsOrigin},
-  {"GetAbsVelocity", CBaseEntity_GetAbsVelocity},
-  {"GetAnimTime", CBaseEntity_GetAnimTime},
-  {"GetBaseAnimating", CBaseEntity_GetBaseAnimating},
-  {"GetBaseEntity", CBaseEntity_GetBaseEntity},
-  {"GetBaseVelocity", CBaseEntity_GetBaseVelocity},
-  {"GetCheckUntouch", CBaseEntity_GetCheckUntouch},
-  {"GetClassname", CBaseEntity_GetClassname},
-  {"GetCollisionGroup", CBaseEntity_GetCollisionGroup},
-  {"GetDataObject", CBaseEntity_GetDataObject},
-  {"GetDebugName", CBaseEntity_GetDebugName},
-  {"GetDLLType", CBaseEntity_GetDLLType},
-  {"GetEffectEntity", CBaseEntity_GetEffectEntity},
-  {"GetEffects", CBaseEntity_GetEffects},
-  {"GetEFlags", CBaseEntity_GetEFlags},
-  {"GetElasticity", CBaseEntity_GetElasticity},
-  {"GetFirstThinkTick", CBaseEntity_GetFirstThinkTick},
-  {"GetFlags", CBaseEntity_GetFlags},
-  {"GetFollowedEntity", CBaseEntity_GetFollowedEntity},
-  {"GetGravity", CBaseEntity_GetGravity},
-  {"GetGroundChangeTime", CBaseEntity_GetGroundChangeTime},
-  {"GetGroundEntity", CBaseEntity_GetGroundEntity},
-  {"GetHealth", CBaseEntity_GetHealth},
-  {"GetKeyValue", CBaseEntity_GetKeyValue},
-  {"GetLastThink", CBaseEntity_GetLastThink},
-  {"GetLastThinkTick", CBaseEntity_GetLastThinkTick},
-  {"GetLocalAngles", CBaseEntity_GetLocalAngles},
-  {"GetLocalAngularVelocity", CBaseEntity_GetLocalAngularVelocity},
-  {"GetLocalOrigin", CBaseEntity_GetLocalOrigin},
-  {"GetLocalVelocity", CBaseEntity_GetLocalVelocity},
-  {"GetMaxHealth", CBaseEntity_GetMaxHealth},
-  {"GetModelIndex", CBaseEntity_GetModelIndex},
-  {"GetModelName", CBaseEntity_GetModelName},
-  {"GetMoveParent", CBaseEntity_GetMoveParent},
-  {"GetMoveType", CBaseEntity_GetMoveType},
-  {"GetOwnerEntity", CBaseEntity_GetOwnerEntity},
-  {"GetParametersForSound", CBaseEntity_GetParametersForSound},
-  {"GetPredictionPlayer", CBaseEntity_GetPredictionPlayer},
-  {"GetPredictionRandomSeed", CBaseEntity_GetPredictionRandomSeed},
-  {"GetSimulatingPlayer", CBaseEntity_GetSimulatingPlayer},
-  {"GetSimulationTime", CBaseEntity_GetSimulationTime},
-  {"GetSolid", CBaseEntity_GetSolid},
-  {"GetSolidFlags", CBaseEntity_GetSolidFlags},
-  {"GetSoundDuration", CBaseEntity_GetSoundDuration},
-  {"GetSoundSourceIndex", CBaseEntity_GetSoundSourceIndex},
-  {"GetTeamNumber", CBaseEntity_GetTeamNumber},
-  {"GetTextureFrameIndex", CBaseEntity_GetTextureFrameIndex},
-  {"GetTouchTrace", CBaseEntity_GetTouchTrace},
-  {"GetTracerAttachment", CBaseEntity_GetTracerAttachment},
-  {"GetTracerType", CBaseEntity_GetTracerType},
-  {"GetVectors", CBaseEntity_GetVectors},
-  {"GetViewOffset", CBaseEntity_GetViewOffset},
-  {"GetWaterLevel", CBaseEntity_GetWaterLevel},
-  {"GetWaterType", CBaseEntity_GetWaterType},
-  {"HasDataObjectType", CBaseEntity_HasDataObjectType},
-  {"HasNPCsOnIt", CBaseEntity_HasNPCsOnIt},
-  {"ImpactTrace", CBaseEntity_ImpactTrace},
-  {"InSameTeam", CBaseEntity_InSameTeam},
-  {"IsAbsQueriesValid", CBaseEntity_IsAbsQueriesValid},
-  {"IsAIWalkable", CBaseEntity_IsAIWalkable},
-  {"IsAlive", CBaseEntity_IsAlive},
-  {"IsAnimatedEveryTick", CBaseEntity_IsAnimatedEveryTick},
-  {"IsBaseObject", CBaseEntity_IsBaseObject},
-  {"IsBaseTrain", CBaseEntity_IsBaseTrain},
-  {"IsBSPModel", CBaseEntity_IsBSPModel},
-  {"IsClient", CBaseEntity_IsClient},
-  {"IsCurrentlyTouching", CBaseEntity_IsCurrentlyTouching},
-  {"IsDormant", CBaseEntity_IsDormant},
-  {"IsEffectActive", CBaseEntity_IsEffectActive},
-  {"IsEFlagSet", CBaseEntity_IsEFlagSet},
-  {"IsFloating", CBaseEntity_IsFloating},
-  {"IsFollowingEntity", CBaseEntity_IsFollowingEntity},
-  {"IsInWorld", CBaseEntity_IsInWorld},
-  {"IsMarkedForDeletion", CBaseEntity_IsMarkedForDeletion},
-  {"IsNPC", CBaseEntity_IsNPC},
-  {"IsPlayer", CBaseEntity_IsPlayer},
-  {"IsPlayerSimulated", CBaseEntity_IsPlayerSimulated},
-  {"IsPointSized", CBaseEntity_IsPointSized},
-  {"IsPrecacheAllowed", CBaseEntity_IsPrecacheAllowed},
-  {"IsServer", CBaseEntity_IsServer},
-  {"IsSimulatedEveryTick", CBaseEntity_IsSimulatedEveryTick},
-  {"IsSimulatingOnAlternateTicks", CBaseEntity_IsSimulatingOnAlternateTicks},
-  {"IsSolid", CBaseEntity_IsSolid},
-  {"IsSolidFlagSet", CBaseEntity_IsSolidFlagSet},
-  {"IsStandable", CBaseEntity_IsStandable},
-  {"IsTransparent", CBaseEntity_IsTransparent},
-  {"IsWeapon", CBaseEntity_IsWeapon},
-  {"KeyValue", CBaseEntity_KeyValue},
-  {"LocalEyeAngles", CBaseEntity_LocalEyeAngles},
-  {"NextMovePeer", CBaseEntity_NextMovePeer},
-  {"ObjectCaps", CBaseEntity_ObjectCaps},
-  {"OnRestore", CBaseEntity_OnRestore},
-  {"PhysicsCheckForEntityUntouch", CBaseEntity_PhysicsCheckForEntityUntouch},
-  {"PhysicsCheckWater", CBaseEntity_PhysicsCheckWater},
-  {"PhysicsCheckWaterTransition", CBaseEntity_PhysicsCheckWaterTransition},
-  {"PhysicsImpact", CBaseEntity_PhysicsImpact},
-  {"PhysicsMarkEntitiesAsTouching", CBaseEntity_PhysicsMarkEntitiesAsTouching},
-  {"PhysicsNotifyOtherOfGroundRemoval", CBaseEntity_PhysicsNotifyOtherOfGroundRemoval},
-  {"PhysicsNotifyOtherOfUntouch", CBaseEntity_PhysicsNotifyOtherOfUntouch},
-  {"PhysicsRemoveGroundList", CBaseEntity_PhysicsRemoveGroundList},
-  {"PhysicsRemoveTouchedList", CBaseEntity_PhysicsRemoveTouchedList},
-  {"PhysicsSimulate", CBaseEntity_PhysicsSimulate},
-  {"PhysicsSolidMaskForEntity", CBaseEntity_PhysicsSolidMaskForEntity},
-  {"PhysicsStartGroundContact", CBaseEntity_PhysicsStartGroundContact},
-  {"Precache", CBaseEntity_Precache},
-  {"PrecacheModel", CBaseEntity_PrecacheModel},
-  {"PrecacheScriptSound", CBaseEntity_PrecacheScriptSound},
-  {"PrecacheSound", CBaseEntity_PrecacheSound},
-  {"PrefetchScriptSound", CBaseEntity_PrefetchScriptSound},
-  {"PrefetchSound", CBaseEntity_PrefetchSound},
-  {"RegisterThinkContext", CBaseEntity_RegisterThinkContext},
-  {"Remove", CBaseEntity_Remove},
-  {"RemoveAllDecals", CBaseEntity_RemoveAllDecals},
-  {"RemoveDataObjectType", CBaseEntity_RemoveDataObjectType},
-  {"RemoveEffects", CBaseEntity_RemoveEffects},
-  {"RemoveEFlags", CBaseEntity_RemoveEFlags},
-  {"RemoveFlag", CBaseEntity_RemoveFlag},
-  {"RemoveSolidFlags", CBaseEntity_RemoveSolidFlags},
-  {"SetAbsAngles", CBaseEntity_SetAbsAngles},
-  {"SetAbsOrigin", CBaseEntity_SetAbsOrigin},
-  {"SetAbsQueriesValid", CBaseEntity_SetAbsQueriesValid},
-  {"SetAbsVelocity", CBaseEntity_SetAbsVelocity},
-  {"SetAIWalkable", CBaseEntity_SetAIWalkable},
-  {"SetAllowPrecache", CBaseEntity_SetAllowPrecache},
-  {"SetAnimatedEveryTick", CBaseEntity_SetAnimatedEveryTick},
-  {"SetAnimTime", CBaseEntity_SetAnimTime},
-  {"SetBaseVelocity", CBaseEntity_SetBaseVelocity},
-  {"SetBlocksLOS", CBaseEntity_SetBlocksLOS},
-  {"SetCheckUntouch", CBaseEntity_SetCheckUntouch},
-  {"SetClassname", CBaseEntity_SetClassname},
-  {"SetCollisionBounds", CBaseEntity_SetCollisionBounds},
-  {"SetCollisionGroup", CBaseEntity_SetCollisionGroup},
-  {"SetEffectEntity", CBaseEntity_SetEffectEntity},
-  {"SetEffects", CBaseEntity_SetEffects},
-  {"SetEFlags", CBaseEntity_SetEFlags},
-  {"SetFriction", CBaseEntity_SetFriction},
-  {"SetGravity", CBaseEntity_SetGravity},
-  {"SetGroundChangeTime", CBaseEntity_SetGroundChangeTime},
-  {"SetGroundEntity", CBaseEntity_SetGroundEntity},
-  {"SetHealth", CBaseEntity_SetHealth},
-  {"SetLocalAngles", CBaseEntity_SetLocalAngles},
-  {"SetLocalAngularVelocity", CBaseEntity_SetLocalAngularVelocity},
-  {"SetLocalOrigin", CBaseEntity_SetLocalOrigin},
-  {"SetLocalVelocity", CBaseEntity_SetLocalVelocity},
-  {"SetModel", CBaseEntity_SetModel},
-  {"SetModelIndex", CBaseEntity_SetModelIndex},
-  {"SetModelName", CBaseEntity_SetModelName},
-  {"SetMoveCollide", CBaseEntity_SetMoveCollide},
-  {"SetMoveType", CBaseEntity_SetMoveType},
-  {"SetNextThink", CBaseEntity_SetNextThink},
-  {"SetOwnerEntity", CBaseEntity_SetOwnerEntity},
-  {"SetParent", CBaseEntity_SetParent},
-  {"SetPlayerSimulated", CBaseEntity_SetPlayerSimulated},
-  {"SetPredictionEligible", CBaseEntity_SetPredictionEligible},
-  {"SetPredictionPlayer", CBaseEntity_SetPredictionPlayer},
-  {"SetRenderColor", CBaseEntity_SetRenderColor},
-  {"SetRenderColorA", CBaseEntity_SetRenderColorA},
-  {"SetRenderColorB", CBaseEntity_SetRenderColorB},
-  {"SetRenderColorG", CBaseEntity_SetRenderColorG},
-  {"SetRenderColorR", CBaseEntity_SetRenderColorR},
-  {"SetSimulatedEveryTick", CBaseEntity_SetSimulatedEveryTick},
-  {"SetSimulationTime", CBaseEntity_SetSimulationTime},
-  {"SetSize", CBaseEntity_SetSize},
-  {"SetSolid", CBaseEntity_SetSolid},
-  {"SetSolidFlags", CBaseEntity_SetSolidFlags},
-  {"SetTextureFrameIndex", CBaseEntity_SetTextureFrameIndex},
-  {"SetViewOffset", CBaseEntity_SetViewOffset},
-  {"SetWaterLevel", CBaseEntity_SetWaterLevel},
-  {"SetWaterType", CBaseEntity_SetWaterType},
-  {"ShouldCollide", CBaseEntity_ShouldCollide},
-  {"ShouldSavePhysics", CBaseEntity_ShouldSavePhysics},
-  {"Spawn", CBaseEntity_Spawn},
-  {"StartGroundContact", CBaseEntity_StartGroundContact},
-  {"StartTouch", CBaseEntity_StartTouch},
-  {"StopFollowingEntity", CBaseEntity_StopFollowingEntity},
-  {"SUB_Remove", CBaseEntity_SUB_Remove},
-  {"Think", CBaseEntity_Think},
-  {"ToggleFlag", CBaseEntity_ToggleFlag},
-  {"Touch", CBaseEntity_Touch},
-  {"TraceBleed", CBaseEntity_TraceBleed},
-  {"UnsetPlayerSimulated", CBaseEntity_UnsetPlayerSimulated},
-  {"UpdateOnRemove", CBaseEntity_UpdateOnRemove},
-  {"VPhysicsDestroyObject", CBaseEntity_VPhysicsDestroyObject},
-  {"VPhysicsGetObject", CBaseEntity_VPhysicsGetObject},
-  {"VPhysicsGetObjectList", CBaseEntity_VPhysicsGetObjectList},
-  {"VPhysicsInitNormal", CBaseEntity_VPhysicsInitNormal},
-  {"VPhysicsInitStatic", CBaseEntity_VPhysicsInitStatic},
-  {"VPhysicsIsFlesh", CBaseEntity_VPhysicsIsFlesh},
-  {"VPhysicsSetObject", CBaseEntity_VPhysicsSetObject},
-  {"VPhysicsUpdate", CBaseEntity_VPhysicsUpdate},
-  {"WakeRestingObjects", CBaseEntity_WakeRestingObjects},
-  {"WorldAlignMaxs", CBaseEntity_WorldAlignMaxs},
-  {"WorldAlignMins", CBaseEntity_WorldAlignMins},
-  {"WorldAlignSize", CBaseEntity_WorldAlignSize},
-  {"WorldSpaceCenter", CBaseEntity_WorldSpaceCenter},
-  {"WorldToEntitySpace", CBaseEntity_WorldToEntitySpace},
-  {"__index", CBaseEntity___index},
-  {"__newindex", CBaseEntity___newindex},
-  {"__eq", CBaseEntity___eq},
-  {"__tostring", CBaseEntity___tostring},
-  {NULL, NULL}
-};
-
-
-static int luasrc_CreateEntityByName (lua_State *L) {
-  lua_pushentity(L, CreateEntityByName(luaL_checkstring(L, 1)));
-  return 1;
-}
-
-
-static const luaL_Reg CBaseEntity_funcs[] = {
-  {"CreateEntityByName", luasrc_CreateEntityByName},
-  {NULL, NULL}
-};
-
-
-/*
-** Open CBaseEntity object
-*/
-LUALIB_API int luaopen_CBaseEntity_shared (lua_State *L) {
-  luaL_getmetatable(L, LUA_BASEENTITYLIBNAME);
-  if (lua_isnoneornil(L, -1)) {
-    lua_pop(L, 1);
-    luaL_newmetatable(L, LUA_BASEENTITYLIBNAME);
-  }
-  luaL_register(L, NULL, CBaseEntitymeta);
-  lua_pushstring(L, "entity");
-  lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
-  luaL_register(L, "_G", CBaseEntity_funcs);
-  lua_pop(L, 1);
-  lua_pushentity(L, NULL);
-  lua_setglobal(L, "NULL");  /* set global NULL */
-  return 1;
-}
 

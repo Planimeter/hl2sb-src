@@ -9,7 +9,7 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define lconvar_cpp
+//#define lconvar_cpp
 
 #include "cbase.h"
 #include "luamanager.h"
@@ -166,7 +166,7 @@ void CC_ConCommand( const CCommand& args )
 	// if ( !pPlayer )
 	// 	return;
 
-	MDLCACHE_CRITICAL_SECTION();
+//	MDLCACHE_CRITICAL_SECTION();
 
 	lua_getglobal( L, "concommand" );
 	if ( lua_istable( L, -1 ) )

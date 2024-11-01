@@ -7,7 +7,7 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lbspflags_cpp
+//#define lbspflags_cpp
 
 #include "cbase.h"
 #include "bspflags.h"

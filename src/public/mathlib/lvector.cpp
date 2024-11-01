@@ -6,7 +6,7 @@
 //
 //=============================================================================//
 
-#define lvector_cpp
+//#define lvector_cpp
 
 #include "cbase.h"
 #include "vector.h"

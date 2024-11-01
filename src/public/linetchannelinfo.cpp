@@ -10,7 +10,7 @@
 //
 // $NoKeywords: $
 //=============================================================================//
-#define linetchannelinfo_cpp
+//#define linetchannelinfo_cpp
 
 #include "cbase.h"
 #include "inetchannelinfo.h"

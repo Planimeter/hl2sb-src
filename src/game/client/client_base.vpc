@@ -51,8 +51,8 @@ $Configuration
 
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include"
-		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead" 
+		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\lua-5.1.5\src;$SRCDIR\lua-5.1.5\etc;$SRCDIR\open-steamworks\Open Steamworks;.\;$SRCDIR\common;$SRCDIR\public;$SRCDIR\public\tier0;$SRCDIR\public\tier1;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include;.\scripted_controls;.\hl2;.\hl2\elements;$SRCDIR\game\shared\hl2;$SRCDIR\game\shared\Multiplayer;$SRCDIR\game\shared\episodic"
+		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;LUA_SDK;HL2SB;ARGG"
 		$PreprocessorDefinitions		"$BASE;fopen=dont_use_fopen" [$WIN32]
 		$PreprocessorDefinitions		"$BASE;USE_WEBM_FOR_REPLAY;" [$LINUXALL]
 		$PreprocessorDefinitions		"$BASE;CURL_STATICLIB" [$WIN32 && $BUILD_REPLAY]
@@ -503,6 +503,65 @@ $Project
 		//Haptics
 		$File	"$SRCDIR\public\haptics\haptic_msgs.cpp"	[!$X360]
 		$File	"$SRCDIR\public\haptics\haptic_utils.cpp"	[$WIN32&&!$X360]
+
+		$Folder	"Lua"
+		{
+            $File "$SRCDIR\game\shared\basescripted.cpp"
+            $File "$SRCDIR\game\shared\basescripted.h"
+		    $File "$SRCDIR\game\shared\lbasecombatweapon_shared.cpp"
+            $File "$SRCDIR\game\shared\lbaseentity_shared.cpp"
+            $File "$SRCDIR\game\shared\lbaseplayer_shared.cpp"
+            $File "$SRCDIR\public\lbspflags.cpp"
+            $File "lc_baseanimating.cpp"
+            $File "lc_baseanimating.h"
+            $File "lc_baseentity.cpp"
+            $File "lc_baseplayer.cpp"
+            $File "$SRCDIR\public\lcdll_int.cpp"
+            $File "lcdll_util.cpp"
+            $File "$SRCDIR\public\lColor.cpp"
+            $File "$SRCDIR\public\tier1\lconvar.cpp"
+            $File "$SRCDIR\public\tier0\ldbg.cpp"
+		    $File "$SRCDIR\game\shared\leffect_dispatch_data.cpp"
+		    $File "$SRCDIR\public\lfilesystem.cpp"
+		    $File "$SRCDIR\public\lgametrace.cpp"
+		    $File "$SRCDIR\public\lglobalvars_base.cpp"
+            $File "liclientshadowmgr.cpp"
+		    $File "$SRCDIR\public\tier1\liconvar.cpp"
+		    $File "$SRCDIR\public\licvar.cpp"
+		    $File "$SRCDIR\public\lienginevgui.cpp"
+		    $File "$SRCDIR\public\vgui\LIInput.cpp"
+		    $File "$SRCDIR\public\materialsystem\limaterial.cpp"
+            $File "$SRCDIR\game\shared\limovehelper.cpp"
+            $File "$SRCDIR\game\shared\lin_buttons.cpp"
+            $File "$SRCDIR\game\shared\lipredictionsystem.cpp"
+            $File "$SRCDIR\public\vgui\LIScheme.cpp"
+            $File "$SRCDIR\public\SoundEmitterSystem\lisoundemittersystembase.cpp"
+            $File "$SRCDIR\public\steam\listeamfriends.cpp"
+            $File "$SRCDIR\public\steam\listeamfriends.h"
+            $File "$SRCDIR\public\vgui\LISurface.cpp"
+            $File "$SRCDIR\public\engine\livdebugoverlay.cpp"
+            $File "$SRCDIR\public\tier1\LKeyValues.cpp"
+            $File "$SRCDIR\public\mathlib\lmathlib.cpp"
+            $File "$SRCDIR\public\lnetworkstringtabledefs.cpp"
+            $File "$SRCDIR\public\vphysics\lperformance.cpp"
+            $File "lprediction.cpp"
+            $File "$SRCDIR\public\vstdlib\lrandom.cpp"
+            $File "$SRCDIR\game\shared\lshareddefs.cpp"
+            $File "$SRCDIR\game\shared\lsrcinit.cpp"
+            $File "$SRCDIR\public\steam\lsteam_api.cpp"
+            $File "$SRCDIR\game\shared\ltakedamageinfo.cpp"
+            $File "$SRCDIR\game\shared\luacachefile.cpp"
+            $File "$SRCDIR\game\shared\luacachefile.h"
+            $File "$SRCDIR\game\shared\luamanager.cpp"
+            $File "$SRCDIR\game\shared\luamanager.h"
+            $File "$SRCDIR\game\shared\lutil_shared.cpp"
+            $File "$SRCDIR\public\mathlib\lvector.cpp"
+            $File "$SRCDIR\public\vgui\LVGUI.cpp"
+            $File "$SRCDIR\public\mathlib\lvmatrix.cpp"
+            $File "$SRCDIR\public\lvphysics_interface.cpp"
+            $File "$SRCDIR\public\XUnzip.cpp"
+            $File "$SRCDIR\public\zip_utils.cpp"
+		}
 
 		$Folder	"Sixense"
 		{

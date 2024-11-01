@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lutil_cpp
+//#define lutil_cpp
 
 #include "cbase.h"
 #include "luamanager.h"

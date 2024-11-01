@@ -4,7 +4,7 @@
 //
 //=============================================================================//
 
-#define lperformance_cpp
+//#define lperformance_cpp
 
 #include "cbase.h"
 #include "performance.h"

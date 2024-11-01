@@ -6,7 +6,7 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define lrandom_cpp
+//#define lrandom_cpp
 
 #include "cbase.h"
 #include "lua.hpp"

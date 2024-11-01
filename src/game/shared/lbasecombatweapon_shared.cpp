@@ -4,7 +4,7 @@
 //
 // $NoKeywords: $
 //=============================================================================//
-#define lbasecombatweapon_shared_cpp
+//#define lbasecombatweapon_shared_cpp
 
 #include "cbase.h"
 #include "luamanager.h"
@@ -63,7 +63,7 @@ static int CBaseCombatWeapon_Activate (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_ActivityListCount (lua_State *L) {
-  lua_pushinteger(L, luaL_checkweapon(L, 1)->ActivityListCount());
+  //lua_pushinteger(L, luaL_checkweapon(L, 1)->ActivityListCount());
   return 1;
 }
 
@@ -541,7 +541,7 @@ static int CBaseCombatWeapon_IsPredicted (lua_State *L) {
 }
 
 static int CBaseCombatWeapon_IsScripted (lua_State *L) {
-  lua_pushboolean(L, luaL_checkweapon(L, 1)->IsScripted());
+//  lua_pushboolean(L, luaL_checkweapon(L, 1)->IsScripted());
   return 1;
 }
 
@@ -845,8 +845,8 @@ static int CBaseCombatWeapon___index (lua_State *L) {
     lua_pushinteger(L, pWeapon->m_iWorldModelIndex);
   else if (Q_strcmp(field, "m_nViewModelIndex") == 0)
     lua_pushinteger(L, pWeapon->m_nViewModelIndex);
-  else if (pWeapon->m_nTableReference != LUA_NOREF) {
-    lua_getref(L, pWeapon->m_nTableReference);
+  //else if (pWeapon->m_nTableReference != LUA_NOREF) {
+    //lua_getref(L, pWeapon->m_nTableReference);
     lua_getfield(L, -1, field);
     if (lua_isnil(L, -1)) {
       lua_pop(L, 2);
@@ -863,7 +863,8 @@ static int CBaseCombatWeapon___index (lua_State *L) {
         }
       }
     }
-  }
+//}
+/*
   else {
     lua_getmetatable(L, 1);
     lua_getfield(L, -1, field);
@@ -880,9 +881,9 @@ static int CBaseCombatWeapon___index (lua_State *L) {
   }
   return 1;
 }
+*/
 
-static int CBaseCombatWeapon___newindex (lua_State *L) {
-  CBaseCombatWeapon *pWeapon = lua_toweapon(L, 1);
+//static int CBaseCombatWeapon___newindex (lua_State *L) {
   if (pWeapon == NULL) {  /* avoid extra test when d is not 0 */
     lua_Debug ar1;
     lua_getstack(L, 1, &ar1);
@@ -892,7 +893,8 @@ static int CBaseCombatWeapon___newindex (lua_State *L) {
 	lua_pushfstring(L, "%s:%d: attempt to index a NULL entity", ar2.short_src, ar1.currentline);
 	return lua_error(L);
   }
-  const char *field = luaL_checkstring(L, 2);
+//  const char *field = luaL_checkstring(L, 2);
+/*
   if (Q_strcmp(field, "m_bAltFiresUnderwater") == 0)
     pWeapon->m_bAltFiresUnderwater = luaL_checkboolean(L, 3);
   else if (Q_strcmp(field, "m_bFireOnEmpty") == 0)
@@ -947,12 +949,13 @@ static int CBaseCombatWeapon___newindex (lua_State *L) {
       pWeapon->m_nTableReference = luaL_ref(L, LUA_REGISTRYINDEX);
     }
     lua_getref(L, pWeapon->m_nTableReference);
+    */
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, field);
 	lua_pop(L, 1);
   }
-  return 0;
-}
+  //return 0;
+//}
 
 static int CBaseCombatWeapon___eq (lua_State *L) {
   lua_pushboolean(L, lua_toweapon(L, 1) == lua_toweapon(L, 2));
@@ -1097,7 +1100,7 @@ static const luaL_Reg CBaseCombatWeaponmeta[] = {
   {"WeaponSound", CBaseCombatWeapon_WeaponSound},
   {"WeaponState", CBaseCombatWeapon_WeaponState},
   {"__index", CBaseCombatWeapon___index},
-  {"__newindex", CBaseCombatWeapon___newindex},
+  //{"__newindex", CBaseCombatWeapon___newindex},
   {"__eq", CBaseCombatWeapon___eq},
   {"__tostring", CBaseCombatWeapon___tostring},
   {NULL, NULL}

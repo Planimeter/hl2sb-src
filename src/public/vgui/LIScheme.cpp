@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define LIScheme_cpp
+//#define LIScheme_cpp
 
 #include "cbase.h"
 #include "vgui/ischeme.h"

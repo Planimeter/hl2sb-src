@@ -80,14 +80,14 @@ void ResetTriggerFactoryDatabase( void )
 CBaseScriptedTrigger::CBaseScriptedTrigger( void )
 {
 #ifdef LUA_SDK
-	m_nTableReference = LUA_NOREF;
+//	m_nTableReference = LUA_NOREF;
 #endif
 }
 
 CBaseScriptedTrigger::~CBaseScriptedTrigger( void )
 {
 #ifdef LUA_SDK
-	lua_unref( L, m_nTableReference );
+//	lua_unref( L, m_nTableReference );
 #endif
 }
 
@@ -153,13 +153,14 @@ void CBaseScriptedTrigger::InitScriptedTrigger( void )
 		lua_pop( L, 1 );
 	}
 
-	if ( m_nTableReference == LUA_NOREF )
-	{
-		LoadScriptedTrigger();
-		m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
-	}
-	else
-	{
+	//if ( m_nTableReference == LUA_NOREF )
+	//{
+	//	LoadScriptedTrigger();
+	//	m_nTableReference = luaL_ref( L, LUA_REGISTRYINDEX );
+	//}
+	//
+	//else
+	//{
 		lua_getglobal( L, "table" );
 		if ( lua_istable( L, -1 ) )
 		{
@@ -167,7 +168,7 @@ void CBaseScriptedTrigger::InitScriptedTrigger( void )
 			if ( lua_isfunction( L, -1 ) )
 			{
 				lua_remove( L, -2 );
-				lua_getref( L, m_nTableReference );
+				//lua_getref( L, m_nTableReference );
 				LoadScriptedTrigger();
 				luasrc_pcall( L, 2, 0, 0 );
 			}
@@ -182,10 +183,11 @@ void CBaseScriptedTrigger::InitScriptedTrigger( void )
 		}
 	}
 
-	BEGIN_LUA_CALL_TRIGGER_METHOD( "Initialize" );
-	END_LUA_CALL_TRIGGER_METHOD( 0, 0 );
+	//BEGIN_LUA_CALL_TRIGGER_METHOD( "Initialize" );
+  // Comment as a tempoary solution - Guest
+	//END_LUA_CALL_TRIGGER_METHOD( 0, 0 );
 #endif
-}
+//}
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -204,11 +206,11 @@ void CBaseScriptedTrigger::Spawn()
 bool CBaseScriptedTrigger::PassesTriggerFilters(CBaseEntity *pOther)
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_TRIGGER_METHOD( "PassesTriggerFilters" );
+	//BEGIN_LUA_CALL_TRIGGER_METHOD( "PassesTriggerFilters" );
 		lua_pushentity( L, pOther );
-	END_LUA_CALL_TRIGGER_METHOD( 1, 1 );
+	//END_LUA_CALL_TRIGGER_METHOD( 1, 1 );
 
-	RETURN_LUA_BOOLEAN();
+	//RETURN_LUA_BOOLEAN();
 #endif
 
 	return BaseClass::PassesTriggerFilters( pOther );
@@ -217,8 +219,8 @@ bool CBaseScriptedTrigger::PassesTriggerFilters(CBaseEntity *pOther)
 void CBaseScriptedTrigger::Think()
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_TRIGGER_METHOD( "Think" );
-	END_LUA_CALL_TRIGGER_METHOD( 0, 0 );
+	//BEGIN_LUA_CALL_TRIGGER_METHOD( "Think" );
+	//END_LUA_CALL_TRIGGER_METHOD( 0, 0 );
 #endif
 }
 
@@ -229,9 +231,9 @@ void CBaseScriptedTrigger::Think()
 void CBaseScriptedTrigger::StartTouch(CBaseEntity *pOther)
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_TRIGGER_METHOD( "StartTouch" );
+	//BEGIN_LUA_CALL_TRIGGER_METHOD( "StartTouch" );
 		lua_pushentity( L, pOther );
-	END_LUA_CALL_TRIGGER_METHOD( 1, 0 );
+	//END_LUA_CALL_TRIGGER_METHOD( 1, 0 );
 #endif
 }
 
@@ -239,9 +241,9 @@ void CBaseScriptedTrigger::StartTouch(CBaseEntity *pOther)
 void CBaseScriptedTrigger::Touch(CBaseEntity *pOther)
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_TRIGGER_METHOD( "Touch" );
+	//BEGIN_LUA_CALL_TRIGGER_METHOD( "Touch" );
 		lua_pushentity( L, pOther );
-	END_LUA_CALL_TRIGGER_METHOD( 1, 0 );
+	//END_LUA_CALL_TRIGGER_METHOD( 1, 0 );
 #endif
 }
 
@@ -252,9 +254,9 @@ void CBaseScriptedTrigger::Touch(CBaseEntity *pOther)
 void CBaseScriptedTrigger::EndTouch(CBaseEntity *pOther)
 {
 #ifdef LUA_SDK
-	BEGIN_LUA_CALL_TRIGGER_METHOD( "EndTouch" );
+	//BEGIN_LUA_CALL_TRIGGER_METHOD( "EndTouch" );
 		lua_pushentity( L, pOther );
-	END_LUA_CALL_TRIGGER_METHOD( 1, 0 );
+	//END_LUA_CALL_TRIGGER_METHOD( 1, 0 );
 #endif
 }
 

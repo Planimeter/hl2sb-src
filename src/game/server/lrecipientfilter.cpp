@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //
 //=============================================================================//
-#define lrecipientfilter_cpp
+//#define lrecipientfilter_cpp
 
 #include "cbase.h"
 #include "recipientfilter.h"

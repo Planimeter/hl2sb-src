@@ -4,7 +4,7 @@
 //
 //===========================================================================//
 
-#define lcdll_int_cpp
+//#define lcdll_int_cpp
 
 #include "cbase.h"
 #include "luamanager.h"

@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define leffect_dispatch_data_cpp
+//#define leffect_dispatch_data_cpp
 
 #include "cbase.h"
 #if CLIENT_DLL

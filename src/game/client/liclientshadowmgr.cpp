@@ -6,7 +6,7 @@
 //
 //=============================================================================//
 
-#define liclientshadowmgr_cpp
+//#define liclientshadowmgr_cpp
 
 #include "cbase.h"
 #include "luamanager.h"

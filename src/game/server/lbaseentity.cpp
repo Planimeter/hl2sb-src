@@ -4,7 +4,7 @@
 //
 //===========================================================================//
 
-#define lbaseentity_cpp
+//#define lbaseentity_cpp
 
 #include "cbase.h"
 #include "luamanager.h"
@@ -92,7 +92,7 @@ static int CBaseEntity_ValidateEntityConnections (lua_State *L) {
 }
 
 static int CBaseEntity_PostClientMessagesSent (lua_State *L) {
-  luaL_checkentity(L, 1)->PostClientMessagesSent();
+//  luaL_checkentity(L, 1)->PostClientMessagesSent();
   return 0;
 }
 

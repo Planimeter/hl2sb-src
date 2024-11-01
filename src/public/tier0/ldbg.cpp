@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //
 //=============================================================================//
-#define ldbg_cpp
+//#define ldbg_cpp
 
 #include "cbase.h"
 #include "lua.hpp"

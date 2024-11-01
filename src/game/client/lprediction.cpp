@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define lprediction_cpp
+//#define lprediction_cpp
 
 #include "cbase.h"
 #include "prediction.h"

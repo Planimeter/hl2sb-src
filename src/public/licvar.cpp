@@ -4,7 +4,7 @@
 //
 //===========================================================================//
 
-#define leiface_cpp
+//#define leiface_cpp
 
 #include "cbase.h"
 #include "luamanager.h"

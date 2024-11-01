@@ -4,7 +4,7 @@
 //
 //===========================================================================//
 
-#define lmathlib_cpp
+//#define lmathlib_cpp
 
 #include "cbase.h"
 #include "mathlib.h"

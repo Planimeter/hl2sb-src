@@ -4,7 +4,7 @@
 //
 //===========================================================================//
 
-#define lplayer_cpp
+//#define lplayer_cpp
 
 #include "cbase.h"
 #include "luamanager.h"
@@ -183,7 +183,7 @@ static int CBasePlayer_Event_KilledOther (lua_State *L) {
 }
 
 static int CBasePlayer_Event_Dying (lua_State *L) {
-  luaL_checkplayer(L, 1)->Event_Dying();
+  //luaL_checkplayer(L, 1)->Event_Dying();
   return 0;
 }
 
@@ -263,7 +263,7 @@ static int CBasePlayer_Weapon_DropSlot (lua_State *L) {
 }
 
 static int CBasePlayer_Weapon_GetLast (lua_State *L) {
-  lua_pushweapon(L, luaL_checkplayer(L, 1)->Weapon_GetLast());
+  //lua_pushweapon(L, luaL_checkplayer(L, 1)->Weapon_GetLast());
   return 1;
 }
 

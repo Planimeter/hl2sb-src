@@ -6,7 +6,7 @@
 // $Date:         $
 // $NoKeywords: $
 //=============================================================================//
-#define lienginevgui_cpp
+//#define lienginevgui_cpp
 
 #include "cbase.h"
 #include "ienginevgui.h"

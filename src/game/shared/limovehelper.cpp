@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define limovehelper_cpp
+//#define limovehelper_cpp
 
 #include "cbase.h"
 #include "imovehelper.h"

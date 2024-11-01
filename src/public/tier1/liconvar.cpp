@@ -9,7 +9,7 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define liconvar_cpp
+//#define liconvar_cpp
 
 #include "cbase.h"
 #include "luamanager.h"

@@ -12,7 +12,7 @@
 // JOHN:  client dll interface declarations
 //
 
-#define lglobalvars_base_cpp
+//#define lglobalvars_base_cpp
 
 #include "cbase.h"
 #include "engine/ivdebugoverlay.h"

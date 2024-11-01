@@ -4,7 +4,7 @@
 //
 //=============================================================================//
 
-#define lutil_shared_cpp
+//#define lutil_shared_cpp
 
 #include "cbase.h"
 #include "luamanager.h"

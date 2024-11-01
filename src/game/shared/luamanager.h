@@ -12,6 +12,9 @@
 #endif
 
 #include "lua.hpp"
+#include "..\lua-5.1.5\src\lua.h"
+#include "..\lua-5.1.5\src\lauxlib.h"
+#include "..\lua-5.1.5\src\lualib.h"
 
 #define LUA_ROOT					"lua" // Can't be "LUA_PATH" because luaconf.h uses it.
 #define LUA_PATH_CACHE				"lua_cache"

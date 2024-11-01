@@ -6,7 +6,7 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lcdll_util_cpp
+//#define lcdll_util_cpp
 
 #include "cbase.h"
 #include "luamanager.h"
