@@ -953,23 +953,15 @@ static int CBaseCombatWeapon___index (lua_State *L) {
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, field);
 	lua_pop(L, 1);
-  }
-  //return 0;
-//}
 
-static int CBaseCombatWeapon___eq (lua_State *L) {
-  lua_pushboolean(L, lua_toweapon(L, 1) == lua_toweapon(L, 2));
-  return 1;
-}
-
-static int CBaseCombatWeapon___tostring (lua_State *L) {
+//static int CBaseCombatWeapon___tostring (lua_State *L) {
   CBaseCombatWeapon *pWeapon = lua_toweapon(L, 1);
   if (pWeapon == NULL)
     lua_pushstring(L, "NULL");
   else
     lua_pushfstring(L, "CBaseCombatWeapon: %d %s", pWeapon->entindex(), pWeapon->GetClassname());
   return 1;
-}
+//}
 
 
 static const luaL_Reg CBaseCombatWeaponmeta[] = {
@@ -1100,21 +1092,15 @@ static const luaL_Reg CBaseCombatWeaponmeta[] = {
   {"WeaponSound", CBaseCombatWeapon_WeaponSound},
   {"WeaponState", CBaseCombatWeapon_WeaponState},
   {"__index", CBaseCombatWeapon___index},
-  //{"__newindex", CBaseCombatWeapon___newindex},
-  {"__eq", CBaseCombatWeapon___eq},
   {"__tostring", CBaseCombatWeapon___tostring},
   {NULL, NULL}
 };
 
+LUALIB_API int luaopen_CBaseCombatWeapon(lua_State* L); {
+    luaL_newmetatable(L, LUA_BASECOMBATWEAPONLIBNAME);
+    luaL_register(L, NULL, CBaseCombatWeaponmeta);
+    lua_pushstring(L, "entity");
+    lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
+    return 1;
 
-/*
-** Open CBaseCombatWeapon object
-*/
-LUALIB_API int luaopen_CBaseCombatWeapon (lua_State *L) {
-  luaL_newmetatable(L, LUA_BASECOMBATWEAPONLIBNAME);
-  luaL_register(L, NULL, CBaseCombatWeaponmeta);
-  lua_pushstring(L, "entity");
-  lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
-  return 1;
 }
-

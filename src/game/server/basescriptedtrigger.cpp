@@ -13,6 +13,7 @@
 #include "iservervehicle.h"
 #include "ai_behavior_follow.h"
 #include "ai_behavior_lead.h"
+#include "basescripted.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -87,7 +88,7 @@ CBaseScriptedTrigger::CBaseScriptedTrigger( void )
 CBaseScriptedTrigger::~CBaseScriptedTrigger( void )
 {
 #ifdef LUA_SDK
-//	lua_unref( L, m_nTableReference );
+	//lua_unref( L, m_nTableReference );
 #endif
 }
 

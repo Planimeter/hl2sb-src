@@ -11,6 +11,8 @@
 
 #include "predictable_entity.h"
 #include "baseentity_shared.h"
+#include "lua.hpp"
+#include "luamanager.h"
 
 #if defined( CLIENT_DLL )
 #define CBaseScripted C_BaseScripted
@@ -69,6 +71,12 @@ private:
 void RegisterScriptedEntity( const char *szClassname );
 void ResetEntityFactoryDatabase( void );
 
+// Fixes by Combine Sandbox
+void FindFactory();
+void RemoveAllScripted();
+int m_nTableReference;
+void CleanupReference(lua_State* L) {
+	luaL_unref(L, LUA_REGISTRYINDEX, m_nTableReference);
+	m_nTableReference = LUA_NOREF;
+}
 #endif
-
-
