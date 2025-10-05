@@ -18,8 +18,14 @@
 
 void CServerGameClients::GetPlayerLimits( int& minplayers, int& maxplayers, int &defaultMaxPlayers ) const
 {
+#ifndef HL2SB
 	minplayers = defaultMaxPlayers = 2; 
 	maxplayers = 16;
+#else
+	minplayers = 1; 
+	maxplayers = MAX_PLAYERS;
+	defaultMaxPlayers = 16;
+#endif
 }
 
 // -------------------------------------------------------------------------------------------- //
@@ -29,4 +35,5 @@ void CServerGameClients::GetPlayerLimits( int& minplayers, int& maxplayers, int 
 void CServerGameDLL::LevelInit_ParseAllEntities( const char *pMapEntities )
 {
 }
+
 
